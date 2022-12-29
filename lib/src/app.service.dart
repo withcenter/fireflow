@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
 class AppService {
@@ -9,15 +11,23 @@ class AppService {
   AppService() {
     // initialize your service here
     debugPrint('--> AppService()');
+    initUser();
   }
 
+  /// This method must be called when the app is initialized.
   void init() {
-    // initialize your service here
-    debugPrint('--> AppService.init()');
+    debugPrint('--> AppService.instance.init()');
   }
 
-  int addOne(int value) {
-    debugPrint('--> AppService.addOne($value) = ${value + 1}');
-    return value + 1;
+  initUser() {
+    debugPrint('--> AppService.initUser()');
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user != null) {
+        debugPrint('--> AppService.initUser() - user is logged in');
+        UserService.instance.generateUserPublicData();
+      } else {
+        debugPrint('--> AppService.initUser() - user is not logged in');
+      }
+    });
   }
 }

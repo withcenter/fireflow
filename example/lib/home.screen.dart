@@ -31,9 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               '1 + 1 = ${Calculator().addOne(1)}',
             ),
-            ElevatedButton(
-                onPressed: () => AppService.instance.addOne(5),
-                child: const Text('Add 1 on 5')),
+            // ElevatedButton(
+            //     onPressed: () => AppService.instance.addOne(5),
+            //     child: const Text('Add 1 on 5')),
           ],
         ),
       ),
