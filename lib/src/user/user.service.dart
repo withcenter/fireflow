@@ -41,7 +41,8 @@ class UserService {
     await myUserPublicDataRef.set({
       'displayName': user.displayName,
       'photoUrl': user.photoUrl,
-      'uid': uid
+      'uid': uid,
+      'userDocumentReference': myUserRef,
     });
 
     debugPrint(
