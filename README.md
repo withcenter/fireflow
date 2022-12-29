@@ -28,4 +28,6 @@
 
 # Getting started
 
-Please see the official document.
+The fireflow has lots of features and lots of documentation. To make it easy to maintain, I have wrote a separate document.
+
+Please see the [Fireflow official document](https://docs.google.com/document/d/e/2PACX-1vQXcu36d1ojHEoi1lh3UNKXnDrfRtb_7J4j7GmTsc1eS2LdLMoggA2KfMqGpE3L4PaYNmCHDhGn6SEm/pub)
