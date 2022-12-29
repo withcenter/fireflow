@@ -1,40 +1,31 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Fireflow
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+`Fireflow` is an open source, easy, and rapid development tool for FlutterFlow apps providing more powerful and enhanced features like chat, forum, push notifications, and social community features.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+# Features
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+- Enhanced user management.
+  - The documents of the `/users` collection have private information and shouldn't be disclosed. But the user information is needed to be disclosed for the most app features. To make it happen, I created another collection named `/users_public_data` that does not hold user's prviate informatio.
 
-## Features
+- Enhanced chat.
+  - Custom design
+    - Custom design means, adding buttons for edit and delete.
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Complete forum functionality including;
+  - Category management
+  - User role management
+  - Post and comment management including
+    - Nested (threaded) comments
+  - Push notification
+    - Subscribing/Unsubscribing a category
+    - Sending push notifications to the author of the parent comments and post.
 
-## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+- Enhanced Firestore Security Rules
 
-## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
 
-```dart
-const like = 'sample';
-```
 
-## Additional information
+# Getting started
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
-# fireflow
+Please see the official document.
