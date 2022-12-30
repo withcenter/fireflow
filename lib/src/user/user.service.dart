@@ -56,35 +56,35 @@ class UserService {
   }
 
   afterProfilePhotoUpload(String? imagePath) async {
-    dog("UserService.afterProfilePhotoUpload() called.");
+    return await afterUserPhotoUpload('photoUrl', imagePath);
 
-    if (imagePath == null) {
-      dog("imagePath is null.");
-      return;
-    }
+    // if (imagePath == null) {
+    //   dog("imagePath is null.");
+    //   return;
+    // }
 
-    final userPublicData = await getUserPublicData();
+    // final userPublicData = await getUserPublicData();
 
-    /// the user has exising profile photo?
-    if (userPublicData.photoUrl != "") {
-      /// same as the new profile photo?
-      if (p.basename(userPublicData.photoUrl) == p.basename(imagePath)) {
-        dog("Upload photo is same as the existing profile photo.");
-        return;
-      }
-      dog("Deleting existing profile photo.");
-      // Delete the existing profile photo. Ignore if there is any error.
-      try {
-        await StorageService.instance.delete(userPublicData.photoUrl);
-      } catch (e) {
-        dog("Error ignored on deleting existing profile photo; $e");
-      }
-    }
+    // /// the user has exising profile photo?
+    // if (userPublicData.photoUrl != "") {
+    //   /// same as the new profile photo?
+    //   if (p.basename(userPublicData.photoUrl) == p.basename(imagePath)) {
+    //     dog("Upload photo is same as the existing profile photo.");
+    //     return;
+    //   }
+    //   dog("Deleting existing profile photo.");
+    //   // Delete the existing profile photo. Ignore if there is any error.
+    //   try {
+    //     await StorageService.instance.delete(userPublicData.photoUrl);
+    //   } catch (e) {
+    //     dog("Error ignored on deleting existing profile photo; $e");
+    //   }
+    // }
 
-    dog("Updating user public data.");
-    await myUserPublicDataRef.update({
-      'photoUrl': imagePath,
-    });
+    // dog("Updating user public data.");
+    // await myUserPublicDataRef.update({
+    //   'photoUrl': imagePath,
+    // });
   }
 
   Future<void> afterCoverPhotoUpload(String? imagePath) async {
@@ -94,8 +94,8 @@ class UserService {
   Future<void> afterUserPhotoUpload(String fieldName, String? imagePath) async {
     dog("UserService.afterUserPhotoUpload() called with fieldName: $fieldName");
 
-    if (imagePath == null) {
-      dog("imagePath is null.");
+    if (imagePath == null || imagePath == "") {
+      dog("imagePath is empty.");
       return;
     }
 

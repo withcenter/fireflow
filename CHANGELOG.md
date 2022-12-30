@@ -1,3 +1,8 @@
+## 0.0.5
+
+* Begin to work on `chat` feature.
+
+
 ## 0.0.4
 
 * Add `debug` option on init.

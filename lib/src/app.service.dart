@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ class AppService {
   static AppService get instance => _instance ?? (_instance = AppService());
   static AppService? _instance;
   late final BuildContext context;
+
+  DocumentReference? chatRoomReference;
 
   AppService() {
     dog("AppService.constructor() called.");
