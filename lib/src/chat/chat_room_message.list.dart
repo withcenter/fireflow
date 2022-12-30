@@ -66,7 +66,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
   bool get isGroupChat => widget.chatRoomDocumentReference != null;
   bool get isSingleChat => !isGroupChat;
 
-  DocumentReference getUserRef(String uid) {
+  DocumentReference getUserDocumentReference(String uid) {
     return FirebaseFirestore.instance.collection('users').doc(uid);
   }
 
@@ -77,9 +77,11 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     init();
   }
 
+  /// Initialize the chat room.
+  ///
   init() async {
     // My user document ref
-    final myRef = getUserRef(my.uid);
+    final myRef = getUserDocumentReference(my.uid);
 
     // // Query the chat room (To see if it exists)
     // final snapshot =
@@ -143,7 +145,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
         final currentUser = FirebaseAuth.instance.currentUser!;
 
         if (data['senderUserDocumentReference'] ==
-            getUserRef(currentUser.uid)) {
+            getUserDocumentReference(currentUser.uid)) {
           return widget.onMyMessage(
             data,
             doc.reference,
