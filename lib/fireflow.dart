@@ -5,3 +5,4 @@ export 'src/user/user.model.dart';
 export 'src/user/user_public_data.model.dart';
 export 'src/setting/setting.service.dart';
 export 'src/setting/setting.model.dart';
+export 'src/functions.dart';

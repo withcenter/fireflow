@@ -9,3 +9,5 @@ firebase_core=/Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/firebase_core
 firebase_core_web=/Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-2.0.2/
 firebase_messaging=/Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/firebase_messaging-14.1.4/
 firebase_messaging_web=/Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/firebase_messaging_web-3.2.9/
+firebase_storage=/Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/firebase_storage-11.0.7/
+firebase_storage_web=/Users/thruthesky/.pub-cache/hosted/pub.dartlang.org/firebase_storage_web-3.3.17/

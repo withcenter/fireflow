@@ -17,6 +17,8 @@ class UserPublicDataModel {
   Timestamp lastPostCreatedAt;
   bool isPremiumUser;
 
+  Map<String, dynamic> data;
+
   UserPublicDataModel({
     required this.uid,
     required this.userDocumentReference,
@@ -33,6 +35,7 @@ class UserPublicDataModel {
     required this.recentPosts,
     required this.lastPostCreatedAt,
     required this.isPremiumUser,
+    required this.data,
   });
 
   factory UserPublicDataModel.fromSnapshot(DocumentSnapshot snapshot) {
@@ -62,6 +65,7 @@ class UserPublicDataModel {
       recentPosts: json['recentPosts'] ?? [],
       lastPostCreatedAt: json['lastPostCreatedAt'] ?? Timestamp.now(),
       isPremiumUser: json['isPremiumUser'] ?? false,
+      data: json,
     );
   }
 

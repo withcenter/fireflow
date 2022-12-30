@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
+import 'package:fireflow/src/storage/storage.service.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as p;
 
 class UserService {
   // create a singleton method of UserService
@@ -50,7 +52,76 @@ class UserService {
       'registeredAt': FieldValue.serverTimestamp(),
     });
 
-    debugPrint(
-        '--> UserService.generateUserPublicData() - user public data created.');
+    dog("UserService.generateUserPublicData() - user public data created.");
+  }
+
+  afterProfilePhotoUpload(String? imagePath) async {
+    dog("UserService.afterProfilePhotoUpload() called.");
+
+    if (imagePath == null) {
+      dog("imagePath is null.");
+      return;
+    }
+
+    final userPublicData = await getUserPublicData();
+
+    /// the user has exising profile photo?
+    if (userPublicData.photoUrl != "") {
+      /// same as the new profile photo?
+      if (p.basename(userPublicData.photoUrl) == p.basename(imagePath)) {
+        dog("Upload photo is same as the existing profile photo.");
+        return;
+      }
+      dog("Deleting existing profile photo.");
+      // Delete the existing profile photo. Ignore if there is any error.
+      try {
+        await StorageService.instance.delete(userPublicData.photoUrl);
+      } catch (e) {
+        dog("Error ignored on deleting existing profile photo; $e");
+      }
+    }
+
+    dog("Updating user public data.");
+    await myUserPublicDataRef.update({
+      'photoUrl': imagePath,
+    });
+  }
+
+  Future<void> afterCoverPhotoUpload(String? imagePath) async {
+    return await afterUserPhotoUpload('coverPhotoUrl', imagePath);
+  }
+
+  Future<void> afterUserPhotoUpload(String fieldName, String? imagePath) async {
+    dog("UserService.afterUserPhotoUpload() called with fieldName: $fieldName");
+
+    if (imagePath == null) {
+      dog("imagePath is null.");
+      return;
+    }
+
+    final userPublicData = await getUserPublicData();
+
+    String? fieldNameValue = userPublicData.data[fieldName];
+
+    /// the user has exising profile photo?
+    if (fieldNameValue != null && fieldNameValue != "") {
+      /// same as the new profile photo?
+      if (p.basename(fieldNameValue) == p.basename(imagePath)) {
+        dog("Upload photo is same as the existing profile photo.");
+        return;
+      }
+      dog("Deleting existing profile photo.");
+      // Delete the existing profile photo. Ignore if there is any error.
+      try {
+        await StorageService.instance.delete(fieldNameValue);
+      } catch (e) {
+        dog("Error ignored on deleting existing profile photo; $e");
+      }
+    }
+
+    dog("Updating user public data.");
+    await myUserPublicDataRef.update({
+      fieldName: imagePath,
+    });
   }
 }
