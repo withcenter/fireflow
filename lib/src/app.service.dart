@@ -10,7 +10,7 @@ class AppService {
   static AppService? _instance;
   late final BuildContext context;
 
-  DocumentReference? chatRoomReference;
+  DocumentReference? currentChatRoomReference;
 
   AppService() {
     dog("AppService.constructor() called.");

@@ -1,6 +1,8 @@
 # Fireflow
 
-`Fireflow` is an open source, easy, and rapid development tool for FlutterFlow apps providing more powerful and enhanced features like chat, forum, push notifications, and social community features.
+* `Fireflow` is an open source, easy and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
+
+* `Fireflow` is especially designed to work with `FlutterFlow`.
 
 # Features
 
