@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-bool globalDebug = false;
+bool globalDebugMode = false;
 dog(String message) {
-  if (globalDebug) log("---> $message");
+  if (globalDebugMode) log("---> $message");
 }

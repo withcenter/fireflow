@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
+/// SettingModel is a class that represents a user's setting.
+///
 class SettingService {
   static SettingService get instance =>
       _instance ?? (_instance = SettingService());

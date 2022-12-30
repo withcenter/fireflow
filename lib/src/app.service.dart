@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
+/// AppService is a singleton class that provides necessary service for Fireflow.
+///
 class AppService {
   // create a singleton method of AppService
 
@@ -23,7 +25,7 @@ class AppService {
     bool debug = false,
   }) {
     this.context = context;
-    globalDebug = debug;
+    globalDebugMode = debug;
     dog('AppService.instance.init()');
   }
 

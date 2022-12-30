@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/storage/storage.service.dart';
-import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 
+/// UserService is a singleton class that provides necessary service for user
+/// related features.
+///
 class UserService {
   // create a singleton method of UserService
   static UserService get instance => _instance ?? (_instance = UserService());
@@ -55,38 +57,12 @@ class UserService {
     dog("UserService.generateUserPublicData() - user public data created.");
   }
 
+  /// Updates the user's public data with the given imagePath
   afterProfilePhotoUpload(String? imagePath) async {
     return await afterUserPhotoUpload('photoUrl', imagePath);
-
-    // if (imagePath == null) {
-    //   dog("imagePath is null.");
-    //   return;
-    // }
-
-    // final userPublicData = await getUserPublicData();
-
-    // /// the user has exising profile photo?
-    // if (userPublicData.photoUrl != "") {
-    //   /// same as the new profile photo?
-    //   if (p.basename(userPublicData.photoUrl) == p.basename(imagePath)) {
-    //     dog("Upload photo is same as the existing profile photo.");
-    //     return;
-    //   }
-    //   dog("Deleting existing profile photo.");
-    //   // Delete the existing profile photo. Ignore if there is any error.
-    //   try {
-    //     await StorageService.instance.delete(userPublicData.photoUrl);
-    //   } catch (e) {
-    //     dog("Error ignored on deleting existing profile photo; $e");
-    //   }
-    // }
-
-    // dog("Updating user public data.");
-    // await myUserPublicDataRef.update({
-    //   'photoUrl': imagePath,
-    // });
   }
 
+  /// Updates the user's public data with the given imagePath
   Future<void> afterCoverPhotoUpload(String? imagePath) async {
     return await afterUserPhotoUpload('coverPhotoUrl', imagePath);
   }

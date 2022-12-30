@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// UserModel is a class that represents a document of /users_public_data.
+///
 class UserPublicDataModel {
   String uid;
   DocumentReference userDocumentReference;

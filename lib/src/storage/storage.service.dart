@@ -5,6 +5,7 @@ import 'package:fireflow/fireflow.dart';
 /// Firebase Storage Service
 ///
 /// Refer readme file for details.
+///
 class StorageService {
   static StorageService get instance =>
       _instance ?? (_instance = StorageService());
@@ -34,6 +35,7 @@ class StorageService {
     }
   }
 
+  /// Returns the metadata of the file.
   Future<FullMetadata> getMetadata(String url) {
     return ref(url).getMetadata();
   }

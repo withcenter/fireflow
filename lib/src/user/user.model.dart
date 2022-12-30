@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// UserModel is a class that represents a user.
+///
 class UserModel {
   String uid;
   String email;

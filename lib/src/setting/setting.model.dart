@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// SettingModel is a class that represents a document of /settings.
+///
 class SettingModel {
   DocumentReference userDocumentReference;
 

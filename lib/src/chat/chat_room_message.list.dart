@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart' as FA;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
 
+/// ChatRoomMessageList is a widget that displays a list of messages in a chat room.
+///
 class ChatRoomMessageList extends StatefulWidget {
   const ChatRoomMessageList({
     Key? key,
@@ -35,7 +37,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
   //
   FirebaseFirestore db = FirebaseFirestore.instance;
   CollectionReference get userCol => db.collection('users');
-  FA.User get my => FA.FirebaseAuth.instance.currentUser!;
+  User get my => FirebaseAuth.instance.currentUser!;
   DocumentReference get myReference => userCol.doc(my.uid);
 
   final chatCol = FirebaseFirestore.instance.collection('chat_rooms');
@@ -138,7 +140,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
         final DocumentSnapshot doc = documentSnapshots[index];
         final data = doc.data() as Map<String, dynamic>;
 
-        final currentUser = FA.FirebaseAuth.instance.currentUser!;
+        final currentUser = FirebaseAuth.instance.currentUser!;
 
         if (data['senderUserDocumentReference'] ==
             getUserRef(currentUser.uid)) {

@@ -32,7 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '1 + 1 = ${Calculator().addOne(1)}',
+              '1 + 1',
+              // '1 + 1 = ${Calculator().addOne(1)}',
             ),
             // ElevatedButton(
             //     onPressed: () => AppService.instance.addOne(5),
