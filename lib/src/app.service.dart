@@ -7,6 +7,7 @@ class AppService {
 
   static AppService get instance => _instance ?? (_instance = AppService());
   static AppService? _instance;
+  late final BuildContext context;
 
   AppService() {
     // initialize your service here
@@ -15,8 +16,11 @@ class AppService {
   }
 
   /// This method must be called when the app is initialized.
-  void init() {
+  void init({
+    required BuildContext context,
+  }) {
     debugPrint('--> AppService.instance.init()');
+    this.context = context;
   }
 
   initUser() {
@@ -24,7 +28,10 @@ class AppService {
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user != null) {
         debugPrint('--> AppService.initUser() - user is logged in');
-        UserService.instance.generateUserPublicData();
+
+        /// Don't do async/await here.
+        UserService.instance.generateUserPublicDataDocument();
+        SettingService.instance.generate();
       } else {
         debugPrint('--> AppService.initUser() - user is not logged in');
       }

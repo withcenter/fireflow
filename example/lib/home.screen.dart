@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fireflow/fireflow.dart';
+import 'package:flutter/scheduler.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.title});
@@ -15,7 +16,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    AppService.instance.init();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      AppService.instance.init(context: context);
+    });
   }
 
   @override

@@ -14,11 +14,15 @@ class UserService {
   DocumentReference get myUserPublicDataRef =>
       FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
-  userPublicDataExists() async {
+  User get my => FirebaseAuth.instance.currentUser!;
+
+  userPublicDataDocumentExists() async {
     final doc = await myUserPublicDataRef.get();
     return doc.exists;
   }
 
+  /// Warning, this method may throw an exception if it is being called immediately after the user is signed in for the first time.
+  /// The `/users/{uid}` document may be created after the user is signed in.
   Future<UserModel> getUser() async {
     // get the user's data from the database
     final snapshot = await myUserRef.get();
@@ -33,16 +37,17 @@ class UserService {
 
   /// Creates /users_public_data/{uid} if it does not exist.
   /// This will crate /users_public_data/{uid} only if the user is logged in for the first time.
-  generateUserPublicData() async {
-    if (await userPublicDataExists()) {
+  generateUserPublicDataDocument() async {
+    if (await userPublicDataDocumentExists()) {
       return;
     }
-    final user = await getUser();
+
     await myUserPublicDataRef.set({
-      'displayName': user.displayName,
-      'photoUrl': user.photoUrl,
+      'displayName': my.displayName ?? '',
+      'photoUrl': my.photoURL ?? '',
       'uid': uid,
       'userDocumentReference': myUserRef,
+      'registeredAt': FieldValue.serverTimestamp(),
     });
 
     debugPrint(
