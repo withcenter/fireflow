@@ -1,3 +1,9 @@
+## 0.0.4
+
+* Add `debug` option on init.
+* Add `StorageService`.
+* Adding `afterUserPhotoUpload`, `afterUserProfilePhotoUpload`.
+
 ## 0.0.3
 
 * Generate `/settings/{uid}` if it does not exists.
