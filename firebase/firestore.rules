@@ -21,8 +21,8 @@ service cloud.firestore {
     }
 
     match /chat_room_messages/{document} {
-      allow read: if resource.data.users.hasAll([myReference()]);
-      allow write: if isMyDoc() || willBeMyDoc();
+      allow read: if get(resource.data.chatRoomDocumentReference).data.users.hasAll([myReference()]);
+      allow write: if debug(get(request.resource.data.chatRoomDocumentReference).data.users).hasAll(debug([myReference()])) && (isMyDoc() || willBeMyDoc());
     }
 
     match /users/{document} {

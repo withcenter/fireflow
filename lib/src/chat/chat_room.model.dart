@@ -38,7 +38,9 @@ class ChatRoomModel {
       userDocumentReferences: json['userDocumentReferences'] ?? [],
       lastMessage: json['lastMessage'] ?? '',
       lastMessageSentAt: json['lastMessageSentAt'] ?? Timestamp.now(),
-      lastMessageSeenBy: json['lastMessageSeenBy'] ?? [],
+      lastMessageSeenBy: List<DocumentReference>.from(
+        json['lastMessageSeenBy'] ?? <DocumentReference>[],
+      ),
       lastMessageSentBy: json['lastMessageSentBy'],
       title: json['title'],
       moderatorUserDocumentReference: json['moderatorUserDocumentReference'],

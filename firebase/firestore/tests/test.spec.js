@@ -103,4 +103,72 @@ describe("Firestore security test", () => {
       })
     );
   });
+  it("Chat room create and create message", async () => {
+    const snapshot = await createChatRoom([A, C]);
+
+    await firebase.assertSucceeds(
+      db(authA)
+        .collection("chat_room_messages")
+        .add({
+          chatRoomDocumentReference: snapshot.ref,
+          userDocumentReference: db().collection("users").doc(A),
+          text: "text",
+        })
+    );
+
+    await firebase.assertFails(
+      db(authB)
+        .collection("chat_room_messages")
+        .add({
+          chatRoomDocumentReference: snapshot.ref,
+          userDocumentReference: db().collection("users").doc(B),
+          text: "text",
+        })
+    );
+
+    await firebase.assertSucceeds(
+      db(authC)
+        .collection("chat_room_messages")
+        .add({
+          chatRoomDocumentReference: snapshot.ref,
+          userDocumentReference: db().collection("users").doc(C),
+          text: "text",
+        })
+    );
+  });
+
+  it("Chat room create and read message", async () => {
+    const snapshot = await createChatRoom([A, C]);
+
+    await firebase.assertSucceeds(
+      db(authA)
+        .collection("chat_room_messages")
+        .add({
+          chatRoomDocumentReference: snapshot.ref,
+          userDocumentReference: db().collection("users").doc(A),
+          text: "text",
+        })
+    );
+    const size = (
+      await db(authA)
+        .collection("chat_room_messages")
+        .where("chatRoomDocumentReference", "==", snapshot.ref)
+        .get()
+    ).size;
+    assert(size === 1);
+
+    await firebase.assertFails(
+      db(authB)
+        .collection("chat_room_messages")
+        .where("chatRoomDocumentReference", "==", snapshot.ref)
+        .get()
+    );
+
+    await firebase.assertSucceeds(
+      db(authC)
+        .collection("chat_room_messages")
+        .where("chatRoomDocumentReference", "==", snapshot.ref)
+        .get()
+    );
+  });
 });

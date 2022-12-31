@@ -89,35 +89,25 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     // My user document ref
     final myRef = getUserDocumentReference(my.uid);
 
-    // // Query the chat room (To see if it exists)
-    // final snapshot =
-    //     await chatCol.where('chatRoomId', isEqualTo: widget.chatRoomId).get();
-
-    //
-    final roomSnapshot = await chatRoomRef.get();
-
     // Set the chat room ref where I am chat in
     AppService.instance.currentChatRoomReference = chatRoomRef;
 
-    // Create chat room document if it does not exists.
-    if (roomSnapshot.exists == false) {
-      if (isSingleChat) {
-        await chatRoomRef.set({
-          'users': youAndMeRef,
-        });
-      } else {
-        await chatRoomRef.set({
-          'users': [myReference],
-        });
-      }
+    if (isSingleChat) {
+      // For 1:1 chat,
+      //  - create a chat room if it does not exist.
+      //  - just make the last message seen by you.
+      await chatRoomRef.set({
+        'users': youAndMeRef,
+        'lastMessageSeenBy': FieldValue.arrayUnion([myRef]),
+      }, SetOptions(merge: true));
+    } else {
+      // For group chat,
+      //  - users can only invited by other user.
+      //  - just make the last message seen by you.
+      await chatRoomRef.update({
+        'lastMessageSeenBy': FieldValue.arrayUnion([myRef]),
+      });
     }
-
-    // Update chat room information
-    //
-    // You are entering the chat room. So, make it read by you.
-    chatRoomRef.update({
-      'lastMessageSeenBy': FieldValue.arrayUnion([myRef])
-    });
 
     // Listen for new message, and make it read by you.
     subscriptionNewMessage = chatRoomRef.snapshots().listen((snapshot) {
@@ -181,7 +171,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       // orderBy is compulsory to enable pagination
       query: FirebaseFirestore.instance
           .collection('chat_room_messages')
-          .where('chatRoomDocumentReferenceReference', isEqualTo: chatRoomRef)
+          .where('chatRoomDocumentReference', isEqualTo: chatRoomRef)
           .orderBy('timestamp', descending: true),
       //Change types accordingly
       itemBuilderType: PaginateBuilderType.listView,
