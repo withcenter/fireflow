@@ -17,6 +17,7 @@ class UserModel {
     required this.photoUrl,
   });
 
+  /// Create a UserModel object from a snapshot of a document.
   factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
     return UserModel.fromJson(
       snapshot.data() as Map<String, dynamic>,
@@ -24,6 +25,7 @@ class UserModel {
     );
   }
 
+  /// Create a UserModel object from a json object.
   factory UserModel.fromJson(
     Map<String, dynamic> json, {
     String? id,

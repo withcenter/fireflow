@@ -135,22 +135,19 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       reverse: true,
       // item builder type is compulsory.
       itemBuilder: (context, documentSnapshots, index) {
-        final DocumentSnapshot doc = documentSnapshots[index];
-        final data = doc.data() as Map<String, dynamic>;
+        final message =
+            ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
 
-        final currentUser = FirebaseAuth.instance.currentUser!;
-
-        if (data['senderUserDocumentReference'] ==
-            getUserDocumentReference(currentUser.uid)) {
+        if (message.isMine) {
           return widget.onMyMessage(
-            data,
-            doc.reference,
+            message.data,
+            message.ref,
           );
         } else {
           return widget.onOtherMessage(
             chatRoomRef,
-            data,
-            doc.reference,
+            message.data,
+            message.ref,
           );
         }
       },

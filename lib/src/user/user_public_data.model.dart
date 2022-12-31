@@ -40,6 +40,7 @@ class UserPublicDataModel {
     required this.data,
   });
 
+  /// Create a UserPublicDataModel object from a snapshot of a document.
   factory UserPublicDataModel.fromSnapshot(DocumentSnapshot snapshot) {
     return UserPublicDataModel.fromJson(
       snapshot.data() as Map<String, dynamic>,
@@ -47,6 +48,7 @@ class UserPublicDataModel {
     );
   }
 
+  /// Create a UserPublicDataModel object from a json object.
   factory UserPublicDataModel.fromJson(
     Map<String, dynamic> json, {
     String? id,

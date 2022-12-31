@@ -9,6 +9,7 @@ class SettingModel {
     required this.userDocumentReference,
   });
 
+  /// Create a SettingModel object from a snapshot of a document.
   factory SettingModel.fromSnapshot(DocumentSnapshot snapshot) {
     return SettingModel.fromJson(
       snapshot.data() as Map<String, dynamic>,
@@ -16,6 +17,7 @@ class SettingModel {
     );
   }
 
+  /// Create a SettingModel object from a json object.
   factory SettingModel.fromJson(
     Map<String, dynamic> json, {
     String? id,

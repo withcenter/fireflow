@@ -1,3 +1,8 @@
+## 0.0.9
+
+* Working on sending chat messages and displaying messages.
+
+
 ## 0.0.8
 
 * Working on sending chat messages.
