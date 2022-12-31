@@ -11,16 +11,22 @@ class ChatRoomMessageList extends StatefulWidget {
     Key? key,
     this.width,
     this.height,
-    this.otherUserDocumentReference,
+    this.otherUserPublicDataDocument,
     this.chatRoomDocumentReference,
     required this.onMyMessage,
     required this.onOtherMessage,
     required this.onEmpty,
-  }) : super(key: key);
+  })  : assert(
+            (otherUserPublicDataDocument != null &&
+                    chatRoomDocumentReference == null) ||
+                (otherUserPublicDataDocument == null &&
+                    chatRoomDocumentReference != null),
+            "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
+        super(key: key);
 
   final double? width;
   final double? height;
-  final DocumentReference? otherUserDocumentReference;
+  final DocumentReference? otherUserPublicDataDocument;
   final DocumentReference? chatRoomDocumentReference;
 
   final Widget Function(Map<String, dynamic>, DocumentReference) onMyMessage;
@@ -48,7 +54,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
   // 1:1 채팅에서 나와 상대방의 ref 배열
   List<DocumentReference> get youAndMeRef => [
-        userCol.doc(widget.otherUserDocumentReference!.id),
+        userCol.doc(widget.otherUserPublicDataDocument!.id),
         myReference,
       ];
 
@@ -57,7 +63,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     if (isGroupChat) {
       return widget.chatRoomDocumentReference!;
     } else {
-      final arr = [my.uid, widget.otherUserDocumentReference!.id];
+      final arr = [my.uid, widget.otherUserPublicDataDocument!.id];
       arr.sort();
       return db.collection('chat_rooms').doc(arr.join('-'));
     }
