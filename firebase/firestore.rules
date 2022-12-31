@@ -13,7 +13,7 @@ service cloud.firestore {
         )
         ||
         (
-          debug(resource.data.users).hasAll(debug([myReference()]))
+          resource.data.users.hasAll([myReference()])
           &&
           onlyUpdating(["userDocumentReferences", "lastMessage", "lastMessageSentAt", "lastMessageSeenBy", "lastMessageSentBy", "unsubscribedUserDocumentReferences"])
         );
@@ -64,10 +64,4 @@ function onlyUpdating(fields) {
   return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
 }
 
-// Attention: This function only works if the fields actually exist in the
-// document. This is a common fitfall and make unwanted results.
-// Use onlyUpdating() instead, if you are not sure when to use this method.
-function notUpdating(fields) {
-  return debug(request.resource.data.diff(resource.data).unchangedKeys()).hasAll(debug(fields));
-}
 
