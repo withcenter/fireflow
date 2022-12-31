@@ -7,3 +7,4 @@ export 'src/setting/setting.model.dart';
 export 'src/functions.dart';
 export 'src/chat/chat_room_message.list.dart';
 export 'src/chat/chat_room.model.dart';
+export 'src/chat/chat.service.dart';

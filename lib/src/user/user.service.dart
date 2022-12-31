@@ -13,13 +13,14 @@ class UserService {
   static UserService? _instance;
 
   String get uid => FirebaseAuth.instance.currentUser!.uid;
-  DocumentReference get myUserRef =>
+  DocumentReference get ref =>
       FirebaseFirestore.instance.collection('users').doc(uid);
   DocumentReference get myUserPublicDataRef =>
       FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   User get my => FirebaseAuth.instance.currentUser!;
 
+  /// check if user's public data document exists
   userPublicDataDocumentExists() async {
     final doc = await myUserPublicDataRef.get();
     return doc.exists;
@@ -29,7 +30,7 @@ class UserService {
   /// The `/users/{uid}` document may be created after the user is signed in.
   Future<UserModel> getUser() async {
     // get the user's data from the database
-    final snapshot = await myUserRef.get();
+    final snapshot = await ref.get();
     return UserModel.fromSnapshot(snapshot);
   }
 
@@ -50,7 +51,7 @@ class UserService {
       'displayName': my.displayName ?? '',
       'photoUrl': my.photoURL ?? '',
       'uid': uid,
-      'userDocumentReference': myUserRef,
+      'userDocumentReference': ref,
       'registeredAt': FieldValue.serverTimestamp(),
     });
 
@@ -67,6 +68,9 @@ class UserService {
     return await afterUserPhotoUpload('coverPhotoUrl', imagePath);
   }
 
+  /// Works after the user's photo is uploaded.
+  ///
+  /// Deletes existing photo and updates the user's public data with the given imagePath
   Future<void> afterUserPhotoUpload(String fieldName, String? imagePath) async {
     dog("UserService.afterUserPhotoUpload() called with fieldName: $fieldName");
 

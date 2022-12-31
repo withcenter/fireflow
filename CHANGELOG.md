@@ -1,3 +1,8 @@
+## 0.0.8
+
+* Working on sending chat messages.
+
+
 ## 0.0.7
 
 * Begin to work on `chat` feature.

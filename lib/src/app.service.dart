@@ -12,6 +12,10 @@ class AppService {
   static AppService? _instance;
   late final BuildContext context;
 
+  /// Current chat room reference.
+  ///
+  /// This is the current chat room that the user is in.
+  /// This is used to determine whether to show the push notification from chat message or not.
   DocumentReference? currentChatRoomReference;
 
   AppService() {
@@ -29,6 +33,9 @@ class AppService {
     dog('AppService.instance.init()');
   }
 
+  /// Initialize the user functions.
+  ///
+  /// This method must be called when the app is initialized.
   initUser() {
     dog('AppService.initUser()');
     FirebaseAuth.instance.authStateChanges().listen((user) {
