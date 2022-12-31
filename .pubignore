@@ -17,6 +17,7 @@ analysis_options.yaml
 test/
 
 apps/
+firebase/
 
 # Miscellaneous
 *.class
