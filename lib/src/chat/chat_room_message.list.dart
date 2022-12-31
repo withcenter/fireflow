@@ -146,33 +146,19 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
             data,
             doc.reference,
           );
-          // return ChatMyMessageWidget(
-          //   chatRoomMessage: ChatRoomMessageListRecord.getDocumentFromData(
-          //     data,
-          //     doc.reference,
-          //   ),
-          // );
         } else {
           return widget.onOtherMessage(
             chatRoomRef,
             data,
             doc.reference,
           );
-          // return ChatOtherUserMessageWidget(
-          //   chatRoomDocumentReference: widget.chatRoomDocumentReference,
-          //   chatRoomMessageDocument:
-          //       ChatRoomMessageListRecord.getDocumentFromData(
-          //     data,
-          //     doc.reference,
-          //   ),
-          // );
         }
       },
       // orderBy is compulsory to enable pagination
       query: FirebaseFirestore.instance
           .collection('chat_room_messages')
           .where('chatRoomDocumentReference', isEqualTo: chatRoomRef)
-          .orderBy('timestamp', descending: true),
+          .orderBy('sentAt', descending: true),
       //Change types accordingly
       itemBuilderType: PaginateBuilderType.listView,
       // to fetch real-time data
