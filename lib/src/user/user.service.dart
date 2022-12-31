@@ -12,12 +12,18 @@ class UserService {
   static UserService get instance => _instance ?? (_instance = UserService());
   static UserService? _instance;
 
+  /// The login user's uid
   String get uid => FirebaseAuth.instance.currentUser!.uid;
+
+  /// The login user's document reference
   DocumentReference get ref =>
       FirebaseFirestore.instance.collection('users').doc(uid);
+
+  /// The login user's public data document reference
   DocumentReference get myUserPublicDataRef =>
       FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
+  /// The login user's Firebase User object.
   User get my => FirebaseAuth.instance.currentUser!;
 
   /// check if user's public data document exists
@@ -34,6 +40,7 @@ class UserService {
     return UserModel.fromSnapshot(snapshot);
   }
 
+  /// Returns the user's public data model.
   Future<UserPublicDataModel> getUserPublicData() async {
     // get the user's public data from the database
     final snapshot = await myUserPublicDataRef.get();

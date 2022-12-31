@@ -11,7 +11,9 @@ class ChatService {
 
   /// Send a message
   ///
-  /// This must be the only message to send a chat message.
+  /// This method sends a chat message and updates the chat room.
+  ///
+  /// This must be the only method to send a chat message.
   sendMessage({
     required DocumentReference? otherUserPublicDataDocumentReference,
     required DocumentReference? chatRoomDocumentReference,
