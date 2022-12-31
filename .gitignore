@@ -1,4 +1,5 @@
 apps/
+node_modules/
 
 # Miscellaneous
 *.class

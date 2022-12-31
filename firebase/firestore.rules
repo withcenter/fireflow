@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /chat_rooms/{document} {
+      allow read: if resource.data.users.hasAll([myReference()]);
+      allow create: if true;
+      allow update: if 
+        (
+          'moderatorUserDocumentReference' in resource.data
+          &&
+          resource.data.moderatorUserDocumentReference == myReference()
+        )
+        ||
+        (
+          debug(resource.data.users).hasAll(debug([myReference()]))
+          &&
+          onlyUpdating(["userDocumentReferences", "lastMessage", "lastMessageSentAt", "lastMessageSeenBy", "lastMessageSentBy", "unsubscribedUserDocumentReferences"])
+        );
+      allow delete: if false;
+    }
+
+    match /chat_room_messages/{document} {
+      allow read: if resource.data.users.hasAll([myReference()]);
+      allow write: if isMyDoc() || willBeMyDoc();
+    }
+
+    match /users/{document} {
+      allow create: if request.auth.uid == document;
+      allow read: if request.auth.uid == document;
+      allow update: if request.auth.uid == document ;
+      allow delete: if false;
+    }
+    
+    match /users_public_data/{document} {
+      allow create: if request.auth.uid == document;
+      allow read: if true;
+      allow update: if isMyDoc()
+      ||
+        onlyUpdating(['likes']);
+      allow delete: if false;
+    }
+  
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if isMyDoc() || willBeMyDoc();
+    }
+  
+    function isMyDoc() {
+      return resource.data.userDocumentReference == myReference();
+    }
+    
+    function willBeMyDoc() {
+      return request.resource.data.userDocumentReference == myReference();
+    }
+    
+    function myReference() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+  }
+}
+
+function onlyUpdating(fields) {
+  return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+}
+
+// Attention: This function only works if the fields actually exist in the
+// document. This is a common fitfall and make unwanted results.
+// Use onlyUpdating() instead, if you are not sure when to use this method.
+function notUpdating(fields) {
+  return debug(request.resource.data.diff(resource.data).unchangedKeys()).hasAll(debug(fields));
+}
+
