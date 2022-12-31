@@ -14,8 +14,8 @@ class ChatRoomMessageModel {
 
   final DocumentReference userDocumentReference;
   final DocumentReference chatRoomDocumentReference;
-  final String? text;
-  final String? photoUrl;
+  final String text;
+  final String photoUrl;
   final Timestamp sentAt;
 
   final DocumentReference ref;
@@ -29,9 +29,11 @@ class ChatRoomMessageModel {
     return ChatRoomMessageModel(
       userDocumentReference: json['userDocumentReference'],
       chatRoomDocumentReference: json['chatRoomDocumentReference'],
-      text: json['text'],
-      photoUrl: json['photoUrl'],
-      sentAt: json['sentAt'],
+      text: json['text'] ?? "",
+      photoUrl: json['photoUrl'] ?? "",
+
+      /// For creation, the server timestamp is null on local cache.
+      sentAt: json['sentAt'] ?? Timestamp.now(),
       ref: snapshot.reference,
     );
   }

@@ -9,6 +9,7 @@ class UserModel {
   String displayName;
   String photoUrl;
 
+  /// UserModel constructor.
   UserModel({
     required this.uid,
     required this.email,

@@ -29,10 +29,8 @@ class ChatRoomMessageList extends StatefulWidget {
   final DocumentReference? otherUserPublicDataDocument;
   final DocumentReference? chatRoomDocumentReference;
 
-  final Widget Function(Map<String, dynamic>, DocumentReference) onMyMessage;
-  final Widget Function(
-          DocumentReference, Map<String, dynamic>, DocumentReference)
-      onOtherMessage;
+  final Widget Function(ChatRoomMessageModel) onMyMessage;
+  final Widget Function(ChatRoomMessageModel) onOtherMessage;
   final Widget onEmpty;
 
   @override
@@ -139,16 +137,9 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
             ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
 
         if (message.isMine) {
-          return widget.onMyMessage(
-            message.data,
-            message.ref,
-          );
+          return widget.onMyMessage(message);
         } else {
-          return widget.onOtherMessage(
-            chatRoomRef,
-            message.data,
-            message.ref,
-          );
+          return widget.onOtherMessage(message);
         }
       },
       // orderBy is compulsory to enable pagination

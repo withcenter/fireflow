@@ -1,3 +1,8 @@
+## 0.0.10
+
+* Fixing chat message.
+
+
 ## 0.0.9
 
 * Working on sending chat messages and displaying messages.
