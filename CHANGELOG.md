@@ -1,3 +1,7 @@
+## 0.0.16
+
+* Working on group chat
+
 ## 0.0.15
 
 * Fix. infinite loader on chat room message list.
