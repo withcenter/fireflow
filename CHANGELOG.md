@@ -1,3 +1,8 @@
+## 0.0.11
+
+* Working on chat room list screen.
+
+
 ## 0.0.10
 
 * Fixing chat message.
