@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
@@ -38,41 +40,29 @@ class ChatRoomMessageList extends StatefulWidget {
 }
 
 class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
-  //
-  FirebaseFirestore db = FirebaseFirestore.instance;
-  CollectionReference get userCol => db.collection('users');
-  User get my => FirebaseAuth.instance.currentUser!;
-  DocumentReference get myReference => userCol.doc(my.uid);
+  User get my => UserService.instance.my;
+  DocumentReference get myReference => UserService.instance.ref;
 
-  final chatCol = FirebaseFirestore.instance.collection('chat_rooms');
+  late final StreamSubscription subscriptionNewMessage;
 
-  late final Map<String, dynamic> chat;
-
-  late final subscriptionNewMessage;
-
-  // 1:1 채팅에서 나와 상대방의 ref 배열
+  /// The chat room document references of the 1:1 chat room between you and the other user.
   List<DocumentReference> get youAndMeRef => [
-        userCol.doc(widget.otherUserPublicDataDocument!.id),
+        UserService.instance.doc(widget.otherUserPublicDataDocument!.id),
         myReference,
       ];
 
-  // 채팅 방 ref
+  /// The chat room document reference.
   DocumentReference get chatRoomRef {
     if (isGroupChat) {
       return widget.chatRoomDocumentReference!;
     } else {
-      final arr = [my.uid, widget.otherUserPublicDataDocument!.id];
-      arr.sort();
-      return db.collection('chat_rooms').doc(arr.join('-'));
+      return ChatService.instance.room(
+          ([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
     }
   }
 
   bool get isGroupChat => widget.chatRoomDocumentReference != null;
   bool get isSingleChat => !isGroupChat;
-
-  DocumentReference getUserDocumentReference(String uid) {
-    return FirebaseFirestore.instance.collection('users').doc(uid);
-  }
 
   @override
   void initState() {
@@ -84,9 +74,6 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
   /// Initialize the chat room.
   ///
   init() async {
-    // My user document ref
-    final myRef = getUserDocumentReference(my.uid);
-
     // Set the chat room ref where I am chat in
     AppService.instance.currentChatRoomReference = chatRoomRef;
 
@@ -95,15 +82,15 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       //  - create a chat room if it does not exist.
       //  - just make the last message seen by you.
       await chatRoomRef.set({
-        'users': youAndMeRef,
-        'lastMessageSeenBy': FieldValue.arrayUnion([myRef]),
+        'userDocumentReferences': youAndMeRef,
+        'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
       }, SetOptions(merge: true));
     } else {
       // For group chat,
       //  - users can only invited by other user.
       //  - just make the last message seen by you.
       await chatRoomRef.update({
-        'lastMessageSeenBy': FieldValue.arrayUnion([myRef]),
+        'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
       });
     }
 
@@ -112,9 +99,9 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       final room = ChatRoomModel.fromSnapshot(snapshot);
 
       /// If the signed-in user have not seen the message, then make it seen.
-      if (room.lastMessageSeenBy.contains(myRef) == false) {
+      if (room.lastMessageSeenBy.contains(myReference) == false) {
         chatRoomRef.update({
-          'lastMessageSeenBy': FieldValue.arrayUnion([myRef])
+          'lastMessageSeenBy': FieldValue.arrayUnion([myReference])
         });
       }
     });

@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /chat_rooms/{document} {
-      allow read: if resource.data.users.hasAll([myReference()]);
+      allow read: if resource.data.userDocumentReferences.hasAll([myReference()]);
       allow create: if true;
       allow update: if 
         (
@@ -13,7 +13,7 @@ service cloud.firestore {
         )
         ||
         (
-          resource.data.users.hasAll([myReference()])
+          resource.data.userDocumentReferences.hasAll([myReference()])
           &&
           onlyUpdating(["userDocumentReferences", "lastMessage", "lastMessageSentAt", "lastMessageSeenBy", "lastMessageSentBy", "unsubscribedUserDocumentReferences"])
         );
@@ -21,8 +21,8 @@ service cloud.firestore {
     }
 
     match /chat_room_messages/{document} {
-      allow read: if get(resource.data.chatRoomDocumentReference).data.users.hasAll([myReference()]);
-      allow write: if get(request.resource.data.chatRoomDocumentReference).data.users.hasAll([myReference()]) && (isMyDoc() || willBeMyDoc());
+      allow read: if get(resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAll([myReference()]);
+      allow write: if get(request.resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAll([myReference()]) && (isMyDoc() || willBeMyDoc());
     }
 
     match /users/{document} {

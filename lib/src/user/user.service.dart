@@ -12,6 +12,15 @@ class UserService {
   static UserService get instance => _instance ?? (_instance = UserService());
   static UserService? _instance;
 
+  /// The Firebase Firestore instance
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
+  /// The collection reference of the users collection
+  CollectionReference get col => db.collection('users');
+
+  /// Returns a document reference of the given id.
+  DocumentReference doc(String id) => col.doc(id);
+
   /// The login user's uid
   String get uid => FirebaseAuth.instance.currentUser!.uid;
 

@@ -9,6 +9,21 @@ class ChatService {
   static ChatService get instance => _instance ?? (_instance = ChatService());
   static ChatService? _instance;
 
+  /// The Firebase Firestore instance
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
+  /// The collection reference of the chat_rooms collection
+  CollectionReference get rooms => db.collection('rooms');
+
+  /// The collection reference of the chat_rooms collection
+  CollectionReference get messages => db.collection('chat_room_messages');
+
+  /// Returns a chat room document reference of the given id.
+  DocumentReference room(String id) => rooms.doc(id);
+
+  /// Returns a chat room message document reference of the given id.
+  DocumentReference message(String id) => messages.doc(id);
+
   /// Send a message
   ///
   /// This method sends a chat message and updates the chat room.
