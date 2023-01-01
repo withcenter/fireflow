@@ -129,7 +129,10 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
           return widget.onOtherMessage(message);
         }
       },
-      // orderBy is compulsory to enable pagination
+
+      /// Get messages of the chat room.
+      ///
+      /// Note, this may cause 'cloud_firestore/permission-denied' exception. See the known issue.
       query: FirebaseFirestore.instance
           .collection('chat_room_messages')
           .where('chatRoomDocumentReference', isEqualTo: chatRoomRef)

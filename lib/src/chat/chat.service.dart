@@ -13,7 +13,7 @@ class ChatService {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   /// The collection reference of the chat_rooms collection
-  CollectionReference get rooms => db.collection('rooms');
+  CollectionReference get rooms => db.collection('chat_rooms');
 
   /// The collection reference of the chat_rooms collection
   CollectionReference get messages => db.collection('chat_room_messages');

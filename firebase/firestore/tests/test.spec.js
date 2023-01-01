@@ -25,6 +25,10 @@ function admin() {
     .firestore();
 }
 
+function userDoc(id) {
+  return db().collection("users").doc(id);
+}
+
 async function getUser(uid) {
   const snapshot = await admin().collection("users").doc(uid).get();
   return snapshot.data();
@@ -63,7 +67,7 @@ async function createChatRoom(users) {
   const ref = await admin()
     .collection("chat_rooms")
     .add({
-      users: users.map((e) => db().collection("users").doc(e)),
+      userDocumentReferences: users.map((e) => userDoc(e)),
     });
 
   const snapshot = await ref.get();
@@ -84,6 +88,40 @@ describe("Firestore security test", () => {
 
     const aToBeSucceed = db(authA).collection("chat_rooms").doc(snapshot.id);
     await firebase.assertSucceeds(aToBeSucceed.get());
+  });
+  it("Chat room list", async () => {
+    const snapshot = await createChatRoom([A, C]);
+    // const adminList = await admin()
+    //   .collection("chat_rooms")
+    //   .where("usersDocumentReferences", "array-contains", [userDoc(B)])
+    //   .get();
+
+    const list = db(authB)
+      .collection("chat_rooms")
+      .where("userDocumentReferences", "array-contains", userDoc(B))
+      .get();
+
+    await firebase.assertSucceeds(list);
+    const snapshot2 = await list;
+    assert(snapshot2.size === 0);
+
+    //
+    const listA = db(authA)
+      .collection("chat_rooms")
+      .where("userDocumentReferences", "array-contains", userDoc(A))
+      .get();
+
+    await firebase.assertSucceeds(listA);
+    const snapshotA = await listA;
+    assert(snapshotA.size === 1);
+
+    //
+    const listN = db()
+      .collection("chat_rooms")
+      .where("userDocumentReferences", "array-contains", userDoc(A))
+      .get();
+
+    await firebase.assertFails(listN);
   });
 
   it("Chat room update - expect failure", async () => {
