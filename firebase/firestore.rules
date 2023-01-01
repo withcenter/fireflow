@@ -4,7 +4,7 @@ service cloud.firestore {
 
     match /chat_rooms/{document} {
       allow get: if isMyChat();
-      allow list: if resource.data.userDocumentReferences.hasAny([myReference()]);
+      allow list: if isMyChat();
       allow create: if true;
       allow update: if 
         (
@@ -48,7 +48,7 @@ service cloud.firestore {
     }
   
     function isMyChat() {
-      return resource.data.userDocumentReferences.hasAll([myReference()]);
+      return resource.data.userDocumentReferences.hasAny([myReference()]);
     }
     function isMyDoc() {
       return resource.data.userDocumentReference == myReference();
