@@ -1,3 +1,19 @@
+## 0.0.15
+
+* Fix. infinite loader on chat room message list.
+
+
+## 0.0.14
+
+* Fix. chat room message list.
+
+
+## 0.0.13
+
+* Work. chat user list display.
+
+
+
 ## 0.0.12
 
 * Fix. AppService.context reset.

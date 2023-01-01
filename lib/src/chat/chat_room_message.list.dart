@@ -45,6 +45,8 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
   late final StreamSubscription subscriptionNewMessage;
 
+  bool ensureChatRoomExists = false;
+
   /// The chat room document references of the 1:1 chat room between you and the other user.
   List<DocumentReference> get youAndMeRef => [
         UserService.instance.doc(widget.otherUserPublicDataDocument!.id),
@@ -85,12 +87,21 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
         'userDocumentReferences': youAndMeRef,
         'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
       }, SetOptions(merge: true));
+
+      /// For 1:1 chat, when a user begins to chat with another user, there might be an
+      /// infinite loader due to the permission issue.
+      setState(() {
+        ensureChatRoomExists = true;
+      });
     } else {
       // For group chat,
       //  - users can only invited by other user.
       //  - just make the last message seen by you.
       await chatRoomRef.update({
         'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
+      });
+      setState(() {
+        ensureChatRoomExists = true;
       });
     }
 
@@ -116,6 +127,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
   @override
   Widget build(BuildContext context) {
+    if (ensureChatRoomExists == false) return const SizedBox.shrink();
     return PaginateFirestore(
       reverse: true,
       // item builder type is compulsory.
@@ -131,8 +143,6 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       },
 
       /// Get messages of the chat room.
-      ///
-      /// Note, this may cause 'cloud_firestore/permission-denied' exception. See the known issue.
       query: FirebaseFirestore.instance
           .collection('chat_room_messages')
           .where('chatRoomDocumentReference', isEqualTo: chatRoomRef)
