@@ -87,12 +87,6 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
         'userDocumentReferences': youAndMeRef,
         'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
       }, SetOptions(merge: true));
-
-      /// For 1:1 chat, when a user begins to chat with another user, there might be an
-      /// infinite loader due to the permission issue.
-      setState(() {
-        ensureChatRoomExists = true;
-      });
     } else {
       // For group chat,
       //  - users can only invited by other user.
@@ -100,10 +94,14 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       await chatRoomRef.update({
         'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
       });
-      setState(() {
-        ensureChatRoomExists = true;
-      });
     }
+
+    /// When the chat begins, the app try to get messages before the chat room exists.
+    /// This may lead permission error and showing an infinite loader.
+    /// Rebuiding the screen helps to avoid the infinite loader.
+    setState(() {
+      ensureChatRoomExists = true;
+    });
 
     // Listen for new message, and make it read by you.
     subscriptionNewMessage = chatRoomRef.snapshots().listen((snapshot) {
