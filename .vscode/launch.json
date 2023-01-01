@@ -5,6 +5,24 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Simulator - sample - debug",
+      "cwd": "apps/sample",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
+    },
+    {
+      "name": "iPhone11MaxPro - sample - debug",
+      "cwd": "apps/sample",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone11MaxPro"
+    },
+    {
       "name": "Simulator - philov - debug",
       "cwd": "apps/philov",
       "request": "launch",

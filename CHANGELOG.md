@@ -1,3 +1,8 @@
+## 0.0.12
+
+* Fix. AppService.context reset.
+
+
 ## 0.0.11
 
 * Working on chat room list screen.

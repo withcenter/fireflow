@@ -10,7 +10,7 @@ class AppService {
 
   static AppService get instance => _instance ?? (_instance = AppService());
   static AppService? _instance;
-  late final BuildContext context;
+  late BuildContext context;
 
   /// Current chat room reference.
   ///
