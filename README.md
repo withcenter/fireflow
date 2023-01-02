@@ -1,5 +1,7 @@
 # Fireflow
 
+![Alt text of the image](https://github.com/username/repository/blob/master/img/octocat.png)
+
 * `Fireflow` is an open source, easy and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
 
 * `Fireflow` is especially designed to work with `FlutterFlow`.
