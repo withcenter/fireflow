@@ -1,3 +1,7 @@
+## 0.0.17
+
+* Documentation update
+
 ## 0.0.16
 
 * Working on group chat
