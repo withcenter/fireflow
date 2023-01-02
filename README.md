@@ -1,6 +1,7 @@
-# Fireflow
 
-![Alt text of the image](https://github.com/username/repository/blob/master/img/octocat.png)
+![Image Link](https://github.com/withcenter/fireflow/blob/main/res/fireflow-logo.jpg?raw=true "This is image title")
+
+# Fireflow
 
 * `Fireflow` is an open source, easy and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
 
