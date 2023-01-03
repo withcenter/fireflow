@@ -1,3 +1,8 @@
+## 0.0.18
+
+* Adding `CustomPopup` widget.
+
+
 ## 0.0.17
 
 * Documentation update

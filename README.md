@@ -7,7 +7,17 @@
 
 * `Fireflow` is especially designed to work with `FlutterFlow`.
 
-# Features
+* `Fireflow` covers from the backend work like supporting forum management with custom security rules to the frontend work like providing `CustomPopup` widget.
+
+
+
+## Getting started
+
+The fireflow has lots of features and large amount of documentation. To make it easy to keep the documentaion simple, I have wrote a separate document.
+
+Please see the [Fireflow document](https://docs.google.com/document/d/e/2PACX-1vQXcu36d1ojHEoi1lh3UNKXnDrfRtb_7J4j7GmTsc1eS2LdLMoggA2KfMqGpE3L4PaYNmCHDhGn6SEm/pub)
+
+## Features
 
 - Enhanced user management.
   - The documents of the `/users` collection have private information and shouldn't be disclosed. But the user information is needed to be disclosed for the most app features. To make it happen, I created another collection named `/users_public_data` that does not hold user's prviate informatio.
@@ -28,11 +38,10 @@
 
 - Enhanced Firestore Security Rules
 
+- Enhanced Push Notification
+  - Subscription for forum category, chat room, etc.
+  - Foreground push notification.
 
 
+- Custom widgets
 
-# Getting started
-
-The fireflow has lots of features and lots of documentation. To make it easy to maintain, I have wrote a separate document.
-
-Please see the [Fireflow official document](https://docs.google.com/document/d/e/2PACX-1vQXcu36d1ojHEoi1lh3UNKXnDrfRtb_7J4j7GmTsc1eS2LdLMoggA2KfMqGpE3L4PaYNmCHDhGn6SEm/pub)
