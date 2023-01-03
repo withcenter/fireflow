@@ -1,3 +1,7 @@
+## 0.0.19
+
+* Displaying chat room users.
+
 ## 0.0.18
 
 * Adding `CustomPopup` widget.
