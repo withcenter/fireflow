@@ -97,9 +97,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text('Custom Popup'),
                         Text('Content of the popup, long before'),
-                        Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                        Text(
+                            'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                         Text('Content of the popup, long before'),
-                        Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                        Text(
+                            'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                         TextButton.icon(
                           onPressed: Navigator.of(context).pop,
                           icon: Icon(Icons.close),
@@ -129,9 +131,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: const [
                       Text('Custom Popup'),
                       Text('Content of the popup, long before'),
-                      Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                      Text(
+                          'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                       Text('Content of the popup, long before'),
-                      Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                      Text(
+                          'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                     ],
                   ),
                 ),
