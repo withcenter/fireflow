@@ -1,3 +1,12 @@
+## 0.0.21
+
+* Adding `DisplayMedia`.
+
+
+## 0.0.20
+
+* Adding `uploadMedia`.
+
 ## 0.0.19
 
 * Displaying chat room users.
