@@ -9,7 +9,7 @@ class ChatRoomModel {
   List<DocumentReference> lastMessageSeenBy;
   DocumentReference? lastMessageSentBy;
   String? title;
-  DocumentReference? moderatorUserDocumentReference;
+  List<DocumentReference>? moderatorUserDocumentReferences;
   List<DocumentReference> unsubscribedUserDocumentReferences;
 
   ChatRoomModel({
@@ -19,7 +19,7 @@ class ChatRoomModel {
     required this.lastMessageSeenBy,
     required this.lastMessageSentBy,
     required this.title,
-    required this.moderatorUserDocumentReference,
+    required this.moderatorUserDocumentReferences,
     required this.unsubscribedUserDocumentReferences,
   });
 
@@ -35,8 +35,7 @@ class ChatRoomModel {
     String? id,
   }) {
     return ChatRoomModel(
-      userDocumentReferences:
-          List<DocumentReference>.from(json['userDocumentReferences'] ?? []),
+      userDocumentReferences: List<DocumentReference>.from(json['userDocumentReferences'] ?? []),
       lastMessage: json['lastMessage'] ?? '',
       lastMessageSentAt: json['lastMessageSentAt'] ?? Timestamp.now(),
       lastMessageSeenBy: List<DocumentReference>.from(
@@ -44,15 +43,16 @@ class ChatRoomModel {
       ),
       lastMessageSentBy: json['lastMessageSentBy'],
       title: json['title'],
-      moderatorUserDocumentReference: json['moderatorUserDocumentReference'],
-      unsubscribedUserDocumentReferences: List<DocumentReference>.from(
-          json['unsubscribedUserDocumentReferences'] ?? []),
+      moderatorUserDocumentReferences:
+          List<DocumentReference>.from(json['moderatorUserDocumentReferences'] ?? []),
+      unsubscribedUserDocumentReferences:
+          List<DocumentReference>.from(json['unsubscribedUserDocumentReferences'] ?? []),
     );
   }
 
   // create "toString()" method that returns a string of the object of this class
   @override
   String toString() {
-    return 'ChatRoomModel{ userDocumentReferences: $userDocumentReferences, lastMessage: $lastMessage, lastMessageSentAt: $lastMessageSentAt, lastMessageSeenBy: $lastMessageSeenBy, lastMessageSentBy: $lastMessageSentBy, title: $title, moderatorUserDocumentReference: $moderatorUserDocumentReference, unsubscribedUserDocumentReferences: $unsubscribedUserDocumentReferences }';
+    return 'ChatRoomModel{ userDocumentReferences: $userDocumentReferences, lastMessage: $lastMessage, lastMessageSentAt: $lastMessageSentAt, lastMessageSeenBy: $lastMessageSeenBy, lastMessageSentBy: $lastMessageSentBy, title: $title, moderatorUserDocumentReferences: $moderatorUserDocumentReferences, unsubscribedUserDocumentReferences: $unsubscribedUserDocumentReferences }';
   }
 }

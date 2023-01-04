@@ -3,21 +3,33 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /chat_rooms/{document} {
-      allow get: if isMyChat();
-      allow list: if isMyChat();
+      allow get: if isMyChatRoom();
+      allow list: if isMyChatRoom();
       allow create: if true;
-      allow update: if 
+      allow update: if
+        // moderator can update anything
         (
-          'moderatorUserDocumentReference' in resource.data
+          'moderatorUserDocumentReferences' in resource.data
           &&
-          resource.data.moderatorUserDocumentReference == myReference()
+          myReference() in resource.data.moderatorUserDocumentReferences
         )
         ||
+        // chat member update last message fields.
         (
-          isMyChat()
+          isMyChatRoom()
           &&
-          onlyUpdating(["userDocumentReferences", "lastMessage", "lastMessageSentAt", "lastMessageSeenBy", "lastMessageSentBy", "unsubscribedUserDocumentReferences"])
-        );
+          onlyUpdating(["lastMessage", "lastMessageSentAt", "lastMessageSeenBy", "lastMessageSentBy"])
+        )
+        // chat member can remove himself or add other users.
+        ||
+        (
+          isMyChatRoom()
+          &&
+          onlyUpdating(["userDocumentReferences"])
+          &&
+          request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.removeAll([myReference()])) 
+        )
+        ;
       allow delete: if false;
     }
 
@@ -47,7 +59,7 @@ service cloud.firestore {
       allow write: if isMyDoc() || willBeMyDoc();
     }
   
-    function isMyChat() {
+    function isMyChatRoom() {
       return resource.data.userDocumentReferences.hasAny([myReference()]);
     }
     function isMyDoc() {
