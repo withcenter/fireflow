@@ -33,12 +33,12 @@ class ChatService {
     required DocumentReference? otherUserPublicDataDocumentReference,
     required DocumentReference? chatRoomDocumentReference,
     required String? text,
-    required String? imagePath,
+    required String? uploadUrl,
   }) {
     dog("ChatService.messageSubmit() called.");
 
     if ((text == null || text.isEmpty) &&
-        (imagePath == null || imagePath.isEmpty)) {
+        (uploadUrl == null || uploadUrl.isEmpty)) {
       return;
     }
 
@@ -65,7 +65,7 @@ class ChatService {
       'userDocumentReference': UserService.instance.ref,
       'sentAt': FieldValue.serverTimestamp(),
       if (text != null) 'text': text,
-      if (imagePath != null) 'photoUrl': imagePath,
+      if (uploadUrl != null) 'uploadUrl': uploadUrl,
     };
 
     futures.add(db.collection('chat_room_messages').add(data));

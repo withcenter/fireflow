@@ -202,15 +202,15 @@ class StorageService {
   /// It returns a list of urls of the uploaded media. If there is no media uploaded, then it returns an empty list.
   ///
   /// @TODO - Add Translations for all the text.
-  Future<List<String>> uploadMedia(
-    BuildContext context,
-    bool allowPhoto,
-    bool allowVideo,
-    bool multiImage,
-    double maxWidth,
-    double maxHeight,
-    int imageQuality,
-  ) async {
+  Future<List<String>> uploadMedia({
+    required BuildContext context,
+    required bool allowPhoto,
+    required bool allowVideo,
+    required bool multiImage,
+    required double maxWidth,
+    required double maxHeight,
+    required int imageQuality,
+  }) async {
     print(
       'uploadMedia() called with context: ..., maxWidth: $maxWidth, maxHeight: $maxHeight, imageQuality: $imageQuality, allowPhoto: $allowPhoto',
     );
