@@ -1,7 +1,6 @@
 ## 0.0.26
 
-* exposing storage service.
-
+* fix. display media.
 
 ## 0.0.25
 
