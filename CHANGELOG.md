@@ -1,3 +1,8 @@
+## 0.0.26
+
+* exposing storage service.
+
+
 ## 0.0.25
 
 * exposing storage service.
