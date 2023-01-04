@@ -1,17 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fireflow/fireflow.dart';
-
-// Begin custom action code
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// Begin custom action code
 import 'package:image_picker/image_picker.dart';
 import 'package:mime_type/mime_type.dart';
-import 'dart:typed_data';
-
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
 
 /// 사진을 여러장 업로드하는 조건
 /// 웹이 아니고(앱에서만 가능), 사진 갤러리에서만 사진을 가져오며, multiImage 가 true 인 경우
@@ -28,6 +24,7 @@ enum MediaSource {
   photoGallery,
   videoGallery,
   camera,
+  file,
 }
 
 /// Firebase Storage Service
@@ -100,8 +97,13 @@ class StorageService {
     // User must sign-in before uploading media.
     final String currentUserUid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
-    // 사진 업로드 이며, Web 이 아니며, multiImage 가 true 인 경우만, 여러 사진 업로드.
-    // Multi Image 를 업로드해도, 동영상을 업로드 할 수 있도록 한다.
+    /// Upload multiple images at once.
+    ///
+    /// The conditions of uploading muliple images are
+    ///   - [multiImage] is true
+    ///   - the app is running as mobile app(not web)
+    ///   - the user selects 'Upload Images' from the menu
+    ///
     if (mediaSource == MediaSource.photoGallery &&
         multiImage &&
         kIsWeb == false) {
@@ -123,6 +125,26 @@ class StorageService {
       }));
     }
 
+    /// If a user selects 'Upload Any File' from the menu, then it will open file picker.
+    if (mediaSource == MediaSource.file) {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        return [
+          SelectedMedia(
+            storagePath(currentUserUid, file.path, isVideo),
+            await file.readAsBytes(),
+          ),
+        ];
+      } else {
+        // User canceled the picker
+        return [];
+      }
+    }
+
+    /// When a user selects one of 'Upload Image', 'Upload Video' or 'Camera'
+    /// from the menu, then it will open image picker or video picker.
     final source = mediaSource == MediaSource.camera
         ? ImageSource.camera
         : ImageSource.gallery;
@@ -206,6 +228,7 @@ class StorageService {
     required BuildContext context,
     required bool allowPhoto,
     required bool allowVideo,
+    required bool allowAnyfile,
     required bool multiImage,
     required double maxWidth,
     required double maxHeight,
@@ -283,6 +306,10 @@ class StorageService {
                   'Gallery',
                   MediaSource.videoGallery,
                 ),
+              if (allowAnyfile) ...[
+                const Divider(),
+                createUploadMediaListTile('Upload Any File', MediaSource.file),
+              ],
               if (!kIsWeb) ...[
                 const Divider(),
                 createUploadMediaListTile('Camera', MediaSource.camera),
@@ -312,8 +339,10 @@ class StorageService {
       return [];
     }
 
-    if (selectedMedia
-        .every((m) => validateFileFormat(m.storagePath, context))) {
+    /// If user selected a 'Upload Any File', then don't check the file format.
+    if (mediaSource == MediaSource.file ||
+        selectedMedia
+            .every((m) => validateFileFormat(m.storagePath, context))) {
       showUploadMessage(
         context,
         'Uploading file...',

@@ -1,3 +1,7 @@
+## 0.0.27
+
+* Finishing `UploadMedia` and `DisplayMedia`.
+
 ## 0.0.26
 
 * fix. display media.

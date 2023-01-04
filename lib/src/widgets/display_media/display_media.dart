@@ -1,29 +1,44 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:path/path.dart' as p;
 
 const _kSupportedVideoMimes = {'video/mp4', 'video/mpeg'};
 
 bool _isVideoPath(String path) =>
     _kSupportedVideoMimes.contains(mime(path.split('?').first));
 
+bool _isImagePath(String path) =>
+    mime(path.split('?').first)?.startsWith('image/') ?? false;
+
 class FlutterFlowMediaDisplay extends StatelessWidget {
   const FlutterFlowMediaDisplay({
     required this.path,
     required this.imageBuilder,
     required this.videoPlayerBuilder,
+    required this.fileBiulder,
   });
 
   final String path;
   final Widget Function(String) imageBuilder;
   final Widget Function(String) videoPlayerBuilder;
+  final Widget Function(String) fileBiulder;
 
   @override
-  Widget build(BuildContext context) =>
-      _isVideoPath(path) ? videoPlayerBuilder(path) : imageBuilder(path);
+  Widget build(BuildContext context) {
+    if (_isVideoPath(path))
+      return videoPlayerBuilder(path);
+    else if (_isImagePath(path))
+      return imageBuilder(path);
+    else
+      return fileBiulder(path);
+
+    // return _isVideoPath(path) ? videoPlayerBuilder(path) : imageBuilder(path);
+  }
 }
 
 const kDefaultAspectRatio = 16 / 9;
@@ -198,23 +213,67 @@ class _UploadedMediaState extends State<DisplayMedia> {
     return Container(
       key: ValueKey(widget.url),
       child: FlutterFlowMediaDisplay(
-        path: widget.url,
-        imageBuilder: (path) => Image.network(
-          path,
-          width: MediaQuery.of(context).size.width,
-          fit: BoxFit.cover,
-        ),
-        videoPlayerBuilder: (path) => FlutterFlowVideoPlayer(
-          path: path,
-          width: widget.width,
-          height: widget.height,
-          autoPlay: false,
-          looping: true,
-          showControls: true,
-          allowFullScreen: true,
-          allowPlaybackSpeedMenu: false,
-        ),
-      ),
+          path: widget.url,
+          imageBuilder: (path) => CachedNetworkImage(
+                imageUrl: path,
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator.adaptive(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.cover,
+              ),
+          videoPlayerBuilder: (path) => FlutterFlowVideoPlayer(
+                path: path,
+                width: widget.width,
+                height: widget.height,
+                autoPlay: false,
+                looping: true,
+                showControls: true,
+                allowFullScreen: true,
+                allowPlaybackSpeedMenu: false,
+              ),
+          fileBiulder: (path) => Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Stack(
+                        children: [
+                          const Icon(
+                            Icons.insert_drive_file,
+                            size: 120,
+                          ),
+                          Container(
+                            width: 120,
+                            height: 120,
+                            child: Align(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 36.0),
+                                child: Text(
+                                  path
+                                      .split('.')
+                                      .last
+                                      .split('?')
+                                      .first
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 24),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        p.basename(
+                            path.replaceAll('%2F', '/').split('?').first),
+                        style: const TextStyle(fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
     );
   }
 }
