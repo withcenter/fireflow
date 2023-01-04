@@ -1,3 +1,8 @@
+## 0.0.22
+
+* fix `DisplayMedia`.
+
+
 ## 0.0.21
 
 * Adding `DisplayMedia`.

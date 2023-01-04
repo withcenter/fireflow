@@ -12,3 +12,4 @@ export 'src/chat/chat.service.dart';
 
 /// Widgets
 export 'src/widgets/custom_popup/custom_popup.dart';
+export 'src/widgets/display_media/display_media.dart';
