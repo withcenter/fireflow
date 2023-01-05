@@ -1,3 +1,7 @@
+## 0.0.36
+
+* Fix. popup menu grey out.
+
 ## 0.0.35
 
 * Fix. uploadUrlType.

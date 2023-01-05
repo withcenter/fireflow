@@ -26,7 +26,7 @@ class CustomPopup extends StatelessWidget {
       itemBuilder: (context) {
         return [
           PopupMenuItem(
-            enabled: false,
+            enabled: true,
             padding: const EdgeInsets.all(0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
