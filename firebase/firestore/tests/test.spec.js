@@ -1,7 +1,7 @@
 const assert = require("assert");
 const firebase = require("@firebase/testing");
 // Firebase project ID
-const TEST_PROJECT_ID = "philov-withcenter";
+const TEST_PROJECT_ID = "withcenter-fireflow";
 
 const A = "user_A";
 const B = "user_B";
@@ -12,17 +12,13 @@ const authC = { uid: C, email: C + "@gmail.com" };
 
 // Get Firestore DB connection with user auth
 function db(auth = null) {
-  return firebase
-    .initializeTestApp({ projectId: TEST_PROJECT_ID, auth: auth })
-    .firestore();
+  return firebase.initializeTestApp({ projectId: TEST_PROJECT_ID, auth: auth }).firestore();
 }
 
 // Get Firestore DB connection with admin auth
 // Note, if you are logged in as admin, it will pass the security check.
 function admin() {
-  return firebase
-    .initializeAdminApp({ projectId: TEST_PROJECT_ID })
-    .firestore();
+  return firebase.initializeAdminApp({ projectId: TEST_PROJECT_ID }).firestore();
 }
 
 function userDoc(id) {
@@ -207,6 +203,53 @@ describe("Firestore security test", () => {
         .collection("chat_room_messages")
         .where("chatRoomDocumentReference", "==", snapshot.ref)
         .get()
+    );
+  });
+
+  it("Chat message edit", async () => {
+    const snapshot = await createChatRoom([A, C]);
+
+    const ref = await db(authA)
+      .collection("chat_room_messages")
+      .add({
+        chatRoomDocumentReference: snapshot.ref,
+        userDocumentReference: db().collection("users").doc(A),
+        text: "text",
+      });
+
+    const messageDoc = await ref.get();
+
+    await firebase.assertFails(
+      db(authB).collection("chat_room_messages").doc(messageDoc.id).update({ text: "up" })
+    );
+    await firebase.assertFails(
+      db(authC).collection("chat_room_messages").doc(messageDoc.id).update({ text: "up" })
+    );
+    await firebase.assertSucceeds(
+      db(authA).collection("chat_room_messages").doc(messageDoc.id).update({ text: "up" })
+    );
+  });
+  it("Chat message delete", async () => {
+    const snapshot = await createChatRoom([A, C]);
+
+    const ref = await db(authA)
+      .collection("chat_room_messages")
+      .add({
+        chatRoomDocumentReference: snapshot.ref,
+        userDocumentReference: db().collection("users").doc(A),
+        text: "text",
+      });
+
+    const messageDoc = await ref.get();
+
+    await firebase.assertFails(
+      db(authB).collection("chat_room_messages").doc(messageDoc.id).delete()
+    );
+    await firebase.assertFails(
+      db(authC).collection("chat_room_messages").doc(messageDoc.id).delete()
+    );
+    await firebase.assertSucceeds(
+      db(authA).collection("chat_room_messages").doc(messageDoc.id).delete()
     );
   });
 });

@@ -34,8 +34,9 @@ service cloud.firestore {
     }
 
     match /chat_room_messages/{document} {
-      allow read: if get(resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAll([myReference()]);
-      allow write: if get(request.resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAll([myReference()]) && (isMyDoc() || willBeMyDoc());
+      allow read: if get(resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAny([myReference()]);
+      allow create: if get(request.resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAny([myReference()]) && willBeMyDoc();
+      allow update, delete: if isMyDoc();
     }
 
     match /users/{document} {
