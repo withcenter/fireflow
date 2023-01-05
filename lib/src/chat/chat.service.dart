@@ -37,7 +37,8 @@ class ChatService {
   }) {
     dog("ChatService.messageSubmit() called.");
 
-    if ((text == null || text.isEmpty) && (uploadUrl == null || uploadUrl.isEmpty)) {
+    if ((text == null || text.isEmpty) &&
+        (uploadUrl == null || uploadUrl.isEmpty)) {
       return;
     }
 
@@ -52,9 +53,11 @@ class ChatService {
     if (isGroupChat) {
       ref = chatRoomDocumentReference;
     } else {
-      ref = db
-          .collection('chat_rooms')
-          .doc(([myUid, otherUserPublicDataDocumentReference!.id]..sort()).join('-'));
+      ref = db.collection('chat_rooms').doc(([
+            myUid,
+            otherUserPublicDataDocumentReference!.id
+          ]..sort())
+              .join('-'));
     }
 
     final data = {
