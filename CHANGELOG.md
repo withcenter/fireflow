@@ -1,3 +1,8 @@
+## 0.0.33
+
+* Add. SafeAreaTop, SafeAreaBottom.
+
+
 ## 0.0.32
 
 * Add. `uploadUrlType` for the type of upload.
