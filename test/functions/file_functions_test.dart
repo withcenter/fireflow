@@ -26,5 +26,9 @@ void main() {
     expect(uploadUrlType('exe'), 'file');
     expect(uploadUrlType(''), null);
     expect(uploadUrlType(null), null);
+    expect(
+        uploadUrlType(
+            'https://firebasestorage.googleapis.com/v0/b/withcenter-fireflow.appspot.com/o/users%2F5gKHATXoTDgGyPcbGQw8vK4neRH2%2Fuploads%2F1672893335818799.mp4?alt=media&token=f46fff47-fbbd-43df-9b4e-29d2d7ee3eed'),
+        'video');
   });
 }

@@ -1,3 +1,7 @@
+## 0.0.32
+
+* Add. `uploadUrlType` for the type of upload.
+
 ## 0.0.31
 
 * Fix. Web can upload any file using uploadMedia.

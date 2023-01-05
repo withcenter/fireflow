@@ -32,14 +32,12 @@ enum MediaSource {
 /// Refer readme file for details.
 ///
 class StorageService {
-  static StorageService get instance =>
-      _instance ?? (_instance = StorageService());
+  static StorageService get instance => _instance ?? (_instance = StorageService());
   static StorageService? _instance;
 
   final storage = FirebaseStorage.instance;
 
-  Reference get uploadsFolder =>
-      storage.ref().child('users').child(UserService.instance.uid);
+  Reference get uploadsFolder => storage.ref().child('users').child(UserService.instance.uid);
 
   Reference ref(String url) {
     return storage.refFromURL(url);
@@ -104,9 +102,7 @@ class StorageService {
     ///   - the app is running as mobile app(not web)
     ///   - the user selects 'Upload Images' from the menu
     ///
-    if (mediaSource == MediaSource.photoGallery &&
-        multiImage &&
-        kIsWeb == false) {
+    if (mediaSource == MediaSource.photoGallery && multiImage && kIsWeb == false) {
       final pickedMediaFuture = picker.pickMultiImage(
         maxWidth: maxWidth,
         maxHeight: maxHeight,
@@ -154,9 +150,7 @@ class StorageService {
 
     /// When a user selects one of 'Upload Image', 'Upload Video' or 'Camera'
     /// from the menu, then it will open image picker or video picker.
-    final source = mediaSource == MediaSource.camera
-        ? ImageSource.camera
-        : ImageSource.gallery;
+    final source = mediaSource == MediaSource.camera ? ImageSource.camera : ImageSource.gallery;
     final pickedMediaFuture = isVideo
         ? picker.pickVideo(source: source)
         : picker.pickImage(
@@ -195,8 +189,7 @@ class StorageService {
     return 'users/$uid/uploads/$timestamp$indexStr.$ext';
   }
 
-  void showUploadMessage(BuildContext context, String message,
-      {bool showLoading = false}) {
+  void showUploadMessage(BuildContext context, String message, {bool showLoading = false}) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
@@ -219,9 +212,7 @@ class StorageService {
     final storageRef = FirebaseStorage.instance.ref().child(path);
     final metadata = SettableMetadata(contentType: mime(path));
     final result = await storageRef.putData(data, metadata);
-    return result.state == TaskState.success
-        ? result.ref.getDownloadURL()
-        : null;
+    return result.state == TaskState.success ? result.ref.getDownloadURL() : null;
   }
 
   /// Upload media to firebase storage.
@@ -251,8 +242,7 @@ class StorageService {
     final textColor = Theme.of(context).colorScheme.primary;
 
     /// * It's a function inside a function. Display bottomsheet to choose media source
-    createUploadMediaListTile(String label, MediaSource mediaSource) =>
-        ListTile(
+    createUploadMediaListTile(String label, MediaSource mediaSource) => ListTile(
           title: Text(
             label,
             textAlign: TextAlign.center,
@@ -343,23 +333,21 @@ class StorageService {
       mediaSource: mediaSource,
       multiImage: multiImage,
     );
-    if (selectedMedia == null) {
+    if (selectedMedia == null || selectedMedia.isEmpty) {
       // Finished without selecting a media
       return [];
     }
 
     /// If user selected a 'Upload Any File', then don't check the file format.
     if (mediaSource == MediaSource.file ||
-        selectedMedia
-            .every((m) => validateFileFormat(m.storagePath, context))) {
+        selectedMedia.every((m) => validateFileFormat(m.storagePath, context))) {
       showUploadMessage(
         context,
         'Uploading file...',
         showLoading: true,
       );
       final List<String> downloadUrls = List<String>.from((await Future.wait(
-              selectedMedia
-                  .map((m) async => await uploadData(m.storagePath, m.bytes))))
+              selectedMedia.map((m) async => await uploadData(m.storagePath, m.bytes))))
           .where((u) => u != null)
           .map((u) => u!)
           .toList());

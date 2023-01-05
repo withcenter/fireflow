@@ -6,10 +6,13 @@
 ///
 /// Returns null if the path is null or the extension is not found.
 String? mimeType(String? path) {
-  if (path == null) return null;
-  final int index = path.lastIndexOf('.');
-  if (index == -1) return null;
-  final String extension = path.substring(index + 1).toLowerCase();
+  if (path == null || path.contains('.') == false) return null;
+
+  String extension = path.split('.').last.toLowerCase();
+  if (extension.contains('?')) {
+    extension = extension.split('?').first;
+  }
+
   const Map<String, String> defaultExtensionMap = <String, String>{
     '123': 'application/vnd.lotus-1-2-3',
     '3dml': 'text/vnd.in3d.3dml',
