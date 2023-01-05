@@ -1011,3 +1011,30 @@ String? mimeType(String? path) {
 
   return defaultExtensionMap[extension];
 }
+
+/// Returns the type of the file based on the url.
+///
+/// It returns one of the following values:
+/// - image
+/// - video
+/// - audio
+/// - file
+/// - null (if the url is null or empty)
+///
+/// Use case, after uploading a file, you can use this method to get the type
+/// of the file and save it in the document.
+String? uploadUrlType(String? url) {
+  if (url == null || url == "") return null;
+  String? type = mimeType(url);
+  if (type == null) {
+    return 'file';
+  } else if (type.startsWith('video/')) {
+    return 'video';
+  } else if (type.startsWith('audio/')) {
+    return 'audio';
+  } else if (type.startsWith('image/')) {
+    return 'image';
+  } else {
+    return 'file';
+  }
+}
