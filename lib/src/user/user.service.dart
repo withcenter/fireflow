@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/storage/storage.service.dart';
 import 'package:path/path.dart' as p;
 
 /// UserService is a singleton class that provides necessary service for user
