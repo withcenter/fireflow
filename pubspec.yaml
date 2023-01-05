@@ -1,6 +1,6 @@
 name: fireflow
 description: This package is designed for FlutterFlow app to provide enhanced features.
-version: 0.0.29
+version: 0.0.31
 homepage: https://github.com/withcenter/fireflow
 
 environment:
@@ -48,7 +48,7 @@ dependencies:
   path: 1.8.2
   flutterflow_paginate_firestore: ^1.0.3+1
 
-  file_picker: ^5.2.4
+  file_picker: 4.5.1
   cached_network_image: 3.2.1
 
 

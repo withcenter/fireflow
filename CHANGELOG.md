@@ -1,10 +1,19 @@
+## 0.0.31
+
+* Fix. Web can upload any file using uploadMedia.
+
+
+## 0.0.30
+
+* Fix. `UploadMedia`.
+
 ## 0.0.29
 
-* bump..
+* bump 29.
 
 ## 0.0.28
 
-* bump.
+* bump 28.
 
 
 ## 0.0.27

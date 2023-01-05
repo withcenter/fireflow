@@ -129,12 +129,21 @@ class StorageService {
     if (mediaSource == MediaSource.file) {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-      if (result != null) {
-        File file = File(result.files.single.path!);
+      if (result != null && result.files.isNotEmpty) {
+        late final Uint8List fileBytes;
+        late final String fileName;
+        if (kIsWeb) {
+          fileBytes = result.files.first.bytes!;
+          fileName = result.files.first.name;
+        } else {
+          File file = File(result.files.single.path!);
+          fileBytes = await file.readAsBytes();
+          fileName = file.path.split('/').last;
+        }
         return [
           SelectedMedia(
-            storagePath(currentUserUid, file.path, isVideo),
-            await file.readAsBytes(),
+            storagePath(currentUserUid, fileName, isVideo),
+            fileBytes,
           ),
         ];
       } else {
