@@ -13,7 +13,7 @@ class SafeAreaBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width,
+      width: width ?? 5,
       height: MediaQuery.of(context).viewPadding.bottom,
       color: Colors.transparent,
     );

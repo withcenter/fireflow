@@ -1,3 +1,7 @@
+## 0.0.35
+
+* Fix. uploadUrlType.
+
 ## 0.0.34
 
 * Bump 34.

@@ -7,15 +7,17 @@ class ChatRoomMessageModel {
     required this.userDocumentReference,
     required this.chatRoomDocumentReference,
     required this.text,
-    required this.uploadUrl,
     required this.sentAt,
     required this.ref,
+    required this.uploadUrl,
+    required this.uploadUrlType,
   });
 
   final DocumentReference userDocumentReference;
   final DocumentReference chatRoomDocumentReference;
   final String text;
   final String uploadUrl;
+  final String uploadUrlType;
   final Timestamp sentAt;
 
   final DocumentReference ref;
@@ -30,11 +32,12 @@ class ChatRoomMessageModel {
       userDocumentReference: json['userDocumentReference'],
       chatRoomDocumentReference: json['chatRoomDocumentReference'],
       text: json['text'] ?? "",
-      uploadUrl: json['uploadUrl'] ?? "",
 
       /// For creation, the server timestamp is null on local cache.
       sentAt: json['sentAt'] ?? Timestamp.now(),
       ref: snapshot.reference,
+      uploadUrl: json['uploadUrl'] ?? "",
+      uploadUrlType: json['uploadUrlType'] ?? "",
     );
   }
 
@@ -45,6 +48,7 @@ class ChatRoomMessageModel {
       'chatRoomDocumentReference': chatRoomDocumentReference,
       'text': text,
       'uploadUrl': uploadUrl,
+      'uploadUrlType': uploadUrlType,
       'sentAt': sentAt,
     };
   }
