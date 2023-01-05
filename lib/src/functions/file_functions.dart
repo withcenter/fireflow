@@ -1,7 +1,11 @@
-// Copyright (c) 2013, the Dart project authors.
-// All rights reserved. Use of this source code is governed by the
-// BSD-style license.
-String? getMimeType(String? path) {
+/// Copyright (c) 2013, the Dart project authors.
+/// All rights reserved. Use of this source code is governed by the
+/// BSD-style license.
+
+/// Get mime type of a file
+///
+/// Returns null if the path is null or the extension is not found.
+String? mimeType(String? path) {
   if (path == null) return null;
   final int index = path.lastIndexOf('.');
   if (index == -1) return null;
