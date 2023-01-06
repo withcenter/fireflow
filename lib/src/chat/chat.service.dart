@@ -143,4 +143,22 @@ class ChatService {
 
     return Future.wait(futures);
   }
+
+  /// leave a chat room
+  ///
+  /// This method removes the current user from the chat room and sends a message to the chat room.
+  /// Note that, 'leave' message must be recorded first before leaving.
+  Future leave({
+    required DocumentReference chatRoomDocumentReference,
+  }) async {
+    await sendMessage(
+      chatRoomDocumentReference: chatRoomDocumentReference,
+      protocol: 'leave',
+    );
+
+    return chatRoomDocumentReference.update({
+      'userDocumentReferences':
+          FieldValue.arrayRemove([UserService.instance.ref]),
+    });
+  }
 }
