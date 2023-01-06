@@ -10,10 +10,11 @@ export 'src/chat/chat_room_message.model.dart';
 export 'src/chat/chat.service.dart';
 export 'src/storage/storage.service.dart';
 
-/// Utils, Functions
+/// Utils, Functions, Actions
 export 'src/utils.dart';
 export 'src/functions/file_functions.dart';
 export 'src/functions/string_functions.dart';
+export 'src/actions/snackbar/snackbar.dart';
 
 /// Widgets
 export 'src/widgets/custom_popup/custom_popup.dart';
