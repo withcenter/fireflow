@@ -45,7 +45,8 @@ class ChatRoomMessageModel {
       uploadUrl: json['uploadUrl'] ?? "",
       uploadUrlType: json['uploadUrlType'] ?? "",
       protocol: json['protocol'] ?? "",
-      protocolTargetUserDocumentReference: json['protocolTargetUserDocumentReference'],
+      protocolTargetUserDocumentReference:
+          json['protocolTargetUserDocumentReference'],
     );
   }
 
@@ -59,7 +60,8 @@ class ChatRoomMessageModel {
       'uploadUrlType': uploadUrlType,
       'sentAt': sentAt,
       'protocol': protocol,
-      'protocolTargetUserDocumentReference': protocolTargetUserDocumentReference,
+      'protocolTargetUserDocumentReference':
+          protocolTargetUserDocumentReference,
     };
   }
 }
