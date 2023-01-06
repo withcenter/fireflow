@@ -1,3 +1,4 @@
+import 'package:fireflow/fireflow.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -80,6 +81,7 @@ SnackBar snackBarContent({
             ),
             IconButton(
               onPressed: () {
+                print('diss?');
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
               icon: Icon(
