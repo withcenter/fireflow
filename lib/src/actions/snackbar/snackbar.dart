@@ -81,8 +81,7 @@ SnackBar snackBarContent({
             ),
             IconButton(
               onPressed: () {
-                print('diss?');
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(AppService.instance.context).hideCurrentSnackBar();
               },
               icon: Icon(
                 Icons.close,
