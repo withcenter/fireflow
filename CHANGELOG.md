@@ -1,3 +1,8 @@
+## 0.0.43
+
+* Fix. chat message list.
+
+
 ## 0.0.42
 
 * Add. user remove from a chat room.

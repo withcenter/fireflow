@@ -18,11 +18,10 @@ class ChatRoomMessageList extends StatefulWidget {
     required this.onMyMessage,
     required this.onOtherMessage,
     required this.onEmpty,
+    this.onProtocolMessage,
   })  : assert(
-            (otherUserPublicDataDocument != null &&
-                    chatRoomDocumentReference == null) ||
-                (otherUserPublicDataDocument == null &&
-                    chatRoomDocumentReference != null),
+            (otherUserPublicDataDocument != null && chatRoomDocumentReference == null) ||
+                (otherUserPublicDataDocument == null && chatRoomDocumentReference != null),
             "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
         super(key: key);
 
@@ -33,6 +32,7 @@ class ChatRoomMessageList extends StatefulWidget {
 
   final Widget Function(ChatRoomMessageModel) onMyMessage;
   final Widget Function(ChatRoomMessageModel) onOtherMessage;
+  final Widget Function(ChatRoomMessageModel)? onProtocolMessage;
   final Widget onEmpty;
 
   @override
@@ -58,8 +58,8 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     if (isGroupChat) {
       return widget.chatRoomDocumentReference!;
     } else {
-      return ChatService.instance.room(
-          ([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
+      return ChatService.instance
+          .room(([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
     }
   }
 
@@ -130,10 +130,15 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       reverse: true,
       // item builder type is compulsory.
       itemBuilder: (context, documentSnapshots, index) {
-        final message =
-            ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
+        final message = ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
 
-        if (message.isMine) {
+        if (message.isProtocol) {
+          if (widget.onProtocolMessage != null) {
+            return widget.onProtocolMessage!(message);
+          } else {
+            return const SizedBox.shrink();
+          }
+        } else if (message.isMine) {
           return widget.onMyMessage(message);
         } else {
           return widget.onOtherMessage(message);
