@@ -1,3 +1,7 @@
+## 0.0.44
+
+* Bump 44.
+
 ## 0.0.43
 
 * Fix. chat message list.
