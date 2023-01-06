@@ -1,3 +1,7 @@
+## 0.0.37
+
+* Add. chat invite.
+
 ## 0.0.36
 
 * Fix. popup menu grey out.

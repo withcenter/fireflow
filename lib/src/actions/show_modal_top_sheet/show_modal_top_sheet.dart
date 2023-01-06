@@ -16,7 +16,8 @@ Future<T?> showModalTopSheet<T>(BuildContext context, Widget child,
     transitionBuilder: (context, animation, secondaryAnimation, child) {
       return SlideTransition(
         position: CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)
-            .drive(Tween<Offset>(begin: const Offset(0, -1.0), end: Offset.zero)),
+            .drive(
+                Tween<Offset>(begin: const Offset(0, -1.0), end: Offset.zero)),
         child: Column(
           children: [
             Material(

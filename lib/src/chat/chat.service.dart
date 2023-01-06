@@ -84,4 +84,23 @@ class ChatService {
 
     return Future.wait(futures);
   }
+
+  /// inviteUser
+  ///
+  /// Returns true if the user add invited successfully. Otherwise, returns false.
+  Future<bool> inviteUser({
+    required DocumentReference chatRoomDocumentReference,
+    required DocumentReference userDocumentReference,
+  }) async {
+    final snapshot = await chatRoomDocumentReference.get();
+    final room = ChatRoomModel.fromSnapshot(snapshot);
+    if (room.userDocumentReferences.contains(userDocumentReference)) {
+      return false;
+    }
+    final chatRoomsUpdateData = {
+      'userDocumentReferences': FieldValue.arrayUnion([userDocumentReference]),
+    };
+    await chatRoomDocumentReference.update(chatRoomsUpdateData);
+    return true;
+  }
 }
