@@ -1,3 +1,7 @@
+## 0.0.41
+
+* Fix. remove context from snackbar.
+
 ## 0.0.40
 
 * Bump 40.

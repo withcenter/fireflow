@@ -1,9 +1,8 @@
 import 'package:fireflow/fireflow.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class customStyleArrow extends CustomPainter {
-  customStyleArrow({
+class CustomStyleArrow extends CustomPainter {
+  CustomStyleArrow({
     required this.color,
   });
   final Color color;
@@ -13,8 +12,8 @@ class customStyleArrow extends CustomPainter {
       ..color = color
       ..strokeWidth = 1
       ..style = PaintingStyle.fill;
-    final double triangleH = 5;
-    final double triangleW = 10.0;
+    const double triangleH = 5;
+    const double triangleW = 10.0;
     final double width = size.width;
     final double height = size.height;
 
@@ -35,7 +34,6 @@ class customStyleArrow extends CustomPainter {
 }
 
 SnackBar snackBarContent({
-  required BuildContext context,
   required String title,
   required String message,
   Color backgroundColor = Colors.black,
@@ -44,7 +42,7 @@ SnackBar snackBarContent({
   Color arrowBackgroundColor = Colors.white,
   int? seconds,
 }) {
-  Widget content = Container(
+  Widget content = SizedBox(
     height: 100,
     child: Stack(
       clipBehavior: Clip.none,
@@ -57,7 +55,7 @@ SnackBar snackBarContent({
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            SizedBox(
+            const SizedBox(
               width: 16,
             ),
             Expanded(
@@ -67,14 +65,14 @@ SnackBar snackBarContent({
                 children: [
                   Text(
                     title,
-                    style: TextStyle(color: Colors.white, fontSize: 14),
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2,
                   ),
                   Text(
                     message,
-                    style: TextStyle(color: Colors.white, fontSize: 13),
+                    style: const TextStyle(color: Colors.white, fontSize: 13),
                   ),
                 ],
               ),
@@ -95,7 +93,7 @@ SnackBar snackBarContent({
           left: 16,
           top: -8,
           child: CustomPaint(
-            painter: customStyleArrow(color: arrowBackgroundColor),
+            painter: CustomStyleArrow(color: arrowBackgroundColor),
             child: Container(
               padding: const EdgeInsets.all(4),
               child: icon,
@@ -120,21 +118,19 @@ SnackBar snackBarContent({
 /// showModalTopSheet is a custom action that shows a modal top sheet.
 /// It can be used to display a snackbar on top.
 snackBarSuccess({
-  required BuildContext context,
   required String title,
   required String message,
   int? seconds,
 }) {
-  ScaffoldMessenger.of(context)
+  ScaffoldMessenger.of(AppService.instance.context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
       snackBarContent(
-        context: context,
         title: title,
         message: message,
         backgroundColor: Colors.black,
         closeButtonColor: Colors.amber,
-        icon: Icon(Icons.check_circle, color: Colors.green, size: 28),
+        icon: const Icon(Icons.check_circle, color: Colors.green, size: 28),
         arrowBackgroundColor: Colors.white,
         seconds: seconds,
       ),
@@ -146,16 +142,14 @@ snackBarSuccess({
 /// showModalTopSheet is a custom action that shows a modal top sheet.
 /// It can be used to display a snackbar on top.
 snackBarWarning({
-  required BuildContext context,
   required String title,
   required String message,
   int? seconds,
 }) {
-  ScaffoldMessenger.of(context)
+  ScaffoldMessenger.of(AppService.instance.context)
     ..hideCurrentSnackBar()
     ..showSnackBar(
       snackBarContent(
-        context: context,
         title: title,
         message: message,
         backgroundColor: Colors.amber.shade700,
