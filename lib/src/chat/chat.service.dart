@@ -29,16 +29,19 @@ class ChatService {
   /// This method sends a chat message and updates the chat room.
   ///
   /// This must be the only method to send a chat message.
+  ///
+  /// if [otherUserPublicDataDocumentReference] is set, thne it is a one-to-one chat.
   sendMessage({
-    required DocumentReference? otherUserPublicDataDocumentReference,
-    required DocumentReference? chatRoomDocumentReference,
-    required String? text,
-    required String? uploadUrl,
+    DocumentReference? otherUserPublicDataDocumentReference,
+    DocumentReference? chatRoomDocumentReference,
+    String? text,
+    String? uploadUrl,
+    String? protocol,
+    DocumentReference? protocolTargetUserDocumentReference,
   }) {
-    dog("ChatService.messageSubmit() called.");
-
     if ((text == null || text.isEmpty) &&
-        (uploadUrl == null || uploadUrl.isEmpty)) {
+        (uploadUrl == null || uploadUrl.isEmpty) &&
+        (protocol == null || protocol.isEmpty)) {
       return;
     }
 
@@ -67,6 +70,10 @@ class ChatService {
       if (text != null) 'text': text,
       if (uploadUrl != null) 'uploadUrl': uploadUrl,
       if (uploadUrl != null) 'uploadUrlType': uploadUrlType(uploadUrl),
+      if (protocol != null) 'protocol': protocol,
+      if (protocolTargetUserDocumentReference != null)
+        'protocolTargetUserDocumentReference':
+            protocolTargetUserDocumentReference,
     };
 
     futures.add(db.collection('chat_room_messages').add(data));
@@ -94,13 +101,46 @@ class ChatService {
   }) async {
     final snapshot = await chatRoomDocumentReference.get();
     final room = ChatRoomModel.fromSnapshot(snapshot);
+
+    /// If the user is already in the chat room, then return false.
     if (room.userDocumentReferences.contains(userDocumentReference)) {
       return false;
     }
     final chatRoomsUpdateData = {
       'userDocumentReferences': FieldValue.arrayUnion([userDocumentReference]),
     };
-    await chatRoomDocumentReference.update(chatRoomsUpdateData);
+
+    final List<Future> futures = [
+      chatRoomDocumentReference.update(chatRoomsUpdateData),
+      sendMessage(
+        chatRoomDocumentReference: chatRoomDocumentReference,
+        protocol: 'invite',
+        protocolTargetUserDocumentReference: userDocumentReference,
+      )
+    ];
+    await Future.wait(futures);
     return true;
+  }
+
+  /// remove a user from the chat room
+  ///
+  /// This method removes a user from the chat room and sends a message to the chat room.
+  Future removeUser({
+    required DocumentReference chatRoomDocumentReference,
+    required DocumentReference userDocumentReference,
+  }) async {
+    final data = {
+      'userDocumentReferences': FieldValue.arrayRemove([userDocumentReference]),
+    };
+    final List<Future> futures = [
+      chatRoomDocumentReference.update(data),
+      sendMessage(
+        chatRoomDocumentReference: chatRoomDocumentReference,
+        protocol: 'remove',
+        protocolTargetUserDocumentReference: userDocumentReference,
+      )
+    ];
+
+    return Future.wait(futures);
   }
 }

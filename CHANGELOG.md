@@ -1,3 +1,7 @@
+## 0.0.42
+
+* Add. user remove from a chat room.
+
 ## 0.0.41
 
 * Fix. remove context from snackbar.
