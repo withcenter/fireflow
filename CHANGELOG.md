@@ -1,3 +1,8 @@
+## 0.0.49
+
+* Fix. chat and gpt.
+
+
 ## 0.0.48
 
 * Add. chat gpt on chat room.
