@@ -33,6 +33,20 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "isGroupChat",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastMessageSentAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "chat_rooms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
           "fieldPath": "userDocumentReferences",
           "arrayConfig": "CONTAINS"
         },
@@ -47,6 +61,7 @@
     {
       "collectionGroup": "fcm_tokens",
       "fieldPath": "fcm_token",
+      "ttl": false,
       "indexes": [
         {
           "order": "ASCENDING",

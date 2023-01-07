@@ -29,6 +29,9 @@ service cloud.firestore {
           &&
           request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.removeAll([myReference()])) 
         )
+        ||
+        // if it's open group chat, he can enter without invitation.
+        resource.data.isOpenChat == true && request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.concat([myReference()]))
         ;
       allow delete: if false;
     }

@@ -20,10 +20,8 @@ class ChatRoomMessageList extends StatefulWidget {
     required this.onEmpty,
     this.onProtocolMessage,
   })  : assert(
-            (otherUserPublicDataDocument != null &&
-                    chatRoomDocumentReference == null) ||
-                (otherUserPublicDataDocument == null &&
-                    chatRoomDocumentReference != null),
+            (otherUserPublicDataDocument != null && chatRoomDocumentReference == null) ||
+                (otherUserPublicDataDocument == null && chatRoomDocumentReference != null),
             "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
         super(key: key);
 
@@ -60,8 +58,8 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     if (isGroupChat) {
       return widget.chatRoomDocumentReference!;
     } else {
-      return ChatService.instance.room(
-          ([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
+      return ChatService.instance
+          .room(([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
     }
   }
 
@@ -91,6 +89,14 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
         'isGroupChat': false,
       }, SetOptions(merge: true));
     } else {
+      // For the open group chat, any user can join the chat room.
+      final room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
+      if (room.userDocumentReferences.contains(myReference) == false && room.isOpenChat == true) {
+        await chatRoomRef.update({
+          'userDocumentReferences': FieldValue.arrayUnion([myReference]),
+        });
+      }
+
       // For group chat,
       //  - users can only invited by other user.
       //  - just make the last message seen by you.
@@ -134,8 +140,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       reverse: true,
       // item builder type is compulsory.
       itemBuilder: (context, documentSnapshots, index) {
-        final message =
-            ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
+        final message = ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
 
         if (message.isProtocol) {
           if (widget.onProtocolMessage != null) {
