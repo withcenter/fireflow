@@ -12,6 +12,15 @@ class AppService {
   static AppService? _instance;
   late BuildContext context;
 
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  CollectionReference get usersCol => db.collection('users');
+  CollectionReference get systemSettingsCol => db.collection('system_settings');
+  DocumentReference get keysRef => systemSettingsCol.doc('keys');
+  Future<DocumentSnapshot> get getKeys => keysRef.get();
+
+  late final KeyModel keys;
+
   /// Current chat room reference.
   ///
   /// This is the current chat room that the user is in.
@@ -20,10 +29,12 @@ class AppService {
 
   AppService() {
     dog("AppService.constructor() called.");
+    initSystemKeys();
     initUser();
   }
 
   /// This method must be called when the app is initialized.
+  /// Don't put any initialization here. Put initialization in the constructor, instead.
   void init({
     required BuildContext context,
     bool debug = false,
@@ -49,5 +60,10 @@ class AppService {
         dog('AppService.initUser() - user is not logged in');
       }
     });
+  }
+
+  initSystemKeys() async {
+    keys = KeyModel.fromSnapshot(await getKeys);
+    print(keys);
   }
 }

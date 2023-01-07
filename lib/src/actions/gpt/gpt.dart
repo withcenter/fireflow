@@ -2,6 +2,8 @@ import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:fireflow/fireflow.dart';
+
 Future<String> queryGpt({
   required String prompt,
   String? model,
@@ -18,8 +20,7 @@ Future<String> queryGpt({
   model ??= "text-davinci-003";
 
   final headers = {
-    'Authorization':
-        'Bearer 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',
+    'Authorization': 'Bearer ${AppService.instance.keys.openAiApiKey}',
     'Content-Type': 'application/json'
   };
   final request = Request(

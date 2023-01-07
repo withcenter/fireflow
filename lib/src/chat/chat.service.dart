@@ -81,7 +81,6 @@ class ChatService {
       'lastMessageSentAt': FieldValue.serverTimestamp(),
       'lastMessageSentBy': UserService.instance.ref,
       'lastMessageSeenBy': [UserService.instance.ref],
-      'isGroupChat': isGroupChat,
     };
     futures.add(
       ref.set(info, SetOptions(merge: true)),

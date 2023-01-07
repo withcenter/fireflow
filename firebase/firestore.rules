@@ -59,6 +59,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isMyDoc() || willBeMyDoc();
     }
+    match /system_settings/{document} {
+      allow read: if true;
+      allow write: if false;
+    }
   
     function isMyChatRoom() {
       return resource.data.userDocumentReferences.hasAny([myReference()]);
