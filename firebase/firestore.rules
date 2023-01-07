@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /chat_rooms/{document} {
-      allow get: if isMyChatRoom();
+      allow get: if isMyChatRoom() || resource.data.isOpenChat == true;
       allow list: if isMyChatRoom() || resource.data.isOpenChat == true;
       allow create: if true;
       allow update: if

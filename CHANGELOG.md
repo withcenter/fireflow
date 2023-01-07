@@ -1,3 +1,8 @@
+## 0.0.51
+
+* Fix. open chat.
+
+
 ## 0.0.50
 
 * Fix. open chat.
