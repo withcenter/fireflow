@@ -18,7 +18,8 @@ Future<String> queryGpt({
   model ??= "text-davinci-003";
 
   final headers = {
-    'Authorization': 'Bearer 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',
+    'Authorization':
+        'Bearer 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',
     'Content-Type': 'application/json'
   };
   final request = Request(

@@ -70,7 +70,8 @@ class ChatService {
       if (uploadUrl != null) 'uploadUrlType': uploadUrlType(uploadUrl),
       if (protocol != null) 'protocol': protocol,
       if (protocolTargetUserDocumentReference != null)
-        'protocolTargetUserDocumentReference': protocolTargetUserDocumentReference,
+        'protocolTargetUserDocumentReference':
+            protocolTargetUserDocumentReference,
     };
 
     futures.add(db.collection('chat_room_messages').add(data));
@@ -154,7 +155,8 @@ class ChatService {
     );
 
     return chatRoomDocumentReference.update({
-      'userDocumentReferences': FieldValue.arrayRemove([UserService.instance.ref]),
+      'userDocumentReferences':
+          FieldValue.arrayRemove([UserService.instance.ref]),
     });
   }
 }
