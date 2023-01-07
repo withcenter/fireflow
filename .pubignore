@@ -15,7 +15,7 @@ example/pubspec.lock
 analysis_options.yaml
 
 test/
-
+res/
 apps/
 firebase/
 
