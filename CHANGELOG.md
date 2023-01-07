@@ -1,3 +1,8 @@
+## 0.0.48
+
+* Add. chat gpt on chat room.
+
+
 ## 0.0.47
 
 * Bump 47.

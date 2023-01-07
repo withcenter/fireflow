@@ -70,8 +70,7 @@ class ChatService {
       if (uploadUrl != null) 'uploadUrlType': uploadUrlType(uploadUrl),
       if (protocol != null) 'protocol': protocol,
       if (protocolTargetUserDocumentReference != null)
-        'protocolTargetUserDocumentReference':
-            protocolTargetUserDocumentReference,
+        'protocolTargetUserDocumentReference': protocolTargetUserDocumentReference,
     };
 
     futures.add(db.collection('chat_room_messages').add(data));
@@ -82,6 +81,7 @@ class ChatService {
       'lastMessageSentAt': FieldValue.serverTimestamp(),
       'lastMessageSentBy': UserService.instance.ref,
       'lastMessageSeenBy': [UserService.instance.ref],
+      'isGroupChat': isGroupChat,
     };
     futures.add(
       ref.set(info, SetOptions(merge: true)),
@@ -155,8 +155,7 @@ class ChatService {
     );
 
     return chatRoomDocumentReference.update({
-      'userDocumentReferences':
-          FieldValue.arrayRemove([UserService.instance.ref]),
+      'userDocumentReferences': FieldValue.arrayRemove([UserService.instance.ref]),
     });
   }
 }
