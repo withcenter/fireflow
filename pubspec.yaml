@@ -51,6 +51,8 @@ dependencies:
   file_picker: 4.5.1
   cached_network_image: 3.2.1
 
+  http: ^0.13.5
+
 
 dev_dependencies:
   flutter_test:

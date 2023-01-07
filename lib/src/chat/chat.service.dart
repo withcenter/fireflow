@@ -30,9 +30,9 @@ class ChatService {
   ///
   /// This must be the only method to send a chat message.
   ///
-  /// if [otherUserPublicDataDocumentReference] is set, thne it is a one-to-one chat.
+  /// if [otherUserDocumentReference] is set, thne it is a one-to-one chat.
   sendMessage({
-    DocumentReference? otherUserPublicDataDocumentReference,
+    DocumentReference? otherUserDocumentReference,
     DocumentReference? chatRoomDocumentReference,
     String? text,
     String? uploadUrl,
@@ -56,11 +56,9 @@ class ChatService {
     if (isGroupChat) {
       ref = chatRoomDocumentReference;
     } else {
-      ref = db.collection('chat_rooms').doc(([
-            myUid,
-            otherUserPublicDataDocumentReference!.id
-          ]..sort())
-              .join('-'));
+      ref = db
+          .collection('chat_rooms')
+          .doc(([myUid, otherUserDocumentReference!.id]..sort()).join('-'));
     }
 
     final data = {
@@ -72,8 +70,7 @@ class ChatService {
       if (uploadUrl != null) 'uploadUrlType': uploadUrlType(uploadUrl),
       if (protocol != null) 'protocol': protocol,
       if (protocolTargetUserDocumentReference != null)
-        'protocolTargetUserDocumentReference':
-            protocolTargetUserDocumentReference,
+        'protocolTargetUserDocumentReference': protocolTargetUserDocumentReference,
     };
 
     futures.add(db.collection('chat_room_messages').add(data));
@@ -157,8 +154,7 @@ class ChatService {
     );
 
     return chatRoomDocumentReference.update({
-      'userDocumentReferences':
-          FieldValue.arrayRemove([UserService.instance.ref]),
+      'userDocumentReferences': FieldValue.arrayRemove([UserService.instance.ref]),
     });
   }
 }

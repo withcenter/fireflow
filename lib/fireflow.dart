@@ -15,6 +15,7 @@ export 'src/utils.dart';
 export 'src/functions/file_functions.dart';
 export 'src/functions/string_functions.dart';
 export 'src/actions/snackbar/snackbar.dart';
+export 'src/actions/gpt/gpt.dart';
 
 /// Widgets
 export 'src/widgets/custom_popup/custom_popup.dart';
