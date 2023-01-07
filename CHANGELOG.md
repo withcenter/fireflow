@@ -1,3 +1,7 @@
+## 0.0.50
+
+* Fix. open chat.
+
 ## 0.0.49
 
 * Fix. chat and gpt.

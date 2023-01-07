@@ -39,7 +39,8 @@ class ChatRoomModel {
     String? id,
   }) {
     return ChatRoomModel(
-      userDocumentReferences: List<DocumentReference>.from(json['userDocumentReferences'] ?? []),
+      userDocumentReferences:
+          List<DocumentReference>.from(json['userDocumentReferences'] ?? []),
       lastMessage: json['lastMessage'] ?? '',
       lastMessageSentAt: json['lastMessageSentAt'] ?? Timestamp.now(),
       lastMessageSeenBy: List<DocumentReference>.from(
@@ -47,10 +48,10 @@ class ChatRoomModel {
       ),
       lastMessageSentBy: json['lastMessageSentBy'],
       title: json['title'],
-      moderatorUserDocumentReferences:
-          List<DocumentReference>.from(json['moderatorUserDocumentReferences'] ?? []),
-      unsubscribedUserDocumentReferences:
-          List<DocumentReference>.from(json['unsubscribedUserDocumentReferences'] ?? []),
+      moderatorUserDocumentReferences: List<DocumentReference>.from(
+          json['moderatorUserDocumentReferences'] ?? []),
+      unsubscribedUserDocumentReferences: List<DocumentReference>.from(
+          json['unsubscribedUserDocumentReferences'] ?? []),
       isGroupChat: json['isGroupChat'] ?? false,
       isOpenChat: json['isOpenChat'] ?? false,
     );
