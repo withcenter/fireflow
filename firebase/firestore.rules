@@ -4,7 +4,7 @@ service cloud.firestore {
 
     match /chat_rooms/{document} {
       allow get: if isMyChatRoom();
-      allow list: if isMyChatRoom();
+      allow list: if isMyChatRoom() || resource.data.isOpenChat == true;
       allow create: if true;
       allow update: if
         // moderator can update anything
