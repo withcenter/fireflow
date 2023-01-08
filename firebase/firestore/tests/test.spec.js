@@ -6,9 +6,11 @@ const TEST_PROJECT_ID = "withcenter-fireflow";
 const A = "user_A";
 const B = "user_B";
 const C = "user_C";
+const D = "user_D";
 const authA = { uid: A, email: A + "@gmail.com" };
 const authB = { uid: B, email: B + "@gmail.com" };
 const authC = { uid: C, email: C + "@gmail.com" };
+const authD = { uid: D, email: D + "@gmail.com" };
 
 // Get Firestore DB connection with user auth
 function db(auth = null) {
@@ -64,6 +66,7 @@ async function createChatRoom(users) {
     .collection("chat_rooms")
     .add({
       userDocumentReferences: users.map((e) => userDoc(e)),
+      unsubscribedUserDocumentReferences: [],
     });
 
   const snapshot = await ref.get();
@@ -86,7 +89,7 @@ describe("Firestore security test", () => {
     await firebase.assertSucceeds(aToBeSucceed.get());
   });
   it("Chat room list", async () => {
-    const snapshot = await createChatRoom([A, C]);
+    let snapshot = await createChatRoom([A, C]);
     // const adminList = await admin()
     //   .collection("chat_rooms")
     //   .where("usersDocumentReferences", "array-contains", [userDoc(B)])
@@ -98,8 +101,8 @@ describe("Firestore security test", () => {
       .get();
 
     await firebase.assertSucceeds(list);
-    const snapshot2 = await list;
-    assert(snapshot2.size === 0);
+    snapshot = await list;
+    assert(snapshot.size === 0);
 
     //
     const listA = db(authA)
@@ -250,6 +253,121 @@ describe("Firestore security test", () => {
     );
     await firebase.assertSucceeds(
       db(authA).collection("chat_room_messages").doc(messageDoc.id).delete()
+    );
+  });
+
+  it("Subscribe", async () => {
+    let snapshot = await createChatRoom([A, B, C]);
+    let ref = snapshot.ref;
+    let data = snapshot.data();
+    assert(data.unsubscribedUserDocumentReferences.length === 0);
+
+    // [] -> [ A ]
+    await firebase.assertSucceeds(
+      db(authA)
+        .collection("chat_rooms")
+        .doc(snapshot.id)
+        .update({
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayUnion(userDoc(A)),
+        })
+    );
+
+    snapshot = await ref.get();
+    assert(snapshot.data().unsubscribedUserDocumentReferences.length === 1);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(A).id);
+
+    // [ A ] -> [ ]
+    await firebase.assertSucceeds(
+      db(authA)
+        .collection("chat_rooms")
+        .doc(snapshot.id)
+        .update({
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(A)),
+        })
+    );
+
+    snapshot = await ref.get();
+    assert(snapshot.data().unsubscribedUserDocumentReferences.length === 0);
+
+    /// [ A, B, C, D ]
+    await admin()
+      .collection("chat_rooms")
+      .doc(snapshot.id)
+      .update({
+        unsubscribedUserDocumentReferences: [userDoc(A), userDoc(B), userDoc(C), userDoc(D)],
+      });
+
+    snapshot = await ref.get();
+    assert(snapshot.data().unsubscribedUserDocumentReferences.length === 4);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(A).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[1].id === userDoc(B).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[2].id === userDoc(C).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[3].id === userDoc(D).id);
+
+    // Failure. It is not allowed to remove other users.
+    //
+    // It is trying: [ A, B, C, D ] -> [ A, B, C ]
+    await firebase.assertFails(
+      db(authA)
+        .collection("chat_rooms")
+        .doc(snapshot.id)
+        .update({
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(D)),
+        })
+    );
+    // [ A, B, C, D] -> [ B, C, D ]
+    await firebase.assertSucceeds(
+      db(authA)
+        .collection("chat_rooms")
+        .doc(snapshot.id)
+        .update({
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(A)),
+        })
+    );
+
+    snapshot = await ref.get();
+    assert(snapshot.data().unsubscribedUserDocumentReferences.length === 3);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(B).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[1].id === userDoc(C).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[2].id === userDoc(D).id);
+
+    // Trying to remove a user ref that is not in the array. So, the update action does not happen.
+    //
+    // [ B, C, D ] -> [ B, C, D ]
+    await firebase.assertSucceeds(
+      db(authB)
+        .collection("chat_rooms")
+        .doc(snapshot.id)
+        .update({
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(A)),
+        })
+    );
+
+    // [ B, C, D ] -> [ C, D ]
+    await firebase.assertSucceeds(
+      db(authB)
+        .collection("chat_rooms")
+        .doc(snapshot.id)
+        .update({
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(B)),
+        })
+    );
+
+    snapshot = await ref.get();
+    assert(snapshot.data().unsubscribedUserDocumentReferences.length === 2);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(C).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[1].id === userDoc(D).id);
+
+    // It is not allowed to add other user's ref.
+    //
+    // It is try to: [ C, D ] -> [ C, D, A ]
+    await firebase.assertFails(
+      db(authC)
+        .collection("chat_rooms")
+        .doc(snapshot.id)
+        .update({
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayUnion(userDoc(A)),
+        })
     );
   });
 });

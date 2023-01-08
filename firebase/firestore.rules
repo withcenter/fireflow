@@ -8,6 +8,7 @@ service cloud.firestore {
       allow delete: if false;
     }
     
+
     match /chat_rooms/{document} {
       allow get: if isMyChatRoom() || isOpenChat();
       allow list: if isMyChatRoom() || isOpenChat();
@@ -33,7 +34,7 @@ service cloud.firestore {
           &&
           onlyUpdating(["userDocumentReferences"])
           &&
-          request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.removeAll([myReference()])) 
+          request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.removeAll([myReference()]))
         )
         ||
         // subscribe, unsubscribe
@@ -42,7 +43,9 @@ service cloud.firestore {
           &&
           onlyUpdating(["unsubscribedUserDocumentReferences"])
           &&
-          request.resource.data.unsubscribedUserDocumentReferences.hasAOnly(resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()])) 
+          request.resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).hasOnly(resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()])) 
+          &&
+          request.resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).size() == resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).size()
         )
         ||
         // if it's open group chat, he can enter without invitation.
@@ -104,7 +107,7 @@ function onlyUpdating(fields) {
 }
 
 function isOpenChat() {
-  return resource.data.isOpenChat == true;
+  return 'isOpenChat' in  resource.data && resource.data.isOpenChat == true;
 }
 
 
