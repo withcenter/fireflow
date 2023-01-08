@@ -37,6 +37,24 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "isOpenChat",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastMessageSentAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "chat_rooms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isGroupChat",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "lastMessageSentAt",
           "order": "DESCENDING"
         }
