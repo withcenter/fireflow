@@ -24,8 +24,7 @@ class UserService {
   String get uid => FirebaseAuth.instance.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   get myRef => ref;
 
@@ -70,12 +69,13 @@ class UserService {
         'userDocumentReference': ref,
         'registeredAt': FieldValue.serverTimestamp(),
       });
-
-      /// Update user's document with the user's public data document reference
-      await myRef.update({
-        'userPublicDataDocumentReference': myUserPublicDataRef,
-      });
     }
+
+    /// Update user's document with the user's public data document reference
+    /// Make sure that the user's public data document reference always exists in /users/{uid}.
+    await myRef.update({
+      'userPublicDataDocumentReference': myUserPublicDataRef,
+    });
 
     dog("UserService.generateUserPublicData() - user public data created.");
   }
