@@ -1,10 +1,16 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
+    match /ff_user_push_notifications/{document} {
+      allow create: if /databases/$(database)/documents/users/$(request.auth.uid) == request.resource.data.sender;
+      allow read: if false;
+      allow write: if false;
+      allow delete: if false;
+    }
+    
     match /chat_rooms/{document} {
-      allow get: if isMyChatRoom() || resource.data.isOpenChat == true;
-      allow list: if isMyChatRoom() || resource.data.isOpenChat == true;
+      allow get: if isMyChatRoom() || isOpenChat();
+      allow list: if isMyChatRoom() || isOpenChat();
       allow create: if true;
       allow update: if
         // moderator can update anything
@@ -30,8 +36,17 @@ service cloud.firestore {
           request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.removeAll([myReference()])) 
         )
         ||
+        // subscribe, unsubscribe
+        (
+          isMyChatRoom()
+          &&
+          onlyUpdating(["unsubscribedUserDocumentReferences"])
+          &&
+          request.resource.data.unsubscribedUserDocumentReferences.hasAOnly(resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()])) 
+        )
+        ||
         // if it's open group chat, he can enter without invitation.
-        resource.data.isOpenChat == true && request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.concat([myReference()]))
+        isOpenChat() && request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.concat([myReference()]))
         ;
       allow delete: if false;
     }
@@ -86,6 +101,10 @@ service cloud.firestore {
 
 function onlyUpdating(fields) {
   return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+}
+
+function isOpenChat() {
+  return resource.data.isOpenChat == true;
 }
 
 

@@ -50,6 +50,7 @@ class AppService {
   initUser() {
     dog('AppService.initUser()');
     FirebaseAuth.instance.authStateChanges().listen((user) {
+      // User singed in
       if (user != null) {
         dog('AppService.initUser() - user is logged in');
 

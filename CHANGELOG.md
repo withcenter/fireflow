@@ -1,7 +1,10 @@
+## 0.0.52
+
+* Update. User public data document reference field in /users collection.
+
 ## 0.0.51
 
 * Fix. open chat.
-
 
 ## 0.0.50
 

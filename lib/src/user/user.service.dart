@@ -27,6 +27,8 @@ class UserService {
   DocumentReference get ref =>
       FirebaseFirestore.instance.collection('users').doc(uid);
 
+  get myRef => ref;
+
   /// The login user's public data document reference
   DocumentReference get myUserPublicDataRef =>
       FirebaseFirestore.instance.collection('users_public_data').doc(uid);
@@ -58,17 +60,22 @@ class UserService {
   /// Creates /users_public_data/{uid} if it does not exist.
   /// This will crate /users_public_data/{uid} only if the user is logged in for the first time.
   generateUserPublicDataDocument() async {
-    if (await userPublicDataDocumentExists()) {
-      return;
-    }
+    ///
+    if (await userPublicDataDocumentExists() == false) {
+      /// Generate the user's public data document
+      await myUserPublicDataRef.set({
+        'displayName': my.displayName ?? '',
+        'photoUrl': my.photoURL ?? '',
+        'uid': uid,
+        'userDocumentReference': ref,
+        'registeredAt': FieldValue.serverTimestamp(),
+      });
 
-    await myUserPublicDataRef.set({
-      'displayName': my.displayName ?? '',
-      'photoUrl': my.photoURL ?? '',
-      'uid': uid,
-      'userDocumentReference': ref,
-      'registeredAt': FieldValue.serverTimestamp(),
-    });
+      /// Update user's document with the user's public data document reference
+      await myRef.update({
+        'userPublicDataDocumentReference': myUserPublicDataRef,
+      });
+    }
 
     dog("UserService.generateUserPublicData() - user public data created.");
   }
