@@ -1,3 +1,7 @@
+## 0.0.54
+
+* Add. push notification on chat.
+
 ## 0.0.53
 
 * Fix. user public data ref.
