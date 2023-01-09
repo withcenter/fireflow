@@ -1,3 +1,7 @@
+## 0.0.53
+
+* Fix. user public data ref.
+
 ## 0.0.52
 
 * Update. User public data document reference field in /users collection.
