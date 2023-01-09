@@ -76,6 +76,6 @@ class UserPublicDataModel {
   // create "toString()" method that returns a string of the object of this class
   @override
   String toString() {
-    return 'UserPublicDataModel(uid: $uid, userDocumentReference: $userDocumentReference, displayName: $displayName, photoUrl: $photoUrl, registeredAt: $registeredAt, updatedAt: $updatedAt)';
+    return "UserPublicDataModel(uid: $uid, userDocumentReference: $userDocumentReference, displayName: $displayName, photoUrl: $photoUrl, gender: $gender, registeredAt: $registeredAt, updatedAt: $updatedAt)";
   }
 }

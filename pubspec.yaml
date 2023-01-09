@@ -53,6 +53,10 @@ dependencies:
 
   http: ^0.13.5
 
+  # used in serialization
+  from_css_color: 2.0.0
+  built_value: 8.4.0
+
 
 dev_dependencies:
   flutter_test:

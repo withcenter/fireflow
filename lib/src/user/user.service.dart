@@ -24,7 +24,8 @@ class UserService {
   String get uid => FirebaseAuth.instance.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref =>
+      FirebaseFirestore.instance.collection('users').doc(uid);
 
   get myRef => ref;
 

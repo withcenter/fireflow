@@ -8,6 +8,7 @@ export 'src/chat/chat_room.model.dart';
 export 'src/chat/chat_room_message.model.dart';
 export 'src/chat/chat.service.dart';
 export 'src/storage/storage.service.dart';
+export 'src/push_notifications/messaging.service.dart';
 
 /// Utils, Functions, Actions
 export 'src/app.service.dart';

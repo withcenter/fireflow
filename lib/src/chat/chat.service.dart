@@ -31,6 +31,8 @@ class ChatService {
   /// This must be the only method to send a chat message.
   ///
   /// if [otherUserDocumentReference] is set, thne it is a one-to-one chat.
+  /// if [chatRoomDocumentReference] is set, then it is a group chat.
+  /// We needs [userDocumentReferences] if it is a group chat to avoid reading the chat room document for saving time.
   sendMessage({
     DocumentReference? otherUserDocumentReference,
     DocumentReference? chatRoomDocumentReference,
@@ -38,7 +40,11 @@ class ChatService {
     String? uploadUrl,
     String? protocol,
     DocumentReference? protocolTargetUserDocumentReference,
+    List<DocumentReference>? userDocumentReferences,
   }) {
+    assert(
+        otherUserDocumentReference != null || chatRoomDocumentReference != null,
+        "User document reference or chat room document reference must be set.");
     if ((text == null || text.isEmpty) &&
         (uploadUrl == null || uploadUrl.isEmpty) &&
         (protocol == null || protocol.isEmpty)) {
@@ -61,6 +67,7 @@ class ChatService {
           .doc(([myUid, otherUserDocumentReference!.id]..sort()).join('-'));
     }
 
+    /// Send chat message
     final data = {
       'chatRoomDocumentReference': ref,
       'userDocumentReference': UserService.instance.ref,
@@ -83,8 +90,22 @@ class ChatService {
       'lastMessageSentBy': UserService.instance.ref,
       'lastMessageSeenBy': [UserService.instance.ref],
     };
+    futures.add(ref.set(info, SetOptions(merge: true)));
+
+    /// Send push notifications
+
     futures.add(
-      ref.set(info, SetOptions(merge: true)),
+      MessagingService.instance.send(
+        notificationTitle: '${AppService.instance.user?.displayName} say ...',
+        notificationText: text,
+        notificationSound: 'default',
+        userRefs: userDocumentReferences ?? [otherUserDocumentReference!],
+        initialPageName: 'ChatRoom',
+        parameterData: {
+          'chatRoomDocument': chatRoomDocumentReference,
+          'otherUserPublicDataDocument': otherUserDocumentReference,
+        },
+      ),
     );
 
     return Future.wait(futures);

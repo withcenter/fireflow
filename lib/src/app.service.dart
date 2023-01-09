@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
@@ -20,6 +22,11 @@ class AppService {
   Future<DocumentSnapshot> get getKeys => keysRef.get();
 
   late final KeyModel keys;
+
+  StreamSubscription? publicDataSubscription;
+
+  /// Keep the login user's public data up to date.
+  UserPublicDataModel? user;
 
   /// Current chat room reference.
   ///
@@ -49,15 +56,29 @@ class AppService {
   /// This method must be called when the app is initialized.
   initUser() {
     dog('AppService.initUser()');
-    FirebaseAuth.instance.authStateChanges().listen((user) {
+    FirebaseAuth.instance.authStateChanges().listen((user) async {
       // User singed in
       if (user != null) {
         dog('AppService.initUser() - user is logged in');
 
-        /// Don't do async/await here.
-        UserService.instance.generateUserPublicDataDocument();
-        SettingService.instance.generate();
+        ///
+        await UserService.instance.generateUserPublicDataDocument();
+        await SettingService.instance.generate();
+
+        /// Get & update the user public data.
+        publicDataSubscription?.cancel();
+        publicDataSubscription = UserService.instance.myUserPublicDataRef
+            .snapshots()
+            .listen((snapshot) {
+          dog('AppService.initUser() - publicDataSubscription');
+          if (snapshot.exists) {
+            dog('AppService.initUser() - publicDataSubscription - snapshot.exists');
+            this.user = UserPublicDataModel.fromSnapshot(snapshot);
+            dog('AppService.initUser() - publicDataSubscription - publicData: ${this.user}');
+          }
+        });
       } else {
+        this.user = null;
         dog('AppService.initUser() - user is not logged in');
       }
     });
