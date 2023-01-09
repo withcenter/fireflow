@@ -1,3 +1,7 @@
+## 0.0.55
+
+* Fix. lint. operand can't be null.
+
 ## 0.0.54
 
 * Add. push notification on chat.

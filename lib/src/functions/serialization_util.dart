@@ -20,7 +20,7 @@ String serializeParameterData(Map<String, dynamic> parameterData) => jsonEncode(
           key,
           serializeParameter(value),
         ),
-      )..removeWhere((k, v) => k == null || v == null),
+      )..removeWhere((k, v) => v == null),
     );
 
 /// Converts the input value into a value that can be JSON encoded.
