@@ -1,3 +1,8 @@
+## 0.0.56
+
+* Fix. Bug on chat send.
+* Fix. Chat message.
+
 ## 0.0.55
 
 * Fix. lint. operand can't be null.

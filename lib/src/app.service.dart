@@ -32,12 +32,13 @@ class AppService {
   ///
   /// This is the current chat room that the user is in.
   /// This is used to determine whether to show the push notification from chat message or not.
-  DocumentReference? currentChatRoomReference;
+  DocumentReference? currentChatRoomDocumentReference;
 
   AppService() {
     dog("AppService.constructor() called.");
     initSystemKeys();
     initUser();
+    MessagingService.instance.init();
   }
 
   /// This method must be called when the app is initialized.
@@ -63,13 +64,11 @@ class AppService {
 
         ///
         await UserService.instance.generateUserPublicDataDocument();
-        await SettingService.instance.generate();
 
         /// Get & update the user public data.
         publicDataSubscription?.cancel();
-        publicDataSubscription = UserService.instance.myUserPublicDataRef
-            .snapshots()
-            .listen((snapshot) {
+        publicDataSubscription =
+            UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) {
           dog('AppService.initUser() - publicDataSubscription');
           if (snapshot.exists) {
             dog('AppService.initUser() - publicDataSubscription - snapshot.exists');
@@ -77,6 +76,9 @@ class AppService {
             dog('AppService.initUser() - publicDataSubscription - publicData: ${this.user}');
           }
         });
+
+        ///
+        await SettingService.instance.generate();
       } else {
         this.user = null;
         dog('AppService.initUser() - user is not logged in');
@@ -86,6 +88,5 @@ class AppService {
 
   initSystemKeys() async {
     keys = KeyModel.fromSnapshot(await getKeys);
-    print(keys);
   }
 }

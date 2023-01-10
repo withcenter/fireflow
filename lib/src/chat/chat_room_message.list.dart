@@ -20,10 +20,8 @@ class ChatRoomMessageList extends StatefulWidget {
     required this.onEmpty,
     this.onProtocolMessage,
   })  : assert(
-            (otherUserPublicDataDocument != null &&
-                    chatRoomDocumentReference == null) ||
-                (otherUserPublicDataDocument == null &&
-                    chatRoomDocumentReference != null),
+            (otherUserPublicDataDocument != null && chatRoomDocumentReference == null) ||
+                (otherUserPublicDataDocument == null && chatRoomDocumentReference != null),
             "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
         super(key: key);
 
@@ -60,8 +58,8 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     if (isGroupChat) {
       return widget.chatRoomDocumentReference!;
     } else {
-      return ChatService.instance.room(
-          ([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
+      return ChatService.instance
+          .room(([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
     }
   }
 
@@ -79,7 +77,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
   ///
   init() async {
     // Set the chat room ref where I am chat in
-    AppService.instance.currentChatRoomReference = chatRoomRef;
+    AppService.instance.currentChatRoomDocumentReference = chatRoomRef;
 
     if (isSingleChat) {
       // For 1:1 chat,
@@ -93,8 +91,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     } else {
       // For the open group chat, any user can join the chat room.
       final room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
-      if (room.userDocumentReferences.contains(myReference) == false &&
-          room.isOpenChat == true) {
+      if (room.userDocumentReferences.contains(myReference) == false && room.isOpenChat == true) {
         await chatRoomRef.update({
           'userDocumentReferences': FieldValue.arrayUnion([myReference]),
         });
@@ -131,7 +128,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
   @override
   void dispose() {
-    AppService.instance.currentChatRoomReference = null;
+    AppService.instance.currentChatRoomDocumentReference = null;
     subscriptionNewMessage.cancel();
     super.dispose();
   }
@@ -143,8 +140,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       reverse: true,
       // item builder type is compulsory.
       itemBuilder: (context, documentSnapshots, index) {
-        final message =
-            ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
+        final message = ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
 
         if (message.isProtocol) {
           if (widget.onProtocolMessage != null) {

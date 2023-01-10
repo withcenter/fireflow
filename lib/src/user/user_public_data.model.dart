@@ -62,7 +62,7 @@ class UserPublicDataModel {
       updatedAt: json['updatedAt'] ?? Timestamp.now(),
       gender: json['gender'] ?? '',
       birthday: json['birthday'] ?? Timestamp.now(),
-      followers: json['followers'] ?? [],
+      followers: List<DocumentReference>.from(json['followers'] ?? []),
       hasPhoto: json['hasPhoto'] ?? false,
       isProfileComplete: json['isProfileComplete'] ?? false,
       coverPhotoUrl: json['coverPhotoUrl'] ?? '',

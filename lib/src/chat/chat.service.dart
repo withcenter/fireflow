@@ -28,11 +28,16 @@ class ChatService {
   ///
   /// This method sends a chat message and updates the chat room.
   ///
-  /// This must be the only method to send a chat message.
+  /// Note, that this must be the only method to send a chat message.
   ///
   /// if [otherUserDocumentReference] is set, thne it is a one-to-one chat.
   /// if [chatRoomDocumentReference] is set, then it is a group chat.
-  /// We needs [userDocumentReferences] if it is a group chat to avoid reading the chat room document for saving time.
+  ///
+  /// To send message fast, it first send the chat message. Then, it updates
+  /// the chat room and send push notifications.
+  ///
+  /// Note, that it will not send push notifications and update chat room
+  /// if the chat message has a protocol.
   sendMessage({
     DocumentReference? otherUserDocumentReference,
     DocumentReference? chatRoomDocumentReference,
@@ -40,10 +45,8 @@ class ChatService {
     String? uploadUrl,
     String? protocol,
     DocumentReference? protocolTargetUserDocumentReference,
-    List<DocumentReference>? userDocumentReferences,
-  }) {
-    assert(
-        otherUserDocumentReference != null || chatRoomDocumentReference != null,
+  }) async {
+    assert(otherUserDocumentReference != null || chatRoomDocumentReference != null,
         "User document reference or chat room document reference must be set.");
     if ((text == null || text.isEmpty) &&
         (uploadUrl == null || uploadUrl.isEmpty) &&
@@ -51,25 +54,23 @@ class ChatService {
       return;
     }
 
-    List<Future> futures = [];
-
     /// Create a chat message
     final db = FirebaseFirestore.instance;
     final myUid = UserService.instance.uid;
-    DocumentReference ref;
+    DocumentReference chatRoomRef;
     bool isGroupChat = chatRoomDocumentReference != null;
 
     if (isGroupChat) {
-      ref = chatRoomDocumentReference;
+      chatRoomRef = chatRoomDocumentReference;
     } else {
-      ref = db
+      chatRoomRef = db
           .collection('chat_rooms')
           .doc(([myUid, otherUserDocumentReference!.id]..sort()).join('-'));
     }
 
-    /// Send chat message
+    /// Send chat message asynchronously.
     final data = {
-      'chatRoomDocumentReference': ref,
+      'chatRoomDocumentReference': chatRoomRef,
       'userDocumentReference': UserService.instance.ref,
       'sentAt': FieldValue.serverTimestamp(),
       if (text != null) 'text': text,
@@ -77,38 +78,62 @@ class ChatService {
       if (uploadUrl != null) 'uploadUrlType': uploadUrlType(uploadUrl),
       if (protocol != null) 'protocol': protocol,
       if (protocolTargetUserDocumentReference != null)
-        'protocolTargetUserDocumentReference':
-            protocolTargetUserDocumentReference,
+        'protocolTargetUserDocumentReference': protocolTargetUserDocumentReference,
     };
+    db.collection('chat_room_messages').add(data);
 
-    futures.add(db.collection('chat_room_messages').add(data));
+    /// If the chat message has a protocol,
+    /// don't update chat room and don't send push notifications.
+    if (protocol != null) {
+      return;
+    }
 
-    /// Update the chat room
+    /// Update the chat room asynchronously.
     final info = {
       'lastMessage': text,
       'lastMessageSentAt': FieldValue.serverTimestamp(),
       'lastMessageSentBy': UserService.instance.ref,
       'lastMessageSeenBy': [UserService.instance.ref],
     };
-    futures.add(ref.set(info, SetOptions(merge: true)));
+    chatRoomRef.set(info, SetOptions(merge: true));
 
     /// Send push notifications
+    ///
+    /// Title and text for the notification
+    late final String title;
+    if ((text == null || text.isEmpty) && (uploadUrl != null && uploadUrl.isNotEmpty)) {
+      text = 'Tap to see the photo.';
+      title = '${AppService.instance.user?.displayName} sent a photo';
+    } else {
+      title = '${AppService.instance.user?.displayName} say ...';
+    }
 
-    futures.add(
-      MessagingService.instance.send(
-        notificationTitle: '${AppService.instance.user?.displayName} say ...',
-        notificationText: text,
-        notificationSound: 'default',
-        userRefs: userDocumentReferences ?? [otherUserDocumentReference!],
-        initialPageName: 'ChatRoom',
-        parameterData: {
-          'chatRoomDocument': chatRoomDocumentReference,
-          'otherUserPublicDataDocument': otherUserDocumentReference,
-        },
-      ),
+    final room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
+
+    /// Remove unsubscribed users
+    ///g
+    final userRefs = room.userDocumentReferences;
+    if (room.unsubscribedUserDocumentReferences.isNotEmpty) {
+      userRefs.removeWhere((ref) => room.unsubscribedUserDocumentReferences.contains(ref));
+    }
+
+    /// Send push notifications
+    ///
+
+    MessagingService.instance.send(
+      notificationTitle: title,
+      notificationText: text,
+      notificationSound: 'default',
+      notificationImageUrl: uploadUrl,
+      userRefs: userRefs,
+      initialPageName: 'ChatRoom',
+      parameterData: {
+        'chatRoomDocument': chatRoomRef,
+        'otherUserPublicDataDocument': otherUserDocumentReference,
+      },
     );
 
-    return Future.wait(futures);
+    return;
   }
 
   /// inviteUser
@@ -176,8 +201,7 @@ class ChatService {
     );
 
     return chatRoomDocumentReference.update({
-      'userDocumentReferences':
-          FieldValue.arrayRemove([UserService.instance.ref]),
+      'userDocumentReferences': FieldValue.arrayRemove([UserService.instance.ref]),
     });
   }
 }

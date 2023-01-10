@@ -1,6 +1,6 @@
 name: fireflow
 description: This package is designed for FlutterFlow app to provide enhanced features.
-version: 0.0.55
+version: 0.0.56
 homepage: https://github.com/withcenter/fireflow
 
 environment:
@@ -57,6 +57,8 @@ dependencies:
   from_css_color: 2.0.0
   built_value: 8.4.0
 
+  # push notification
+  another_flushbar: ^1.12.29
 
 dev_dependencies:
   flutter_test:
