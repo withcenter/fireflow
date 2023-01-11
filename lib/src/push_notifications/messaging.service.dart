@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/functions/serialization_util.dart';
 import 'package:fireflow/src/push_notifications/message.model.dart';
+import 'package:flutter/foundation.dart';
 
 class MessagingService {
   static MessagingService get instance => _instance ??= MessagingService();
@@ -17,6 +18,7 @@ class MessagingService {
   }
 
   init() {
+    if (kIsWeb) return;
     FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
       /// This will triggered while the app is opened
       /// If the message has data, then do some extra work based on the data.
@@ -51,73 +53,9 @@ class MessagingService {
   onTapMessage(MessageModel message) async {
     /// 채팅 푸시 알림?
     ///
-    ///
-
     if (AppService.instance.onTapMessage != null) {
       AppService.instance.onTapMessage!(message.data.initialPageName, message.data.parameterData);
     }
-
-    // AppService.instance.context
-    //     .pushNamed(message.data.initialPageName, queryParams: message.data.parameterData);
-    // if (message.data.initialPageName == 'ChatRoom') {
-    //   final chatRoomRef = message.data.chatRoomDocumentReference!;
-    //   print('Navigate to ChatRoomPage by context.pushNamed, ${chatRoomRef.id}');
-
-    /// 1:1 채팅? 채팅방 id 에 하이픈(-)이 있으면 1:1 채팅.
-    // if (chatRoomRef.id.contains('-')) {
-    /// 1:1 채팅방이면 상대방의 정보를 가져와서 채팅방 페이지로 이동.
-    /// 이 때, 사용자의 reference 만 넘겨도 되는지 확인을 한다.
-    /// 어차피 여기서는 FF 의 Schema Record 로 변환 할 수 없다.
-    /// 그래서, 정 안되면, 채팅방 페이지 문서에서, Document 외에 reference 를 옵션으로 받도록 한다.
-    ///
-    // final doc = await UsersPublicDataRecord.getDocumentOnce(
-    //   db.collection('users_public_data').doc(message.data.senderUserDocumentReference.id),
-    // );
-    // context.pushNamed(
-    //   'ChatRoom',
-    //   queryParams: {'otherUserDocument': serializeParam(doc, ParamType.Document)}.withoutNulls,
-    //   extra: <String, dynamic>{
-    //     'otherUserDocument': doc,
-    //   },
-    // );
-    // } else {
-    // 그룹 채팅 방.
-    // final doc = await ChatRoomsRecord.getDocumentOnce(chatRoomRef);
-    // context.pushNamed(
-    //   'ChatRoom',
-    //   queryParams: {'chatRoomDocument': serializeParam(doc, ParamType.Document)}.withoutNulls,
-    //   extra: <String, dynamic>{
-    //     'chatRoomDocument': doc,
-    //   },
-    // );
-
-    // Navigator.of(AppService.instance.context).pushNamed('ChatRoom', arguments: {
-    //   'chatRoomDocument': chatRoomRef,
-    // });
-
-    // AppService.instance.context.pushNamed('ChatRoom', arguments: {
-    //   'chatRoomDocument': chatRoomRef,
-    // });
-    // }
-
-    //   return;
-    // }
-
-    // final pageBuilder = pageBuilderMap[message.data.initialPageName];
-    // if (pageBuilder != null) {
-    //   /// message.data.parameterData 는 문자열인데, 이것을 JSON 객체로 변경한다.
-    //   /// 이 때, JSON 으로 변환하기 전에, users/<uid> 를 users_public_data/<uid> 로 변경한 후, JSON 객체로 변경한다.
-    //   /// /users 컬렉션은 Firestore security 로 제한되어 읽을 수가 없다.
-    //   final page = await pageBuilder(
-    //     getInitialParameterData({
-    //       "parameterData": message.data.parameterData.replaceAll('users/', 'users_public_data/')
-    //     }),
-    //   );
-    //   await Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => page),
-    //   );
-    // }
   }
 
   /// Send push message.

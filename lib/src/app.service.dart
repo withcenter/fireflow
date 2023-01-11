@@ -48,7 +48,7 @@ class AppService {
   void init({
     required BuildContext context,
     bool debug = false,
-    Function(String, Map<String, String>)? onTapMessage,
+    Function(String, Map<String, dynamic>)? onTapMessage,
   }) {
     dog('AppService.instance.init()');
     this.context = context;
