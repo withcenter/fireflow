@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflow/fireflow.dart';
@@ -22,10 +24,9 @@ class MessagingService {
 
       final message = MessageModel.fromRemoteMessage(remoteMessage);
 
-      print('--> initMessaging::onMessage (got a message) -> ${message.data}');
+      log('--> initMessaging::onMessage; $message');
 
-      print(
-          'Notification: ${message.notification}, ${message.notification.title}, ${message.notification.body}');
+      log('Notification: ${message.notification}, ${message.notification.title}, ${message.notification.body}');
 
       /// Is this message coming from the chat room I am chatting in?
       if (AppService.instance.currentChatRoomDocumentReference != null &&
@@ -49,41 +50,56 @@ class MessagingService {
   /// 여기서 부터, ... notification 으로 부터 전달받은 값을 reference 로 변경하여, 각 페이지로 이동한다. 각 Schema Document 로는 변경하기 어렵다.
   onTapMessage(MessageModel message) async {
     /// 채팅 푸시 알림?
-    if (message.data.initialPageName == 'ChatRoom') {
-      final chatRoomRef = message.data.chatRoomDocumentReference!;
-      print('Navigate to ChatRoomPage by context.pushNamed, ${chatRoomRef.id}');
+    ///
+    ///
 
-      /// 1:1 채팅? 채팅방 id 에 하이픈(-)이 있으면 1:1 채팅.
-      if (chatRoomRef.id.contains('-')) {
-        /// 1:1 채팅방이면 상대방의 정보를 가져와서 채팅방 페이지로 이동.
-        /// 이 때, 사용자의 reference 만 넘겨도 되는지 확인을 한다.
-        /// 어차피 여기서는 FF 의 Schema Record 로 변환 할 수 없다.
-        /// 그래서, 정 안되면, 채팅방 페이지 문서에서, Document 외에 reference 를 옵션으로 받도록 한다.
-        ///
-        // final doc = await UsersPublicDataRecord.getDocumentOnce(
-        //   db.collection('users_public_data').doc(message.data.senderUserDocumentReference.id),
-        // );
-        // context.pushNamed(
-        //   'ChatRoom',
-        //   queryParams: {'otherUserDocument': serializeParam(doc, ParamType.Document)}.withoutNulls,
-        //   extra: <String, dynamic>{
-        //     'otherUserDocument': doc,
-        //   },
-        // );
-      } else {
-        // 그룹 채팅 방.
-        // final doc = await ChatRoomsRecord.getDocumentOnce(chatRoomRef);
-        // context.pushNamed(
-        //   'ChatRoom',
-        //   queryParams: {'chatRoomDocument': serializeParam(doc, ParamType.Document)}.withoutNulls,
-        //   extra: <String, dynamic>{
-        //     'chatRoomDocument': doc,
-        //   },
-        // );
-      }
+    AppService.instance.onTapMessage(message.data.initialPageName, message.data.parameterData);
 
-      return;
-    }
+    // AppService.instance.context
+    //     .pushNamed(message.data.initialPageName, queryParams: message.data.parameterData);
+    // if (message.data.initialPageName == 'ChatRoom') {
+    //   final chatRoomRef = message.data.chatRoomDocumentReference!;
+    //   print('Navigate to ChatRoomPage by context.pushNamed, ${chatRoomRef.id}');
+
+    /// 1:1 채팅? 채팅방 id 에 하이픈(-)이 있으면 1:1 채팅.
+    // if (chatRoomRef.id.contains('-')) {
+    /// 1:1 채팅방이면 상대방의 정보를 가져와서 채팅방 페이지로 이동.
+    /// 이 때, 사용자의 reference 만 넘겨도 되는지 확인을 한다.
+    /// 어차피 여기서는 FF 의 Schema Record 로 변환 할 수 없다.
+    /// 그래서, 정 안되면, 채팅방 페이지 문서에서, Document 외에 reference 를 옵션으로 받도록 한다.
+    ///
+    // final doc = await UsersPublicDataRecord.getDocumentOnce(
+    //   db.collection('users_public_data').doc(message.data.senderUserDocumentReference.id),
+    // );
+    // context.pushNamed(
+    //   'ChatRoom',
+    //   queryParams: {'otherUserDocument': serializeParam(doc, ParamType.Document)}.withoutNulls,
+    //   extra: <String, dynamic>{
+    //     'otherUserDocument': doc,
+    //   },
+    // );
+    // } else {
+    // 그룹 채팅 방.
+    // final doc = await ChatRoomsRecord.getDocumentOnce(chatRoomRef);
+    // context.pushNamed(
+    //   'ChatRoom',
+    //   queryParams: {'chatRoomDocument': serializeParam(doc, ParamType.Document)}.withoutNulls,
+    //   extra: <String, dynamic>{
+    //     'chatRoomDocument': doc,
+    //   },
+    // );
+
+    // Navigator.of(AppService.instance.context).pushNamed('ChatRoom', arguments: {
+    //   'chatRoomDocument': chatRoomRef,
+    // });
+
+    // AppService.instance.context.pushNamed('ChatRoom', arguments: {
+    //   'chatRoomDocument': chatRoomRef,
+    // });
+    // }
+
+    //   return;
+    // }
 
     // final pageBuilder = pageBuilderMap[message.data.initialPageName];
     // if (pageBuilder != null) {
@@ -121,7 +137,8 @@ class MessagingService {
     if ((notificationTitle ?? '').isEmpty || (notificationText ?? '').isEmpty) {
       return;
     }
-    parameterData['isPushNotification'] = true;
+    parameterData['isPushNotification'] = 'Y';
+    parameterData['senderUserDocumentReference'] = UserService.instance.ref;
 
     /// Remove the current user from the list.
     userRefs.removeWhere((ref) => ref.id == UserService.instance.uid);

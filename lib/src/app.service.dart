@@ -21,12 +21,15 @@ class AppService {
   DocumentReference get keysRef => systemSettingsCol.doc('keys');
   Future<DocumentSnapshot> get getKeys => keysRef.get();
 
+  bool debug = false;
   late final KeyModel keys;
 
   StreamSubscription? publicDataSubscription;
 
   /// Keep the login user's public data up to date.
   UserPublicDataModel? user;
+
+  late final Function(String, Map<String, String>) onTapMessage;
 
   /// Current chat room reference.
   ///
@@ -46,9 +49,11 @@ class AppService {
   void init({
     required BuildContext context,
     bool debug = false,
+    Function(String, Map<String, String>)? onTapMessage,
   }) {
     this.context = context;
-    globalDebugMode = debug;
+    this.debug = debug;
+    if (onTapMessage != null) this.onTapMessage = onTapMessage;
     dog('AppService.instance.init()');
   }
 

@@ -1,33 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-/// Note that, json['parameterData'] is a String. And it should be kept as a String here.
-
+/// Push notification message modeling
 ///
-class MessageDataModel {
-  final DocumentReference? chatRoomDocumentReference;
-  final String initialPageName;
-  final String parameterData;
-
-  MessageDataModel({
-    this.chatRoomDocumentReference,
-    required this.initialPageName,
-    required this.parameterData,
-  });
-
-  static FirebaseFirestore get db => FirebaseFirestore.instance;
-
-  factory MessageDataModel.fromJson(Map<String, dynamic> json) {
-    return MessageDataModel(
-      chatRoomDocumentReference: json['chatRoomDocumentReference'] == null
-          ? null
-          : db.doc(json['chatRoomDocumentReference']),
-      initialPageName: json['initialPageName'],
-      parameterData: json['parameterData'],
-    );
-  }
-}
-
+///
+/// See the [Push Notification Data Modeling](https://docs.google.com/document/d/1oZUnw60kcYuf-I5aIzETeD9ioqjydNTot1qhZ0q7MNY/edit#heading=h.3b8fun9rsitr) in document for more details.
 class MessageModel {
   final String? title;
   final String? body;
@@ -43,6 +22,46 @@ class MessageModel {
       data: MessageDataModel.fromJson(message.data),
       notification: MessageNotificationModel.fromJson(message.notification),
     );
+  }
+  @override
+  toString() {
+    return 'MessageModel(title: $title, body: $body, data: $data, notification: $notification)';
+  }
+}
+
+/// Note that, json['parameterData'] is a String. it needs to be converted as JSON.
+///
+/// See the [Push Notification Data Modeling](https://docs.google.com/document/d/1oZUnw60kcYuf-I5aIzETeD9ioqjydNTot1qhZ0q7MNY/edit#heading=h.3b8fun9rsitr) in document for more details.
+class MessageDataModel {
+  final DocumentReference? chatRoomDocumentReference;
+  final DocumentReference? senderUserDocumentReference;
+  final String initialPageName;
+  final Map<String, String> parameterData;
+
+  MessageDataModel({
+    required this.initialPageName,
+    required this.parameterData,
+    required this.senderUserDocumentReference,
+    this.chatRoomDocumentReference,
+  });
+
+  static FirebaseFirestore get db => FirebaseFirestore.instance;
+
+  factory MessageDataModel.fromJson(Map<String, dynamic> json) {
+    final params = jsonDecode(json['parameterData']);
+    return MessageDataModel(
+      chatRoomDocumentReference:
+          params['chatRoomDocument'] == null ? null : db.doc(params['chatRoomDocument']),
+      senderUserDocumentReference: params['senderUserDocumentReference'] == null
+          ? null
+          : db.doc(params['senderUserDocumentReference']),
+      initialPageName: json['initialPageName'],
+      parameterData: Map<String, String>.from(params),
+    );
+  }
+  @override
+  toString() {
+    return 'MessageDataModel(initialPageName: $initialPageName, parameterData: $parameterData, senderUserDocumentReference: $senderUserDocumentReference, chatRoomDocumentReference: $chatRoomDocumentReference)';
   }
 }
 
@@ -73,5 +92,10 @@ class MessageNotificationModel {
       title: title,
       body: body,
     );
+  }
+
+  @override
+  toString() {
+    return 'MessageNotificationModel(title: $title, body: $body)';
   }
 }
