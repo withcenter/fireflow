@@ -1,3 +1,8 @@
+## 0.0.57
+
+* Update. push notification on foreground.
+
+
 ## 0.0.56
 
 * Fix. Bug on chat send.

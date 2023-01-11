@@ -13,7 +13,8 @@ class MessageModel {
   final MessageDataModel data;
   final MessageNotificationModel notification;
 
-  MessageModel({this.title, this.body, required this.data, required this.notification});
+  MessageModel(
+      {this.title, this.body, required this.data, required this.notification});
 
   factory MessageModel.fromRemoteMessage(RemoteMessage message) {
     return MessageModel(
@@ -50,8 +51,9 @@ class MessageDataModel {
   factory MessageDataModel.fromJson(Map<String, dynamic> json) {
     final params = jsonDecode(json['parameterData']);
     return MessageDataModel(
-      chatRoomDocumentReference:
-          params['chatRoomDocument'] == null ? null : db.doc(params['chatRoomDocument']),
+      chatRoomDocumentReference: params['chatRoomDocument'] == null
+          ? null
+          : db.doc(params['chatRoomDocument']),
       senderUserDocumentReference: params['senderUserDocumentReference'] == null
           ? null
           : db.doc(params['senderUserDocumentReference']),

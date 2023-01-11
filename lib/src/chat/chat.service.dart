@@ -46,7 +46,8 @@ class ChatService {
     String? protocol,
     DocumentReference? protocolTargetUserDocumentReference,
   }) async {
-    assert(otherUserDocumentReference != null || chatRoomDocumentReference != null,
+    assert(
+        otherUserDocumentReference != null || chatRoomDocumentReference != null,
         "User document reference or chat room document reference must be set.");
     if ((text == null || text.isEmpty) &&
         (uploadUrl == null || uploadUrl.isEmpty) &&
@@ -78,7 +79,8 @@ class ChatService {
       if (uploadUrl != null) 'uploadUrlType': uploadUrlType(uploadUrl),
       if (protocol != null) 'protocol': protocol,
       if (protocolTargetUserDocumentReference != null)
-        'protocolTargetUserDocumentReference': protocolTargetUserDocumentReference,
+        'protocolTargetUserDocumentReference':
+            protocolTargetUserDocumentReference,
     };
     db.collection('chat_room_messages').add(data);
 
@@ -101,7 +103,8 @@ class ChatService {
     ///
     /// Title and text for the notification
     late final String title;
-    if ((text == null || text.isEmpty) && (uploadUrl != null && uploadUrl.isNotEmpty)) {
+    if ((text == null || text.isEmpty) &&
+        (uploadUrl != null && uploadUrl.isNotEmpty)) {
       text = 'Tap to see the photo.';
       title = '${AppService.instance.user?.displayName} sent a photo';
     } else {
@@ -114,7 +117,8 @@ class ChatService {
     ///g
     final userRefs = room.userDocumentReferences;
     if (room.unsubscribedUserDocumentReferences.isNotEmpty) {
-      userRefs.removeWhere((ref) => room.unsubscribedUserDocumentReferences.contains(ref));
+      userRefs.removeWhere(
+          (ref) => room.unsubscribedUserDocumentReferences.contains(ref));
     }
 
     /// Send push notifications
@@ -201,7 +205,8 @@ class ChatService {
     );
 
     return chatRoomDocumentReference.update({
-      'userDocumentReferences': FieldValue.arrayRemove([UserService.instance.ref]),
+      'userDocumentReferences':
+          FieldValue.arrayRemove([UserService.instance.ref]),
     });
   }
 }
