@@ -87,7 +87,7 @@ service cloud.firestore {
     
     // check if the user is admin.
     function isAdmin() {
-      return get(/databases/$(database)/documents/settings/admins).data[request.auth.uid] == true;
+      return get(/databases/$(database)/documents/system_settings/admins).data[request.auth.uid] == true;
     }
 
     function isMyChatRoom() {

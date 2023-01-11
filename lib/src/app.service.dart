@@ -21,7 +21,6 @@ class AppService {
   DocumentReference get keysRef => systemSettingsCol.doc('keys');
   Future<DocumentSnapshot> get getKeys => keysRef.get();
 
-  bool debug = false;
   late final KeyModel keys;
 
   StreamSubscription? publicDataSubscription;
@@ -51,10 +50,10 @@ class AppService {
     bool debug = false,
     Function(String, Map<String, String>)? onTapMessage,
   }) {
-    this.context = context;
-    this.debug = debug;
-    if (onTapMessage != null) this.onTapMessage = onTapMessage;
     dog('AppService.instance.init()');
+    this.context = context;
+    gDebug = debug;
+    if (onTapMessage != null) this.onTapMessage = onTapMessage;
   }
 
   /// Initialize the user functions.
