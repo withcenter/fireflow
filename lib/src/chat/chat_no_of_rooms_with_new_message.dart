@@ -8,16 +8,16 @@ class ChatNoOfRoomsWithNewMessage extends StatefulWidget {
     Key? key,
     required this.width,
     required this.height,
-    this.textSize = 12,
-    this.backgroundColor = const Color(0xFFFF4B4B),
-    this.textColor = const Color(0xFFFFFFFF),
+    this.textSize,
+    this.backgroundColor,
+    this.textColor,
   }) : super(key: key);
 
   final double width;
   final double height;
-  final double textSize;
-  final Color backgroundColor;
-  final Color textColor;
+  final double? textSize;
+  final Color? backgroundColor;
+  final Color? textColor;
 
   @override
   _ChatNoOfRoomsWithNewMessageState createState() =>
@@ -68,7 +68,7 @@ class _ChatNoOfRoomsWithNewMessageState
       width: widget.width,
       height: widget.height,
       decoration: BoxDecoration(
-        color: widget.backgroundColor,
+        color: widget.backgroundColor ?? const Color(0xFFFF4B4B),
         shape: BoxShape.circle,
       ),
       child: Align(
@@ -76,8 +76,8 @@ class _ChatNoOfRoomsWithNewMessageState
         child: Text(
           count.toString(),
           style: TextStyle(
-            color: widget.textColor,
-            fontSize: widget.textSize,
+            color: widget.textColor ?? const Color(0xFFFFFFFF),
+            fontSize: widget.textSize ?? 12,
           ),
         ),
       ),
