@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 class ChatNoOfRoomsWithNewMessage extends StatefulWidget {
   const ChatNoOfRoomsWithNewMessage({
     Key? key,
-    required this.width,
-    required this.height,
+    this.width,
+    this.height,
     this.textSize,
     this.backgroundColor,
     this.textColor,
   }) : super(key: key);
 
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final double? textSize;
   final Color? backgroundColor;
   final Color? textColor;
@@ -65,8 +65,8 @@ class _ChatNoOfRoomsWithNewMessageState
       return const SizedBox.shrink();
     }
     return Container(
-      width: widget.width,
-      height: widget.height,
+      width: widget.width ?? 16,
+      height: widget.height ?? 16,
       decoration: BoxDecoration(
         color: widget.backgroundColor ?? const Color(0xFFFF4B4B),
         shape: BoxShape.circle,
