@@ -21,6 +21,9 @@ class ChatService {
   /// Returns a chat room document reference of the given id.
   DocumentReference room(String id) => rooms.doc(id);
 
+  Query get myRooms => rooms.where('userDocumentReferences',
+      arrayContains: UserService.instance.ref);
+
   /// Returns a chat room message document reference of the given id.
   DocumentReference message(String id) => messages.doc(id);
 

@@ -1,3 +1,8 @@
+## 0.0.58
+
+* Update. No of room with new chat message.
+
+
 ## 0.0.57
 
 * Update. push notification on foreground.
