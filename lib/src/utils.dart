@@ -1,7 +1,5 @@
 import 'dart:developer';
 
-import 'package:fireflow/fireflow.dart';
-
 /// globa debug mode
 ///
 /// If this is true, debug message will be printed.
