@@ -62,7 +62,7 @@ service cloud.firestore {
 
     match /users/{document} {
       allow create: if request.auth.uid == document;
-      allow read: if request.auth.uid == document;
+      allow read: if request.auth.uid == document || isAdmin();
       allow update: if request.auth.uid == document ;
       allow delete: if false;
     }
@@ -82,9 +82,14 @@ service cloud.firestore {
     }
     match /system_settings/{document} {
       allow read: if true;
-      allow write: if false;
+      allow write: if isAdmin();
     }
-  
+    
+    // check if the user is admin.
+    function isAdmin() {
+      return get(/databases/$(database)/documents/settings/admins).data[request.auth.uid] == true;
+    }
+
     function isMyChatRoom() {
       return resource.data.userDocumentReferences.hasAny([myReference()]);
     }
