@@ -38,12 +38,14 @@ class MessageDataModel {
   final DocumentReference? senderUserDocumentReference;
   final String initialPageName;
   final Map<String, String> parameterData;
+  final String? chatRoomId;
 
   MessageDataModel({
     required this.initialPageName,
     required this.parameterData,
     required this.senderUserDocumentReference,
     this.chatRoomDocumentReference,
+    this.chatRoomId,
   });
 
   static FirebaseFirestore get db => FirebaseFirestore.instance;
@@ -59,11 +61,12 @@ class MessageDataModel {
           : db.doc(params['senderUserDocumentReference']),
       initialPageName: json['initialPageName'],
       parameterData: Map<String, String>.from(params),
+      chatRoomId: params['chatRoomId'],
     );
   }
   @override
   toString() {
-    return 'MessageDataModel(initialPageName: $initialPageName, parameterData: $parameterData, senderUserDocumentReference: $senderUserDocumentReference, chatRoomDocumentReference: $chatRoomDocumentReference)';
+    return 'MessageDataModel(initialPageName: $initialPageName, parameterData: $parameterData, senderUserDocumentReference: $senderUserDocumentReference, chatRoomDocumentReference: $chatRoomDocumentReference, chatRoomId: $chatRoomId)';
   }
 }
 

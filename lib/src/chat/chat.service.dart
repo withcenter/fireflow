@@ -135,8 +135,14 @@ class ChatService {
       userRefs: userRefs,
       initialPageName: 'ChatRoom',
       parameterData: {
-        'chatRoomDocument': chatRoomRef,
-        'otherUserPublicDataDocument': otherUserDocumentReference,
+        if (isGroupChat)
+          'chatRoomDocument': chatRoomRef
+        else
+          'otherUserPublicDataDocument': UserService.instance.publicRef,
+
+        /// Send the chat room id. This is being used to detect if the user
+        /// is already in the chat room.
+        'chatRoomId': chatRoomRef.id,
       },
     );
 

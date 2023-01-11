@@ -26,16 +26,14 @@ class MessagingService {
 
       final message = MessageModel.fromRemoteMessage(remoteMessage);
 
-      log('--> initMessaging::onMessage; $message');
-
-      log('Notification: ${message.notification}, ${message.notification.title}, ${message.notification.body}');
+      dog('--> initMessaging::onMessage; $message');
+      // log('Notification: ${message.notification}, ${message.notification.title}, ${message.notification.body}');
 
       /// Is this message coming from the chat room I am chatting in?
       if (AppService.instance.currentChatRoomDocumentReference != null &&
           AppService.instance.currentChatRoomDocumentReference?.id ==
-              message.data.chatRoomDocumentReference?.id) {
-        print(
-            '---> I am chatting with this user already. Do not show a notification.');
+              message.data.chatRoomId) {
+        dog('I am chatting with this user already. Do not show a notification.');
         return;
       }
       showFlushbar(
@@ -79,7 +77,7 @@ class MessagingService {
     if ((notificationTitle ?? '').isEmpty || (notificationText ?? '').isEmpty) {
       return;
     }
-    parameterData['isPushNotification'] = 'Y';
+
     parameterData['senderUserDocumentReference'] = UserService.instance.ref;
 
     /// Remove the current user from the list.

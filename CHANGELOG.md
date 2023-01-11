@@ -1,4 +1,4 @@
-## 0.0.60
+## 0.0.61
 
 * Fix. parameter options on no of room with new chat message.
 

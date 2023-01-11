@@ -12,5 +12,5 @@ bool gDebug = false;
 ///
 /// [message] is the message to print
 dog(String message) {
-  if (gDebug) log("---> $message");
+  if (gDebug) log("DOG ---> $message");
 }

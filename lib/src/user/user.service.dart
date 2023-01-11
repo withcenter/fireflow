@@ -33,6 +33,8 @@ class UserService {
   DocumentReference get myUserPublicDataRef =>
       FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
+  get publicRef => myUserPublicDataRef;
+
   /// The login user's Firebase User object.
   User get my => FirebaseAuth.instance.currentUser!;
 
