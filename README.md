@@ -341,7 +341,9 @@ at /system_settings/admins { <USER_UID>: true }
 
 You need to add {admin: true} in the /users_public_data/<UID> document.
 
-set-admin.gif
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/set-admin.gif?raw=true "How to set admin")
+
+
 
 
 # Push notification
