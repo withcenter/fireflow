@@ -20,6 +20,8 @@
   - [Enable Push notifications](#enable-push-notifications)
   - [AppService](#appservice)
 - [User](#user)
+  - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
+- [Push notification](#push-notification)
 - [Chat](#chat)
   - [Chat schema](#chat-schema)
   - [How to display menu when the chat message has tapped.](#how-to-display-menu-when-the-chat-message-has-tapped)
@@ -28,10 +30,11 @@
   - [How to not invite the same user.](#how-to-not-invite-the-same-user)
   - [How to display the protocol message.](#how-to-display-the-protocol-message)
   - [How to remove a user](#how-to-remove-a-user)
-- [Push notification](#push-notification)
   - [How to receive and display the push notifications while the app is foreground.](#how-to-receive-and-display-the-push-notifications-while-the-app-is-foreground)
   - [Displaying the number of chat rooms with new messages.](#displaying-the-number-of-chat-rooms-with-new-messages)
   - [Querying to the Open AI - GPT.](#querying-to-the-open-ai---gpt)
+- [Forum](#forum)
+  - [Forum Schema](#forum-schema)
 - [Supabase](#supabase)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
@@ -171,63 +174,39 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 
 # User
 
-- Create the `users` schema in Flutterflow.
+- Create the `users_public_data` schema in Flutterflow like below.
 
-/users_public_data collection
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users_public_data-schema.jpg?raw=true "Flutterflow users_public_data schmea")
+
+
+- `uid` is the the uid of the user.
+- `userDocumentReference` is the document reference of the user.
+- `displayName` is the display name of the user.
+- `photoUrl` is the primary profile photo url of the user.
+- `registeredAt` is the time that this document was created.
+- `updatedAt` is the time that this document was updated.
+- `gender` can be one of `M` or `F`. M as Male or F as Female
+- `birthday` is the birthday of the user
+- `followers` is the list of user document references who follow the user.
+- `hasPhoto` is set to `true` if the user has the primary profile photo. Or false.
+- `isProfileComplete` is set to `true` if the user filled in the necessary fields in his profile. Or false.
+- `coverPhotoUrl` is the url of the cover photo of the user.
+- `recentPosts` is the list of the last recent 50 document references that the user posts. Note, create /posts collections and `recentPosts` Data Type first to add this field.
+- `lastPostCreatedAt` is the time that the user created the last post.
+- `isPremiumUser` is set to `true` if the user is paid for premium service.
+
+
+
+## How to get users_public_data document
+
 
 When you need to get the user’s public data document, use `usersPublicDataDocumentReference` in `Authenticated User`.
-uid
-String
-The user’s uid
-userDocumentReference
-Doc Reference (users)
-The user’s document reference
-displayName
-String
-The user’s display name
-photoUrl
-Image Path
-Primary profile photo url
-registeredAt
-Timestamp
-The time that this document was created.
-updatedAt
-Timestamp
-The time that this document was updated.
-gender
-String
-M as Male or F as Female
-birthday
-Timestamp
-Birthday of the user
-followers
-List< Doc References (users) >
-Document reference of users who follow me.
-hasPhoto
-Boolean
-True if the user has the primary profile photo. Or false.
-isProfileComplete
-Boolean
-True if the user filled in the necessary fields in his profile. Or false.
-coverPhotoUrl
-Image Path
-The cover photo url of the user
-recentPosts
-List< Data (recentPosts) >
-The last 50 recent posts of the user.
-Note, create /posts collections and `recentPosts` Data Type first to add this field.
-lastPostCreatedAt
-Timestamp
-The time that the user created the last post.
-isPremiumUser
-Boolean
-True if the user is paid for premium service.
 
 
 
 
-
-
+# Push notification
 
 
 
@@ -259,14 +238,18 @@ True if the user is paid for premium service.
 ## How to remove a user
 
 
-# Push notification
-
-
 ## How to receive and display the push notifications while the app is foreground.
 
 ## Displaying the number of chat rooms with new messages.
 
 ## Querying to the Open AI - GPT.
+
+# Forum
+
+## Forum Schema
+
+
+
 
 # Supabase
 
