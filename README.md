@@ -100,7 +100,7 @@ I make sample projects and sell it by cloning in Flutterflow.
 
 ### Firestore Security Rules
 
-![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-firestore-deploy.jpg?raw=true)
+![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-firestore-deploy.jpg?v=2&raw=true)
 
 
 
