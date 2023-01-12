@@ -19,6 +19,7 @@
     - [Firestore Security Rules](#firestore-security-rules)
   - [Enable Push notifications](#enable-push-notifications)
   - [AppService](#appservice)
+- [Local State Variable](#local-state-variable)
 - [User](#user)
   - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
 - [Push notification](#push-notification)
@@ -37,6 +38,7 @@
   - [Querying to the Open AI - GPT.](#querying-to-the-open-ai---gpt)
 - [Forum](#forum)
   - [Forum Schema](#forum-schema)
+    - [recentPosts](#recentposts)
 - [Supabase](#supabase)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
@@ -174,6 +176,12 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-on-page-load-app-service.jpg?raw=true "Adding App Service")
 
 
+# Local State Variable
+
+There are few local state variables that Fireflow uses.
+
+
+
 # User
 
 - Create the `users_public_data` schema in Flutterflow like below.
@@ -221,12 +229,49 @@ When you need to get the user’s public data document, use `usersPublicDataDocu
 
 ### Chat Room collection
 
-ff-schema-chat-rooms.jpg
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-schema-chat-rooms.jpg?raw=true "Chat rooms collection")
+
+- `userDocumentReferences` is the participants document reference of the chat room.
+- `lastMessage` is the last chat message.
+- `lastMessageSentAt` is the timestamp of last message
+- `lastMessageSeenBy` is the list of user reference who have read the message
+- `lastMessageSentBy` is the user reference of the last chat message sender.
+- `title` is the chat room title. The moderator can change it.
+- `moderatorUserDocumentReferences` is the user document references of the moderators. The first user who created the chat room becomes a moderator automatically. And he can add more moderators.
+- `unsubscribedUserDocumentReferences` is the document references of the users who disabled the notification of a new message for the chat room.
+- `isGroupChat` is set to `true` if it's a group chat. Otherwise, false.
+- `isOpenChat` is set to `true` if the chat room is open to anyone. When it is set to true, users can join the chat room.
+
+
+
+
+
 
 ### Chat message collection
 
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat_room_messages.jpg?raw=true "Chat rooms collection")
 
-ff-chat_room_messages.jpg
+- `userDocumentReference` is the document reference of the user who sent this message.
+- `chatRoomDocumentReference` is the reference of the chat room document.
+- `text` is the chat message.
+- `uploadUrl` is the url of the uploaded file. It can be an Image Path, Video Path, Audio Path or any upload url.
+- `uploadUrlType` is the type of the upload file. It can be one of the following;
+  - Empty string if there is no upload.
+  - image
+  - video
+  - audio
+  - file ( if the upload file is not one of image, video, audio, then it is file type ).
+- `protocol` is the protocol states the purpose(or action) of the message. For instance, when a user invites another user, then the protocol is set to `invite`. It could be one of;
+  - invite
+  - remove
+  - leave
+  When the protocol is set, there might be extra information.
+- `protocolTargetUserDocumentReference` is the target user document reference who is being affected by the protocol. For instance, User A invites user B. then, the protocol is set to `invite`. And A's ref goes into userDocumentReference and B's ref goes into protocolTargetUserDocumentReference.
+- `sentAt` is the time that the message was sent.
+
+
+
 
 ## How to display menu when the chat message has tapped.
 
@@ -259,7 +304,13 @@ ff-chat_room_messages.jpg
 
 ## Forum Schema
 
-ff-schema-recent-posts.jpg
+### recentPosts
+
+The recent 50 posts of each users wil be saved in `recentPosts`.
+
+- Create the `recentPosts` Date Types like below.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-schema-recent-posts.jpg?raw=true "Recent posts")
 
 
 
