@@ -17,8 +17,11 @@
 - [Getting started](#getting-started)
   - [Setting up Firebase](#setting-up-firebase)
     - [Firestore Security Rules](#firestore-security-rules)
+  - [Enable Push notifications](#enable-push-notifications)
   - [AppService](#appservice)
+- [User](#user)
 - [Chat](#chat)
+  - [Chat schema](#chat-schema)
   - [How to display menu when the chat message has tapped.](#how-to-display-menu-when-the-chat-message-has-tapped)
   - [How to leave a group chat room.](#how-to-leave-a-group-chat-room)
   - [How to display an uploaded file.](#how-to-display-an-uploaded-file)
@@ -87,6 +90,9 @@ I make sample projects and sell it by cloning in Flutterflow.
     - Subscribing/Unsubscribing a category
     - Sending push notifications to the author of the parent comments and post.
 
+- Optional push notification.
+  - There will be an option to enable or disable push notification.
+
 - Chat
   - Block the moderator to leave the chat room when there are other members in the room.
   - Destroying the chat room. The fireflow will automatically remove all users and delete the chat room.
@@ -108,6 +114,10 @@ Fireflow has its own Firestore Security Rules. To apply it, you will need to che
 And copy the [fireflow security rules](https://raw.githubusercontent.com/withcenter/fireflow/main/firebase/firestore.rules) and paste it into your Firebase firestore security rules.
 
 ![Firestore Security Rules](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-rules.gif?raw=true)
+
+## Enable Push notifications
+
+- The fireflow is tightly coupled with the Push Notification as of now. So, you need to enable push notification on Flutterflow.
 
 ## AppService
 
@@ -149,19 +159,84 @@ The `onTapMessage` is the push notification handler while the app is foreground.
   - I should have decoupled the Independent Components, but I didn't for hoping that people who need the `Independent Components` would get interested in fireflow.
 
 
-- One thing to note is that, the context that is given to `AppService` must be valid context. You may initialize the `AppService` on all the root level screens to provide valid context.
+- Add the `appService` action on the root level screens.
+  - One thing to note is that, the context that is given to `AppService` must be valid context. You may initialize the `AppService` on all the root level screens to provide valid context.
   - The root level screen is the screens that are the at bottom parts of the nav stack and the context of the screens must alive.
+    - For instance, If the Home screen is always exists at the bottom of the nav stack, then you can only add the `appService` action on Home screen.
   - If you really don't know what to do, you can simply add the action on every page.
 
 
-ff-on-page-load-app-service.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-on-page-load-app-service.jpg?raw=true "Adding App Service")
 
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-supabase.jpg?raw=true "Supabase")
+# User
+
+- Create the `users` schema in Flutterflow.
+
+/users_public_data collection
+
+When you need to get the user’s public data document, use `usersPublicDataDocumentReference` in `Authenticated User`.
+uid
+String
+The user’s uid
+userDocumentReference
+Doc Reference (users)
+The user’s document reference
+displayName
+String
+The user’s display name
+photoUrl
+Image Path
+Primary profile photo url
+registeredAt
+Timestamp
+The time that this document was created.
+updatedAt
+Timestamp
+The time that this document was updated.
+gender
+String
+M as Male or F as Female
+birthday
+Timestamp
+Birthday of the user
+followers
+List< Doc References (users) >
+Document reference of users who follow me.
+hasPhoto
+Boolean
+True if the user has the primary profile photo. Or false.
+isProfileComplete
+Boolean
+True if the user filled in the necessary fields in his profile. Or false.
+coverPhotoUrl
+Image Path
+The cover photo url of the user
+recentPosts
+List< Data (recentPosts) >
+The last 50 recent posts of the user.
+Note, create /posts collections and `recentPosts` Data Type first to add this field.
+lastPostCreatedAt
+Timestamp
+The time that the user created the last post.
+isPremiumUser
+Boolean
+True if the user is paid for premium service.
+
+
+
+
+
+
+
 
 
 
 # Chat
+
+## Chat schema
+
+- Chat service needs two collections.
 
 ## How to display menu when the chat message has tapped.
 
