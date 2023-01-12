@@ -15,6 +15,8 @@
 - [Features](#features)
   - [The Coming Features](#the-coming-features)
 - [Getting started](#getting-started)
+  - [Setting up Firebase](#setting-up-firebase)
+    - [Firestore Security Rules](#firestore-security-rules)
   - [AppService](#appservice)
 - [Chat](#chat)
   - [How to display menu when the chat message has tapped.](#how-to-display-menu-when-the-chat-message-has-tapped)
@@ -93,6 +95,14 @@ I make sample projects and sell it by cloning in Flutterflow.
 
 
 # Getting started
+
+## Setting up Firebase
+
+### Firestore Security Rules
+
+![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-firestore-deploy.jpg?raw=true)
+
+
 
 
 ## AppService
