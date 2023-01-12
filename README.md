@@ -106,6 +106,7 @@ Fireflow has its own Firestore Security Rules. To apply it, you will need to che
 
 And copy the [fireflow security rules](https://raw.githubusercontent.com/withcenter/fireflow/main/firebase/firestore.rules) and paste it into your Firebase firestore security rules.
 
+![Firestore Security Rules](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-rules.gif?raw=true)
 
 ## AppService
 
@@ -142,13 +143,12 @@ As you can see, it uses the `push_notifications_handler.dart` that is generated 
 
 The `onTapMessage` is the push notification handler while the app is foreground. And If you don't want it, you can remove that part including `import .../push_notifications_handler.dart;` And uncheck the `Exclude from compilation`.
 
-
 - There are some functions, widgets and actions that don't need to connect to Firebase and don't need to use BuildContext. They are called as **Independent Components**.
   - For `Independent Components`, you don't have to initialize the `AppService`.
   - I should have decoupled the Independent Components, but I didn't for hoping that people who need the `Independent Components` would get interested in fireflow.
 
 
-
+- One thing to note is that, the context that is given to `AppService` must be valid context. You may initialized the `AppService` on all the root level screens to provide valid context.
 
 
 

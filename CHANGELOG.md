@@ -1,3 +1,7 @@
+## 0.0.62
+
+* Doc. Begin to update document for public release.
+
 ## 0.0.61
 
 * Fix. parameter options on no of room with new chat message.
