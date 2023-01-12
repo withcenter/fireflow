@@ -1,3 +1,8 @@
+## 0.0.64
+
+* Doc. updating document only.
+
+
 ## 0.0.63
 
 * Add supabase for FULLTEXT SEARCH.

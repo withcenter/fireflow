@@ -77,8 +77,9 @@ class AppService {
 
         /// Observe(get & update) the user public data.
         publicDataSubscription?.cancel();
-        publicDataSubscription =
-            UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
+        publicDataSubscription = UserService.instance.myUserPublicDataRef
+            .snapshots()
+            .listen((snapshot) async {
           if (snapshot.exists) {
             this.user = UserPublicDataModel.fromSnapshot(snapshot);
             if (supabase) {
@@ -88,7 +89,8 @@ class AppService {
                 'display_name': this.user!.displayName,
                 'gender': this.user!.gender,
                 'birthday': this.user!.birthday.toDate().toIso8601String(),
-                'registeredAt': this.user!.registeredAt.toDate().toIso8601String(),
+                'registeredAt':
+                    this.user!.registeredAt.toDate().toIso8601String(),
               }, onConflict: 'uid');
             }
           }

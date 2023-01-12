@@ -77,6 +77,8 @@
 - [Developer coding guide](#developer-coding-guide)
 - [Sponsors](#sponsors)
 - [Known Issues](#known-issues)
+  - [Push notification and back navigation](#push-notification-and-back-navigation)
+  - [\[cloud\_firestore/permission\_denied\] The caller does not have permission to execute the specified operation.](#cloud_firestorepermission_denied-the-caller-does-not-have-permission-to-execute-the-specified-operation)
 
 
 # Overview
@@ -773,17 +775,18 @@ The snackbar in FF is okay. But I want to have my own design of snackbars. So, h
 
 ## snackBarSuccess
 
-snackbar-1.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/snackbar-1.jpg?raw=true "Snackbar")
+
 
 Add snackBarSuccess Custom Action like below.
 
-snackbar-2.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/snackbar-2.jpg?raw=true "Snackbar")
 
 ## snackBarWarning
 
 Add snackBarWarning Custom Action like below.
 
-snackbar-3.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/snackbar-3.jpg?raw=true "Snackbar")
 
 
 # Developer coding guide
@@ -807,5 +810,23 @@ FlutterFlow Korean Community
 
 # Known Issues
 
-- There is [an issue regarding the push notification](https://github.com/FlutterFlow/flutterflow-issues/issues/228). This bug produces an error on back navigation when the app is opened by tapping on the push message.
+## Push notification and back navigation
+
+There is [an issue regarding the push notification](https://github.com/FlutterFlow/flutterflow-issues/issues/228). This bug produces an error on back navigation when the app is opened by tapping on the push message.
+
+
+## [cloud_firestore/permission_denied] The caller does not have permission to execute the specified operation.
+
+Most of the time, it really causes problems. But in a few cases, it is designed to produce permission errors while it is working fine.
+
+For instance, in the `ChatRoomMessageList` widget of fireflow,
+
+The chat room for 1:1 chat will be created in `initState` asynchronously while the app queries to read the messages in the ListView widget.
+
+The app will first read the chat messages before the chat room exists. But to read chat messages, the chat room must exist. This is why there is a permission error.
+The permission error may appear in the console, but still it works fine.
+This permission error may not appear always.
+
+
+[cloud_firestore/permission_denied] happens often when the app is listening to some documents and suddenly user login status changes. For instance, the app is listening to a chat room and the user suddenly leaves the chat room. And it would be best if the app handles all the [cloud_firestore/permission_denied] exceptions nicely, but in some cases (or in many cases) it is just okay with the permission exceptions.
 
