@@ -180,6 +180,13 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 
 There are few local state variables that Fireflow uses.
 
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-local-states.jpg?raw=true "Adding App Service")
+
+- `defaultImagePath` is the image path that will be used by default. For instance, when you add a Image widget and sometimes it needs the default image.
+- `anonymousMaleUrl` is the male picture url that will be shown by default when the user is male and has no profile photo.
+- `anonymousFemaleUrl` is the female picture url that will be used when the user is female and has no profile photo.
+- `chatSendMessageAskResult` is  
+
 
 
 # User
