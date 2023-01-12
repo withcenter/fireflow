@@ -29,20 +29,34 @@
   - [users\_public\_data schema](#users_public_data-schema)
   - [Register and sign-in](#register-and-sign-in)
   - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
+  - [Profile photo upload](#profile-photo-upload)
+  - [Adding extra fields on users\_public\_data schema](#adding-extra-fields-on-users_public_data-schema)
+- [System setting](#system-setting)
+  - [Admin](#admin)
 - [Push notification](#push-notification)
+  - [Foreground Push Notification and Routing](#foreground-push-notification-and-routing)
+  - [MessageModel](#messagemodel)
 - [Chat](#chat)
   - [Chat schema](#chat-schema)
     - [Chat Room collection](#chat-room-collection)
     - [Chat message collection](#chat-message-collection)
-  - [How to display menu when the chat message has tapped.](#how-to-display-menu-when-the-chat-message-has-tapped)
-  - [How to leave a group chat room.](#how-to-leave-a-group-chat-room)
-  - [How to display an uploaded file.](#how-to-display-an-uploaded-file)
-  - [How to not invite the same user.](#how-to-not-invite-the-same-user)
-  - [How to display the protocol message.](#how-to-display-the-protocol-message)
-  - [How to remove a user](#how-to-remove-a-user)
-  - [How to receive and display the push notifications while the app is foreground.](#how-to-receive-and-display-the-push-notifications-while-the-app-is-foreground)
-  - [Displaying the number of chat rooms with new messages.](#displaying-the-number-of-chat-rooms-with-new-messages)
-  - [Querying to the Open AI - GPT.](#querying-to-the-open-ai---gpt)
+  - [Logic of chat](#logic-of-chat)
+    - [Entering Chat Room to begin chat](#entering-chat-room-to-begin-chat)
+    - [How to list my chat rooms](#how-to-list-my-chat-rooms)
+    - [How to display menu when the chat message has tapped.](#how-to-display-menu-when-the-chat-message-has-tapped)
+    - [How to leave a group chat room.](#how-to-leave-a-group-chat-room)
+    - [How to display an uploaded file.](#how-to-display-an-uploaded-file)
+    - [How to not invite the same user.](#how-to-not-invite-the-same-user)
+    - [How to display the protocol message.](#how-to-display-the-protocol-message)
+    - [How to remove a user](#how-to-remove-a-user)
+    - [How to receive and display the push notifications while the app is foreground.](#how-to-receive-and-display-the-push-notifications-while-the-app-is-foreground)
+    - [How to display the number of chat rooms with new messages.](#how-to-display-the-number-of-chat-rooms-with-new-messages)
+    - [How to query to the Open AI - GPT.](#how-to-query-to-the-open-ai---gpt)
+    - [How to change chat room title](#how-to-change-chat-room-title)
+    - [How to send chat message](#how-to-send-chat-message)
+    - [How to create a group chat](#how-to-create-a-group-chat)
+  - [Chat Design](#chat-design)
+    - [ChatRoomProtocolMessage](#chatroomprotocolmessage)
 - [Forum](#forum)
   - [Forum Schema](#forum-schema)
     - [recentPosts](#recentposts)
@@ -51,6 +65,7 @@
   - [Custom Popup widget.](#custom-popup-widget)
 - [Developer coding guide](#developer-coding-guide)
 - [Sponsors](#sponsors)
+- [Known Issues](#known-issues)
 
 
 # Overview
@@ -77,10 +92,11 @@ I make sample projects and sell it by cloning in Flutterflow.
 
 - Chat.
   - Custom design.
+    - Tap on chat message to delete, edit, copy, open, etc.
   - Push notification. User can subscribe/unsubscribe chat room.
   - Display the number of chat room that has unread messages.
   - Open AI. GPT query. Chat members can query to GPT and share.
-  - Uploading any kinds of files like TXT, PDF, ZIP, etc.
+  - Uploading any kinds of files like Image, Video, TXT, PDF, ZIP, etc.
   - User invite and leave in Group chat.
   - Moderator can remove a user.
 
@@ -114,6 +130,7 @@ I make sample projects and sell it by cloning in Flutterflow.
   - Block users not to enter the chat room. `blockUsers` will hold the list of the blocked users.
   - Sending push notification to all users including those who are unsubscribed the chat room.
 
+- Since the `AppCheck` is built-in by Flutterflow, why don't fireflow remove the security rules and `/users_public_data`?
 
 
 # Getting started
@@ -286,8 +303,65 @@ Note, that the `userPublicDataDocumentReference` in `users` collection is set on
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-get-user-pub-doc.jpg?raw=true "How to get user public data document")
 
 
+## Profile photo upload
+
+- Uploading the profile photo of the user is much complicated than you may think.
+  - If a user cancels on the following(immediate) upload after the user has just uploaded a profile photo, the app maintains the same URL on the widget state. So, it should simply ignore when the user canceled the upload.
+  - The existing profile photo should be deleted (or continue to work) even if the actual file does not exist. There might be some cases where the photo fields have urls but the photos are not actually exists and this would cause a problem.
+
+
+- When the user uploads his profile photo, use the `Upload Media Action` in fireflow (not in flutterflow), then pass the uploaded URL to `afterProfilePhotoUpload`. And leave all the other works to fireflow.
+
+- For cover photo upload, update the photo using `Upload Media Action` in fireflow and url to `afterCoverPhotoUpload` action.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-photo.jpg?raw=true "User photo")
+
+
+## Adding extra fields on users_public_data schema
+
+- You can simply add more fields on users_public_data schema.
+
+
+
+# System setting
+
+Some API Keys like Open AI will be invalid once it is open to the public. So, it needs to be kept in the database (or somewhere else).
+
+In Fireflow, those keys should be in /system_settings/keys { keyName: … }
+
+
+
+## Admin
+
+
+To set a user as an admin, You need to update the Firestore directly. You can do so within FF settings, or Firestore.
+
+You need to add your UID (Or any other user’s UID that you want to set as an admin)
+at /system_settings/admins { <USER_UID>: true }
+
+You need to add {admin: true} in the /users_public_data/<UID> document.
+
+set-admin.gif
+
 
 # Push notification
+
+There are some differences from the notification logic of FF.
+
+- The push notification sender's user reference is added to the parameter.
+- The sender’s user document reference is always removed. Meaning, the sender will not receive the push notification he sent.
+- Foreground push notification works.
+
+
+## Foreground Push Notification and Routing
+
+It is not ideal to do routings inside fireflow.
+You can handle the tap event on push notification by adding `onTapMessage` callback to AppService.
+
+
+## MessageModel
+
+The `MessageModel` will handle all kinds of push notification data including, but not limited to chat, post, profile.
 
 
 
@@ -343,35 +417,105 @@ Note, that the `userPublicDataDocumentReference` in `users` collection is set on
 
 
 
+## Logic of chat
 
-## How to display menu when the chat message has tapped.
+
+### Entering Chat Room to begin chat
+
+- For A, to chat with B
+  - A enters the `ChatRoom` screen with the parameter of the `userPublicDataDocument` of B over
+  - Then, in the `ChatRoom` Screen,
+  - Display user’s photo and name on the app bar from `userPublicDataDocument`
+  - Use the `ChatRoomMessages` custom widget with the reference of `userPublicDataDocument`.
+  - Note that, If a user document reference is given to fireflow ChatRoomMessages widget, it is considered as 1:1 chat.
+
+
+- To begin a group chat,
+  - A opens a group chat with `chatRoomDocument`.
+  - Display chat room information from `chatRoomDocument`.
+  - In the chat room, it uses the `ChatRoomMessages` custom widget with the reference of `chatRoomDocument`.
+  - If a chat room document reference is given to fireflow ChatRoomMessages widget, it is considered as group chat.
+
+### How to list my chat rooms
+
+Get the chat rooms that have the login user’s document reference in the `userDocumentReferences` field.
+
+
+### How to display menu when the chat message has tapped.
 
 - message copy, edit, delete, open, etc.
 
-## How to leave a group chat room.
+### How to leave a group chat room.
 
 
-## How to display an uploaded file.
+### How to display an uploaded file.
 
-## How to not invite the same user.
+### How to not invite the same user.
 
 
-## How to display the protocol message.
+### How to display the protocol message.
 
 - When someone invited.
 - When someone removed.
 - When someone leave.
 
-## How to remove a user
+### How to remove a user
 
 
-## How to receive and display the push notifications while the app is foreground.
+### How to receive and display the push notifications while the app is foreground.
 
-## Displaying the number of chat rooms with new messages.
+### How to display the number of chat rooms with new messages.
 
-## Querying to the Open AI - GPT.
+- Use `ChatNoOfRoomsWithNewMessage` widget.
+
+- It is counted by the number of rooms, not by the number of messages.
+- It is done in steps, 
+  - Listen for the changes of my chat rooms,
+  - Count the number of rooms that don’t have my user document reference in `lastMessageSeenBy` field.
+
+
+
+### How to query to the Open AI - GPT.
 
 - If you don't want to implement GPT query, simply don't add the Open AI key and don't put options for GPT query.
+
+### How to change chat room title
+
+
+
+### How to send chat message
+
+When a user inputs and sends a message, simply pass the input over the `onChatMessageSubmit`.
+
+
+
+
+### How to create a group chat
+
+Create `chat_rooms` document with fields and values of
+moderatorUserDocumentReference as the creator’s reference
+title as the title of the chat room
+userDocumentReferences with the create’s reference.
+lastMessageSentAt with Current Time (Not Firestore server timestamp)
+
+Save the created document to `createdChatRoom` as action output
+
+
+And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument parameter.
+
+
+
+## Chat Design
+
+
+### ChatRoomProtocolMessage
+
+
+
+
+
+
+
 
 # Forum
 
@@ -423,4 +567,10 @@ If you want to update/improve the fireflow or if you want to work on your projec
 
 FlutterFlow Korean Community
 
+
+
+
+# Known Issues
+
+- There is [an issue regarding the push notification](https://github.com/FlutterFlow/flutterflow-issues/issues/228). This bug produces an error on back navigation when the app is opened by tapping on the push message.
 
