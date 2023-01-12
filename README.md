@@ -149,7 +149,15 @@ The `onTapMessage` is the push notification handler while the app is foreground.
   - I should have decoupled the Independent Components, but I didn't for hoping that people who need the `Independent Components` would get interested in fireflow.
 
 
-- One thing to note is that, the context that is given to `AppService` must be valid context. You may initialized the `AppService` on all the root level screens to provide valid context.
+- One thing to note is that, the context that is given to `AppService` must be valid context. You may initialize the `AppService` on all the root level screens to provide valid context.
+  - The root level screen is the screens that are the at bottom parts of the nav stack and the context of the screens must alive.
+  - If you really don't know what to do, you can simply add the action on every page.
+
+
+ff-on-page-load-app-service.jpg
+
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-supabase.jpg?raw=true "Supabase")
 
 
 
@@ -191,8 +199,9 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 
 - Add `supabase: true` on `AppService`.
 
+- And prepare `users_public_data` schema like below.
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/res/ff-supabase.jpg?raw=true "Supabase")
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-supabase.jpg?raw=true "Supabase")
 
 
 
