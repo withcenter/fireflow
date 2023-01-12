@@ -25,6 +25,7 @@
 - [The structure of Fireflow](#the-structure-of-fireflow)
   - [Files and folders](#files-and-folders)
 - [User](#user)
+  - [users schema](#users-schema)
   - [users\_public\_data schema](#users_public_data-schema)
   - [Register and sign-in](#register-and-sign-in)
   - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
@@ -230,6 +231,9 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 
 # User
 
+## users schema
+
+
 
 ## users_public_data schema
 
@@ -270,8 +274,9 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 ## How to get users_public_data document
 
 
-- When you need to get the public data document of a user, filter the `usersPublicDataDocumentReference` in the `users_public_data` schema with the ref of `Authenticated User`.
+- When you need to get the public data document of a user, filter the `userDocumentReference` in the `users_public_data` schema with the `userPublicDataDocumentReference` of `Authenticated User`.
 
+Note, that the `userPublicDataDocumentReference` in `users` collection is set on the very first time the app runs by `AppService`. So, it may be a good idea to not use it on the first screen of the app. You may use it on the second page and after.
 
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-get-user-pub-doc.jpg?raw=true "How to get user public data document")
