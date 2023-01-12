@@ -233,6 +233,10 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 
 ## users schema
 
+- Add `userPublicDataDocumentReference` to `users` schema. This is the connection to `users_public_data` schema.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-user-schema.jpg?raw=true "Flutterflow users schmea")
+
 
 
 ## users_public_data schema
