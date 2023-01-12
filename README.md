@@ -24,6 +24,8 @@
 - [Push notification](#push-notification)
 - [Chat](#chat)
   - [Chat schema](#chat-schema)
+    - [Chat Room collection](#chat-room-collection)
+    - [Chat message collection](#chat-message-collection)
   - [How to display menu when the chat message has tapped.](#how-to-display-menu-when-the-chat-message-has-tapped)
   - [How to leave a group chat room.](#how-to-leave-a-group-chat-room)
   - [How to display an uploaded file.](#how-to-display-an-uploaded-file)
@@ -217,6 +219,15 @@ When you need to get the user’s public data document, use `usersPublicDataDocu
 
 - Chat service needs two collections.
 
+### Chat Room collection
+
+ff-schema-chat-rooms.jpg
+
+### Chat message collection
+
+
+ff-chat_room_messages.jpg
+
 ## How to display menu when the chat message has tapped.
 
 - message copy, edit, delete, open, etc.
@@ -247,6 +258,8 @@ When you need to get the user’s public data document, use `usersPublicDataDocu
 # Forum
 
 ## Forum Schema
+
+ff-schema-recent-posts.jpg
 
 
 
