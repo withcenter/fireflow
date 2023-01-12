@@ -29,6 +29,7 @@
   - [How to receive and display the push notifications while the app is foreground.](#how-to-receive-and-display-the-push-notifications-while-the-app-is-foreground)
   - [Displaying the number of chat rooms with new messages.](#displaying-the-number-of-chat-rooms-with-new-messages)
   - [Querying to the Open AI - GPT.](#querying-to-the-open-ai---gpt)
+- [Supabase](#supabase)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
 - [Sponsors](#sponsors)
@@ -183,6 +184,17 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 ## Displaying the number of chat rooms with new messages.
 
 ## Querying to the Open AI - GPT.
+
+# Supabase
+
+- To enable supabase, follow [the Supabase document in the offical site](https://docs.flutterflow.io/data-and-backend/supabase).
+
+- Add `supabase: true` on `AppService`.
+
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/res/ff-supabase.jpg?raw=true "Supabase")
+
+
 
 # Widgets
 
