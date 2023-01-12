@@ -71,6 +71,9 @@
       - [Add the custom widget in your design](#add-the-custom-widget-in-your-design)
   - [DisplayMedia widget](#displaymedia-widget)
   - [SafeArea widget](#safearea-widget)
+- [Actions](#actions)
+  - [snackBarSuccess](#snackbarsuccess)
+  - [snackBarWarning](#snackbarwarning)
 - [Developer coding guide](#developer-coding-guide)
 - [Sponsors](#sponsors)
 - [Known Issues](#known-issues)
@@ -733,11 +736,14 @@ In the example below;
 Some devices like the one on the left side have no notches. That’s fine without SafeArea.
 But some devices like the one on the right have notches at the top and at the bottom. 
 
-safearea-1.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/safearea-1.jpg?raw=true "SafeArea")
+
 
 Yes, of course, you may twist the widgets to make the full screen with a background image like below. But that has limitations and the widget tree goes crazy.
 
-safearea-2.jpg
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/safearea-2.jpg?raw=true "SafeArea")
+
 
 So?
 
@@ -745,18 +751,39 @@ Here comes with the two widgets. SafeAreaTop and SafeAreaBottom.
 
 Here is how to create SafeAreaTop and SafeAreaBottom widgets using Fireflow.
 
-safearea-3.jpg
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/safearea-3.jpg?raw=true "SafeArea")
 
 
-safearea-4.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/safearea-4.jpg?raw=true "SafeArea")
 
 How to layout the SafeAreaTop and SafeAreaBottom widgets.
 
-safearea-5.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/safearea-5.jpg?raw=true "SafeArea")
 
 Be sure that you disable the `Enforce Width and Height` option.
 
-safearea-6.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/safearea-6.jpg?raw=true "SafeArea")
+
+
+# Actions
+
+The snackbar in FF is okay. But I want to have my own design of snackbars. So, here are the two. It's relatively easy to design the snackbar.
+
+
+## snackBarSuccess
+
+snackbar-1.jpg
+
+Add snackBarSuccess Custom Action like below.
+
+snackbar-2.jpg
+
+## snackBarWarning
+
+Add snackBarWarning Custom Action like below.
+
+snackbar-3.jpg
 
 
 # Developer coding guide
