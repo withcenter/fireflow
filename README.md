@@ -22,7 +22,11 @@
   - [Local State Variable](#local-state-variable)
   - [Keys](#keys)
     - [Open AI Keys](#open-ai-keys)
+- [The structure of Fireflow](#the-structure-of-fireflow)
+  - [Files and folders](#files-and-folders)
 - [User](#user)
+  - [users\_public\_data schema](#users_public_data-schema)
+  - [Register and sign-in](#register-and-sign-in)
   - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
 - [Push notification](#push-notification)
 - [Chat](#chat)
@@ -44,6 +48,7 @@
 - [Supabase](#supabase)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
+- [Developer coding guide](#developer-coding-guide)
 - [Sponsors](#sponsors)
 
 
@@ -184,7 +189,7 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 
 There are few local state variables that Fireflow uses.
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-local-states-2.jpg?v=2&raw=true "Adding App Service")
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-local-states-2.jpg?v=2&raw=true "Local State Variables")
 
 - `defaultImagePath` is the image path that will be used by default. For instance, when you add a Image widget and sometimes it needs the default image.
 - `anonymousMaleUrl` is the male picture url that will be shown by default when the user is male and has no profile photo.
@@ -195,19 +200,42 @@ There are few local state variables that Fireflow uses.
 
 ## Keys
 
+- Some keys like the `Open AI` key can't be exposed to public. Once it did, it will be automatically invalid. So, you need to keep it secret. In this manner, Fireflow keeps the keys in Firestore database.
+
+
 ### Open AI Keys
 
-- The `Open AI` key can't be exposed to public. Once it did, it will be automatically invalid. So, you need to keep it secret. In this manner, Fireflow keeps the keys in Firestore database.
+- Save the Open AI Keys at `/system_settings/keys {openAiApiKey: ... }`.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-keys.jpg?raw=true "Open AI API Keys")
 
 
-firestore-keys.jpg
+
+# The structure of Fireflow
+
+The fireflow reuses the code of the flutterflow since fireflow depends on flutterflow. But fireflow is decoupled from flutterflow. This means you can use fireflow with flutter.
+
+## Files and folders
+
+- `lib/src/actions`
+  This folder contains codes that works like functions but depending on Firebase or Material design.
+
+- `lib/src/functions`
+  This folder contains codes that are independent from Firebase, nor Material design.
+
+- `lib/src/widgets`
+  This folder contains widgets.
 
 
 
 # User
 
-- Create the `users_public_data` schema in Flutterflow like below.
 
+## users_public_data schema
+
+- Since `users` collection has private information like email and phone number, fireflow saves public information into `users_public_data` collection.
+
+- Create the `users_public_data` schema in Flutterflow like below.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users_public_data-schema.jpg?raw=true "Flutterflow users_public_data schmea")
 
@@ -228,13 +256,25 @@ firestore-keys.jpg
 - `lastPostCreatedAt` is the time that the user created the last post.
 - `isPremiumUser` is set to `true` if the user is paid for premium service.
 
+## Register and sign-in
+
+- As long as the user signs in with Firebase Auth `sign-in logic` applies the same.
+
+- When a user signs in, Fireflow will create
+  - `/users_public_data/<uid>` document if it does not exists.
+  - `/settings/<uid>` document if it does not exsits.
+
+- When a user signs in for the first time, fireflow will send a welcome chat message to user.
 
 
 ## How to get users_public_data document
 
 
-When you need to get the user’s public data document, use `usersPublicDataDocumentReference` in `Authenticated User`.
+- When you need to get the public data document of a user, filter the `usersPublicDataDocumentReference` in the `users_public_data` schema with the ref of `Authenticated User`.
 
+
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-get-user-pub-doc.jpg?raw=true "How to get user public data document")
 
 
 
@@ -322,6 +362,8 @@ When you need to get the user’s public data document, use `usersPublicDataDocu
 
 ## Querying to the Open AI - GPT.
 
+- If you don't want to implement GPT query, simply don't add the Open AI key and don't put options for GPT query.
+
 # Forum
 
 ## Forum Schema
@@ -355,6 +397,17 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 
 
+
+# Developer coding guide
+
+If you want to update/improve the fireflow or if you want to work on your project other with fireflow, then follow the steps below.
+
+1. Fork fireflow.
+2. Clone fireflow from the fork.
+3. Create your own branch.
+4. Clone your project under `<fireflow>/apps` folder.
+5. Change the path of fireflow package to `path: ../..` in the pubspec.yaml of your project.
+6. One you have updated fireflow, create PR.
 
 
 # Sponsors
