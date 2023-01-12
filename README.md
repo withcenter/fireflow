@@ -19,7 +19,9 @@
     - [Firestore Security Rules](#firestore-security-rules)
   - [Enable Push notifications](#enable-push-notifications)
   - [AppService](#appservice)
-- [Local State Variable](#local-state-variable)
+  - [Local State Variable](#local-state-variable)
+  - [Keys](#keys)
+    - [Open AI Keys](#open-ai-keys)
 - [User](#user)
   - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
 - [Push notification](#push-notification)
@@ -110,6 +112,8 @@ I make sample projects and sell it by cloning in Flutterflow.
 
 # Getting started
 
+To get started, you would need to install the necessary parts of the Fireflow.
+
 ## Setting up Firebase
 
 ### Firestore Security Rules
@@ -176,16 +180,27 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-on-page-load-app-service.jpg?raw=true "Adding App Service")
 
 
-# Local State Variable
+## Local State Variable
 
 There are few local state variables that Fireflow uses.
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-local-states.jpg?v=2&raw=true "Adding App Service")
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-local-states-2.jpg?v=2&raw=true "Adding App Service")
 
 - `defaultImagePath` is the image path that will be used by default. For instance, when you add a Image widget and sometimes it needs the default image.
 - `anonymousMaleUrl` is the male picture url that will be shown by default when the user is male and has no profile photo.
 - `anonymousFemaleUrl` is the female picture url that will be used when the user is female and has no profile photo.
-- `chatSendMessageAskResult` is  
+- `chatSendMessageAskResult` is the state that will hold the result of chat send option. When the user sends a message, he can choose an option whether to query to GPT or not.
+- `gptLoader` is the state that when the user query to GPT, it will show the loading indicator.
+
+
+## Keys
+
+### Open AI Keys
+
+- The `Open AI` key can't be exposed to public. Once it did, it will be automatically invalid. So, you need to keep it secret. In this manner, Fireflow keeps the keys in Firestore database.
+
+
+firestore-keys.jpg
 
 
 
