@@ -29,7 +29,8 @@ class MessagingService {
 
       /// Is this message coming from the chat room I am chatting in?
       if (AppService.instance.currentChatRoomDocumentReference != null &&
-          AppService.instance.currentChatRoomDocumentReference?.id == message.data.chatRoomId) {
+          AppService.instance.currentChatRoomDocumentReference?.id ==
+              message.data.chatRoomId) {
         dog('I am chatting with this user already. Do not show a notification.');
         return;
       }
@@ -50,7 +51,8 @@ class MessagingService {
     /// 채팅 푸시 알림?
     ///
     if (AppService.instance.onTapMessage != null) {
-      AppService.instance.onTapMessage!(message.data.initialPageName, message.data.parameterData);
+      AppService.instance.onTapMessage!(
+          message.data.initialPageName, message.data.parameterData);
     }
   }
 
@@ -83,7 +85,8 @@ class MessagingService {
     final pushNotificationData = {
       'notification_title': notificationTitle,
       'notification_text': notificationText,
-      if (notificationImageUrl != null) 'notification_image_url': notificationImageUrl,
+      if (notificationImageUrl != null)
+        'notification_image_url': notificationImageUrl,
       if (scheduledTime != null) 'scheduled_time': scheduledTime,
       if (notificationSound != null) 'notification_sound': notificationSound,
       'user_refs': userRefs.map((u) => u.path).join(','),
