@@ -100,9 +100,11 @@ I make sample projects and sell it by cloning in Flutterflow.
 
 ### Firestore Security Rules
 
-![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-firestore-deploy.jpg?v=2&raw=true)
+Fireflow has its own Firestore Security Rules. To apply it, you will need to check the `Exclude` buttons on the Collections like below. 
 
+![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-firestore-deploy-1.jpg?raw=true)
 
+And copy the [fireflow security rules](https://raw.githubusercontent.com/withcenter/fireflow/main/firebase/firestore.rules) and paste it into your Firebase firestore security rules.
 
 
 ## AppService
