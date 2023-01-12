@@ -1,6 +1,6 @@
 name: fireflow
 description: This package is designed for FlutterFlow app to provide enhanced features.
-version: 0.0.62
+version: 0.0.63
 homepage: https://github.com/withcenter/fireflow
 
 environment:
@@ -59,6 +59,10 @@ dependencies:
 
   # push notification
   another_flushbar: ^1.12.29
+
+
+  supabase: 1.2.0
+  supabase_flutter: 1.2.2
 
 dev_dependencies:
   flutter_test:

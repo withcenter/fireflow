@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// AppService is a singleton class that provides necessary service for Fireflow.
 ///
@@ -36,6 +37,9 @@ class AppService {
   /// This is used to determine whether to show the push notification from chat message or not.
   DocumentReference? currentChatRoomDocumentReference;
 
+  /// If [supabase] is set to true, then fireflow will interact with Supabase.
+  late final bool supabase;
+
   AppService() {
     dog("AppService.constructor() called.");
     initSystemKeys();
@@ -48,11 +52,13 @@ class AppService {
   void init({
     required BuildContext context,
     bool debug = false,
+    bool supabase = false,
     Function(String, Map<String, dynamic>)? onTapMessage,
   }) {
     dog('AppService.instance.init()');
     this.context = context;
     gDebug = debug;
+    this.supabase = supabase;
     if (onTapMessage != null) this.onTapMessage = onTapMessage;
   }
 
@@ -69,16 +75,24 @@ class AppService {
         ///
         await UserService.instance.generateUserPublicDataDocument();
 
-        /// Get & update the user public data.
+        /// Observe(get & update) the user public data.
         publicDataSubscription?.cancel();
-        publicDataSubscription = UserService.instance.myUserPublicDataRef
-            .snapshots()
-            .listen((snapshot) {
+        publicDataSubscription =
+            UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) {
           dog('AppService.initUser() - publicDataSubscription');
           if (snapshot.exists) {
             dog('AppService.initUser() - publicDataSubscription - snapshot.exists');
             this.user = UserPublicDataModel.fromSnapshot(snapshot);
             dog('AppService.initUser() - publicDataSubscription - publicData: ${this.user}');
+            if (supabase) {
+              dog('AppService.initUser() - publicDataSubscription - upsert supabase');
+              Supabase.instance.client.from('users_public_data').upsert({
+                'uid': this.user!.uid,
+                'display_name': this.user!.displayName,
+                'gender': this.user!.gender,
+                'birthday': this.user!.birthday.toDate().toIso8601String(),
+              }, onConflict: 'uid');
+            }
           }
         });
 

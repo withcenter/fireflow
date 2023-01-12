@@ -1,3 +1,7 @@
+## 0.0.63
+
+* Add supabase for FULLTEXT SEARCH.
+
 ## 0.0.62
 
 * Doc. Begin to update document for public release.
