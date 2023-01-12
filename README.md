@@ -63,6 +63,10 @@
 - [Supabase](#supabase)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
+    - [How to implement the custom ppup](#how-to-implement-the-custom-ppup)
+    - [Custom poup step by step example](#custom-poup-step-by-step-example)
+      - [Create a child Component](#create-a-child-component)
+      - [Create a popup Component](#create-a-popup-component)
 - [Developer coding guide](#developer-coding-guide)
 - [Sponsors](#sponsors)
 - [Known Issues](#known-issues)
@@ -550,7 +554,98 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 ## Custom Popup widget.
 
+FF provides the bottom shee widget. But it is way different from the popup menu.
 
+So, I made a widget named `CustomPopup` that does something like the popup menu in the following screenshot.
+
+Ex) Chat room screenshot
+
+In the screenshot, I display the members of the chat room. Yes, it is a real popup menu and all the designs are coming from Components. You can add custom design and actions as you want.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/custom-popup.gif?raw=true "Custom Popup")
+
+
+### How to implement the custom ppup
+
+- For your information, When you create a Component, you can use that Component in a Custom widget. You need to check `Exclude from Compile` in this case.
+
+
+- The child widget is the Component that displays as a trigger. The child component in the screenshot above is the widget that has two photos. In the component, the first user is the user who sent the last message. The second user is the user who last entered the chat room.
+
+
+- When a user taps on the Component, a popup menu is shown. And the popup menu is the ChatGroupUsers Component.
+
+
+- You can make your own child Component and the popup Component with your own design and actions. Just the way you develop your Component.
+  - And passed them over the CustomPopup widget.
+
+
+- Options
+  - dx is the x position where the popup would appear.
+  - dy is the y position where the popup would appear.
+
+
+```dart
+import '../../components/chat_group_user_icons_widget.dart';
+import '../../components/chat_group_users_widget.dart';
+import 'package:fireflow/fireflow.dart';
+ 
+class DisplayChatUsers extends StatefulWidget {
+ const DisplayChatUsers({
+   Key? key,
+   this.width,
+   this.height,
+   required this.chatRoom,
+ }) : super(key: key);
+ 
+ final double? width;
+ final double? height;
+ final ChatRoomsRecord chatRoom;
+ 
+ @override
+ _DisplayChatUsersState createState() => _DisplayChatUsersState();
+}
+ 
+class _DisplayChatUsersState extends State<DisplayChatUsers> {
+ @override
+ Widget build(BuildContext context) {
+   return CustomPopup(
+     dx: 32,
+     dy: 38,
+     child: ChatGroupUserIconsWidget(
+       chatRoom: widget.chatRoom,
+       width: 80,
+       iconSize: 42,
+     ),
+     popup: ChatGroupUsersWidget(
+       chatRoom: widget.chatRoom,
+     ),
+   );
+ }
+}
+```
+
+### Custom poup step by step example
+
+
+#### Create a child Component
+
+The child component is the widget that will trigger a popup menu to be appeared when a user presses on.
+
+Example)
+
+Just create an icon, or a text or any. You can do whatever design you like, but don’t put a widget that has tap event handler like a button.
+
+
+custom-popup-1.jpg
+
+
+#### Create a popup Component
+
+Create a component that will appear as a popup menu. You can do whatever design you want and you can add whatever actions you like. And yes, it works just as you expect.
+
+
+custom-popup-2.jpg
 
 
 # Developer coding guide
