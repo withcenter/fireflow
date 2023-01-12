@@ -69,6 +69,7 @@
       - [Create a popup Component](#create-a-popup-component)
       - [Custom widget for Custom Popup](#custom-widget-for-custom-popup)
       - [Add the custom widget in your design](#add-the-custom-widget-in-your-design)
+  - [DisplayMedia widget](#displaymedia-widget)
 - [Developer coding guide](#developer-coding-guide)
 - [Sponsors](#sponsors)
 - [Known Issues](#known-issues)
@@ -678,9 +679,41 @@ And I added `fireflow` as its dependency. You may leave the version empty. Note 
 Now, the easiest part. Just add the custom widget where you want to add.
 For the example of the code above, the Custom widget is ChatRoomMenu. And I added at the top-right corner.
 
-custom-popup-4.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/custom-popup-4.jpg?raw=true "Custom Popup")
 
 
+## DisplayMedia widget
+
+This widget accepts a String of URL together with width and height.
+
+The widget and height is used to size video.
+
+This widget displays any kind of url like photo, video, audio, txt, pdf, etc.
+
+
+Below is an example of displaying media by giving a photo url. 
+
+display-media-1.jpg
+
+To make the border round like above,
+
+
+Disable `Enforce Width and Height`
+
+
+display-media-2.jpg
+
+And wrap it with a container, put border property, and enable `Clip Content`.
+
+
+display-media-3.jpg
+
+
+The DisplayMedia widget of Fireflow displays files like below.
+
+display-media-4.jpg
+
+It displays the file of the given url but does not react on tap. So, it is up to you how you want to design your app.
 
 # Developer coding guide
 
