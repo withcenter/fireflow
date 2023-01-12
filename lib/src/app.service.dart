@@ -77,8 +77,9 @@ class AppService {
 
         /// Observe(get & update) the user public data.
         publicDataSubscription?.cancel();
-        publicDataSubscription =
-            UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) {
+        publicDataSubscription = UserService.instance.myUserPublicDataRef
+            .snapshots()
+            .listen((snapshot) {
           dog('AppService.initUser() - publicDataSubscription');
           if (snapshot.exists) {
             dog('AppService.initUser() - publicDataSubscription - snapshot.exists');
