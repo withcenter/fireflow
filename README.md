@@ -70,6 +70,7 @@
       - [Custom widget for Custom Popup](#custom-widget-for-custom-popup)
       - [Add the custom widget in your design](#add-the-custom-widget-in-your-design)
   - [DisplayMedia widget](#displaymedia-widget)
+  - [SafeArea widget](#safearea-widget)
 - [Developer coding guide](#developer-coding-guide)
 - [Sponsors](#sponsors)
 - [Known Issues](#known-issues)
@@ -693,7 +694,8 @@ This widget displays any kind of url like photo, video, audio, txt, pdf, etc.
 
 Below is an example of displaying media by giving a photo url. 
 
-display-media-1.jpg
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/display-media-1.jpg?raw=true "Display Media")
 
 To make the border round like above,
 
@@ -701,19 +703,61 @@ To make the border round like above,
 Disable `Enforce Width and Height`
 
 
-display-media-2.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/display-media-2.jpg?raw=true "Display Media")
+
 
 And wrap it with a container, put border property, and enable `Clip Content`.
 
 
-display-media-3.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/display-media-3.jpg?raw=true "Display Media")
+
 
 
 The DisplayMedia widget of Fireflow displays files like below.
 
-display-media-4.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/display-media-4.jpg?raw=true "Display Media")
+
+
 
 It displays the file of the given url but does not react on tap. So, it is up to you how you want to design your app.
+
+
+## SafeArea widget
+
+You can Enable/Disable the SafeArea in FF. But you cannot give SafeArea on top only or bottom only. And you cannot optionally add a space to make the contents(widgets) appear safely from the notches.
+
+For instance, you want to design your app with an image that displays as a background of the full screen. In this case you have to disable the SafeArea. But you need it enabled for some devices that have notches.
+
+In the example below;
+
+Some devices like the one on the left side have no notches. That’s fine without SafeArea.
+But some devices like the one on the right have notches at the top and at the bottom. 
+
+safearea-1.jpg
+
+Yes, of course, you may twist the widgets to make the full screen with a background image like below. But that has limitations and the widget tree goes crazy.
+
+safearea-2.jpg
+
+So?
+
+Here comes with the two widgets. SafeAreaTop and SafeAreaBottom.
+
+Here is how to create SafeAreaTop and SafeAreaBottom widgets using Fireflow.
+
+safearea-3.jpg
+
+
+safearea-4.jpg
+
+How to layout the SafeAreaTop and SafeAreaBottom widgets.
+
+safearea-5.jpg
+
+Be sure that you disable the `Enforce Width and Height` option.
+
+safearea-6.jpg
+
 
 # Developer coding guide
 
