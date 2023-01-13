@@ -1,3 +1,8 @@
+## 0.0.65
+
+* Add. forum categories.
+
+
 ## 0.0.64
 
 * Doc. updating document only.

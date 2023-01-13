@@ -27,7 +27,8 @@ class UserService {
   String get uid => FA.FirebaseAuth.instance.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref =>
+      FirebaseFirestore.instance.collection('users').doc(uid);
 
   get myRef => ref;
 
@@ -94,8 +95,9 @@ class UserService {
   listenUserPublicData() {
     /// Observe(get & update) the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription =
-        UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef
+        .snapshots()
+        .listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (AppService.instance.supabase) {

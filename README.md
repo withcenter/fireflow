@@ -60,6 +60,7 @@
 - [Forum](#forum)
   - [Forum Schema](#forum-schema)
     - [recentPosts](#recentposts)
+  - [Forum Category Logic](#forum-category-logic)
 - [Supabase](#supabase)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
@@ -542,6 +543,8 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 ## Forum Schema
 
+
+
 ### recentPosts
 
 The recent 50 posts of each users wil be saved in `recentPosts`.
@@ -550,6 +553,12 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-schema-recent-posts.jpg?raw=true "Recent posts")
 
+
+## Forum Category Logic
+
+- Fireflow creates its category document with the document id as the category itself. For instance, if the category is `qna`, the document path will be `/categories/qna`. The is because
+  - it's easy to specify the category directly into the UI builder. For instance, you want to display the QnA forum, then you can pass `qna` as the category parameter. If you don't use the category as its document id, then the logic would get complicated to get the document id of `qna`.
+  - it's easy to design the firestore security rules.
 
 
 
