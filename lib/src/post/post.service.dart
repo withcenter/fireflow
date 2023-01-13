@@ -12,7 +12,7 @@ class PostService {
   DocumentReference doc(String category) => col.doc(category);
 
   /// post create method
-  Future<DocumentReference> afterCreate({
+  Future afterCreate({
     required DocumentReference postDocumentReference,
   }) async {
     // get the post's data from the database
@@ -52,6 +52,6 @@ class PostService {
       },
     ));
 
-    return postDocumentReference;
+    return;
   }
 }
