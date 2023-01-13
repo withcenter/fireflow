@@ -1,3 +1,7 @@
+## 0.0.67
+
+* Work. forum function.
+
 ## 0.0.66
 
 * Work. forum categories.

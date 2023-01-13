@@ -10,6 +10,7 @@ export 'src/chat/chat.service.dart';
 export 'src/storage/storage.service.dart';
 export 'src/push_notifications/messaging.service.dart';
 export 'src/chat/chat_no_of_rooms_with_new_message.dart';
+export 'src/category/category.service.dart';
 
 /// Utils, Functions, Actions
 export 'src/app.service.dart';
