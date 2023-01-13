@@ -266,10 +266,13 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 
 ## users schema
 
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users-schema.jpg?raw=true "Flutterflow users schmea")
+
+
 - Add `userPublicDataDocumentReference` to `users` schema. This is the connection to `users_public_data` schema.
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-user-schema.jpg?raw=true "Flutterflow users schmea")
-
+- Add `admin` boolean. If this is set to true, the user will see admin menu. To give the user admin permission, you need to add the uid of the user into the system_settings collection.
 
 
 ## users_public_data schema
