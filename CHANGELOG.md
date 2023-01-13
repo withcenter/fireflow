@@ -1,3 +1,7 @@
+## 0.0.69
+
+* Fix. category.
+
 ## 0.0.68
 
 * Work. post after create.

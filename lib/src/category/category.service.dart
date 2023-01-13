@@ -13,6 +13,7 @@ class CategoryService {
     String? title,
   }) async {
     await doc(category).set({
+      'category': category,
       if (title != null) 'title': title,
     });
 

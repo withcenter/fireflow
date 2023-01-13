@@ -52,6 +52,6 @@ class PostService {
       },
     ));
 
-    return;
+    return Future.wait(futures);
   }
 }

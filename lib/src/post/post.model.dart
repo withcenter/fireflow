@@ -63,7 +63,7 @@ class PostModel {
       deleted: json['deleted'] ?? false,
       likes: json['likes'] ?? [],
       hasLike: json['hasLike'] ?? false,
-      files: json['files'] ?? [],
+      files: List<String>.from(json['files'] ?? []),
       wasPremiumUser: json['wasPremiumUser'] ?? false,
       emphasizePremiumUserPost: json['emphasizePremiumUserPost'] ?? false,
     );

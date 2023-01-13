@@ -37,16 +37,14 @@ class CategoryModel {
     String? id,
   }) {
     return CategoryModel(
-      category: json['category'],
+      category: json['category'] ?? id,
       title: json['title'] ?? '',
       noOfPosts: json['noOfPosts'] ?? 0,
       noOfComments: json['noOfComments'] ?? 0,
-      enablePushNotificationSubscription:
-          json['enablePushNotificationSubscription'] ?? false,
+      enablePushNotificationSubscription: json['enablePushNotificationSubscription'] ?? false,
       emphasizePremiumUserPost: json['emphasizePremiumUserPost'] ?? false,
       waitMinutesForNextPost: json['waitMinutesForNextPost'] ?? 0,
-      waitMinutesForPremiumUserNextPost:
-          json['waitMinutesForPremiumUserNextPost'] ?? 0,
+      waitMinutesForPremiumUserNextPost: json['waitMinutesForPremiumUserNextPost'] ?? 0,
     );
   }
 
