@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as FA;
 import 'package:fireflow/fireflow.dart';
 import 'package:path/path.dart' as p;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UserService is a singleton class that provides necessary service for user
 /// related features.
@@ -21,11 +24,10 @@ class UserService {
   DocumentReference doc(String id) => col.doc(id);
 
   /// The login user's uid
-  String get uid => FirebaseAuth.instance.currentUser!.uid;
+  String get uid => FA.FirebaseAuth.instance.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   get myRef => ref;
 
@@ -36,7 +38,10 @@ class UserService {
   get publicRef => myUserPublicDataRef;
 
   /// The login user's Firebase User object.
-  User get my => FirebaseAuth.instance.currentUser!;
+  FA.User get currentUser => FA.FirebaseAuth.instance.currentUser!;
+
+  StreamSubscription? publicDataSubscription;
+  UserPublicDataModel? my;
 
   /// check if user's public data document exists
   userPublicDataDocumentExists() async {
@@ -66,8 +71,8 @@ class UserService {
     if (await userPublicDataDocumentExists() == false) {
       /// Generate the user's public data document
       await myUserPublicDataRef.set({
-        'displayName': my.displayName ?? '',
-        'photoUrl': my.photoURL ?? '',
+        'displayName': currentUser.displayName ?? '',
+        'photoUrl': currentUser.photoURL ?? '',
         'uid': uid,
         'userDocumentReference': ref,
         'registeredAt': FieldValue.serverTimestamp(),
@@ -81,6 +86,33 @@ class UserService {
     });
 
     dog("UserService.generateUserPublicData() - user public data created.");
+  }
+
+  /// Listen the changes of the user's public data and
+  /// - keep the user's public data in memory.
+  /// - update the user's public data in Supabase.
+  listenUserPublicData() {
+    /// Observe(get & update) the user public data.
+    publicDataSubscription?.cancel();
+    publicDataSubscription =
+        UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
+      if (snapshot.exists) {
+        my = UserPublicDataModel.fromSnapshot(snapshot);
+        if (AppService.instance.supabase) {
+          /// Upsert the user public data to Supabase.
+          await Supabase.instance.client.from('users_public_data').upsert(
+            {
+              'uid': my!.uid,
+              'display_name': my!.displayName,
+              'gender': my!.gender,
+              'birthday': my!.birthday.toDate().toIso8601String(),
+              'registeredAt': my!.registeredAt.toDate().toIso8601String(),
+            },
+            onConflict: 'uid',
+          );
+        }
+      }
+    });
   }
 
   /// Updates the user's public data with the given imagePath

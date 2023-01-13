@@ -24,8 +24,6 @@ class AppService {
 
   late final KeyModel keys;
 
-  StreamSubscription? publicDataSubscription;
-
   /// Keep the login user's public data up to date.
   UserPublicDataModel? user;
 
@@ -74,27 +72,7 @@ class AppService {
 
         ///
         await UserService.instance.generateUserPublicDataDocument();
-
-        /// Observe(get & update) the user public data.
-        publicDataSubscription?.cancel();
-        publicDataSubscription = UserService.instance.myUserPublicDataRef
-            .snapshots()
-            .listen((snapshot) async {
-          if (snapshot.exists) {
-            this.user = UserPublicDataModel.fromSnapshot(snapshot);
-            if (supabase) {
-              /// Upsert the user public data to Supabase.
-              await Supabase.instance.client.from('users_public_data').upsert({
-                'uid': this.user!.uid,
-                'display_name': this.user!.displayName,
-                'gender': this.user!.gender,
-                'birthday': this.user!.birthday.toDate().toIso8601String(),
-                'registeredAt':
-                    this.user!.registeredAt.toDate().toIso8601String(),
-              }, onConflict: 'uid');
-            }
-          }
-        });
+        UserService.instance.listenUserPublicData();
 
         ///
         await SettingService.instance.generate();
