@@ -99,6 +99,8 @@ service cloud.firestore {
         required(['category'])
         &&
         categoryExists()
+        &&
+        willBeMyDoc()
       ;
 
       // Post update rule;
@@ -146,11 +148,23 @@ service cloud.firestore {
       return request.resource.data.userDocumentReference == myReference();
     }
     
+    function categoryExists() {
+      return exists(/databases/$(database)/documents/categories/$(request.resource.data.category));
+    }
+    
     function myReference() {
       return /databases/$(database)/documents/users/$(request.auth.uid);
     }
   }
 }
+
+// * Warning : It's check the fields after save.
+// * Warning : !!! It's not checking the incoming data fields !!!
+function required(fields) {
+  return request.resource.data.keys().hasAll( fields );
+}
+
+
 
 function onlyUpdating(fields) {
   return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);

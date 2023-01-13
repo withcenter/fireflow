@@ -26,6 +26,9 @@ function admin() {
 function userDoc(id) {
   return db().collection("users").doc(id);
 }
+function ref(id) {
+  return userDoc(id);
+}
 
 async function getUser(uid) {
   const snapshot = await admin().collection("users").doc(uid).get();
@@ -35,7 +38,14 @@ async function setUser(uid, data) {
   return await admin().collection("users").doc(uid).set(data, { merge: true });
 }
 
-async function setCategory(id, data) {
+/**
+ * Creates or updates a category.
+ *
+ * @param {*} id category id
+ * @param {*} data category like. ex) { title: "category title" }
+ * @returns Promise<void>
+ */
+async function setCategory(id, data = {}) {
   return admin().collection("categories").doc(id).set(data, { merge: true });
 }
 
@@ -368,6 +378,26 @@ describe("Firestore security test", () => {
         .update({
           unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayUnion(userDoc(A)),
         })
+    );
+  });
+
+  it("Failure on creating a post with non-existing category.", async () => {
+    await firebase.assertFails(
+      db(authA).collection("posts").add({ category: "non-existsing", title: "title" })
+    );
+  });
+  it("Success on creating a post with existing category, but without my ref.", async () => {
+    await setCategory("apple");
+    await firebase.assertFails(
+      db(authA).collection("posts").add({ category: "apple", title: "title" })
+    );
+  });
+  it("Success on creating a post with existing category.", async () => {
+    await setCategory("apple");
+    await firebase.assertSucceeds(
+      db(authA)
+        .collection("posts")
+        .add({ category: "apple", userDocumentReference: ref(A), title: "title" })
     );
   });
 });
