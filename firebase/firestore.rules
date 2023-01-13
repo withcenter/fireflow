@@ -84,6 +84,51 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+
+    // category
+    match /categories/{category} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // posts
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if
+        required(['category'])
+        &&
+        categoryExists()
+      ;
+
+      // Post update rule;
+      // - Success if nothing changes. if request.resource.data is same as resource.data
+      // - Success if 'likes', 'noOfLikes', 'noOfComments' is updated only.
+      allow update: if
+        isMyDoc()
+        ||
+        isAdmin()
+        ||
+        onlyUpdating(['likes', 'noOfLikes', 'noOfComments'])
+      ;
+      // Post deletion is not allowed.
+      allow delete: if false;
+    }
+
+    // comments
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if willBeMyDoc();
+      allow update: if
+        isMyDoc() 
+        ||
+        isAdmin()
+        ||
+        onlyUpdating(['likes', 'noOfLikes'])
+      ;
+      allow delete: if false;
+    }
+
     
     // check if the user is admin.
     function isAdmin() {

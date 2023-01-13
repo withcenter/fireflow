@@ -13,7 +13,7 @@
 - [Fireflow](#fireflow)
 - [Overview](#overview)
 - [Features](#features)
-  - [The Coming Features](#the-coming-features)
+  - [What's coming](#whats-coming)
 - [Getting started](#getting-started)
   - [Setting up Firebase](#setting-up-firebase)
     - [Firestore Security Rules](#firestore-security-rules)
@@ -122,7 +122,7 @@ I make sample projects and sell it by cloning in Flutterflow.
 
 - Custom widgets
 
-## The Coming Features
+## What's coming
 
 - Forum
   The complete forum functionality including;
@@ -133,6 +133,9 @@ I make sample projects and sell it by cloning in Flutterflow.
   - Push notification
     - Subscribing/Unsubscribing a category
     - Sending push notifications to the author of the parent comments and post.
+
+- Hard limit on wait minutes for post creation.
+  - Add a security rules for timestamp check.
 
 - Optional push notification.
   - There will be an option to enable or disable push notification.
