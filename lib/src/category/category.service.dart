@@ -12,11 +12,6 @@ class CategoryService {
     required String category,
     String? title,
   }) async {
-    await FirebaseFirestore.instance
-        .collection('categories')
-        .doc(category)
-        .set({});
-
     await categoryDoc(category).set({
       if (title != null) 'title': title,
     });

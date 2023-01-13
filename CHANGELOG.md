@@ -1,3 +1,7 @@
+## 0.0.66
+
+* Work. forum categories.
+
 ## 0.0.65
 
 * Add. forum categories.
