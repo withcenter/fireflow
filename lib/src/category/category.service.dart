@@ -5,17 +5,17 @@ class CategoryService {
   static CategoryService? _instance;
 
   FirebaseFirestore get db => FirebaseFirestore.instance;
-  CollectionReference get categoriesCol => db.collection('categories');
-  DocumentReference categoryDoc(String category) => categoriesCol.doc(category);
+  CollectionReference get col => db.collection('categories');
+  DocumentReference doc(String category) => col.doc(category);
 
   Future<DocumentReference> create({
     required String category,
     String? title,
   }) async {
-    await categoryDoc(category).set({
+    await doc(category).set({
       if (title != null) 'title': title,
     });
 
-    return categoryDoc(category);
+    return doc(category);
   }
 }

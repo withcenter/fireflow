@@ -26,7 +26,7 @@
   - [Files and folders](#files-and-folders)
 - [User](#user)
   - [users schema](#users-schema)
-  - [users\_public\_data schema](#users_public_data-schema)
+  - [users\_public\_data schema (dirty)](#users_public_data-schema-dirty)
   - [Register and sign-in](#register-and-sign-in)
   - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
   - [Profile photo upload](#profile-photo-upload)
@@ -60,7 +60,8 @@
 - [Forum](#forum)
   - [Forum Schema](#forum-schema)
     - [recentPosts](#recentposts)
-  - [Forum Category Logic](#forum-category-logic)
+  - [Category Logic](#category-logic)
+  - [Post Creation Logic](#post-creation-logic)
 - [Supabase](#supabase)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
@@ -276,7 +277,7 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 - Add `admin` boolean. If this is set to true, the user will see admin menu. To give the user admin permission, you need to add the uid of the user into the system_settings collection.
 
 
-## users_public_data schema
+## users_public_data schema (dirty)
 
 - Since `users` collection has private information like email and phone number, fireflow saves public information into `users_public_data` collection.
 
@@ -554,12 +555,30 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-schema-recent-posts.jpg?raw=true "Recent posts")
 
 
-## Forum Category Logic
+## Category Logic
 
 - Fireflow creates its category document with the document id as the category itself. For instance, if the category is `qna`, the document path will be `/categories/qna`. The is because
   - it's easy to specify the category directly into the UI builder. For instance, you want to display the QnA forum, then you can pass `qna` as the category parameter. If you don't use the category as its document id, then the logic would get complicated to get the document id of `qna`.
   - it's easy to design the firestore security rules.
 
+
+
+## Post Creation Logic
+
+- When the user fill the form and submit, create a post document with
+  - category (required)
+  - userDocumentReference (optional, but recommended)
+  - createdAt (optional, but recommend)
+  - title (optional)
+  - content (optional)
+  - files (optional)
+
+- After create, you need to call `PostService.instance.afterCreate()`. This will
+  - fill up the remaining fields
+  - increment post counters on multiple places
+  - send push notifications
+  - backup data into supabase (optiona)
+  - do other tasks.
 
 
 # Supabase

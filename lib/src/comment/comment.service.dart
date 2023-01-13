@@ -5,6 +5,6 @@ class CommentService {
   static CommentService? _instance;
 
   FirebaseFirestore get db => FirebaseFirestore.instance;
-  CollectionReference get commentsCol => db.collection('comments');
-  DocumentReference commentDoc(String category) => commentsCol.doc(category);
+  CollectionReference get col => db.collection('comments');
+  DocumentReference doc(String category) => col.doc(category);
 }

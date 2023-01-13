@@ -1,3 +1,7 @@
+## 0.0.68
+
+* Work. post after create.
+
 ## 0.0.67
 
 * Work. forum function.
