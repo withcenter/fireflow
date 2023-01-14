@@ -77,6 +77,8 @@
 - [Actions](#actions)
   - [snackBarSuccess](#snackbarsuccess)
   - [snackBarWarning](#snackbarwarning)
+- [Functions](#functions)
+  - [Country Code](#country-code)
 - [Developer coding guide](#developer-coding-guide)
 - [Sponsors](#sponsors)
 - [Known Issues](#known-issues)
@@ -832,6 +834,17 @@ Add snackBarSuccess Custom Action like below.
 Add snackBarWarning Custom Action like below.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/snackbar-3.jpg?raw=true "Snackbar")
+
+
+
+# Functions
+
+## Country Code
+
+- You can put favorites on top with divider.
+  - For favorites, you can add dial_code or country name(case sensitive).
+
+
 
 
 # Developer coding guide
