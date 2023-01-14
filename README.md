@@ -26,11 +26,12 @@
   - [Files and folders](#files-and-folders)
 - [User](#user)
   - [users schema](#users-schema)
-  - [users\_public\_data schema (dirty)](#users_public_data-schema-dirty)
+  - [users\_public\_data schema](#users_public_data-schema)
   - [Register and sign-in](#register-and-sign-in)
   - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
   - [Profile photo upload](#profile-photo-upload)
   - [Adding extra fields on users\_public\_data schema](#adding-extra-fields-on-users_public_data-schema)
+- [User setting](#user-setting)
 - [System setting](#system-setting)
   - [Admin](#admin)
 - [Push notification](#push-notification)
@@ -103,7 +104,7 @@ I make sample projects and sell it by cloning in Flutterflow.
 # Features
 
 - Enhanced user management.
-  - The documents of the `/users` collection have private information and shouldn't be disclosed. But the user information is needed to be disclosed for the most app features. To make it happen, I created another collection named `/users_public_data` that does not hold user's prviate informatio.
+  - The documents of the `/users` collection have private information and shouldn't be disclosed. But the user information is needed to be disclosed for the most app features. To make it happen, I created another collection named `/users_public_data` that does not hold user's prviate information.
 
 - Chat.
   - Custom design.
@@ -159,7 +160,11 @@ To get started, you would need to install the necessary parts of the Fireflow.
 
 ### Firestore Security Rules
 
-Fireflow has its own Firestore Security Rules. To apply it, you will need to check the `Exclude` buttons on the Collections like below. 
+Fireflow has its own Firestore Security Rules to protect the app safer.
+
+You may think `App check` will do for the security. Partly, yes. While `App Check` adds an important layer of protection against some (not all) abuse towards your backend, it does not replace Firebase's server-side security rules. See [the App Check offical document](https://firebase.google.com/docs/app-check#how_strong_is_the_security_provided_by).
+
+To apply it, you will need to check the `Exclude` buttons on the Collections like below. 
 
 ![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-firestore-deploy-1.jpg?raw=true)
 
@@ -277,9 +282,10 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 - Add `admin` boolean. If this is set to true, the user will see admin menu. To give the user admin permission, you need to add the uid of the user into the system_settings collection.
 
 
-## users_public_data schema (dirty)
+## users_public_data schema
 
 - Since `users` collection has private information like email and phone number, fireflow saves public information into `users_public_data` collection.
+  - Even if the app adopts `App Check`, it needs more to secure the data. Since firestore always delivers the whole document to the client, it is vulnerable if you don't keep the private information in seperate document. The abusers can look at the data transfered over the network.
 
 - Create the `users_public_data` schema in Flutterflow like below.
 
@@ -342,6 +348,11 @@ Note, that the `userPublicDataDocumentReference` in `users` collection is set on
 
 - You can simply add more fields on users_public_data schema.
 
+
+# User setting
+
+- User settings could be saved in `users_public_data` collection. But the problem is when the client lists/searches user information based on the settings, the firestore downloads the whole document whether is it big or small. And this leads time consuming and lagging on the app and it costs more money also.
+  - This is why Fireflow has a separated `settings` collection.
 
 
 # System setting

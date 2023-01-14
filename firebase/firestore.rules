@@ -66,14 +66,23 @@ service cloud.firestore {
       allow update: if request.auth.uid == document ;
       allow delete: if false;
     }
+
     
     match /users_public_data/{document} {
       allow create: if request.auth.uid == document;
       allow read: if true;
-      allow update: if isMyDoc()
-      ||
+      allow update: if
+        isMyDoc()
+        ||
         onlyUpdating(['likes']);
       allow delete: if false;
+    }
+
+    match /user_settings/{document} {
+    	allow read: if true;
+      allow create: if willBeMyDoc();
+      allow update: if isMyDoc();
+      allow delete: if isMyDoc();
     }
   
     match /settings/{document} {
