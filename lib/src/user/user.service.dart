@@ -89,11 +89,13 @@ class UserService {
     dog("UserService.generateUserPublicData() - user public data created.");
   }
 
-  /// Listen the changes of the user's public data and
+  /// Listen the changes of users_public_data/{uid}.
+  ///
+  /// It listens the update of the login user's public data document and
   /// - keep the user's public data in memory.
-  /// - update the user's public data in Supabase.
+  /// - update the user's public data in Supabase if neccessary.
   listenUserPublicData() {
-    /// Observe(get & update) the user public data.
+    /// Observe the user public data.
     publicDataSubscription?.cancel();
     publicDataSubscription = UserService.instance.myUserPublicDataRef
         .snapshots()

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
-/// SettingModel is a class that represents a user's setting.
+/// UserSettingModel is a class that represents a user's setting.
 ///
 class SettingService {
   static SettingService get instance =>
@@ -25,10 +25,10 @@ class SettingService {
 
   /// Warning, this method may throw an exception if it is being called immediately after the user is signed in for the first time.
   /// The `/users/{uid}` document may be created after the user is signed in.
-  Future<SettingModel> get() async {
+  Future<UserSettingModel> get() async {
     // get the user's data from the database
     final snapshot = await mySettingRef.get();
-    return SettingModel.fromSnapshot(snapshot);
+    return UserSettingModel.fromSnapshot(snapshot);
   }
 
   /// Creates /users_public_data/{uid} if it does not exist.

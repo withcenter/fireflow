@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// AppService is a singleton class that provides necessary service for Fireflow.
 ///
@@ -38,15 +37,31 @@ class AppService {
   /// If [supabase] is set to true, then fireflow will interact with Supabase.
   late final bool supabase;
 
+  /// AppService constructor
+  ///
+  /// AppService is a singleton. So, this constructor will be called only one time.
+  /// The service initialization should be kept here.
   AppService() {
     dog("AppService.constructor() called.");
-    initSystemKeys();
-    initUser();
+    _initSystemKeys();
+    _initUser();
     MessagingService.instance.init();
   }
 
-  /// This method must be called when the app is initialized.
-  /// Don't put any initialization here. Put initialization in the constructor, instead.
+  /// Initialize the settings of AppService.
+  ///
+  /// This method must be called after the app boots and should be
+  /// called on every root level screen with valid BuildContext. In other words,
+  /// call this method again to put the valid/alive BuildContext of a screen.
+  ///
+  /// [context] is the BuildContext of a screen. It must be valid and alive.
+  /// Set [debug] to true to print the logs in dev console.
+  /// If [supabase] is set to true, AppService will sync the user, post, comment
+  /// into Supabase. So, the app can do FULLTEXT search and more complicated
+  /// conditional search.
+  /// [onTapMessage] is a callback method and is called when the user taps on
+  /// foreground push notification snackbar. If this is set to null, then there
+  /// will be no snackbar.
   void init({
     required BuildContext context,
     bool debug = false,
@@ -63,27 +78,28 @@ class AppService {
   /// Initialize the user functions.
   ///
   /// This method must be called when the app is initialized.
-  initUser() {
-    dog('AppService.initUser()');
+  _initUser() {
+    dog('AppService._initUser()');
+
+    /// TODO - Use `distinct` to reduce the multiple event handling.
+    /// TODO - FirebaseAuth.instance.authStateChanges().distinct((p, c) => p?.user?.uid == c?.user?.uid)
     FirebaseAuth.instance.authStateChanges().listen((user) async {
       // User singed in
       if (user != null) {
-        dog('AppService.initUser() - user is logged in');
+        dog('AppService._initUser() - user is logged in');
 
-        ///
         await UserService.instance.generateUserPublicDataDocument();
         UserService.instance.listenUserPublicData();
-
-        ///
         await SettingService.instance.generate();
       } else {
         this.user = null;
-        dog('AppService.initUser() - user is not logged in');
+        dog('AppService._initUser() - user is not logged in');
       }
     });
   }
 
-  initSystemKeys() async {
+  /// Get keys from Firestore.
+  _initSystemKeys() async {
     keys = KeyModel.fromSnapshot(await getKeys);
   }
 }
