@@ -13,11 +13,14 @@ class SettingService {
   String get uid => FirebaseAuth.instance.currentUser!.uid;
   DocumentReference get mySettingRef =>
       FirebaseFirestore.instance.collection('settings').doc(uid);
-  DocumentReference get myUserRef =>
+  DocumentReference get myUserDocumentReference =>
       FirebaseFirestore.instance.collection('users').doc(uid);
 
   User get my => FirebaseAuth.instance.currentUser!;
 
+  /// Check user setting document exists.
+  ///
+  /// Returns true if the setting document exsits. otherwise, false.
   exists() async {
     final doc = await mySettingRef.get();
     return doc.exists;
@@ -39,7 +42,7 @@ class SettingService {
     }
 
     await mySettingRef.set({
-      'userDocumentReference': myUserRef,
+      'userDocumentReference': myUserDocumentReference,
     });
 
     debugPrint(
