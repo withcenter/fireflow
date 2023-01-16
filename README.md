@@ -508,13 +508,12 @@ To display the chat rooms
 1. Add a Column as the child of List View.
 2. Add two containers to the Column. The first container is for displaying the one and one chat and the second container is for displaying the group chat.
 3. Add conditional visibilities on the first and second containers.
-   1. Set the condition as the `Num List Items` of `monderatorUserDocumentReferences` is equal to 0.
+  1. Set the condition as the `Num List Items` of `monderatorUserDocumentReferences` is equal to 0.
 
 
-ff-chat-condition-sing-chat.jpg
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat_room_messages.jpg?raw=true "Chat rooms collection")
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat.jpg?raw=true "Chat rooms collection")
 
-
+//// from here.
 
 
 
