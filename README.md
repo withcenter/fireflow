@@ -513,7 +513,7 @@ To display the chat rooms
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat.jpg?raw=true "Chat rooms collection")
 
-  2. //// from here.
+  2. //// @todo from here, add moer details
 
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-group-chat.jpg?raw=true "Chat rooms collection")
