@@ -892,7 +892,7 @@ Add snackBarWarning Custom Action like below.
   - For favorites, you can add dial_code or country name(case sensitive).
 
 
-
+ff-dial-code-picker-code-expression.jpg
 
 # Developer coding guide
 
