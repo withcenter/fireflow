@@ -5,13 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Simulator J. iMac - sample - debug",
+      "name": "Simulator J. Macbook - sample - debug",
       "cwd": "apps/sample",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "0F92FE71-3ACA-4C76-BA6A-A2861890D461"
+      "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     },
     {
       "name": "iPhone11MaxPro - sample - debug",
@@ -30,24 +30,6 @@
       "program": "lib/main.dart",
       "flutterMode": "release",
       "deviceId": "iPhone11MaxPro"
-    },
-    {
-      "name": "Simulator J. iMac - example - debug",
-      "cwd": "example",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "flutterMode": "debug",
-      "deviceId": "0F92FE71-3ACA-4C76-BA6A-A2861890D461"
-    },
-    {
-      "name": "Simulator J. Macbook - sample - debug",
-      "cwd": "apps/sample",
-      "request": "launch",
-      "type": "dart",
-      "program": "lib/main.dart",
-      "flutterMode": "debug",
-      "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     },
     {
       "name": "Simulator - philov - debug",
@@ -137,6 +119,24 @@
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"
+    },
+    {
+      "name": "Simulator J. iMac - sample - debug",
+      "cwd": "apps/sample",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "0F92FE71-3ACA-4C76-BA6A-A2861890D461"
+    },
+    {
+      "name": "Simulator J. iMac - example - debug",
+      "cwd": "example",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "0F92FE71-3ACA-4C76-BA6A-A2861890D461"
     }
   ]
 }

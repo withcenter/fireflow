@@ -38,6 +38,7 @@
   - [Foreground Push Notification and Routing](#foreground-push-notification-and-routing)
   - [MessageModel](#messagemodel)
 - [Chat](#chat)
+  - [Chat Overview](#chat-overview)
   - [Chat schema](#chat-schema)
     - [Chat Room collection](#chat-room-collection)
     - [Chat message collection](#chat-message-collection)
@@ -88,13 +89,11 @@
 
 # Overview
 
-Flutterflow is a gorgeous platform to build mobile apps rapidly. Flutterflow developers can build whatever apps they want without limitation.
+Flutterflow is a gorgeous platform to build mobile apps rapidly. The developers can build whatever apps they want without limitation.
 
 Flutterflow comes easy when the project is relatively small. But when the project grows with complicated functionalities and logics, you will feel the pressure of what professional developers feel.
 
-Many of Flutterflow developers are stuck with Custom functions, custom widgets, custom actions. They are ultimately important to make your app fully functional. There are helper tools and Flutterflow to build custom code easily. But often, we as Flutterflow developers need more to make it easy and use. And what’s worse is that the more the logic becomes complicate, the more you would stuck in the custom coding.
-
-That’s why **Fireflow** came out.
+Many of Flutterflow developers are stuck with Custom functions, custom widgets, custom actions. They are ultimately important to make your app fully functional. And **Fireflow** came out to help.
 
 Fireflow encapsulates all the complicated logics and is made easy to reuse. Yes, it’s for you if you want to build professional apps like chat apps, SNS apps, community apps, and more.
 
@@ -155,6 +154,7 @@ I make sample projects and sell it by cloning in Flutterflow.
 
 - Since the `AppCheck` is built-in by Flutterflow, why don't fireflow remove the security rules and `/users_public_data`?
 
+- Image cropping before uploading.
 
 # Getting started
 
@@ -408,6 +408,12 @@ The `MessageModel` will handle all kinds of push notification data including, bu
 
 # Chat
 
+## Chat Overview
+
+- There are two types of chat room.
+  - One is the one and one chat
+  - The other is the group chat.
+
 ## Chat schema
 
 - Chat service needs two collections.
@@ -480,12 +486,47 @@ The `MessageModel` will handle all kinds of push notification data including, bu
 
 Get the chat rooms that have the login user’s document reference in the `userDocumentReferences` field.
 
+To get the list the chat rooms
+
+1. Add ListView (or Column)
+2. Add Backend Query
+   1. Choose `chat_rooms` on Collection.
+   2. Query Type to `List of Documents`
+   3. Add a filter
+      1. Collection Field Name to `userDocumentReferences`
+      2. Relation to `Array Contains`
+      3. Value Source to `User Record Reference`
+   4. Add an ordering
+      1. Collection Field Name to `lastMesageSentAt`
+      2. Order to `Decreasing`
+
+
+
+
+To display the chat rooms
+
+1. Add a Column as the child of List View.
+2. Add two containers to the Column. The first container is for displaying the one and one chat and the second container is for displaying the group chat.
+3. Add conditional visibilities on the first and second containers.
+   1. Set the condition as the `Num List Items` of `monderatorUserDocumentReferences` is equal to 0.
+
+
+ff-chat-condition-sing-chat.jpg
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat_room_messages.jpg?raw=true "Chat rooms collection")
+
+
+
+
+
 
 ### How to display menu when the chat message has tapped.
 
 - message copy, edit, delete, open, etc.
 
 ### How to leave a group chat room.
+
+
+
 
 
 ### How to display an uploaded file.
