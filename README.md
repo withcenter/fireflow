@@ -686,7 +686,9 @@ To display the chat rooms
 
 ### How to leave a group chat room.
 
-
+1. Close the dialog or drawer (if the button to leave the chat room is in a dialog or drawer)
+2. Call the leave method of the ChatService and pass the chat room's document reference
+3. Navigate to chat page with the replace route option enabled
 
 
 
