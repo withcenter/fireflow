@@ -611,7 +611,7 @@ To display the chat rooms
             1. Add stack to the row
             2. Inside the stack add two image widget or custom widget to display the group chat's two users' photos (the first photo will display the last message sender photo and the second photo will display the last person who entered the chat room)
 
-          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-stack-groupchat-two-users-photos.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-stack-group-chat-two-users-photos.png?raw=true "Chat rooms collection")
 
             To display the last message sender photo to the first image widget:
                 1. Add backend query to the first image widget
