@@ -526,7 +526,7 @@ To display the chat rooms
             2. Relation to `Equal To`
             3. Value Source to Custom Function named `chatOtherUserReference` and set its two parameters as:
                 1. `userDocumentReference` equal to `chat_rooms document's userDocumentReferences field`
-                2. `myUserDocumentReference` equal to `Logged in user's reference`
+                2. `myUserDocumentReference` equal to `Logged in user's document reference`
           
       ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-onetoone-backend-2.png?raw=true "Chat rooms collection")
 
@@ -550,12 +550,12 @@ To display the chat rooms
       ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-onetoone-chat-2.png?raw=true "Chat rooms collection")
             
 
-                1. (if condition) check if the user's photo url is set, if it is then set it as the path of the image widget
-                2. (else condition) another if else condition to check if the user's gender is male or female to correctly show the placeholder image based on the gender of the user
+                1. (if condition) check if the user's photo url is set, if it is, then set it as the path of the image widget
+                2. (else condition) another if else condition to check if the user's gender is male or female to correctly show the placeholder image based on the user's gender
 
       ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat-user-photo-condition-2.png?raw=true "Chat rooms collection")
 
-                    1. (if condition) check if the user is female, if it is then set the path of the image widget to the female placeholder image url stored in local state
+                    1. (if condition) check if the user is female, if it is, then set the path of the image widget to the female placeholder image url stored in local state
                     2. (else condition) if the user is not female, set the path of the image widget to the male placeholder image url stored in local state
 
         To display the user's name and the last message sent:
@@ -641,7 +641,7 @@ To display the chat rooms
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-enter-user-photo-backend-query.png?raw=true "Chat rooms collection")
 
             To display the number of users in the group chat room:
-                1. Add container to the stack
+                1. Add container
                 2. Inside the container add text widget
                 3. Set the text widget's value to the number of userDocumentReferences inside the chatRoom document
 
