@@ -694,6 +694,9 @@ To display the chat rooms
 
 ### How to display an uploaded file.
 
+1. Call the FireFlow DisplayMedia widget
+2. Pass the required parameters such as width, height and url
+
 ### How to not invite the same user.
 
 
