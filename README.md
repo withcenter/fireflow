@@ -622,11 +622,11 @@ To display the chat rooms
                     2. Relation to `Equal To`
                     3. Vaue Source to `lastMessageSentBy`
 
-                    ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-group-chat-last-message-user-photo.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-group-chat-last-message-user-photo.png?raw=true "Chat rooms collection")
 
                 5. Add conditional visibility by checking if the `lastMessageSentBy` field is set.
 
-                ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-user-photo-conditional-visibility.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-user-photo-conditional-visibility.png?raw=true "Chat rooms collection")
 
             To display the last person photo who entered the chat room to the second image widget:
                 1. Add backend query to the second image widget
@@ -638,7 +638,7 @@ To display the chat rooms
                     3. Vaue Source to custom function named userDocumentReferenceOfChatRoomLastEnter and set its parameter:
                         1. chatRoom equal to chatRoom Document
 
-                    ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-enter-user-photo-backend-query.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-enter-user-photo-backend-query.png?raw=true "Chat rooms collection")
 
             To display the number of users in the group chat room:
                 1. Add container to the stack
@@ -654,15 +654,15 @@ To display the chat rooms
             1. Add column
             2. Inside the column add two text widgets
 
-            ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-title-last-message-sent-column.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-title-last-message-sent-column.png?raw=true "Chat rooms collection")
 
                 1. (top text widget) set its value to chat_roomm's title
 
-                ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-title-text.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-title-text.png?raw=true "Chat rooms collection")
 
                 2. (bottom text widget) set its value to chat_room's last message
 
-                ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-text.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-text.png?raw=true "Chat rooms collection")
 
         To display the chat_room's last message timestamp:
 
@@ -670,11 +670,11 @@ To display the chat rooms
             2. Inside the column add text widget
             3. Set text widget's value to chat_room's lastMessageSentAt timestamp with a format of M/d h:mm a
 
-            ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage-timestamp.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage-timestamp.png?raw=true "Chat rooms collection")
 
             4. Add conditional visibiility to check if the lastMessageSent is set
 
-            ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-timestamp-visibility.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-timestamp-visibility.png?raw=true "Chat rooms collection")
 
             
 
