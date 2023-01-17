@@ -581,7 +581,7 @@ To display the chat rooms
 
       ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage-timestamp.png?raw=true "Chat rooms collection")
 
-            4. Add conditional visibiility to check if the lastMessageSent is set
+            4. Add conditional visibility to check if the lastMessageSent is set
 
       ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-sing-chat-last-message-timestamp-visibility.png?raw=true "Chat rooms collection")
 
@@ -611,7 +611,7 @@ To display the chat rooms
             1. Add stack to the row
             2. Inside the stack add two image widget or custom widget to display the group chat's two users' photos (the first photo will display the last message sender photo and the second photo will display the last person who entered the chat room)
 
-            ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-stack-group chat-two-users-photos.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-stack-group chat-two-users-photos.png?raw=true "Chat rooms collection")
 
             To display the last message sender photo to the first image widget:
                 1. Add backend query to the first image widget
@@ -672,7 +672,7 @@ To display the chat rooms
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage-timestamp.png?raw=true "Chat rooms collection")
 
-            4. Add conditional visibiility to check if the lastMessageSent is set
+            4. Add conditional visibility to check if the lastMessageSent is set
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-timestamp-visibility.png?raw=true "Chat rooms collection")
 
