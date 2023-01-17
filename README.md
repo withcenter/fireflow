@@ -411,7 +411,7 @@ The `MessageModel` will handle all kinds of push notification data including, bu
 ## Chat Overview
 
 - There are two types of chat room.
-  - One is the one and one chat
+  - One is the one to one chat
   - The other is the group chat.
 
 ## Chat schema
@@ -482,12 +482,14 @@ The `MessageModel` will handle all kinds of push notification data including, bu
   - In the chat room, it uses the `ChatRoomMessages` custom widget with the reference of `chatRoomDocument`.
   - If a chat room document reference is given to fireflow ChatRoomMessages widget, it is considered as group chat.
 
+
+
+
 ### How to list my chat rooms
 
-Get the chat rooms that have the login user’s document reference in the `userDocumentReferences` field.
+Get the chat rooms that have the logged in user’s document reference in the `userDocumentReferences` field.
 
-To get the list the chat rooms
-
+To get the list of chat rooms
 1. Add ListView (or Column)
 2. Add Backend Query
    1. Choose `chat_rooms` on Collection.
@@ -506,18 +508,59 @@ To get the list the chat rooms
 To display the chat rooms
 
 1. Add a Column as the child of List View.
-2. Add two containers to the Column. The first container is for displaying the one and one chat and the second container is for displaying the group chat.
-3. Add conditional visibilities on the first and second containers.
-  1. Set the condition as the `Num List Items` of `monderatorUserDocumentReferences` is equal to 0.
+2. Add two containers to the Column. The first container is for displaying the one to one chat and the second container is for displaying the group chat.
 
+    1. (one to one chat container)
+        1. Add conditional visibility as the `Num List Items` of `monderatorUserDocumentReferences` is equal to 0.
+    
+        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat.jpg?raw=true "Chat rooms collection")
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat.jpg?raw=true "Chat rooms collection")
+        2. Add Backend Query
+            1. Choose `users_public__data` on Collection.
+            2. Query Type to `Single Document`
+      
+            ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-onetoone-backend.png?raw=true "Chat rooms collection")
 
-  2. //// from here.
+        3. Add a filter
+            1. Collection Field Name to `userDocumentReferences`
+            2. Relation to `Equal To`
+            3. Value Source to Custom Function named `chatOtherUserReference` and set its two parameters as:
+                1. `userDocumentReference` equal to `chat_rooms document's userDocumentReferences field`
+                2. `myUserDocumentReference` equal to `Logged in user's reference`
+          
+                ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-onetoone-backend-2.png?raw=true "Chat rooms collection")
 
+        4. Inside the one to one chat container add row
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-group-chat.jpg?raw=true "Chat rooms collection")
+        5. Inside the row add container
 
+        6. Inside the container add row again
+
+        7. Inside the row you can now add a widget to display the user's photo and add text widgets to display the user's name and the timestamp of the last message
+
+        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-onetoone-row.png?raw=true "Chat rooms collection")
+
+        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-onetoone-row-2.png?raw=true "Chat rooms collection")
+
+    2. (group chat container)
+
+        1. Add conditional visibility as the `Num List Items` of `monderatorUserDocumentReferences` is greater than 0.
+
+        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-group-chat.jpg?raw=true "Chat rooms collection")
+
+        2. Add row
+
+        3. Inside the row add container
+
+        4. Inside the container add row again
+
+        5. Inside the row you can now add a widget to display the users' photos and text widgets to display group chat's last message and the time it was sent
+
+        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-grouchat-row.png?raw=true "Chat rooms collection")
+
+        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-grouchat-row-2.png?raw=true "Chat rooms collection")
+
+    
 
 
 
