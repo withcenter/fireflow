@@ -553,7 +553,7 @@ To display the chat rooms
         3. Inside the row add container
 
         4. Inside the container add row again
-
+        
         5. Inside the row you can now add a widget to display the users' photos and text widgets to display group chat's last message and the time it was sent
 
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-grouchat-row.png?raw=true "Chat rooms collection")
@@ -931,11 +931,11 @@ Add snackBarWarning Custom Action like below.
 
 ## Country Code
 
-- You can put favorites on top with divider.
-  - For favorites, you can add dial_code or country name(case sensitive).
+- You can display a list of favorite countries on top with divider.
+  - For favorites, you can add dial_code or country name in the list. And the country name in favotes is case sensitive.
 
 
-
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-dial-code-picker-code-expression.jpg?raw=true "Country Dial Code Picker")
 
 # Developer coding guide
 
