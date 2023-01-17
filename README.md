@@ -656,7 +656,7 @@ To display the chat rooms
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-title-last-message-sent-column.png?raw=true "Chat rooms collection")
 
-                1. (top text widget) set its value to chat_roomm's title
+                1. (top text widget) set its value to chat_room's title
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-title-text.png?raw=true "Chat rooms collection")
 
