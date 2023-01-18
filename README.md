@@ -534,7 +534,7 @@ To display the chat rooms
 
         6. Inside the `Container` add `Row` again
 
-        Inside the `Row` you can now add a widget to display the `user's photo` and text widgets to display the `user's name`, `last message` and the `timestamp` of it
+        Inside the `Row` you can now add a widget to display the `user's photo` and text widgets to display the `user's name`, `last message` and the time it was sent
 
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-onetoone-row.png?raw=true "Chat rooms collection")
 
@@ -545,12 +545,12 @@ To display the chat rooms
             1. Add `Image Widget` or `Custom Widget`
             2. Set its path to if else condition (we need to check first if the user's photo is set or not)
 
-        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-onetoone-chat-2.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-onetoone-chat-2.png?raw=true "Chat rooms collection")
             
                 1. (if condition) check if the user's photo url is set, if it is, then set it as the path of the image widget
                 2. (else condition) another if else condition to check if the user's gender is `male or female` to correctly show the placeholder image based on the user's gender
 
-                ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat-user-photo-condition-2.png?raw=true "Chat rooms collection")
+          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat-user-photo-condition-2.png?raw=true "Chat rooms collection")
 
                     1. (if condition) check if the user is female, if it is, then set the path of the image widget to the female placeholder image url stored in local state
                     2. (else condition) if the user is not female, set the path of the image widget to the male placeholder image url stored in local state
@@ -564,11 +564,11 @@ To display the chat rooms
 
                 1. (top text widget) set its value to user's display name
 
-                ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-user-display-name.png?raw=true "Chat rooms collection")
+      ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-user-display-name.png?raw=true "Chat rooms collection")
                 
                 2. (bottom text widget) set its value to chat_room's last message
 
-                ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage.png?raw=true "Chat rooms collection")
+      ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage.png?raw=true "Chat rooms collection")
 
         To display the chat_room's last message timestamp:
 
@@ -576,11 +576,11 @@ To display the chat rooms
             2. Inside the Column add text widget
             3. Set text widget's value to chat_room's lastMessageSentAt timestamp with a format of M/d h:mm a
 
-        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage-timestamp.png?raw=true "Chat rooms collection")
+      ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage-timestamp.png?raw=true "Chat rooms collection")
 
             4. Add conditional visibility to check if the lastMessageSent is set
 
-            ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-sing-chat-last-message-timestamp-visibility.png?raw=true "Chat rooms collection")
+      ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-sing-chat-last-message-timestamp-visibility.png?raw=true "Chat rooms collection")
 
             
 
@@ -591,13 +591,13 @@ To display the chat rooms
 
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-group-chat.jpg?raw=true "Chat rooms collection")
 
-        2. Inside the group chat container add row
+        2. Inside the `Container` add `Row`
 
-        3. Inside the row add container
+        3. Inside the `Row` add `Container`
 
-        4. Inside the container add row again
+        4. Inside the `Container` add `Row` again
 
-        5. Inside the row you can now add a widget to display the users' photos and text widgets to display group chat's last message and the time it was sent
+        5. Inside the `Row` you can now add a widget to display the users' photos and text widgets to display group chat's last message and the time it was sent
 
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-grouchat-row.png?raw=true "Chat rooms collection")
 
@@ -605,19 +605,20 @@ To display the chat rooms
 
         To display the group chat's two users' photos:
             
-            1. Add stack to the row
-            2. Inside the stack add two image widget or custom widget to display the group chat's two users' photos (the first photo will display the last message sender photo and the second photo will display the last person who entered the chat room)
+            1. Add `Stack` to the `Row`
+            2. Inside the `Stack` add two image widget or custom widget to display the group chat's two users' photos (the first photo will display the last message sender photo and the second photo will display the last person who entered the chat room)
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-stack-group-chat-two-users-photos.png?raw=true "Chat rooms collection")
 
-            To display the last message sender photo to the first image widget:
-                1. Add backend query to the first image widget
-                2. Set the collection field to users_public_data
-                3. Query type to Single Document
-                4. Add a filter
-                    1. Collection field name to `userDocumentReference`
-                    2. Relation to `Equal To`
-                    3. Vaue Source to `lastMessageSentBy`
+            To display the last message sender photo:
+                1. Add `Backend Query`
+                2. `Query Collection`
+                3. `Collection Field` to `users_public_data`
+                4. `Query Type` to `Single Document`
+                5. Add a filter
+                    1. `Collection Field Name` to `userDocumentReference`
+                    2. `Relation` to `Equal To`
+                    3. `Vaue Source` to `lastMessageSentBy`
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-group-chat-last-message-user-photo.png?raw=true "Chat rooms collection")
 
@@ -638,16 +639,16 @@ To display the chat rooms
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-enter-user-photo-backend-query.png?raw=true "Chat rooms collection")
 
             To display the number of users in the group chat room:
-                1. Add container
-                2. Inside the container add text widget
+                1. Add `Container`
+                2. Inside the cCntainer add Text widget
                 3. Set the text widget's value to the number of userDocumentReferences inside the chatRoom document
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-number-of-users.png?raw=true "Chat rooms collection")
                 
         To display the group chat's title and the last message sent:
 
-            1. Add column
-            2. Inside the column add two text widgets
+            1. Add `Column`
+            2. Inside the `Column` add two text widgets
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-title-last-message-sent-column.png?raw=true "Chat rooms collection")
 
@@ -661,8 +662,8 @@ To display the chat rooms
 
         To display the chat_room's last message timestamp:
 
-            1. Add column to the row
-            2. Inside the column add text widget
+            1. Add `Column` to the `Row`
+            2. Inside the `Column` add text widget
             3. Set text widget's value to chat_room's lastMessageSentAt timestamp with a format of M/d h:mm a
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage-timestamp.png?raw=true "Chat rooms collection")
