@@ -637,7 +637,7 @@ To display the chat rooms
                     3. `Vaue Source` to custom function named `userDocumentReferenceOfChatRoomLastEnter` and set its parameter:
                         1. `chatRoom` equal to `chat_rooms Document`
 
-                    - Note if the chat room don't have any user yet or it has only one user yet, then the photo of the creator of the chatroom will be displayed. Furthermore, since the first image widget will display the photo of the last message sender, if the last message message sender is the same with the last person who entered the chat room, the photo of the predecessor of the last person who entered the chat room will be displayed to avoid displaying the same image on the two image widgets.
+                    - Note if the chat room don't have any user yet or it has only one user yet, then the photo of the creator of the chatroom will be displayed. Furthermore, since the first image widget will display the photo of the last message sender, if the last message sender is the same with the last person who entered the chat room, the photo of the predecessor of the last person who entered the chat room will be displayed to avoid displaying the same image on the two image widgets.
 
                         
 
