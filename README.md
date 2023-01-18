@@ -542,23 +542,23 @@ To display the chat rooms
 
         To display the user's photo:
 
-            1. Add `Image Widget` or `Custom Widget`
-            2. Set its path to if else condition (we need to check first if the user's photo is set or not)
+          1. Add `Image Widget` or `Custom Widget`
+          2. Set its path to if else condition (we need to check first if the user's photo is set or not)
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-onetoone-chat-2.png?raw=true "Chat rooms collection")
             
-                1. (if condition) check if the user's photo url is set, if it is, then set it as the path of the image widget
-                2. (else condition) another if else condition to check if the user's gender is `male or female` to correctly show the placeholder image based on the user's gender
+          1. (if condition) check if the user's photo url is set, if it is, then set it as the path of the image widget
+          2. (else condition) another if else condition to check if the user's gender is `male or female` to correctly show the placeholder image based on the user's gender
 
-          ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat-user-photo-condition-2.png?raw=true "Chat rooms collection")
+            ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat-user-photo-condition-2.png?raw=true "Chat rooms collection")
 
-                    1. (if condition) check if the user is female, if it is, then set the path of the image widget to the female placeholder image url stored in local state
-                    2. (else condition) if the user is not female, set the path of the image widget to the male placeholder image url stored in local state
+            1. (if condition) check if the user is female, if it is, then set the path of the image widget to the female placeholder image url stored in local state
+            2. (else condition) if the user is not female, set the path of the image widget to the male placeholder image url stored in local state
 
         To display the user's name and the last message sent:
 
-            1. Add `Column`
-            2. Inside the `Column` add two text widgets
+            3. Add `Column`
+            4. Inside the `Column` add two text widgets
 
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-user-name-last-mesage.png?raw=true "Chat rooms collection")
 
@@ -572,13 +572,13 @@ To display the chat rooms
 
         To display the chat_rooms last message timestamp:
 
-            1. Add `Column`
-            2. Inside the Column add text widget
-            3. Set text widget's value to chat_rooms lastMessageSentAt timestamp with a format of M/d h:mm a
+            5. Add `Column`
+            6. Inside the Column add text widget
+            7. Set text widget's value to chat_rooms lastMessageSentAt timestamp with a format of M/d h:mm a
 
       ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage-timestamp.png?raw=true "Chat rooms collection")
 
-            4. Add conditional visibility to check if the lastMessageSent is set
+            8. Add conditional visibility to check if the lastMessageSent is set
 
       ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-sing-chat-last-message-timestamp-visibility.png?raw=true "Chat rooms collection")
 
