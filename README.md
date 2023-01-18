@@ -848,6 +848,7 @@ In the screenshot, I display the members of the chat room. Yes, it is a real pop
 - You can make your own child Component and the popup Component with your own design and actions. Just the way you develop your Component.
   - And passed them over the CustomPopup widget.
 
+- Don't put the size of the width in the popup component. The width of the popup component will be automatically sized.
 
 - Options
   - dx is the x position where the popup would appear.
@@ -893,6 +894,7 @@ class _DisplayChatUsersState extends State<DisplayChatUsers> {
  }
 }
 ```
+
 
 ### Custom poup step by step example
 

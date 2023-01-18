@@ -1,3 +1,7 @@
+## 0.0.72
+
+* Update. doc.
+
 ## 0.0.71
 
 * Update. doc.
