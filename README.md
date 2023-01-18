@@ -613,12 +613,12 @@ To display the chat rooms
             To display the last message sender photo:
                 1. Add `Backend Query`
                 2. `Query Collection`
-                3. `Collection Field` to `users_public_data`
-                4. `Query Type` to `Single Document`
+                3. Collection Field to `users_public_data`
+                4. Query Type to `Single Document`
                 5. Add a filter
-                    1. `Collection Field Name` to `userDocumentReference`
-                    2. `Relation` to `Equal To`
-                    3. `Vaue Source` to `lastMessageSentBy`
+                    1. Collection Field Name to `userDocumentReference`
+                    2. Relation to `Equal To`
+                    3. Vaue Source to `lastMessageSentBy`
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-group-chat-last-message-user-photo.png?raw=true "Chat rooms collection")
 
