@@ -508,7 +508,7 @@ To get the list of chat rooms
 To display the chat rooms
 
 1. Add a `Column` as the child of `List View`.
-2. Add `two Containers` to the Column. The `first Container` is for `displaying the one to one chat` and the `second Container` is for `displaying the group chat`.
+2. Add `two Containers` to the `Column`. The `first Container` is for `displaying the one to one chat` and the `second Container` is for `displaying the group chat`.
     1. (One to One chat Container)
         1. Add `Backend Query`
             1. `Query Collection`.
@@ -528,11 +528,11 @@ To display the chat rooms
     
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat.jpg?raw=true "Chat rooms collection")
 
-        4. Inside the `Container` add `Row`
+        3. Inside the `Container` add `Row`
 
-        5. Inside the `Row` add `Container`
+        4. Inside the `Row` add `Container`
 
-        6. Inside the `Container` add `Row` again
+        5. Inside the `Container` add `Row` again
 
         Inside the `Row` you can now add a widget to display the `user's photo` and text widgets to display the `user's name`, `last message` and the time it was sent
 
@@ -622,26 +622,27 @@ To display the chat rooms
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-group-chat-last-message-user-photo.png?raw=true "Chat rooms collection")
 
-                5. Add conditional visibility by checking if the `lastMessageSentBy` field is set.
+                6. Add conditional visibility by checking if the `lastMessageSentBy` field is set.
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-user-photo-conditional-visibility.png?raw=true "Chat rooms collection")
 
             To display the last person photo who entered the chat room to the second image widget:
-                1. Add backend query to the second image widget
-                2. Set the collection field to users_public_data
-                3. Query type to Single Document
-                4. Add a filter
-                    1. Collection field name to `userDocumentReference`
-                    2. Relation to `Equal To`
-                    3. Vaue Source to custom function named userDocumentReferenceOfChatRoomLastEnter and set its parameter:
-                        1. chatRoom equal to chatRoom Document
+                1. Add `Backend Query`
+                2. `Query Collection`
+                2. `Collection Field` to users_public_data
+                3. `Query Type` to `Single Document`
+                4. Add a `Filter`
+                    1. `Collection Field Name` to `userDocumentReference`
+                    2. `Relation` to `Equal To`
+                    3. `Vaue Source` to custom function named `userDocumentReferenceOfChatRoomLastEnter` and set its parameter:
+                        1. `chatRoom` equal to `chatRoom Document`
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-enter-user-photo-backend-query.png?raw=true "Chat rooms collection")
 
             To display the number of users in the group chat room:
                 1. Add `Container`
-                2. Inside the cCntainer add Text widget
-                3. Set the text widget's value to the number of userDocumentReferences inside the chatRoom document
+                2. Inside the `Containe`r add `Text widget`
+                3. Set the `text widget's value` to the number of `userDocumentReferences` inside the chatRoom document
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-number-of-users.png?raw=true "Chat rooms collection")
                 
@@ -664,11 +665,11 @@ To display the chat rooms
 
             1. Add `Column` to the `Row`
             2. Inside the `Column` add text widget
-            3. Set text widget's value to chat_room's lastMessageSentAt timestamp with a format of M/d h:mm a
+            3. Set text widget's value to chat_room's `lastMessageSentAt` timestamp with a format of M/d h:mm a
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-sing-chat-last-mesage-timestamp.png?raw=true "Chat rooms collection")
 
-            4. Add conditional visibility to check if the lastMessageSent is set
+            4. Add conditional visibility to check if the `lastMessageSent` is set
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-timestamp-visibility.png?raw=true "Chat rooms collection")
 
