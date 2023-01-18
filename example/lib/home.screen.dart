@@ -26,6 +26,42 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          CustomPopup(
+            dx: 0,
+            dy: 32,
+            popup: Container(
+              padding: const EdgeInsets.all(24),
+              color: Colors.amber,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Custom Popup'),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  const Text('Content of the popup, long before'),
+                  const Text(
+                      'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                  const Text('Content of the popup, long before'),
+                  const Text(
+                      'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                  TextButton.icon(
+                    onPressed: Navigator.of(context).pop,
+                    icon: const Icon(Icons.close),
+                    label: const Text(
+                      'Close',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            child: Container(
+                padding: const EdgeInsets.all(8),
+                child: const Icon(Icons.settings)),
+          ),
+        ],
       ),
       backgroundColor: Colors.pink.shade50,
       body: SingleChildScrollView(
@@ -35,77 +71,28 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              PopupMenuButton(
-                itemBuilder: ((context) => [
-                      PopupMenuItem(
-                        child: Text('Item 1'),
-                      ),
-                      PopupMenuItem(
-                        child: Text('Item 2'),
-                      ),
-                      PopupMenuItem(
-                        child: Text('Item 3'),
-                      ),
-                    ]),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    final renderBox = context.findRenderObject() as RenderBox;
-                    final size = renderBox.size;
-                    final offset = renderBox.localToGlobal(Offset.zero);
-                    showGeneralDialog(
-                      context: context,
-                      barrierColor: Colors.black54,
-                      barrierDismissible: true,
-                      barrierLabel: 'Label',
-                      pageBuilder: (context, __, ___) {
-                        return Stack(
-                          children: [
-                            Positioned(
-                              top: offset.dy,
-                              left: offset.dx,
-                              child: Container(
-                                color: Colors.blue,
-                                child: Column(
-                                  children: [
-                                    Text('Popup'),
-                                    FlutterLogo(size: 150),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Text('Show Dialog')),
-              const SizedBox(height: 100),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 100),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 100),
-              const Text('Hi, there. How are you?'),
+              const Text('Custom Popup'),
               const SizedBox(height: 100),
               Align(
                 alignment: Alignment.topLeft,
                 child: CustomPopup(
+                  dx: 2560,
                   popup: Container(
                     color: Colors.blue,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('Custom Popup'),
-                        Text('Content of the popup, long before'),
-                        Text(
+                        const Text('Custom Popup'),
+                        const Text('Content of the popup, long before'),
+                        const Text(
                             'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
-                        Text('Content of the popup, long before'),
-                        Text(
+                        const Text('Content of the popup, long before'),
+                        const Text(
                             'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                         TextButton.icon(
                           onPressed: Navigator.of(context).pop,
-                          icon: Icon(Icons.close),
-                          label: Text(
+                          icon: const Icon(Icons.close),
+                          label: const Text(
                             'Close',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -120,12 +107,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 100),
-              const Text('Hi, there. How are you?'),
+              const Text('Anonother Custom Popup'),
               const SizedBox(height: 10),
               CustomPopup(
-                dy: 64,
+                dy: 16,
+                dx: -256,
                 popup: Container(
-                  color: Colors.blue,
+                  color: Colors.amber,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: const [
@@ -145,48 +133,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 10),
-              ElevatedButton.icon(
-                  onPressed: null,
-                  icon: const Icon(Icons.close),
-                  label: const Text('Hide Custom Popup')),
-              PopupMenuButton(
-                itemBuilder: ((context) => [
-                      PopupMenuItem(
-                        child: Text('Item 1'),
-                      ),
-                      PopupMenuItem(
-                        child: Text('Item 2'),
-                      ),
-                      PopupMenuItem(
-                        child: Text('Item 3'),
-                      ),
-                    ]),
-              ),
-              const SizedBox(height: 10),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 100),
-              const SizedBox(height: 100),
-              const Text('Hi, there. How are you?'),
-              const SizedBox(height: 100),
-              const SizedBox(height: 210),
-              const Text('Hi, there. How are you?'),
               const SizedBox(height: 500),
               const Text('I dont wan t'),
               const SizedBox(height: 210),
