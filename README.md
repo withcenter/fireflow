@@ -487,52 +487,47 @@ The `MessageModel` will handle all kinds of push notification data including, bu
 
 ### How to list my chat rooms
 
-Get the chat rooms that have the logged in user’s document reference in the `userDocumentReferences` field.
+* Get the chat rooms that have the logged in user’s document reference in the `userDocumentReferences` field.
 
-To get the list of chat rooms
-1. Add ListView (or Column)
-2. Add Backend Query
-   1. Choose `chat_rooms` on Collection.
-   2. Query Type to `List of Documents`
-   3. Add a filter
-      1. Collection Field Name to `userDocumentReferences`
-      2. Relation to `Array Contains`
-      3. Value Source to `User Record Reference`
-   4. Add an ordering
-      1. Collection Field Name to `lastMesageSentAt`
-      2. Order to `Decreasing`
-
-
+* To get the list of chat rooms from the Firestore
+  * Add ListView (or Column)
+  * Add Backend Query
+    * Choose `chat_rooms` on Collection.
+    * Query Type to `List of Documents`
+    * Add a filter
+      * Collection Field Name to `userDocumentReferences`
+      * Relation to `Array Contains`
+      * Value Source to `User Record Reference`
+    * Add an ordering
+    * Collection Field Name to `lastMesageSentAt`
+    * Order to `Decreasing`
 
 
-To display the chat rooms
-
-1. Add a `Column` as the child of `List View`.
-2. Add `two Containers` to the `Column`. The `first Container` is for `displaying the one to one chat` and the `second Container` is for `displaying the group chat`.
-    1. (One to One chat Container)
-        1. Add `Backend Query`
-            1. `Query Collection`.
-            2. Query Type to `Single Document`.
-            3. Add a Filter.
-                1. Collection Field Name to `userDocumentReference`.
-                2. Relation to `Equal To`.
-                3. Value Source to Custom Function named `chatOtherUserReference` and set its two parameters.
-                    1. `userDocumentReferences` to `chat_rooms' userDocumentReferences`.
-                    2. `myUserDocumentReference` to `logged in user's reference`.
-
+* To display the chat rooms
+  * Add a `Column` as the child of `List View`.
+  * Add `two Containers` to the `Column`. The `first Container` is for `displaying the one to one chat` and the `second Container` is for `displaying the group chat`.
+  * (One to One chat Container)
+    * Add `Backend Query`
+    * `Query Collection`.
+    * Query Type to `Single Document`.
+      * Add a Filter.
+      * Collection Field Name to `userDocumentReference`.
+      * Relation to `Equal To`.
+      * Value Source to Custom Function named `chatOtherUserReference` and set its two parameters.
+        * `userDocumentReferences` to `chat_rooms' userDocumentReferences`.
+        * `myUserDocumentReference` to `logged in user's reference`.
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-onetoone-backend.png?raw=true "Chat rooms collection")
-
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-onetoone-backend-2.png?raw=true "Chat rooms collection")
+        
+      * Add `conditional visibility` as the `Num List Items` of `monderatorUserDocumentReferences` is equal to 0.
 
-        2. Add `conditional visibility` as the `Num List Items` of `monderatorUserDocumentReferences` is equal to 0.
-    
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat.jpg?raw=true "Chat rooms collection")
 
-        3. Inside the `Container` add `Row`
+        1. Inside the `Container` add `Row`
 
-        4. Inside the `Row` add `Container`
+        2. Inside the `Row` add `Container`
 
-        5. Inside the `Container` add `Row` again
+        3. Inside the `Container` add `Row` again
 
         Inside the `Row` you can now add a widget to display the `user's photo` and text widgets to display the `user's name`, `last message` and the time it was sent
 
@@ -547,8 +542,8 @@ To display the chat rooms
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-onetoone-chat-2.png?raw=true "Chat rooms collection")
             
-          1. (if condition) check if the user's photo url is set, if it is, then set it as the path of the image widget
-          2. (else condition) another if else condition to check if the user's gender is `male or female` to correctly show the placeholder image based on the user's gender
+          3. (if condition) check if the user's photo url is set, if it is, then set it as the path of the image widget
+          4. (else condition) another if else condition to check if the user's gender is `male or female` to correctly show the placeholder image based on the user's gender
 
             ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat-user-photo-condition-2.png?raw=true "Chat rooms collection")
 
@@ -605,20 +600,20 @@ To display the chat rooms
 
         To display the group chat's two users' photos:
             
-            1. Add `Stack` to the `Row`
-            2. Inside the `Stack` add two image widget or custom widget to display the group chat's two users' photos (the first photo will display the last message sender photo and the second photo will display the last person who entered the chat room)
+          1. Add `Stack` to the `Row`
+          2. Inside the `Stack` add two image widget or custom widget to display the group chat's two users' photos (the first photo will display the last message sender photo and the second photo will display the last person who entered the chat room)
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-stack-group-chat-two-users-photos.png?raw=true "Chat rooms collection")
 
-            To display the last message sender photo:
-                1. Add `Backend Query`
-                2. `Query Collection`
-                3. Collection Field to `users_public_data`
-                4. Query Type to `Single Document`
-                5. Add a filter
-                    1. Collection Field Name to `userDocumentReference`
-                    2. Relation to `Equal To`
-                    3. Vaue Source to `lastMessageSentBy`
+          To display the last message sender photo:
+            1. Add `Backend Query`
+            2. `Query Collection`
+            3. Collection Field to `users_public_data`
+            4. Query Type to `Single Document`
+            5. Add a filter
+              1. Collection Field Name to `userDocumentReference`
+              2. Relation to `Equal To`
+              3. Vaue Source to `lastMessageSentBy`
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-column-group-chat-last-message-user-photo.png?raw=true "Chat rooms collection")
 
@@ -640,13 +635,12 @@ To display the chat rooms
                     - Note if the chat room don't have any user yet or it has only one user yet, then the photo of the creator of the chatroom will be displayed. Furthermore, since the first image widget will display the photo of the last message sender, if the last message sender is the same with the last person who entered the chat room, the photo of the predecessor of the last person who entered the chat room will be displayed to avoid displaying the same image on the two image widgets.
 
                         
-
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-enter-user-photo-backend-query.png?raw=true "Chat rooms collection")
 
-            To display the number of users in the group chat room:
-                1. Add `Container`
-                2. Inside the `Container` add `Text widget`
-                3. Set the `text widget's value` to the number of `userDocumentReferences` inside the chat_rooms document
+          To display the number of users in the group chat room:
+            1. Add `Container`
+            2. Inside the `Container` add `Text widget`
+            3. Set the `text widget's value` to the number of `userDocumentReferences` inside the chat_rooms document
 
           ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-number-of-users.png?raw=true "Chat rooms collection")
                 
