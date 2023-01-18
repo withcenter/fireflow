@@ -542,11 +542,11 @@ The `MessageModel` will handle all kinds of push notification data including, bu
             
         * (if condition) check if the user's photo url is set, if it is, then set it as the path of the image widget
         * (else condition) another if else condition to check if the user's gender is `male or female` to correctly show the placeholder image based on the user's gender
-
-        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat-user-photo-condition-2.png?raw=true "Chat rooms collection")
-
           * (if condition) check if the user is female, if it is, then set the path of the image widget to the female placeholder image url stored in local state
           * (else condition) if the user is not female, set the path of the image widget to the male placeholder image url stored in local state
+
+        ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-condition-sing-chat-user-photo-condition-2.png?raw=true "Chat rooms collection")
+        
 
     * To display the user's name and the last message sent:
       * Add `Column`
