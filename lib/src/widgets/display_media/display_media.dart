@@ -17,25 +17,27 @@ bool _isImagePath(String path) =>
 
 class FlutterFlowMediaDisplay extends StatelessWidget {
   const FlutterFlowMediaDisplay({
+    Key? key,
     required this.path,
     required this.imageBuilder,
     required this.videoPlayerBuilder,
-    required this.fileBiulder,
-  });
+    required this.fileBuilder,
+  }) : super(key: key);
 
   final String path;
   final Widget Function(String) imageBuilder;
   final Widget Function(String) videoPlayerBuilder;
-  final Widget Function(String) fileBiulder;
+  final Widget Function(String) fileBuilder;
 
   @override
   Widget build(BuildContext context) {
-    if (_isVideoPath(path))
+    if (_isVideoPath(path)) {
       return videoPlayerBuilder(path);
-    else if (_isImagePath(path))
+    } else if (_isImagePath(path)) {
       return imageBuilder(path);
-    else
-      return fileBiulder(path);
+    } else {
+      return fileBuilder(path);
+    }
 
     // return _isVideoPath(path) ? videoPlayerBuilder(path) : imageBuilder(path);
   }
@@ -48,10 +50,11 @@ enum VideoType {
   network,
 }
 
-Set<VideoPlayerController> _videoPlayers = Set();
+Set<VideoPlayerController> _videoPlayers = {};
 
 class FlutterFlowVideoPlayer extends StatefulWidget {
   const FlutterFlowVideoPlayer({
+    Key? key,
     required this.path,
     this.videoType = VideoType.network,
     this.width,
@@ -63,7 +66,7 @@ class FlutterFlowVideoPlayer extends StatefulWidget {
     this.allowFullScreen = true,
     this.allowPlaybackSpeedMenu = false,
     this.lazyLoad = false,
-  });
+  }) : super(key: key);
 
   final String path;
   final VideoType videoType;
@@ -232,7 +235,7 @@ class _UploadedMediaState extends State<DisplayMedia> {
                 allowFullScreen: true,
                 allowPlaybackSpeedMenu: false,
               ),
-          fileBiulder: (path) => Center(
+          fileBuilder: (path) => Center(
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   child: Column(
