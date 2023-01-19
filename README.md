@@ -669,7 +669,18 @@ The `MessageModel` will handle all kinds of push notification data including, bu
 
 ### How to display menu when the chat message has tapped.
 
-- message copy, edit, delete, open, etc.
+* Create a component that will accept `chatRoomMessageDocument` as parameter.
+* Inside the component, put some widgets that will display the menu actions such as copy, edit, delete, open, etc.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-chat-message-menu-component.png?raw=true "Chat rooms collection")
+
+* Inside the chat room, when the message has been tapped, open the component created above as a bottom sheet and pass the `chatRoomMessageDocument`.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat_room-message-tapped.png?raw=true "Chat rooms collection")
+
+
+
+
 
 ### How to leave a group chat room.
 
