@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// PostModel is a class that represents a document of /posts.
 ///
 class PostModel {
+  final String id;
   final String category;
   final DocumentReference userDocumentReference;
   final String title;
@@ -20,6 +21,7 @@ class PostModel {
   final bool emphasizePremiumUserPost;
 
   PostModel({
+    required this.id,
     required this.category,
     required this.title,
     required this.content,
@@ -50,18 +52,20 @@ class PostModel {
     Map<String, dynamic> json, {
     String? id,
   }) {
+    /// Note that, on Firestore cache, the Timestamp on local cache would be null.
     return PostModel(
+      id: id ?? '',
       category: json['category'],
       title: json['title'] ?? '',
       content: json['content'] ?? '',
       userDocumentReference: json['userDocumentReference'],
       createdAt: json['createdAt'] ?? Timestamp.now(),
-      updatedAt: json['updatedAt'] ?? json['createdAt'],
+      updatedAt: json['updatedAt'] ?? Timestamp.now(),
       hasPhoto: json['hasPhoto'] ?? false,
       noOfComments: json['noOfComments'] ?? 0,
       hasComment: json['hasComment'] ?? false,
       deleted: json['deleted'] ?? false,
-      likes: json['likes'] ?? [],
+      likes: List<DocumentReference>.from(json['likes'] ?? []),
       hasLike: json['hasLike'] ?? false,
       files: List<String>.from(json['files'] ?? []),
       wasPremiumUser: json['wasPremiumUser'] ?? false,
@@ -72,6 +76,6 @@ class PostModel {
   // create "toString()" method that returns a string of the object of this class
   @override
   String toString() {
-    return 'PostModel{ category: $category, title: $title, content: $content, userDocumentReference: $userDocumentReference, createdAt: $createdAt, updatedAt: $updatedAt, hasPhoto: $hasPhoto, noOfComments: $noOfComments, hasComment: $hasComment, deleted: $deleted, likes: $likes, hasLike: $hasLike, files: $files, wasPremiumUser: $wasPremiumUser, emphasizePremiumUserPost: $emphasizePremiumUserPost}';
+    return 'PostModel{ id: $id, category: $category, title: $title, content: $content, userDocumentReference: $userDocumentReference, createdAt: $createdAt, updatedAt: $updatedAt, hasPhoto: $hasPhoto, noOfComments: $noOfComments, hasComment: $hasComment, deleted: $deleted, likes: $likes, hasLike: $hasLike, files: $files, wasPremiumUser: $wasPremiumUser, emphasizePremiumUserPost: $emphasizePremiumUserPost}';
   }
 }

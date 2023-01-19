@@ -107,42 +107,42 @@ packages:
     source: hosted
     version: "1.1.1"
   cloud_firestore:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_firestore
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.0"
   cloud_firestore_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_firestore_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.9.1"
   cloud_firestore_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_firestore_web
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.1"
   cloud_functions:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_functions
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.6"
   cloud_functions_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_functions_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.1.25"
   cloud_functions_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_functions_web
       url: "https://pub.dartlang.org"
@@ -212,84 +212,84 @@ packages:
     source: hosted
     version: "4.5.1"
   firebase_auth:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.0"
   firebase_auth_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_auth_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.11.4"
   firebase_auth_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_auth_web
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.2.0"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
   firebase_core_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.5.2"
   firebase_core_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
   firebase_messaging:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_messaging
       url: "https://pub.dartlang.org"
     source: hosted
     version: "14.1.4"
   firebase_messaging_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_messaging_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.8"
   firebase_messaging_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_messaging_web
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.9"
   firebase_storage:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_storage
       url: "https://pub.dartlang.org"
     source: hosted
     version: "11.0.7"
   firebase_storage_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_storage_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.1.25"
   firebase_storage_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_storage_web
       url: "https://pub.dartlang.org"
@@ -722,14 +722,14 @@ packages:
     source: hosted
     version: "1.1.1"
   supabase:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
   supabase_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: supabase_flutter
       url: "https://pub.dartlang.org"

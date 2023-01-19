@@ -98,7 +98,8 @@ service cloud.firestore {
     // category
     match /categories/{category} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || onlyUpdating(['noOfPosts', 'noOfComments'])
     }
 
     // posts

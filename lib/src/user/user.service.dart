@@ -30,7 +30,7 @@ class UserService {
   DocumentReference get ref =>
       FirebaseFirestore.instance.collection('users').doc(uid);
 
-  get myRef => ref;
+  DocumentReference get myRef => ref;
 
   /// The login user's public data document reference
   DocumentReference get myUserPublicDataRef =>
@@ -78,6 +78,21 @@ class UserService {
         'userDocumentReference': ref,
         'registeredAt': FieldValue.serverTimestamp(),
       });
+
+      /// Create user's document.
+      /// Mostly, user document will be created automatically by flutterflow
+      /// when the user is signed in. But there are some cases where the
+      /// app is not developed by fireflow.
+      /// In that case, it will create the user document when user's public
+      /// data document is being created. So, it will check the exitence only
+      /// once and it will save money.
+      final snapshot = await myRef.get();
+      if (snapshot.exists == false) {
+        await myRef.set({
+          'uid': uid,
+          'created_time': FieldValue.serverTimestamp(),
+        });
+      }
     }
 
     /// Update user's document with the user's public data document reference

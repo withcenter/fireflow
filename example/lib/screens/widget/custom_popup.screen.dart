@@ -1,29 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
+class CustomPopupScreen extends StatelessWidget {
+  const CustomPopupScreen({super.key});
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-    //   AppService.instance.init(context: context);
-    // });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
+        title: const Text("Custom Popup"),
         actions: [
           CustomPopup(
             dx: 0,

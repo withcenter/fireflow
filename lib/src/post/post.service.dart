@@ -20,9 +20,7 @@ class PostService {
     final categoryDoc = CategoryService.instance.doc(post.category);
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
-    final List<Future> futures = [];
-
-    futures.add(postDocumentReference.update({
+    await postDocumentReference.update({
       'userDocumentReference': UserService.instance.ref,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
@@ -36,22 +34,20 @@ class PostService {
       'hasLike': false,
       'wasPremiumUser': UserService.instance.my?.isPremiumUser ?? false,
       'emphasizePremiumUserPost': category.emphasizePremiumUserPost
-    }));
+    });
 
     // update the user's post count
-    futures.add(UserService.instance.publicRef.update(
+    await UserService.instance.publicRef.update(
       {
         'noOfPosts': FieldValue.increment(1),
       },
-    ));
+    );
 
     //
-    futures.add(categoryDoc.update(
+    await categoryDoc.update(
       {
         'noOfPosts': FieldValue.increment(1),
       },
-    ));
-
-    return Future.wait(futures);
+    );
   }
 }

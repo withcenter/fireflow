@@ -15,7 +15,9 @@ export 'src/storage/storage.service.dart';
 export 'src/push_notifications/messaging.service.dart';
 export 'src/chat/chat_no_of_rooms_with_new_message.dart';
 export 'src/category/category.service.dart';
+export 'src/category/category.model.dart';
 export 'src/post/post.service.dart';
+export 'src/post/post.model.dart';
 export 'src/comment/comment.service.dart';
 
 /// Utils, Functions, Actions
