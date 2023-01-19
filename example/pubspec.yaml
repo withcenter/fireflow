@@ -16,6 +16,8 @@ dependencies:
   fireflow:
     path: ..
 
+  go_router:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
