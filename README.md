@@ -678,7 +678,6 @@ The `MessageModel` will handle all kinds of push notification data including, bu
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat_room-message-tapped.png?raw=true "Chat rooms collection")
 
-- message copy, edit, delete, open, etc.
 
 
 
