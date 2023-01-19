@@ -49,5 +49,15 @@ class PostService {
         'noOfPosts': FieldValue.increment(1),
       },
     );
+
+    /// TODO update the post data into Supabase.
+  }
+
+  Future afterUpdate({
+    required DocumentReference postDocumentReference,
+  }) {
+    // TODO update post data
+    // TODO update the post data into Supabase.
+    return Future.value(null);
   }
 }

@@ -81,6 +81,7 @@
   - [snackBarWarning](#snackbarwarning)
 - [Functions](#functions)
   - [Country Code](#country-code)
+- [Unit Testing](#unit-testing)
 - [Developer coding guide](#developer-coding-guide)
 - [Sponsors](#sponsors)
 - [Known Issues](#known-issues)
@@ -1076,6 +1077,12 @@ Add snackBarWarning Custom Action like below.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-dial-code-picker-code-expression.jpg?raw=true "Country Dial Code Picker")
 
+
+# Unit Testing
+
+The current version of fireflow has no backend or a minimum size of backend code. And most of the imporant part of fireflow is going under the scene. So, we have more unit test codes than widget test codes.
+
+- Firestore security rule - unit test.
 
 # Developer coding guide
 

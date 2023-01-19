@@ -29,7 +29,10 @@ final router = GoRouter(
       name: 'PostEdit',
       path: '/postEdit',
       builder: (context, state) {
-        return PostEditScreen(category: state.queryParams['category']!);
+        return PostEditScreen(
+          category: state.queryParams['category'],
+          postId: state.queryParams['postId'],
+        );
       },
     ),
     GoRoute(

@@ -18,6 +18,25 @@ class PostEditScreen extends StatefulWidget {
 class _PostEditScreenState extends State<PostEditScreen> {
   final title = TextEditingController();
   final content = TextEditingController();
+
+  late final PostModel post;
+
+  bool get isCreate => widget.postId == null;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.postId != null) {
+      PostService.instance.col.doc(widget.postId).get().then((value) {
+        post = PostModel.fromSnapshot(value);
+        title.text = post.title;
+        content.text = post.content;
+        setState(() {});
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,15 +60,11 @@ class _PostEditScreenState extends State<PostEditScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final data = {
-                  'category': widget.category,
-                  'userDocumentReference': UserService.instance.ref,
-                  'title': title.text,
-                  'content': content.text,
-                  'createdAt': FieldValue.serverTimestamp(),
-                };
-                final ref = await PostService.instance.col.add(data);
-                PostService.instance.afterCreate(postDocumentReference: ref);
+                if (isCreate)
+                  await create();
+                else
+                  await update();
+
                 context.pop();
               },
               child: const Text('Submit'),
@@ -57,6 +72,29 @@ class _PostEditScreenState extends State<PostEditScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  create() async {
+    final data = {
+      'category': widget.category,
+      'userDocumentReference': UserService.instance.ref,
+      'title': title.text,
+      'content': content.text,
+      'createdAt': FieldValue.serverTimestamp(),
+    };
+    final ref = await PostService.instance.col.add(data);
+    PostService.instance.afterCreate(postDocumentReference: ref);
+  }
+
+  update() async {
+    final data = {
+      'title': title.text,
+      'content': content.text,
+    };
+    await PostService.instance.doc(widget.postId!).update(data);
+    PostService.instance.afterUpdate(
+      postDocumentReference: PostService.instance.doc(widget.postId!),
     );
   }
 }

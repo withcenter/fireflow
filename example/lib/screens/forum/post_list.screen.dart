@@ -49,7 +49,7 @@ class PostListScreen extends StatelessWidget {
               return ListTile(
                 title: Text(post.title),
                 subtitle: Text(post.content),
-                onTap: () => context.pushNamed('PostDetail', queryParams: {
+                onTap: () => context.pushNamed('PostEdit', queryParams: {
                   'postId': post.id,
                 }),
               );
