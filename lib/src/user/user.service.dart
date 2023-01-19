@@ -93,7 +93,7 @@ class UserService {
   ///
   /// It listens the update of the login user's public data document and
   /// - keep the user's public data in memory.
-  /// - update the user's public data in Supabase if neccessary.
+  /// - update the user's public data into Supabase if neccessary.
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
@@ -104,13 +104,14 @@ class UserService {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (AppService.instance.supabase) {
           /// Upsert the user public data to Supabase.
-          await Supabase.instance.client.from('users_public_data').upsert(
+          await Supabase.instance.client.from(Config.supabaseTable).upsert(
             {
+              'model': 'user',
               'uid': my!.uid,
               'display_name': my!.displayName,
               'gender': my!.gender,
               'birthday': my!.birthday.toDate().toIso8601String(),
-              'registeredAt': my!.registeredAt.toDate().toIso8601String(),
+              'registered_at': my!.registeredAt.toDate().toIso8601String(),
             },
             onConflict: 'uid',
           );

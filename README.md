@@ -65,6 +65,7 @@
   - [Category Logic](#category-logic)
   - [Post Creation Logic](#post-creation-logic)
 - [Supabase](#supabase)
+  - [Supabase Table](#supabase-table)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
     - [How to implement the custom ppup](#how-to-implement-the-custom-ppup)
@@ -806,6 +807,10 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 # Supabase
 
+- We support the supabase for the text search and the complicated conditional filterings.
+  - User profile, post, comment, chat title will be automatically saved into supabase the option is enabled.
+  - Only public data should be saved in the supabase.
+
 - To enable supabase, follow [the Supabase document in the offical site](https://docs.flutterflow.io/data-and-backend/supabase).
 
 - Add `supabase: true` on `AppService`.
@@ -813,6 +818,18 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 - And prepare `users_public_data` schema like below.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-supabase.jpg?raw=true "Supabase")
+
+
+## Supabase Table
+
+- For the simplicity, we use only one table for search. You can customize your own.
+
+
+- `model` is the model of data group. It can be one of
+  - user
+  - chat_room
+  - post
+  - comment
 
 
 

@@ -1,3 +1,7 @@
+/// Config
+export 'config.dart';
+
+/// Service
 export 'src/user/user.service.dart';
 export 'src/user/user.model.dart';
 export 'src/user/user_public_data.model.dart';
