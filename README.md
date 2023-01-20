@@ -7,7 +7,8 @@
 
 * `Fireflow` is an open source, easy and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
 
-* `Fireflow` is especially designed to work with `FlutterFlow`. You may use it with `Flutter` as you wish.
+* `Fireflow` can be used for both of `Flutter` and `FlutterFlow`.
+  * For the example code of fireflow, see [the example project](https://github.com/withcenter/fireflow/tree/main/example).
 
 
 - [Fireflow](#fireflow)
@@ -827,6 +828,7 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 ## Comment creation
 
+- The `createdAt` field must be set to Firestore.serverTimestamp by flutterflow. `updatedAt` is optional.
 - The `order` field must be set by Flutterflow. It's not an ideal for the fireflow to update the `order` field since fireflow is a bit slow. And the flutterflow needs it immediately after it creates a comment to display the comments in nested position.
 
 
