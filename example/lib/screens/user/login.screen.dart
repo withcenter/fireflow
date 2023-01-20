@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -11,7 +13,7 @@ class LoginScreen extends StatelessWidget {
     final password = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: Text('Login'),
       ),
       body: Container(
           child: Column(
@@ -29,7 +31,11 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email.text, password: password.text);
+              context.goNamed('Home');
+            },
             child: const Text('Submit'),
           ),
         ],

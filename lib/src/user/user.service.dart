@@ -40,6 +40,8 @@ class UserService {
   /// The login user's Firebase User object.
   FA.User get currentUser => FA.FirebaseAuth.instance.currentUser!;
 
+  bool get isLoggedIn => FA.FirebaseAuth.instance.currentUser != null;
+
   StreamSubscription? publicDataSubscription;
 
   /// The login user's public data model.

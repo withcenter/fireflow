@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Colors.pink.shade50,
         child: Column(
           children: [
+            if (UserService.instance.isLoggedIn) Text(UserService.instance.uid),
             const SizedBox(
               height: 24,
             ),
