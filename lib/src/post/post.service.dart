@@ -62,7 +62,6 @@ class PostService {
           'updated_at': post.updatedAt.toDate().toIso8601String(),
           'title': post.title,
           'content': post.content,
-          'deleted': false,
         },
       );
     }
@@ -89,7 +88,6 @@ class PostService {
           'updated_at': post.updatedAt.toDate().toIso8601String(),
           'title': post.title,
           'content': post.content,
-          'deleted': false,
         },
       ).eq('postId', postDocumentReference.id);
     }
