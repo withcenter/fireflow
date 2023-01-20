@@ -1,14 +1,15 @@
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/res/fireflow-logo.jpg?raw=true "This is image title")
 
-[English](https://github.com/withcenter/fireflow/blob/main/README.md) | [한국어](https://github.com/withcenter/fireflow/blob/main/etc/readme/ko/README.md)
+FlutterFlow Documents: [English](https://github.com/withcenter/fireflow/blob/main/README.md) | [한국어](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/ko/README.md)
+Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutter/en/README.md)
 
 # Fireflow
 
 * `Fireflow` is an open source, easy and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
 
 * `Fireflow` can be used for both of `Flutter` and `FlutterFlow`.
-  * For the example code of fireflow, see [the example project](https://github.com/withcenter/fireflow/tree/main/example).
+  * For the example code of Flutter, see [the example project](https://github.com/withcenter/fireflow/tree/main/example).
 
 
 - [Fireflow](#fireflow)
@@ -63,8 +64,16 @@
 - [Forum](#forum)
   - [Forum Schema](#forum-schema)
     - [recentPosts](#recentposts)
-  - [Category Logic](#category-logic)
-  - [Creating post](#creating-post)
+  - [Category](#category)
+    - [Category Logic](#category-logic)
+  - [Post](#post)
+    - [Post Create](#post-create)
+    - [Post Update](#post-update)
+    - [Post Delete](#post-delete)
+  - [Comment](#comment)
+    - [Comment Create](#comment-create)
+    - [Comment Update](#comment-update)
+    - [Comment Delete](#comment-delete)
     - [Logic of post creation](#logic-of-post-creation)
   - [Updating post](#updating-post)
   - [Comment creation](#comment-creation)
@@ -786,17 +795,51 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-schema-recent-posts.jpg?raw=true "Recent posts")
 
 
-## Category Logic
+
+## Category
+### Category Logic
 
 - Fireflow creates its category document with the document id as the category itself. For instance, if the category is `qna`, the document path will be `/categories/qna`. The is because
   - it's easy to specify the category directly into the UI builder. For instance, you want to display the QnA forum, then you can pass `qna` as the category parameter. If you don't use the category as its document id, then the logic would get complicated to get the document id of `qna`.
   - it's easy to design the firestore security rules.
 
 
-## Creating post
+## Post
 
+
+### Post Create
 - `createdAt` must be set to `Firestore.serverTimestamp` when the post is created by Flutterflow.
 - `updatedAt` is optional. And it is set by the fireflow.
+- call `PostService.instance.afterCreate` after creating a post.
+
+
+### Post Update
+
+- call `PostService.instance.afterUpdate` after upating a post.
+
+
+### Post Delete
+
+- call `PostService.instance.afterDelete` after delete a post.
+
+
+## Comment
+
+### Comment Create
+
+- call `CommentService.instance.afterCreate` after creating a comment.
+
+
+### Comment Update
+
+- call `CommentService.instance.afterUpdate` after updating a comment.
+
+
+### Comment Delete
+
+- call `CommentService.instance.afterDelete` after deleting a comment.
+
+
 
 
 ### Logic of post creation

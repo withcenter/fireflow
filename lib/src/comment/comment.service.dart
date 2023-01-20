@@ -16,30 +16,25 @@ class CommentService {
   /// Use this to list the comments on post view screen.
   Stream<QuerySnapshot<Object?>> children(String postId) {
     return CommentService.instance.col
-        .where('postDocumentReference',
-            isEqualTo: PostService.instance.doc(postId))
+        .where('postDocumentReference', isEqualTo: PostService.instance.doc(postId))
+        .orderBy('order', descending: false)
         .snapshots();
   }
 
   afterCreate({required DocumentReference commentDocumentReference}) async {
-    final comment =
-        CommentModel.fromSnapshot(await commentDocumentReference.get());
-    final post =
-        PostModel.fromSnapshot(await comment.postDocumentReference.get());
+    final comment = CommentModel.fromSnapshot(await commentDocumentReference.get());
+    final post = PostModel.fromSnapshot(await comment.postDocumentReference.get());
 
-    CommentModel? parent;
-    if (comment.parentCommentDocumentReference != null) {
-      parent = CommentModel.fromSnapshot(
-          await comment.parentCommentDocumentReference!.get());
-    }
+    // CommentModel? parent;
+    // if (comment.parentCommentDocumentReference != null) {
+    //   parent = CommentModel.fromSnapshot(await comment.parentCommentDocumentReference!.get());
+    // }
 
     final categoryDoc = CategoryService.instance.doc(post.category);
     // update comment
     // add category of the post, update `order` field.
     await commentDocumentReference.update({
       'category': post.category,
-      'order': commentOrder(parent?.order, parent?.depth, post.noOfComments),
-      'depth': parent?.depth ?? 0 + 1,
     });
 
     // send push notification
@@ -47,10 +42,22 @@ class CommentService {
 
     // increase on of comments in category docuemnt, user doucment, post document
 
-// TODO update no of comments on user document
+    // update the user's post count
+    await post.ref.update(
+      {
+        'noOfComments': FieldValue.increment(1),
+      },
+    );
+
     await categoryDoc.update(
       {
-        'noOfComment': FieldValue.increment(1),
+        'noOfComments': FieldValue.increment(1),
+      },
+    );
+    // update the user's post count
+    await UserService.instance.publicRef.update(
+      {
+        'noOfComments': FieldValue.increment(1),
       },
     );
 
@@ -70,12 +77,25 @@ class CommentService {
   }
 
   afterUpdate({required DocumentReference commentDocumentReference}) async {
-    // update comment
-    // updatedAt...
-
     // send push notification
     // send message to the post's owner and comment's owners of the hierachical ancestors
 
-    // copy data into supabase.
+    final comment = CommentModel.fromSnapshot(await commentDocumentReference.get());
+
+    // update the user's post count
+    await commentDocumentReference.update(
+      {
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+    );
+
+    if (AppService.instance.supabase) {
+      await supabase.comments.update(
+        {
+          'updated_at': comment.updatedAt.toDate().toIso8601String(),
+          'content': comment.content,
+        },
+      ).eq('commentId', comment.id);
+    }
   }
 }

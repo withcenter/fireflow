@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflow/fireflow.dart';
 
 /// PostModel is a class that represents a document of /posts.
 ///
@@ -20,6 +21,8 @@ class PostModel {
   final bool wasPremiumUser;
   final bool emphasizePremiumUserPost;
 
+  final DocumentReference ref;
+
   PostModel({
     required this.id,
     required this.category,
@@ -37,6 +40,7 @@ class PostModel {
     required this.files,
     required this.wasPremiumUser,
     required this.emphasizePremiumUserPost,
+    required this.ref,
   });
 
   /// Create a PostModel object from a snapshot of a document.
@@ -50,11 +54,11 @@ class PostModel {
   /// Create a PostModel object from a json object.
   factory PostModel.fromJson(
     Map<String, dynamic> json, {
-    String? id,
+    required String id,
   }) {
     /// Note that, on Firestore cache, the Timestamp on local cache would be null.
     return PostModel(
-      id: id ?? '',
+      id: id,
       category: json['category'],
       title: json['title'] ?? '',
       content: json['content'] ?? '',
@@ -70,6 +74,7 @@ class PostModel {
       files: List<String>.from(json['files'] ?? []),
       wasPremiumUser: json['wasPremiumUser'] ?? false,
       emphasizePremiumUserPost: json['emphasizePremiumUserPost'] ?? false,
+      ref: PostService.instance.doc(id),
     );
   }
 

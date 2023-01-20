@@ -28,8 +28,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: PostService.instance.doc(widget.postId).get(),
+      body: StreamBuilder(
+        stream: PostService.instance.doc(widget.postId).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -42,39 +42,43 @@ class _PostViewScreenState extends State<PostViewScreen> {
             );
           }
           final post = PostModel.fromSnapshot(snapshot.data!);
-          return Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(post.title),
-                Container(width: double.infinity, color: Colors.grey.shade200, padding: const EdgeInsets.all(24.0), child: Text(post.content)),
-                TextField(
-                  controller: comment,
-                  decoration: const InputDecoration(
-                    hintText: 'Comment',
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(post.title),
+                  Container(width: double.infinity, color: Colors.grey.shade200, padding: const EdgeInsets.all(24.0), child: Text(post.content)),
+                  TextField(
+                    controller: comment,
+                    decoration: const InputDecoration(
+                      hintText: 'Comment',
+                    ),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final ref = await CommentService.instance.col.add({
-                      'postDocumentReference': PostService.instance.doc(widget.postId),
-                      'userDocumentReference': UserService.instance.ref,
-                      'content': comment.text,
-                      'createdAt': FieldValue.serverTimestamp(),
-                    });
+                  ElevatedButton(
+                    onPressed: () async {
+                      final data = {
+                        'postDocumentReference': PostService.instance.doc(widget.postId),
+                        'userDocumentReference': UserService.instance.ref,
+                        'content': comment.text,
+                        'createdAt': FieldValue.serverTimestamp(),
+                        'order': commentOrder(null, null, post.noOfComments),
+                        'depth': 1,
+                      };
 
-                    await CommentService.instance.afterCreate(commentDocumentReference: ref);
-                  },
-                  child: const Text('Submit'),
-                ),
-                Expanded(
-                  child: StreamBuilder(
+                      final ref = await CommentService.instance.col.add(data);
+                      await CommentService.instance.afterCreate(commentDocumentReference: ref);
+                    },
+                    child: const Text('Submit'),
+                  ),
+                  StreamBuilder(
                     stream: CommentService.instance.children(post.id),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return const Center(
-                          child: Text('Error'),
+                        print(snapshot.error);
+                        return Center(
+                          child: Text('Error, ${snapshot.error}}'),
                         );
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -90,16 +94,18 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       final docs = snapshot.data!.docs;
 
                       return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           final comment = CommentModel.fromSnapshot(docs[index]);
-                          return CommentWidget(comment: comment);
+                          return CommentWidget(post: post, comment: comment);
                         },
                         itemCount: snapshot.data?.docs.length,
                       );
                     },
                   ),
-                )
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -111,53 +117,106 @@ class _PostViewScreenState extends State<PostViewScreen> {
 class CommentWidget extends StatelessWidget {
   const CommentWidget({
     Key? key,
+    required this.post,
     required this.comment,
   }) : super(key: key);
 
+  final PostModel post;
   final CommentModel comment;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(comment.content),
-      subtitle: Row(
+    return Container(
+      margin: EdgeInsets.only(left: 16 * (comment.depth - 1)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextButton(
-            onPressed: () {
-              final editComment = TextEditingController(text: comment.content);
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return Container(
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: editComment,
-                          decoration: const InputDecoration(
-                            hintText: 'Comment',
-                          ),
+          Text(comment.content),
+          Text(comment.id, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () {
+                  final replyComment = TextEditingController();
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: replyComment,
+                              decoration: const InputDecoration(
+                                hintText: 'Comment',
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                print('no of comments: ${post.noOfComments}');
+                                final data = {
+                                  'postDocumentReference': comment.postDocumentReference,
+                                  'parentCommentDocumentReference': CommentService.instance.doc(comment.id),
+                                  'userDocumentReference': UserService.instance.ref,
+                                  'content': replyComment.text,
+                                  'createdAt': FieldValue.serverTimestamp(),
+                                  'order': commentOrder(comment.order, comment.depth, post.noOfComments),
+                                  'depth': comment.depth + 1,
+                                };
+                                print('reply; $data');
+                                final ref = await CommentService.instance.col.add(data);
+
+                                await CommentService.instance.afterCreate(commentDocumentReference: ref);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Reply'),
+                            ),
+                          ],
                         ),
-                        TextButton(
-                          onPressed: () async {
-                            await snapshot.data!.docs[index].reference.update({
-                              'content': editComment.text,
-                            });
-                            CommentService.instance.afterUpdate(commentDocumentReference: snapshot.data!.docs[index].reference);
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Edit'),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
-              );
-            },
-            child: Text('Edit'),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text('Delete'),
+                child: Text('Reply'),
+              ),
+              TextButton(
+                onPressed: () {
+                  final editComment = TextEditingController(text: comment.content);
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: editComment,
+                              decoration: const InputDecoration(
+                                hintText: 'Comment',
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                final ref = CommentService.instance.doc(comment.id);
+                                await ref.update({
+                                  'content': editComment.text,
+                                });
+                                CommentService.instance.afterUpdate(commentDocumentReference: ref);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Edit'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Text('Edit'),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text('Delete'),
+              ),
+            ],
           ),
         ],
       ),

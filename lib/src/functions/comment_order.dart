@@ -4,6 +4,8 @@
 /// [depth] is the depth of the parent comment. If it has no parent comment, it should be null or 0.
 /// [noOfComments] is the number of comments of the post.
 ///
+/// @example commentOrder(null, null, post.noOfComments),
+///
 /// Save the return value to the comment's order field.
 String commentOrder(
   String? order,
@@ -32,7 +34,8 @@ String commentOrder(
   ///
   ///
   /// 참고, 이 함수는 depth 의 값을 0(또는 null)으로 입력 받지만, 실제 코멘트 DB(문서)에 저장하는 값은 1부터 시작하는 것을
-  ///   원칙으로 한다. 예를 들면, depth 값을 1 증가 시키기 위해서, +1 증가시키는 함수(IncreaseInteger)를 써야 하는데,
+  ///   원칙으로 한다. 즉, 첫번째 레벨 코멘트의 depth 는 모두 1 이다.
+  ///   예를 들면, depth 값을 1 증가 시키기 위해서, +1 증가시키는 함수(IncreaseInteger)를 써야 하는데,
   ///   첫번째 레벨의 경우(부모 코멘트가 없는 경우), IncreaseInteger 함수에 0(NULL)을 지정하면 +1을 해서, 1 값이 리턴된다.
   ///   그 값을 코멘트 DB(문서)의 depth 에 저장하므로, 자연스럽게 1 부터 시작하는 것이다.
   ///   또는 첫번째 레벨의 코멘트는 그냥 depth=1 로 지정하면 된다.
@@ -44,9 +47,7 @@ String commentOrder(
   ///   어떤 것이 먼저 쓰였는지 구분하기 어렵게 된다.
   ///
   /// 참고, 총 90만개의 코멘트를 지원한다.
-  order = order == null || order == ''
-      ? List<String>.filled(16, '100000').join(".")
-      : order;
+  order = order == null || order == '' ? List<String>.filled(16, '100000').join(".") : order;
   depth ??= 0;
   noOfComments ??= 0;
   if (depth >= 16) return order;
