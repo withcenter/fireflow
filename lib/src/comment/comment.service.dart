@@ -17,6 +17,7 @@ class CommentService {
     final categoryDoc = CategoryService.instance.doc(post.category);
     // update comment
     // add category of the post, update `order` field.
+    // TODO depth and order
     await commentDocumentReference.update({
       'category': post.category,
       'order': '',
