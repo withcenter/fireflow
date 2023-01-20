@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
+import 'package:fireflow/src/supabase/supabase_tables.dart';
 import 'package:flutter/material.dart';
 
 /// AppService is a singleton class that provides necessary service for Fireflow.
@@ -58,7 +59,8 @@ class AppService {
   /// Set [debug] to true to print the logs in dev console.
   /// If [supabase] is set to true, AppService will sync the user, post, comment
   /// into Supabase. So, the app can do FULLTEXT search and more complicated
-  /// conditional search.
+  /// conditional search. Note that, the supabase must be initialized before
+  /// calling this method.
   /// [onTapMessage] is a callback method and is called when the user taps on
   /// foreground push notification snackbar. If this is set to null, then there
   /// will be no snackbar.
@@ -67,12 +69,14 @@ class AppService {
     bool debug = false,
     bool supabase = false,
     Function(String, Map<String, dynamic>)? onTapMessage,
+    SupabaseTables? tables,
   }) {
     dog('AppService.instance.init()');
     this.context = context;
     gDebug = debug;
     this.supabase = supabase;
     if (onTapMessage != null) this.onTapMessage = onTapMessage;
+    Config.instance.supabase.tables = tables ?? SupabaseTables();
   }
 
   /// Initialize the user functions.

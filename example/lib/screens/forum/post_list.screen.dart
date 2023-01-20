@@ -25,6 +25,7 @@ class PostListScreen extends StatelessWidget {
       body: StreamBuilder(
         stream: PostService.instance.col
             .where('category', isEqualTo: category)
+            .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -49,9 +50,12 @@ class PostListScreen extends StatelessWidget {
               return ListTile(
                 title: Text(post.title),
                 subtitle: Text(post.content),
-                onTap: () => context.pushNamed('PostEdit', queryParams: {
-                  'postId': post.id,
-                }),
+                onTap: () => context.pushNamed(
+                  'postView',
+                  queryParams: {
+                    'postId': post.id,
+                  },
+                ),
               );
             },
           );

@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/category/category.model.dart';
-import 'package:fireflow/src/post/post.model.dart';
 
 class PostService {
   static PostService get instance => _instance ??= PostService();
@@ -10,6 +8,8 @@ class PostService {
   FirebaseFirestore get db => FirebaseFirestore.instance;
   CollectionReference get col => db.collection('posts');
   DocumentReference doc(String category) => col.doc(category);
+
+  UserPublicDataModel get my => UserService.instance.my;
 
   /// post create method
   Future afterCreate({
@@ -32,9 +32,11 @@ class PostService {
       'likes': [],
       'noOfLikes': 0,
       'hasLike': false,
-      'wasPremiumUser': UserService.instance.my?.isPremiumUser ?? false,
+      'wasPremiumUser': UserService.instance.my.isPremiumUser,
       'emphasizePremiumUserPost': category.emphasizePremiumUserPost
     });
+
+    // TODO push notification to the category's followers
 
     // update the user's post count
     await UserService.instance.publicRef.update(
@@ -50,14 +52,46 @@ class PostService {
       },
     );
 
-    /// TODO update the post data into Supabase.
+    if (AppService.instance.supabase) {
+      await supabase.posts.insert(
+        {
+          'postId': postDocumentReference.id,
+          'category': post.category,
+          'uid': my.uid,
+          'created_at': post.createdAt.toDate().toIso8601String(),
+          'updated_at': post.updatedAt.toDate().toIso8601String(),
+          'title': post.title,
+          'content': post.content,
+          'deleted': false,
+        },
+      );
+    }
   }
 
   Future afterUpdate({
     required DocumentReference postDocumentReference,
-  }) {
-    // TODO update post data
-    // TODO update the post data into Supabase.
-    return Future.value(null);
+  }) async {
+    PostModel post = PostModel.fromSnapshot(await postDocumentReference.get());
+
+    /// Update `updatedAt`
+    await postDocumentReference.update({
+      'updatedAt': FieldValue.serverTimestamp(),
+      'hasPhoto': post.files.isNotEmpty,
+    });
+
+    /// Read the `updatdAt`
+    post = PostModel.fromSnapshot(await postDocumentReference.get());
+
+    if (AppService.instance.supabase) {
+      await supabase.posts.update(
+        {
+          'category': post.category,
+          'updated_at': post.updatedAt.toDate().toIso8601String(),
+          'title': post.title,
+          'content': post.content,
+          'deleted': false,
+        },
+      ).eq('postId', postDocumentReference.id);
+    }
   }
 }

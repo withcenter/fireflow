@@ -1,3 +1,12 @@
+import 'package:fireflow/fireflow.dart';
+
 class Config {
-  static const String supabaseTable = 'fireflow';
+  static Config get instance => _instance ??= Config();
+  static Config? _instance;
+
+  SupabaseConfig supabase = SupabaseConfig();
+}
+
+class SupabaseConfig {
+  late final SupabaseTables tables;
 }

@@ -63,9 +63,14 @@
   - [Forum Schema](#forum-schema)
     - [recentPosts](#recentposts)
   - [Category Logic](#category-logic)
-  - [Post Creation Logic](#post-creation-logic)
+  - [Creating post](#creating-post)
+    - [Logic of post creation](#logic-of-post-creation)
+  - [Updating post](#updating-post)
+  - [Comment creation](#comment-creation)
 - [Supabase](#supabase)
   - [Supabase Table](#supabase-table)
+    - [users\_public\_data](#users_public_data)
+    - [posts](#posts)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
     - [How to implement the custom ppup](#how-to-implement-the-custom-ppup)
@@ -787,8 +792,13 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
   - it's easy to design the firestore security rules.
 
 
+## Creating post
 
-## Post Creation Logic
+- `createdAt` must be set to `Firestore.serverTimestamp` when the post is created by Flutterflow.
+- `updatedAt` is optional. And it is set by the fireflow.
+
+
+### Logic of post creation
 
 - When the user fill the form and submit, create a post document with
   - category (required)
@@ -806,31 +816,40 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
   - do other tasks.
 
 
+
+
+
+## Updating post
+
+- `updatedAt` is optional. And it is set by the fireflow.
+
+
+
+## Comment creation
+
+- The `order` field must be set by Flutterflow. It's not an ideal for the fireflow to update the `order` field since fireflow is a bit slow. And the flutterflow needs it immediately after it creates a comment to display the comments in nested position.
+
+
 # Supabase
 
 - We support the supabase for the text search and the complicated conditional filterings.
   - User profile, post, comment, chat title will be automatically saved into supabase the option is enabled.
-  - Only public data should be saved in the supabase.
+  - Only the public data (non-sensitive private information of the user) should be saved in the supabase.
 
 - To enable supabase, follow [the Supabase document in the offical site](https://docs.flutterflow.io/data-and-backend/supabase).
 
 - Add `supabase: true` on `AppService`.
 
-- And prepare `users_public_data` schema like below.
+- And prepare `users_public_data`, `posts` schemas like below.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-supabase.jpg?raw=true "Supabase")
 
 
 ## Supabase Table
 
-- For the simplicity, we use only one table for search. You can customize your own.
+### users_public_data
 
-
-- `model` is the model of data group. It can be one of
-  - user
-  - chat_room
-  - post
-  - comment
+### posts
 
 
 

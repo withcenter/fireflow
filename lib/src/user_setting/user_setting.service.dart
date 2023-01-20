@@ -45,7 +45,6 @@ class SettingService {
       'userDocumentReference': myUserDocumentReference,
     });
 
-    debugPrint(
-        '--> UserService.generateUserPublicData() - /settings/{Doc Reference(users)} created.');
+    dog('UserService.generateUserPublicData() - /settings/{Doc Reference(users)} created.');
   }
 }

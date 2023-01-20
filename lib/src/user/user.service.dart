@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as FA;
 import 'package:fireflow/fireflow.dart';
 import 'package:path/path.dart' as p;
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UserService is a singleton class that provides necessary service for user
 /// related features.
@@ -42,7 +41,12 @@ class UserService {
   FA.User get currentUser => FA.FirebaseAuth.instance.currentUser!;
 
   StreamSubscription? publicDataSubscription;
-  UserPublicDataModel? my;
+
+  /// The login user's public data model.
+  ///
+  /// The app is listening the changes of the user's public data document and update this model.
+  /// So, [my] will always have the latest data.
+  late UserPublicDataModel my;
 
   /// check if user's public data document exists
   userPublicDataDocumentExists() async {
@@ -119,14 +123,16 @@ class UserService {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (AppService.instance.supabase) {
           /// Upsert the user public data to Supabase.
-          await Supabase.instance.client.from(Config.supabaseTable).upsert(
+          // await Supabase.instance.client
+          //     .from(Config.instance.supabase.usersPublicData)
+
+          await supabase.usersPublicData.upsert(
             {
-              'model': 'user',
-              'uid': my!.uid,
-              'display_name': my!.displayName,
-              'gender': my!.gender,
-              'birthday': my!.birthday.toDate().toIso8601String(),
-              'registered_at': my!.registeredAt.toDate().toIso8601String(),
+              'uid': my.uid,
+              'display_name': my.displayName,
+              'gender': my.gender,
+              'birthday': my.birthday.toDate().toIso8601String(),
+              'registered_at': my.registeredAt.toDate().toIso8601String(),
             },
             onConflict: 'uid',
           );

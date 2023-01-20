@@ -1,3 +1,4 @@
+import 'package:example/screens/forum/post_view.screen.dart';
 import 'package:example/screens/user/login.screen.dart';
 import 'package:example/screens/user/register.screen.dart';
 import 'package:example/screens/widget/custom_popup.screen.dart';
@@ -32,6 +33,15 @@ final router = GoRouter(
         return PostEditScreen(
           category: state.queryParams['category'],
           postId: state.queryParams['postId'],
+        );
+      },
+    ),
+    GoRoute(
+      name: 'PostView',
+      path: '/postView',
+      builder: (context, state) {
+        return PostViewScreen(
+          postId: state.queryParams['postId']!,
         );
       },
     ),
