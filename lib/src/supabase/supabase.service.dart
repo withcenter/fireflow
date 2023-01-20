@@ -11,4 +11,6 @@ class SupabaseService {
       .from(Config.instance.supabase.tables.usersPublicData);
   SupabaseQueryBuilder get posts =>
       Supabase.instance.client.from(Config.instance.supabase.tables.posts);
+  SupabaseQueryBuilder get comments =>
+      Supabase.instance.client.from(Config.instance.supabase.tables.comments);
 }

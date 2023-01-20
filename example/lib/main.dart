@@ -38,6 +38,7 @@ class _MyAppState extends State<MyApp> {
         tables: SupabaseTables(
           usersPublicData: 'users_public_data',
           posts: 'posts',
+          comments: 'comments',
         ),
       );
     });
