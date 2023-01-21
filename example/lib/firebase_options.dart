@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyALWCc85GW7FeB7sCOEjgncIiiwzzFf7-Y',
-    appId: '1:1091153425562:android:a05deb13b784b9eafa9b23',
+    appId: '1:1091153425562:android:d7493b3caef95ac4fa9b23',
     messagingSenderId: '1091153425562',
     projectId: 'withcenter-fireflow',
     storageBucket: 'withcenter-fireflow.appspot.com',
@@ -66,12 +66,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAUAzX_uOE0MiPVrHOX-uU15C9ZBkJXVvU',
-    appId: '1:1091153425562:ios:0b923824c4872c2afa9b23',
+    appId: '1:1091153425562:ios:9ce15fa0ffdcce44fa9b23',
     messagingSenderId: '1091153425562',
     projectId: 'withcenter-fireflow',
     storageBucket: 'withcenter-fireflow.appspot.com',
     androidClientId: '1091153425562-k902fmdi7bfrg0hh3euhgftholdoj086.apps.googleusercontent.com',
-    iosClientId: '1091153425562-soi02rpuqnicf7l7l84kk7qpio5rrq90.apps.googleusercontent.com',
-    iosBundleId: 'com.example.example',
+    iosClientId: '1091153425562-g8rs75stp6aeoisf6ci0froob43jrq9t.apps.googleusercontent.com',
+    iosBundleId: 'com.fireflow.ex',
   );
 }

@@ -43,6 +43,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1091153425562:android:d7493b3caef95ac4fa9b23",
+        "android_client_info": {
+          "package_name": "com.fireflow.ex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091153425562-23l9ef7egtt0v3lsrvidegn4dlf4n8r1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALWCc85GW7FeB7sCOEjgncIiiwzzFf7-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091153425562-23l9ef7egtt0v3lsrvidegn4dlf4n8r1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091153425562-pk97eh10hg8bos5guae52rsk1tta0ebm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.withcenter.fireflow"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1091153425562:android:c00195f653bb3c49fa9b23",
         "android_client_info": {
           "package_name": "com.withcenter.fireflow"
