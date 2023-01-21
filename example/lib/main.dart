@@ -49,13 +49,6 @@ class _MyAppState extends State<MyApp> {
         ),
       );
     });
-
-    /// 푸시 알림 토큰 업데이트
-    FirebaseAuth.instance.authStateChanges().where((user) => user != null).map((user) => user!.uid).distinct().listen((event) async {
-      if (kIsWeb) return;
-      MessagingService.instance.updateToken(await FirebaseMessaging.instance.getToken());
-      FirebaseMessaging.instance.onTokenRefresh.listen(MessagingService.instance.updateToken);
-    });
   }
 
   @override

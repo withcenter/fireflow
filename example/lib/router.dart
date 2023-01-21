@@ -1,4 +1,7 @@
+import 'package:example/screens/forum/category/category_edit.screen.dart';
+import 'package:example/screens/forum/category/category_list.screen.dart';
 import 'package:example/screens/forum/post_view.screen.dart';
+import 'package:example/screens/setting/setting.screen.dart';
 import 'package:example/screens/user/login.screen.dart';
 import 'package:example/screens/user/register.screen.dart';
 import 'package:example/screens/widget/custom_popup.screen.dart';
@@ -13,6 +16,16 @@ final router = GoRouter(
       name: 'Home',
       path: '/',
       builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      name: 'CategoryList',
+      path: '/categoryList',
+      builder: (context, state) => const CategoryListScreen(),
+    ),
+    GoRoute(
+      name: 'CategoryEdit',
+      path: '/categoryEdit',
+      builder: (context, state) => CategoryEditScreen(category: state.queryParams['category']),
     ),
     GoRoute(
       name: 'CustomPopup',
@@ -54,6 +67,11 @@ final router = GoRouter(
       name: 'Login',
       path: '/login',
       builder: (context, state) => LoginScreen(),
+    ),
+    GoRoute(
+      name: 'Setting',
+      path: '/setting',
+      builder: (context, state) => SettingScreen(),
     ),
   ],
 );

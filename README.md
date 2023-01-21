@@ -8,7 +8,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 
 * `Fireflow` is an open source, easy and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
 
-* `Fireflow` can be used for both of `Flutter` and `FlutterFlow`.
+* `Fireflow` is developped with Flutter (Not FlutterFlow) and is primarily desinged for the both of `Flutter` and `FlutterFlow`.
   * For the example code of Flutter, see [the example project](https://github.com/withcenter/fireflow/tree/main/example).
 
 
@@ -34,6 +34,8 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Profile photo upload](#profile-photo-upload)
   - [Adding extra fields on users\_public\_data schema](#adding-extra-fields-on-users_public_data-schema)
 - [User setting](#user-setting)
+  - [New Comment Notification](#new-comment-notification)
+  - [Forum Category Subscription](#forum-category-subscription)
 - [System setting](#system-setting)
   - [Admin](#admin)
 - [Push notification](#push-notification)
@@ -106,18 +108,13 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 
 # Overview
 
-Flutterflow is a gorgeous platform to build mobile apps rapidly. The developers can build whatever apps they want without limitation.
+Flutterflow is a gorgeous platform to build mobile apps rapidly. The developers can build whatever apps they like without any limitations.
 
-Flutterflow comes easy when the project is relatively small. But when the project grows with complicated functionalities and logics, you will feel the pressure of what professional developers feel.
+Flutterflow comes easy when the project is relatively small. But when the project grows with complicated functionalities and logics, you will feel the pressure of what the professional developer feels.
 
-Many of Flutterflow developers are stuck with Custom functions, custom widgets, custom actions. They are ultimately important to make your app fully functional. And **Fireflow** came out to help.
+To make the apps fully functional, the developers definitely need the use of custom code. It's important, but many of Flutterflow developers are stuck with Custom functions, custom widgets, and custom actions.  That's where **Fireflow** came in.
 
-Fireflow encapsulates all the complicated logics and is made easy to reuse. Yes, it’s for you if you want to build professional apps like chat apps, SNS apps, community apps, and more.
-
-It’s open source and you can use it for free. The document is written in detail. And you can ask anything about Fireflow.
-
-I make sample projects and sell it by cloning in Flutterflow.
-
+Fireflow encapsulates all the complicated logics and serve most of the common use cases. Use it build professional apps like chat apps, SNS apps, community apps, and more.
 
 # Features
 
@@ -145,14 +142,13 @@ I make sample projects and sell it by cloning in Flutterflow.
 
 # TODO
 
-- Change `SettingService` and `SettingModel` to `UserSettingService` and `UserSettingModel`.
 
 - Forum
   The complete forum functionality including;
-  - Category management
+  - Category management (o)
   - User role management
-  - Post and comment management including
-    - Nested (threaded) comments
+  - Post and comment management including (o)
+    - Nested (threaded) comments (o)
   - Push notification
     - Subscribing/Unsubscribing a category
     - Sending push notifications to the author of the parent comments and post.
@@ -374,8 +370,28 @@ Note, that the `userPublicDataDocumentReference` in `users` collection is set on
 
 # User setting
 
-- User settings could be saved in `users_public_data` collection. But the problem is when the client lists/searches user information based on the settings, the firestore downloads the whole document whether is it big or small. And this leads time consuming and lagging on the app and it costs more money also.
-  - This is why Fireflow has a separated `settings` collection.
+- User settigns are kept in `/user_settings/<uid>` document.
+  - It could be saved in `/users_public_data/<uid>` collection. But the problem is when the client lists/searches user information based on the settings, the firestore downloads the whole document whether is it big or small. And this leads the waste of network bandwidth, time consuming and lagging on the app. And even worse it costs more.
+
+- You just set the settings. That's it. It will work.
+
+
+## New Comment Notification
+
+- If a user enable this option, the user will get push notification on every new comments under his posts or comments.
+- To enable it, simple set `notifyNewComments` to true. Example) `/user_settings/<uid> {notifyNewComments: true}`.
+- To disable it, set it to false or delete the field.
+
+
+## Forum Category Subscription
+
+- There are two types of push notification subscriptions. One is the post subscription, the other is the comment subscription.
+- If a user subscribes for the post, then he will get a push notification whenever there is a new post under the category.
+- If a user subscribes for the comment, he will get a push notification on very new comments under the category.
+- To enable the post subscription, set `[category].post` to true. Example) `/user_settings/<uid> {qna.post: true}`.
+- To enable the comment subscription, set `[category].comment` to true. Example) `/user_settings/<uid> {qna.comment: true}`.
+
+
 
 
 # System setting
@@ -798,6 +814,17 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 
 ## Category
+
+- Admin can create, update or delete the categories.
+- Managing the categories is just as simple as creating, updating and deleting documents.
+  - To create a category, add a document under `/categories` folder with `category` and `title` fields.
+  - To update a category, just update it.
+  - To delete a category, just delete it.
+
+
+
+
+
 ### Category Logic
 
 - Fireflow creates its category document with the document id as the category itself. For instance, if the category is `qna`, the document path will be `/categories/qna`. The is because

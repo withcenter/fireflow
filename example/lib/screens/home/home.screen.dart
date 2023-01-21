@@ -53,8 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             ElevatedButton(
-              onPressed: () => context.pushNamed('Category'),
+              onPressed: () => context.pushNamed('CategoryList'),
               child: const Text('Category List'),
+            ),
+            ElevatedButton(
+              onPressed: () => context.pushNamed('Setting'),
+              child: const Text('Settings'),
             ),
             StreamBuilder(
               stream: CategoryService.instance.col.snapshots(),
@@ -64,8 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     shrinkWrap: true,
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      final category = CategoryModel.fromSnapshot(
-                          snapshot.data!.docs[index]);
+                      final category = CategoryModel.fromSnapshot(snapshot.data!.docs[index]);
                       return ListTile(
                         title: Text(category.title),
                         subtitle: Text('category: ${category.category}'),

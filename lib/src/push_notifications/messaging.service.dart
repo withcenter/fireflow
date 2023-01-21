@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/functions/serialization_util.dart';
@@ -14,7 +15,8 @@ class MessagingService {
   final kUserPushNotificationsCollectionName = 'ff_user_push_notifications';
 
   /// my token collection
-  final fcmTokensCol = FirebaseFirestore.instance.collectionGroup('fcm_tokens');
+  get fcmTokensGroupCol => FirebaseFirestore.instance.collectionGroup('fcm_tokens');
+  get myTokensCol => UserService.instance.ref.collection('fcm_tokens');
 
   MessagingService() {
     print('MessagingService()');
@@ -22,6 +24,13 @@ class MessagingService {
 
   init() {
     if (kIsWeb) return;
+
+    /// 푸시 알림 토큰 업데이트
+    FirebaseAuth.instance.authStateChanges().where((user) => user != null).map((user) => user!.uid).distinct().listen((event) async {
+      MessagingService.instance.updateToken(await FirebaseMessaging.instance.getToken());
+      FirebaseMessaging.instance.onTokenRefresh.listen(MessagingService.instance.updateToken);
+    });
+
     FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
       /// This will triggered while the app is opened
       /// If the message has data, then do some extra work based on the data.
@@ -104,24 +113,25 @@ class MessagingService {
   /// Note that, muliple users may have the same FCM tokens if the app manages
   /// fcm tokens with fireflow while flutterflow prevents it.
   Future<QuerySnapshot<Map<String, dynamic>>> getTokenDocuments(token) {
-    return fcmTokensCol.where('fcm_token', isEqualTo: token).get();
+    return fcmTokensGroupCol.where('fcm_token', isEqualTo: token).get();
   }
 
-  /// Unhandled Exception: [cloud_firestore/failed-precondition] Operation was rejected because the system is not in a state required for the operation's execution. If performing a query, ensure it has been indexed via the Firebase console.
+  /// Update the FCM token.
   updateToken(String? token) async {
-    print('updateToken: $token');
+    if (UserService.instance.notLoggedIn) return;
+    dog('updateToken: $token');
     if (token == null) return;
     final snapshot = await getTokenDocuments(token);
     if (snapshot.size > 0) {
-      print('token already exists. skip.');
+      dog('token already exists. skip.');
       return;
     } else {
-      print('token does not exist. add it.');
-      // fcmTokensCol.add({
-      //   'fcm_token': token,
-      //   'device_type': Platform.isIOS ? 'iOS' : 'Android',
-      //   'created_at': FieldValue.serverTimestamp(),
-      // });
+      dog('token does not exist. add it.');
+      myTokensCol.add({
+        'fcm_token': token,
+        'device_type': Platform.isIOS ? 'iOS' : 'Android',
+        'created_at': FieldValue.serverTimestamp(),
+      });
     }
   }
 }

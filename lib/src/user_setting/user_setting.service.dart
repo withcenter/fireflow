@@ -5,16 +5,13 @@ import 'package:flutter/material.dart';
 
 /// UserSettingModel is a class that represents a user's setting.
 ///
-class SettingService {
-  static SettingService get instance =>
-      _instance ?? (_instance = SettingService());
-  static SettingService? _instance;
+class UserSettingService {
+  static UserSettingService get instance => _instance ?? (_instance = UserSettingService());
+  static UserSettingService? _instance;
 
   String get uid => FirebaseAuth.instance.currentUser!.uid;
-  DocumentReference get mySettingRef =>
-      FirebaseFirestore.instance.collection('settings').doc(uid);
-  DocumentReference get myUserDocumentReference =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('settings').doc(uid);
+  DocumentReference get myUserDocumentReference => FirebaseFirestore.instance.collection('users').doc(uid);
 
   User get my => FirebaseAuth.instance.currentUser!;
 
@@ -22,7 +19,7 @@ class SettingService {
   ///
   /// Returns true if the setting document exsits. otherwise, false.
   exists() async {
-    final doc = await mySettingRef.get();
+    final doc = await ref.get();
     return doc.exists;
   }
 
@@ -30,7 +27,7 @@ class SettingService {
   /// The `/users/{uid}` document may be created after the user is signed in.
   Future<UserSettingModel> get() async {
     // get the user's data from the database
-    final snapshot = await mySettingRef.get();
+    final snapshot = await ref.get();
     return UserSettingModel.fromSnapshot(snapshot);
   }
 
@@ -41,10 +38,16 @@ class SettingService {
       return;
     }
 
-    await mySettingRef.set({
+    await ref.set({
       'userDocumentReference': myUserDocumentReference,
     });
 
     dog('UserService.generateUserPublicData() - /settings/{Doc Reference(users)} created.');
+  }
+
+  notifyNewComments(bool? value) async {
+    await ref.update({
+      'notifyNewComments': value,
+    });
   }
 }

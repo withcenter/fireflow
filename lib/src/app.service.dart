@@ -94,7 +94,7 @@ class AppService {
 
         await UserService.instance.generateUserPublicDataDocument();
         UserService.instance.listenUserPublicData();
-        await SettingService.instance.generate();
+        await UserSettingService.instance.generate();
       } else {
         this.user = null;
         dog('AppService._initUser() - user is not logged in');
