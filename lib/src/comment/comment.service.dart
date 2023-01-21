@@ -98,4 +98,31 @@ class CommentService {
       ).eq('commentId', comment.id);
     }
   }
+
+  afterDelete({required DocumentReference commentDocumentReference}) async {
+    // send push notification
+    // send message to the post's owner and comment's owners of the hierachical ancestors
+
+    final comment = CommentModel.fromSnapshot(await commentDocumentReference.get());
+    final categoryDoc = CategoryService.instance.doc(comment.category);
+
+    // update the user's post count
+    await comment.postDocumentReference.update(
+      {
+        'noOfComments': FieldValue.increment(-1),
+      },
+    );
+
+    await categoryDoc.update(
+      {
+        'noOfComments': FieldValue.increment(-1),
+      },
+    );
+
+    // don't decrease no of comments in post.
+
+    if (AppService.instance.supabase) {
+      await supabase.comments.delete().eq('commentId', comment.id);
+    }
+  }
 }

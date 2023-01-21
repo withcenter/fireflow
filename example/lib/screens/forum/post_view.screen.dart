@@ -48,13 +48,26 @@ class _PostViewScreenState extends State<PostViewScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(post.title),
+                  Text(post.deleted ? '---deleted---' : post.title),
+                  Text(post.id, style: const TextStyle(color: Colors.grey, fontSize: 10)),
                   Container(width: double.infinity, color: Colors.grey.shade200, padding: const EdgeInsets.all(24.0), child: Text(post.content)),
                   TextField(
                     controller: comment,
                     decoration: const InputDecoration(
                       hintText: 'Comment',
                     ),
+                  ),
+                  Wrap(
+                    children: [
+                      TextButton(
+                        onPressed: () async {
+                          await post.ref.update({'deleted': true});
+                          PostService.instance.afterDelete(postDocumentReference: post.ref);
+                          context.pop();
+                        },
+                        child: Text('Delete'),
+                      ),
+                    ],
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -131,7 +144,7 @@ class CommentWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(comment.content),
+          Text(comment.deleted ? '---deleted---' : comment.content),
           Text(comment.id, style: const TextStyle(color: Colors.grey, fontSize: 10)),
           Row(
             children: [
@@ -195,11 +208,10 @@ class CommentWidget extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () async {
-                                final ref = CommentService.instance.doc(comment.id);
-                                await ref.update({
+                                await comment.ref.update({
                                   'content': editComment.text,
                                 });
-                                CommentService.instance.afterUpdate(commentDocumentReference: ref);
+                                CommentService.instance.afterUpdate(commentDocumentReference: comment.ref);
                                 Navigator.pop(context);
                               },
                               child: const Text('Edit'),
@@ -213,7 +225,10 @@ class CommentWidget extends StatelessWidget {
                 child: Text('Edit'),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await comment.ref.update({'deleted': true});
+                  CommentService.instance.afterDelete(commentDocumentReference: comment.ref);
+                },
                 child: Text('Delete'),
               ),
             ],

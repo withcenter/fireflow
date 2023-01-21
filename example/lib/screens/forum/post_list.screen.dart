@@ -23,10 +23,7 @@ class PostListScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder(
-        stream: PostService.instance.col
-            .where('category', isEqualTo: category)
-            .orderBy('createdAt', descending: true)
-            .snapshots(),
+        stream: PostService.instance.col.where('category', isEqualTo: category).orderBy('createdAt', descending: true).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -48,7 +45,7 @@ class PostListScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final post = PostModel.fromSnapshot(snapshot.data!.docs[index]);
               return ListTile(
-                title: Text(post.title),
+                title: Text(post.deleted ? '---deleted---' : post.title),
                 subtitle: Text(post.content),
                 onTap: () => context.pushNamed(
                   'postView',

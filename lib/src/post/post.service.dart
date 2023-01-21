@@ -92,4 +92,32 @@ class PostService {
       ).eq('postId', postDocumentReference.id);
     }
   }
+
+  /// post create method
+  Future afterDelete({
+    required DocumentReference postDocumentReference,
+  }) async {
+    // get the post's data from the database
+    final post = PostModel.fromSnapshot(await postDocumentReference.get());
+    final categoryDoc = CategoryService.instance.doc(post.category);
+    final category = CategoryModel.fromSnapshot(await categoryDoc.get());
+
+    // update the user's post count
+    await UserService.instance.publicRef.update(
+      {
+        'noOfPosts': FieldValue.increment(-1),
+      },
+    );
+
+    //
+    await categoryDoc.update(
+      {
+        'noOfPosts': FieldValue.increment(-1),
+      },
+    );
+
+    if (AppService.instance.supabase) {
+      await supabase.posts.delete().eq('postId', post.id);
+    }
+  }
 }

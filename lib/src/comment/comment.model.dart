@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflow/fireflow.dart';
 
 /// CommentModel is a class that represents a document of /comments.
 ///
@@ -11,9 +12,12 @@ class CommentModel {
   final String content;
   final String order;
   final int depth;
+  final bool deleted;
 
   final Timestamp createdAt;
   final Timestamp updatedAt;
+
+  final DocumentReference ref;
 
   CommentModel({
     required this.id,
@@ -26,6 +30,8 @@ class CommentModel {
     required this.depth,
     required this.createdAt,
     required this.updatedAt,
+    required this.deleted,
+    required this.ref,
   });
 
   /// Create a CommentModel object from a snapshot of a document.
@@ -50,8 +56,10 @@ class CommentModel {
       content: json['content'] ?? '',
       order: json['order'] ?? '',
       depth: json['depth'] ?? 0,
+      deleted: json['deleted'] ?? false,
       createdAt: json['createdAt'] ?? Timestamp.now(),
       updatedAt: json['updatedAt'] ?? Timestamp.now(),
+      ref: CommentService.instance.doc(id),
     );
   }
 
