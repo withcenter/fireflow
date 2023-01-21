@@ -71,6 +71,10 @@ service cloud.firestore {
       }
     }
 
+
+    match /{path=**}/fcm_tokens/{docId} {
+      allow read: if true;
+    }
     
     match /users_public_data/{document} {
       allow create: if request.auth.uid == document;

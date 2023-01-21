@@ -14,7 +14,7 @@ class MessagingService {
   final kUserPushNotificationsCollectionName = 'ff_user_push_notifications';
 
   /// my token collection
-  final fcmTokensCol = UserService.instance.ref.collection('fcm_tokens');
+  final fcmTokensCol = FirebaseFirestore.instance.collectionGroup('fcm_tokens');
 
   MessagingService() {
     print('MessagingService()');
@@ -107,21 +107,21 @@ class MessagingService {
     return fcmTokensCol.where('fcm_token', isEqualTo: token).get();
   }
 
+  /// Unhandled Exception: [cloud_firestore/failed-precondition] Operation was rejected because the system is not in a state required for the operation's execution. If performing a query, ensure it has been indexed via the Firebase console.
   updateToken(String? token) async {
     print('updateToken: $token');
     if (token == null) return;
-
     final snapshot = await getTokenDocuments(token);
     if (snapshot.size > 0) {
       print('token already exists. skip.');
       return;
     } else {
       print('token does not exist. add it.');
-      fcmTokensCol.add({
-        'fcm_token': token,
-        'device_type': Platform.isIOS ? 'iOS' : 'Android',
-        'created_at': FieldValue.serverTimestamp(),
-      });
+      // fcmTokensCol.add({
+      //   'fcm_token': token,
+      //   'device_type': Platform.isIOS ? 'iOS' : 'Android',
+      //   'created_at': FieldValue.serverTimestamp(),
+      // });
     }
   }
 }
