@@ -23,6 +23,15 @@
       "deviceId": "iPhone11MaxPro"
     },
     {
+      "name": "iPhone11MaxPro - example - release",
+      "cwd": "example",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "deviceId": "iPhone11MaxPro"
+    },
+    {
       "name": "Simulator J. Macbook - sample - debug",
       "cwd": "apps/sample",
       "request": "launch",

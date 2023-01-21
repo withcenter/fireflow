@@ -30,6 +30,8 @@ dependencies:
   firebase_storage_platform_interface: 4.1.25
   firebase_storage_web: 3.3.17
 
+  collection: 1.16.0
+
   image_picker: 0.8.5+3
   image_picker_android: 0.8.5+3
   image_picker_for_web: 2.1.10

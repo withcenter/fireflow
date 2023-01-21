@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 
@@ -10,9 +12,11 @@ class CommentModel {
   final DocumentReference userDocumentReference;
   final String category;
   final String content;
+  final String safeContent;
   final String order;
   final int depth;
   final bool deleted;
+  final List<String> files;
 
   final Timestamp createdAt;
   final Timestamp updatedAt;
@@ -26,11 +30,13 @@ class CommentModel {
     required this.userDocumentReference,
     required this.category,
     required this.content,
+    required this.safeContent,
     required this.order,
     required this.depth,
     required this.createdAt,
     required this.updatedAt,
     required this.deleted,
+    required this.files,
     required this.ref,
   });
 
@@ -54,9 +60,11 @@ class CommentModel {
       userDocumentReference: json['userDocumentReference'],
       category: json['category'] ?? '',
       content: json['content'] ?? '',
+      safeContent: _safeContent(json['content']),
       order: json['order'] ?? '',
       depth: json['depth'] ?? 0,
       deleted: json['deleted'] ?? false,
+      files: json['files'] ?? [],
       createdAt: json['createdAt'] ?? Timestamp.now(),
       updatedAt: json['updatedAt'] ?? Timestamp.now(),
       ref: CommentService.instance.doc(id),
@@ -67,5 +75,17 @@ class CommentModel {
   @override
   String toString() {
     return 'CommentModel{ postDocumentReference: $postDocumentReference, parentCommentDocumentReference: $parentCommentDocumentReference, userDocumentReference: $userDocumentReference, category: $category, content: $content, order: $order, depth: $depth, createdAt: $createdAt, updatedAt: $updatedAt}';
+  }
+
+  static String _safeContent(String? content) {
+    if (content == null) {
+      return '';
+    }
+    content = content.replaceAll(RegExp(r'<[^>]*>'), '');
+    content = content.replaceAll('\r', '');
+    content = content.replaceAll('\n', ' ');
+    content = content.replaceAll('\t', ' ');
+    content = content.substring(0, min(content.length, 64));
+    return content;
   }
 }

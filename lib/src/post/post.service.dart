@@ -11,6 +11,12 @@ class PostService {
 
   UserPublicDataModel get my => UserService.instance.my;
 
+  /// Get the post
+  Future<PostModel> get(String id) async {
+    final snapshot = await PostService.instance.doc(id).get();
+    return PostModel.fromSnapshot(snapshot);
+  }
+
   /// post create method
   Future afterCreate({
     required DocumentReference postDocumentReference,

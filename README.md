@@ -159,6 +159,10 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
 - Optional push notification.
   - There will be an option to enable or disable push notification.
 
+- Display user online/offline status without Cloud function.
+  - Record on/offline status on Realtime database only and create a widget to display whether the user is online or offline.
+  - If the on/off status is not save in firestore, it cannot be searched. but it can display.
+
 - Chat
   - Block the moderator to leave the chat room when there are other members in the room.
   - Destroying the chat room. The fireflow will automatically remove all users and delete the chat room.

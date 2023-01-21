@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -9,18 +10,37 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Setting'),
-        ),
-        body: Column(
-          children: [
-            SwitchListTile(
+      appBar: AppBar(
+        title: const Text('Setting'),
+      ),
+      body: Column(
+        children: [
+          StreamBuilder(
+            stream: UserSettingService.instance.ref.snapshots(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (!snapshot.hasData || snapshot.data!.exists == false) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final settings = UserSettingModel.fromSnapshot(snapshot.data!);
+
+              return SwitchListTile(
                 title: const Text('Notify new comments'),
-                value: true,
+                value: settings.notifyNewComments,
                 onChanged: (value) {
                   UserSettingService.instance.notifyNewComments(value);
-                }),
-          ],
-        ));
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

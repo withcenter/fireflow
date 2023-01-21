@@ -49,7 +49,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(post.deleted ? '---deleted---' : post.title),
-                  Text(post.id, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                  Text("post id: ${post.id}, uid: ${post.userDocumentReference.id}", style: const TextStyle(color: Colors.grey, fontSize: 10)),
                   Container(width: double.infinity, color: Colors.grey.shade200, padding: const EdgeInsets.all(24.0), child: Text(post.content)),
                   TextField(
                     controller: comment,
@@ -145,7 +145,7 @@ class CommentWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(comment.deleted ? '---deleted---' : comment.content),
-          Text(comment.id, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+          Text('id: ${comment.id}, uid: ${comment.userDocumentReference.id}', style: const TextStyle(color: Colors.grey, fontSize: 10)),
           Row(
             children: [
               TextButton(
