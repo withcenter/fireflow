@@ -65,6 +65,10 @@ service cloud.firestore {
       allow read: if request.auth.uid == document || isAdmin();
       allow update: if request.auth.uid == document ;
       allow delete: if false;
+      match /fcm_tokens/{fcmTokenDocId} {
+        allow get, list, delete: if request.auth.uid == document;
+        allow create, update, delete: if request.auth.uid == document && required(['fcm_token', 'device_type', 'created_at']);
+      }
     }
 
     

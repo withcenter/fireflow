@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflow/fireflow.dart';
@@ -10,6 +12,9 @@ class MessagingService {
   static MessagingService? _instance;
 
   final kUserPushNotificationsCollectionName = 'ff_user_push_notifications';
+
+  /// my token collection
+  final fcmTokensCol = UserService.instance.ref.collection('fcm_tokens');
 
   MessagingService() {
     print('MessagingService()');
@@ -28,9 +33,7 @@ class MessagingService {
       // log('Notification: ${message.notification}, ${message.notification.title}, ${message.notification.body}');
 
       /// Is this message coming from the chat room I am chatting in?
-      if (AppService.instance.currentChatRoomDocumentReference != null &&
-          AppService.instance.currentChatRoomDocumentReference?.id ==
-              message.data.chatRoomId) {
+      if (AppService.instance.currentChatRoomDocumentReference != null && AppService.instance.currentChatRoomDocumentReference?.id == message.data.chatRoomId) {
         dog('I am chatting with this user already. Do not show a notification.');
         return;
       }
@@ -51,8 +54,7 @@ class MessagingService {
     /// 채팅 푸시 알림?
     ///
     if (AppService.instance.onTapMessage != null) {
-      AppService.instance.onTapMessage!(
-          message.data.initialPageName, message.data.parameterData);
+      AppService.instance.onTapMessage!(message.data.initialPageName, message.data.parameterData);
     }
   }
 
@@ -85,8 +87,7 @@ class MessagingService {
     final pushNotificationData = {
       'notification_title': notificationTitle,
       'notification_text': notificationText,
-      if (notificationImageUrl != null)
-        'notification_image_url': notificationImageUrl,
+      if (notificationImageUrl != null) 'notification_image_url': notificationImageUrl,
       if (scheduledTime != null) 'scheduled_time': scheduledTime,
       if (notificationSound != null) 'notification_sound': notificationSound,
       'user_refs': userRefs.map((u) => u.path).join(','),
@@ -95,9 +96,32 @@ class MessagingService {
       'sender': UserService.instance.ref,
       'timestamp': DateTime.now(),
     };
-    return FirebaseFirestore.instance
-        .collection(kUserPushNotificationsCollectionName)
-        .doc()
-        .set(pushNotificationData);
+    return FirebaseFirestore.instance.collection(kUserPushNotificationsCollectionName).doc().set(pushNotificationData);
+  }
+
+  /// Returns the fcm_tokens documents of the users who have the same FCM token.
+  ///
+  /// Note that, muliple users may have the same FCM tokens if the app manages
+  /// fcm tokens with fireflow while flutterflow prevents it.
+  Future<QuerySnapshot<Map<String, dynamic>>> getTokenDocuments(token) {
+    return fcmTokensCol.where('fcm_token', isEqualTo: token).get();
+  }
+
+  updateToken(String? token) async {
+    print('updateToken: $token');
+    if (token == null) return;
+
+    final snapshot = await getTokenDocuments(token);
+    if (snapshot.size > 0) {
+      print('token already exists. skip.');
+      return;
+    } else {
+      print('token does not exist. add it.');
+      fcmTokensCol.add({
+        'fcm_token': token,
+        'device_type': Platform.isIOS ? 'iOS' : 'Android',
+        'created_at': FieldValue.serverTimestamp(),
+      });
+    }
   }
 }
