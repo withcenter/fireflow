@@ -8,7 +8,9 @@ class PostModel {
   final String category;
   final DocumentReference userDocumentReference;
   final String title;
+  final String safeTitle;
   final String content;
+  final String safeContent;
   final Timestamp createdAt;
   final Timestamp updatedAt;
   final bool hasPhoto;
@@ -27,7 +29,9 @@ class PostModel {
     required this.id,
     required this.category,
     required this.title,
+    required this.safeTitle,
     required this.content,
+    required this.safeContent,
     required this.userDocumentReference,
     required this.createdAt,
     required this.updatedAt,
@@ -61,7 +65,9 @@ class PostModel {
       id: id,
       category: json['category'],
       title: json['title'] ?? '',
+      safeTitle: safeString(json['title']),
       content: json['content'] ?? '',
+      safeContent: safeString(json['content']),
       userDocumentReference: json['userDocumentReference'],
       createdAt: json['createdAt'] ?? Timestamp.now(),
       updatedAt: json['updatedAt'] ?? Timestamp.now(),

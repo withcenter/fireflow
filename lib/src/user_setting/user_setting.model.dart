@@ -6,11 +6,17 @@ class UserSettingModel {
   final String id;
   final DocumentReference userDocumentReference;
   final bool notifyNewComments;
+  final List<DocumentReference> postSubscriptions;
+  final List<DocumentReference> commentSubscriptions;
+  final Map<String, dynamic> data;
 
   UserSettingModel({
     required this.id,
     required this.userDocumentReference,
     required this.notifyNewComments,
+    required this.postSubscriptions,
+    required this.commentSubscriptions,
+    required this.data,
   });
 
   /// Create a UserSettingModel object from a snapshot of a document.
@@ -30,6 +36,9 @@ class UserSettingModel {
       id: id,
       userDocumentReference: json['userDocumentReference'],
       notifyNewComments: json['notifyNewComments'] ?? false,
+      postSubscriptions: List<DocumentReference>.from(json['postSubscriptions'] ?? []),
+      commentSubscriptions: List<DocumentReference>.from(json['commentSubscriptions'] ?? []),
+      data: json,
     );
   }
 

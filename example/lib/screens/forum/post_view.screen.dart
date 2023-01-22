@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class PostViewScreen extends StatefulWidget {
-  const PostViewScreen({super.key, required this.postId});
+  const PostViewScreen({super.key, required this.postDocumentReference});
 
-  final String postId;
+  final DocumentReference postDocumentReference;
 
   @override
   State<PostViewScreen> createState() => _PostViewScreenState();
@@ -23,13 +23,13 @@ class _PostViewScreenState extends State<PostViewScreen> {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () => context.pushNamed('PostEdit', queryParams: {
-              'postId': widget.postId,
+              'postId': widget.postDocumentReference.id,
             }),
           ),
         ],
       ),
       body: StreamBuilder(
-        stream: PostService.instance.doc(widget.postId).snapshots(),
+        stream: widget.postDocumentReference.snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -49,14 +49,8 @@ class _PostViewScreenState extends State<PostViewScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(post.deleted ? '---deleted---' : post.title),
-                  Text(
-                      "post id: ${post.id}, uid: ${post.userDocumentReference.id}",
-                      style: const TextStyle(color: Colors.grey, fontSize: 10)),
-                  Container(
-                      width: double.infinity,
-                      color: Colors.grey.shade200,
-                      padding: const EdgeInsets.all(24.0),
-                      child: Text(post.content)),
+                  Text("post id: ${post.id}, uid: ${post.userDocumentReference.id}", style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                  Container(width: double.infinity, color: Colors.grey.shade200, padding: const EdgeInsets.all(24.0), child: Text(post.content)),
                   TextField(
                     controller: comment,
                     decoration: const InputDecoration(
@@ -68,8 +62,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       TextButton(
                         onPressed: () async {
                           await post.ref.update({'deleted': true});
-                          PostService.instance
-                              .afterDelete(postDocumentReference: post.ref);
+                          PostService.instance.afterDelete(postDocumentReference: post.ref);
                           context.pop();
                         },
                         child: Text('Delete'),
@@ -79,8 +72,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       final data = {
-                        'postDocumentReference':
-                            PostService.instance.doc(widget.postId),
+                        'postDocumentReference': widget.postDocumentReference,
                         'userDocumentReference': UserService.instance.ref,
                         'content': comment.text,
                         'createdAt': FieldValue.serverTimestamp(),
@@ -89,8 +81,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       };
 
                       final ref = await CommentService.instance.col.add(data);
-                      await CommentService.instance
-                          .afterCreate(commentDocumentReference: ref);
+                      CommentService.instance.afterCreate(commentDocumentReference: ref);
                     },
                     child: const Text('Submit'),
                   ),
@@ -119,8 +110,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          final comment =
-                              CommentModel.fromSnapshot(docs[index]);
+                          final comment = CommentModel.fromSnapshot(docs[index]);
                           return CommentWidget(post: post, comment: comment);
                         },
                         itemCount: snapshot.data?.docs.length,
@@ -155,8 +145,7 @@ class CommentWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(comment.deleted ? '---deleted---' : comment.content),
-          Text('id: ${comment.id}, uid: ${comment.userDocumentReference.id}',
-              style: const TextStyle(color: Colors.grey, fontSize: 10)),
+          Text('id: ${comment.id}, uid: ${comment.userDocumentReference.id}', style: const TextStyle(color: Colors.grey, fontSize: 10)),
           Row(
             children: [
               TextButton(
@@ -176,26 +165,18 @@ class CommentWidget extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () async {
-                                print('no of comments: ${post.noOfComments}');
                                 final data = {
-                                  'postDocumentReference':
-                                      comment.postDocumentReference,
-                                  'parentCommentDocumentReference':
-                                      CommentService.instance.doc(comment.id),
-                                  'userDocumentReference':
-                                      UserService.instance.ref,
+                                  'postDocumentReference': comment.postDocumentReference,
+                                  'parentCommentDocumentReference': CommentService.instance.doc(comment.id),
+                                  'userDocumentReference': UserService.instance.ref,
                                   'content': replyComment.text,
                                   'createdAt': FieldValue.serverTimestamp(),
-                                  'order': commentOrder(comment.order,
-                                      comment.depth, post.noOfComments),
+                                  'order': commentOrder(comment.order, comment.depth, post.noOfComments),
                                   'depth': comment.depth + 1,
                                 };
-                                print('reply; $data');
-                                final ref =
-                                    await CommentService.instance.col.add(data);
+                                final ref = await CommentService.instance.col.add(data);
 
-                                await CommentService.instance
-                                    .afterCreate(commentDocumentReference: ref);
+                                CommentService.instance.afterCreate(commentDocumentReference: ref);
                                 Navigator.pop(context);
                               },
                               child: const Text('Reply'),
@@ -210,8 +191,7 @@ class CommentWidget extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  final editComment =
-                      TextEditingController(text: comment.content);
+                  final editComment = TextEditingController(text: comment.content);
                   showModalBottomSheet(
                     context: context,
                     builder: (context) {
@@ -229,8 +209,7 @@ class CommentWidget extends StatelessWidget {
                                 await comment.ref.update({
                                   'content': editComment.text,
                                 });
-                                CommentService.instance.afterUpdate(
-                                    commentDocumentReference: comment.ref);
+                                CommentService.instance.afterUpdate(commentDocumentReference: comment.ref);
                                 Navigator.pop(context);
                               },
                               child: const Text('Edit'),
@@ -246,8 +225,7 @@ class CommentWidget extends StatelessWidget {
               TextButton(
                 onPressed: () async {
                   await comment.ref.update({'deleted': true});
-                  CommentService.instance
-                      .afterDelete(commentDocumentReference: comment.ref);
+                  CommentService.instance.afterDelete(commentDocumentReference: comment.ref);
                 },
                 child: Text('Delete'),
               ),

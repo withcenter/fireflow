@@ -13,6 +13,8 @@ export 'src/chat/chat_room_message.model.dart';
 export 'src/chat/chat.service.dart';
 export 'src/storage/storage.service.dart';
 export 'src/push_notifications/messaging.service.dart';
+export 'src/push_notifications/messaging.options.dart';
+export 'src/push_notifications/message.model.dart';
 export 'src/chat/chat_no_of_rooms_with_new_message.dart';
 export 'src/category/category.service.dart';
 export 'src/category/category.model.dart';
@@ -21,7 +23,7 @@ export 'src/post/post.model.dart';
 export 'src/comment/comment.service.dart';
 export 'src/comment/comment.model.dart';
 
-export 'src/supabase/supabase_options.dart';
+export 'src/supabase/supabase.options.dart';
 export 'src/supabase/supabase.service.dart';
 
 /// Utils, Functions, Actions

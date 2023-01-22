@@ -19,6 +19,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 - [Getting started](#getting-started)
   - [Setting up Firebase](#setting-up-firebase)
     - [Firestore Security Rules](#firestore-security-rules)
+  - [Enable deeplink](#enable-deeplink)
   - [Enable Push notifications](#enable-push-notifications)
   - [AppService](#appservice)
   - [Local State Variable](#local-state-variable)
@@ -39,6 +40,9 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 - [System setting](#system-setting)
   - [Admin](#admin)
 - [Push notification](#push-notification)
+  - [Push notification data](#push-notification-data)
+    - [Push notification data of post and comment](#push-notification-data-of-post-and-comment)
+    - [Push notification data of chat](#push-notification-data-of-chat)
   - [Foreground Push Notification and Routing](#foreground-push-notification-and-routing)
   - [MessageModel](#messagemodel)
 - [Chat](#chat)
@@ -192,6 +196,10 @@ To apply it, you will need to check the `Exclude` buttons on the Collections lik
 And copy the [fireflow security rules](https://raw.githubusercontent.com/withcenter/fireflow/main/firebase/firestore.rules) and paste it into your Firebase firestore security rules.
 
 ![Firestore Security Rules](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-rules.gif?raw=true)
+
+## Enable deeplink
+
+- Enable the Deeplink in FlutterFlow.
 
 ## Enable Push notifications
 
@@ -392,8 +400,8 @@ Note, that the `userPublicDataDocumentReference` in `users` collection is set on
 - There are two types of push notification subscriptions. One is the post subscription, the other is the comment subscription.
 - If a user subscribes for the post, then he will get a push notification whenever there is a new post under the category.
 - If a user subscribes for the comment, he will get a push notification on very new comments under the category.
-- To enable the post subscription, set `[category].post` to true. Example) `/user_settings/<uid> {qna.post: true}`.
-- To enable the comment subscription, set `[category].comment` to true. Example) `/user_settings/<uid> {qna.comment: true}`.
+- To enable the post subscription, add the category reference into `postSubscriptions` array. Example) `/user_settings/<uid> {postSubscriptions: ['category/qnaCategoryReference']}`.
+- To enable the comment subscription, add the category reference into `commentSubscriptions` array. Example) `/user_settings/<uid> {commentSubscriptions: ['category/qna']}`.
 
 
 
@@ -430,6 +438,29 @@ There are some differences from the notification logic of FF.
 - Foreground push notification works.
 
 
+## Push notification data
+
+
+### Push notification data of post and comment
+
+- To make the flutter push notification work with the flutterflow, it passes the data in a certain compatible format.
+  - For post and comment,
+    - the `initialPageName` is fixed to `PostView`
+    - the parameter of the `PostView` is fixed to `postDocumentReferece` and is set to the post reference.
+  
+  This means, the page name of the post view must be `PostView` and the parameter of the `PostView` page must be `postDocumentReference`.
+  Or when the user taps on the message, the app would not open the proper post view screen.
+
+
+### Push notification data of chat
+
+- To make the fireflow push notification work with the flutterflow, it passes the data in a certain compatible format.
+  - the `intialPageName` is fixed to `ChatRoom`. So, the chat room must have `ChatRoom` as its page name.
+  - the `parameterData` has `chatRoomId` and one of `chatRoomDocument` or `otherUserPublicDataDocument`. So, the `ChatRoom` must have parameters of `ChatRoomId`, `chatRoomDocument` and `otherUserPublicDataDocument`.
+    - `chatRoomId` is a String, and have the chat room id.
+    - the `chatRoomDocument` is set, if it's group chat. It's a string of chat room document path.
+    - or the `otherUserPublicDataDocument` is set if it is one and one chat. It's a string of user public document path.
+    Note that, the chat room requires the `chatRoomDocument` or the `otherUserPublicDataDocument` as a document. (Well, you may design differently.) And the fireflow will automatically convert the path of the document to a document when the page is opened when the user taps on the message. And the document itself cannot be delivered as push notification data.
 
 ## Foreground Push Notification and Routing
 
@@ -920,6 +951,7 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
   ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-supabase.jpg?raw=true "Supabase")
   - set the `supabase` options like below.
     - `AppService.instance.init(supabase: SupabaseOptions(...))`.
+    - See [the API reference](https://pub.dev/documentation/fireflow/latest/fireflow/SupabaseOptions-class.html) for details.
 
 
 

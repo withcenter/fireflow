@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -14,6 +15,62 @@ class PostListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('$category'),
         actions: [
+          StreamBuilder(
+            stream: UserSettingService.instance.ref.snapshots(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasError) {
+                print(snapshot.error);
+                return Icon(Icons.error_outline);
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              final setting = UserSettingModel.fromSnapshot(snapshot.data!);
+              final categoryDocumentReference = CategoryService.instance.doc(category);
+
+              return IconButton(
+                  onPressed: () {
+                    UserSettingService.instance.ref.update({
+                      'postSubscriptions': setting.postSubscriptions.contains(categoryDocumentReference)
+                          ? FieldValue.arrayRemove([categoryDocumentReference])
+                          : FieldValue.arrayUnion([categoryDocumentReference])
+                    });
+                  },
+                  icon: setting.postSubscriptions.contains(categoryDocumentReference)
+                      ? Icon(Icons.notifications_active_outlined)
+                      : Icon(Icons.notifications_off_outlined));
+            },
+          ),
+          StreamBuilder(
+            stream: UserSettingService.instance.ref.snapshots(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasError) {
+                print(snapshot.error);
+                return Icon(Icons.error_outline);
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              final setting = UserSettingModel.fromSnapshot(snapshot.data!);
+              final categoryDocumentReference = CategoryService.instance.doc(category);
+
+              return IconButton(
+                  onPressed: () {
+                    UserSettingService.instance.ref.update({
+                      'commentSubscriptions': setting.commentSubscriptions.contains(categoryDocumentReference)
+                          ? FieldValue.arrayRemove([categoryDocumentReference])
+                          : FieldValue.arrayUnion([categoryDocumentReference])
+                    });
+                  },
+                  icon: setting.commentSubscriptions.contains(categoryDocumentReference) ? Icon(Icons.comment) : Icon(Icons.comments_disabled_outlined));
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () => context.pushNamed('PostEdit', queryParams: {
@@ -23,10 +80,7 @@ class PostListScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder(
-        stream: PostService.instance.col
-            .where('category', isEqualTo: category)
-            .orderBy('createdAt', descending: true)
-            .snapshots(),
+        stream: PostService.instance.col.where('category', isEqualTo: category).orderBy('createdAt', descending: true).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -53,7 +107,7 @@ class PostListScreen extends StatelessWidget {
                 onTap: () => context.pushNamed(
                   'postView',
                   queryParams: {
-                    'postId': post.id,
+                    'postDocumentReference': post.ref.path,
                   },
                 ),
               );

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
+import 'package:collection/collection.dart';
 
 class PostService {
   static PostService get instance => _instance ??= PostService();
@@ -26,6 +27,28 @@ class PostService {
     final categoryDoc = CategoryService.instance.doc(post.category);
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
+    /// send push notifications to the subscribers of the category
+    ///
+    /// send message to the post's owner and comment's owners of the hierachical ancestors
+    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
+    if (snapshot.size > 0) {
+      final List<DocumentReference> userRefs = [];
+      for (final doc in snapshot.docs) {
+        final setting = UserSettingModel.fromSnapshot(doc);
+        userRefs.add(setting.userDocumentReference);
+      }
+
+      MessagingService.instance.send(
+        notificationTitle: post.safeTitle,
+        notificationText: post.safeContent,
+        notificationSound: 'default',
+        notificationImageUrl: post.files.firstOrNull,
+        userRefs: userRefs,
+        initialPageName: 'PostView',
+        parameterData: {'postDocumentReference': post.ref},
+      );
+    }
+
     await postDocumentReference.update({
       'userDocumentReference': UserService.instance.ref,
       'createdAt': FieldValue.serverTimestamp(),
@@ -41,8 +64,6 @@ class PostService {
       'wasPremiumUser': UserService.instance.my.isPremiumUser,
       'emphasizePremiumUserPost': category.emphasizePremiumUserPost
     });
-
-    // TODO push notification to the category's followers
 
     // update the user's post count
     await UserService.instance.publicRef.update(

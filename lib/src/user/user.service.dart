@@ -26,14 +26,12 @@ class UserService {
   String get uid => FA.FirebaseAuth.instance.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
@@ -71,6 +69,10 @@ class UserService {
     // get the user's public data from the database
     final snapshot = await myUserPublicDataRef.get();
     return UserPublicDataModel.fromSnapshot(snapshot);
+  }
+
+  Future<UserPublicDataModel> get(String id) async {
+    return UserPublicDataModel.fromSnapshot(await doc(id).get());
   }
 
   /// Creates /users_public_data/{uid} if it does not exist.
@@ -120,9 +122,7 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (SupabaseService.instance.backupUsersPubicData) {
@@ -190,5 +190,26 @@ class UserService {
     await myUserPublicDataRef.update({
       fieldName: imagePath,
     });
+  }
+
+  newCommentSubscribers(List<DocumentReference> userReferences) async {
+    if (userReferences.isEmpty) {
+      return [];
+    }
+
+    List<Future<UserSettingModel>> futures = [];
+    for (final ref in userReferences) {
+      futures.add(UserSettingService.instance.get(ref.id));
+    }
+
+    final results = await Future.wait<UserSettingModel>(futures);
+
+    final List<DocumentReference> subscribers = [];
+    for (final setting in results) {
+      if (setting.notifyNewComments == true) {
+        subscribers.add(setting.userDocumentReference);
+      }
+    }
+    return subscribers;
   }
 }

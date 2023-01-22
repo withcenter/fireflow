@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflow/fireflow.dart';
 
 /// CategoryModel is a class that represents a document of /categories.
 ///
@@ -11,6 +12,7 @@ class CategoryModel {
   final bool emphasizePremiumUserPost;
   final int waitMinutesForNextPost;
   final int waitMinutesForPremiumUserNextPost;
+  final DocumentReference ref;
 
   CategoryModel({
     required this.category,
@@ -21,6 +23,7 @@ class CategoryModel {
     required this.emphasizePremiumUserPost,
     required this.waitMinutesForNextPost,
     required this.waitMinutesForPremiumUserNextPost,
+    required this.ref,
   });
 
   /// Create a CategoryModel object from a snapshot of a document.
@@ -41,12 +44,11 @@ class CategoryModel {
       title: json['title'] ?? '',
       noOfPosts: json['noOfPosts'] ?? 0,
       noOfComments: json['noOfComments'] ?? 0,
-      enablePushNotificationSubscription:
-          json['enablePushNotificationSubscription'] ?? false,
+      enablePushNotificationSubscription: json['enablePushNotificationSubscription'] ?? false,
       emphasizePremiumUserPost: json['emphasizePremiumUserPost'] ?? false,
       waitMinutesForNextPost: json['waitMinutesForNextPost'] ?? 0,
-      waitMinutesForPremiumUserNextPost:
-          json['waitMinutesForPremiumUserNextPost'] ?? 0,
+      waitMinutesForPremiumUserNextPost: json['waitMinutesForPremiumUserNextPost'] ?? 0,
+      ref: CategoryService.instance.doc(json['category'] ?? id),
     );
   }
 

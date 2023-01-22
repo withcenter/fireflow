@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 
@@ -60,7 +58,7 @@ class CommentModel {
       userDocumentReference: json['userDocumentReference'],
       category: json['category'] ?? '',
       content: json['content'] ?? '',
-      safeContent: _safeContent(json['content']),
+      safeContent: safeString(json['content']),
       order: json['order'] ?? '',
       depth: json['depth'] ?? 0,
       deleted: json['deleted'] ?? false,
@@ -75,17 +73,5 @@ class CommentModel {
   @override
   String toString() {
     return 'CommentModel{ postDocumentReference: $postDocumentReference, parentCommentDocumentReference: $parentCommentDocumentReference, userDocumentReference: $userDocumentReference, category: $category, content: $content, order: $order, depth: $depth, createdAt: $createdAt, updatedAt: $updatedAt}';
-  }
-
-  static String _safeContent(String? content) {
-    if (content == null) {
-      return '';
-    }
-    content = content.replaceAll(RegExp(r'<[^>]*>'), '');
-    content = content.replaceAll('\r', '');
-    content = content.replaceAll('\n', ' ');
-    content = content.replaceAll('\t', ' ');
-    content = content.substring(0, min(content.length, 64));
-    return content;
   }
 }

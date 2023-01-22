@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:example/screens/forum/category/category_edit.screen.dart';
 import 'package:example/screens/forum/category/category_list.screen.dart';
 import 'package:example/screens/forum/post_view.screen.dart';
@@ -25,8 +26,7 @@ final router = GoRouter(
     GoRoute(
       name: 'CategoryEdit',
       path: '/categoryEdit',
-      builder: (context, state) =>
-          CategoryEditScreen(category: state.queryParams['category']),
+      builder: (context, state) => CategoryEditScreen(category: state.queryParams['category']),
     ),
     GoRoute(
       name: 'CustomPopup',
@@ -55,7 +55,7 @@ final router = GoRouter(
       path: '/postView',
       builder: (context, state) {
         return PostViewScreen(
-          postId: state.queryParams['postId']!,
+          postDocumentReference: FirebaseFirestore.instance.doc(state.queryParams['postDocumentReference']!),
         );
       },
     ),

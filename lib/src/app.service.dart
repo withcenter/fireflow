@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/supabase/supabase_options.dart';
+import 'package:fireflow/src/supabase/supabase.options.dart';
 import 'package:flutter/material.dart';
 
 /// AppService is a singleton class that provides necessary service for Fireflow.
@@ -13,6 +13,8 @@ class AppService {
 
   static AppService get instance => _instance ?? (_instance = AppService());
   static AppService? _instance;
+
+  bool initialized = false;
   late BuildContext context;
 
   final FirebaseFirestore db = FirebaseFirestore.instance;
@@ -27,8 +29,6 @@ class AppService {
   /// Keep the login user's public data up to date.
   UserPublicDataModel? user;
 
-  Function(String, Map<String, String>)? onTapMessage;
-
   /// Current chat room reference.
   ///
   /// This is the current chat room that the user is in.
@@ -41,9 +41,6 @@ class AppService {
   /// The service initialization should be kept here.
   AppService() {
     dog("AppService.constructor() called.");
-    _initSystemKeys();
-    _initUser();
-    MessagingService.instance.init();
   }
 
   /// Initialize the settings of AppService.
@@ -54,24 +51,35 @@ class AppService {
   ///
   /// [context] is the BuildContext of a screen. It must be valid and alive.
   /// Set [debug] to true to print the logs in dev console.
-  /// If [supabase] is set to true, AppService will sync the user, post, comment
+  /// If [supabase] is set, AppService will sync the user, post, comment data
   /// into Supabase. So, the app can do FULLTEXT search and more complicated
-  /// conditional search. Note that, the supabase must be initialized before
-  /// calling this method.
-  /// [onTapMessage] is a callback method and is called when the user taps on
-  /// foreground push notification snackbar. If this is set to null, then there
+  /// conditional search. Note that, the supabase must be initialized in the app
+  /// before calling this method.
+  ///
+  /// If [messaging] is set, AppService will initialize the messaging service.
+  /// See the API reference for details.
   /// will be no snackbar.
+  ///
   void init({
     required BuildContext context,
     bool debug = false,
-    Function(String, Map<String, dynamic>)? onTapMessage,
     SupabaseOptions? supabase,
+    MessagingOptions? messaging,
   }) {
     dog('AppService.instance.init()');
     this.context = context;
     gDebug = debug;
-    if (onTapMessage != null) this.onTapMessage = onTapMessage;
     Config.instance.supabase = supabase;
+    Config.instance.messaging = messaging;
+
+    ///
+    if (initialized == false) {
+      dog("AppService.instance.init() - initializing...");
+      initialized = true;
+      _initSystemKeys();
+      _initUser();
+      MessagingService.instance.init();
+    }
   }
 
   /// Initialize the user functions.

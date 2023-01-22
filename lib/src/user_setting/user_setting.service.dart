@@ -6,15 +6,14 @@ import 'package:flutter/material.dart';
 /// UserSettingModel is a class that represents a user's setting.
 ///
 class UserSettingService {
-  static UserSettingService get instance =>
-      _instance ?? (_instance = UserSettingService());
+  static UserSettingService get instance => _instance ?? (_instance = UserSettingService());
   static UserSettingService? _instance;
 
   String get uid => FirebaseAuth.instance.currentUser!.uid;
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('user_settings').doc(uid);
-  DocumentReference get myUserDocumentReference =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  CollectionReference get col => FirebaseFirestore.instance.collection('user_settings');
+  DocumentReference doc(String id) => FirebaseFirestore.instance.collection('user_settings').doc(id);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('user_settings').doc(uid);
+  DocumentReference get myUserDocumentReference => FirebaseFirestore.instance.collection('users').doc(uid);
 
   User get my => FirebaseAuth.instance.currentUser!;
 
@@ -28,10 +27,12 @@ class UserSettingService {
 
   /// Warning, this method may throw an exception if it is being called immediately after the user is signed in for the first time.
   /// The `/users/{uid}` document may be created after the user is signed in.
-  Future<UserSettingModel> get() async {
-    // get the user's data from the database
-    final snapshot = await ref.get();
-    return UserSettingModel.fromSnapshot(snapshot);
+  Future<UserSettingModel> get([String? id]) async {
+    if (id == null) {
+      return UserSettingModel.fromSnapshot(await ref.get());
+    } else {
+      return UserSettingModel.fromSnapshot(await doc(id).get());
+    }
   }
 
   /// Creates /users_public_data/{uid} if it does not exist.

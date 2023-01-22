@@ -7,4 +7,5 @@ class Config {
   /// [supa] returns true if supabase is enabled.
   bool get supa => supabase != null;
   SupabaseOptions? supabase;
+  MessagingOptions? messaging;
 }

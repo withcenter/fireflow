@@ -16,8 +16,7 @@ class CommentService {
   /// Use this to list the comments on post view screen.
   Stream<QuerySnapshot<Object?>> children(String postId) {
     return CommentService.instance.col
-        .where('postDocumentReference',
-            isEqualTo: PostService.instance.doc(postId))
+        .where('postDocumentReference', isEqualTo: PostService.instance.doc(postId))
         .orderBy('order', descending: false)
         .snapshots();
   }
@@ -28,10 +27,8 @@ class CommentService {
   }
 
   afterCreate({required DocumentReference commentDocumentReference}) async {
-    final comment =
-        CommentModel.fromSnapshot(await commentDocumentReference.get());
-    final post =
-        PostModel.fromSnapshot(await comment.postDocumentReference.get());
+    final comment = CommentModel.fromSnapshot(await commentDocumentReference.get());
+    final post = PostModel.fromSnapshot(await comment.postDocumentReference.get());
 
     // CommentModel? parent;
     // if (comment.parentCommentDocumentReference != null) {
@@ -47,17 +44,28 @@ class CommentService {
 
     // send push notification
     // send message to the post's owner and comment's owners of the hierachical ancestors
-    final userReferences = await _getAncestorsUid(comment);
-    print('uids; ${userReferences.length} $userReferences');
+    final ancestorReferences = await _getAncestorsUid(comment);
+    final userRefs = await UserService.instance.newCommentSubscribers(ancestorReferences);
+
+    /// send push notifications to the subscribers of the category
+    ///
+    /// send message to the post's owner and comment's owners of the hierachical ancestors
+    final snapshot = await UserSettingService.instance.col.where('commentSubscriptions', arrayContains: categoryDoc).get();
+    if (snapshot.size > 0) {
+      for (final doc in snapshot.docs) {
+        final setting = UserSettingModel.fromSnapshot(doc);
+        userRefs.add(setting.userDocumentReference);
+      }
+    }
 
     MessagingService.instance.send(
       notificationTitle: '${UserService.instance.my.displayName} says ...',
       notificationText: comment.safeContent,
       notificationSound: 'default',
       notificationImageUrl: comment.files.firstOrNull,
-      userRefs: userReferences,
+      userRefs: userRefs,
       initialPageName: 'PostView',
-      parameterData: {'postDocument': comment.postDocumentReference},
+      parameterData: {'postDocumentReference': comment.postDocumentReference},
     );
 
     // increase on of comments in category docuemnt, user doucment, post document
@@ -100,8 +108,7 @@ class CommentService {
     // send push notification
     // send message to the post's owner and comment's owners of the hierachical ancestors
 
-    final comment =
-        CommentModel.fromSnapshot(await commentDocumentReference.get());
+    final comment = CommentModel.fromSnapshot(await commentDocumentReference.get());
 
     // update the user's post count
     await commentDocumentReference.update(
@@ -121,8 +128,7 @@ class CommentService {
   }
 
   afterDelete({required DocumentReference commentDocumentReference}) async {
-    final comment =
-        CommentModel.fromSnapshot(await commentDocumentReference.get());
+    final comment = CommentModel.fromSnapshot(await commentDocumentReference.get());
     final categoryDoc = CategoryService.instance.doc(comment.category);
 
     // update the user's post count
@@ -152,13 +158,14 @@ class CommentService {
   Future<List<DocumentReference>> _getAncestorsUid(CommentModel comment) async {
     final List<DocumentReference> ancestors = [];
     ancestors.add(comment.userDocumentReference);
-    final post =
-        await PostService.instance.get(comment.postDocumentReference.id);
+    final post = await PostService.instance.get(comment.postDocumentReference.id);
     ancestors.add(post.userDocumentReference);
 
+    /// Get ancestors comments and post.
+    ///
+    /// Cannot use `Future.all()` here.
     while (comment.parentCommentDocumentReference != null) {
-      final parent = await CommentService.instance
-          .get(comment.parentCommentDocumentReference!.id);
+      final parent = await CommentService.instance.get(comment.parentCommentDocumentReference!.id);
       ancestors.add(parent.userDocumentReference);
       comment = parent;
     }

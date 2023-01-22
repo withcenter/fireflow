@@ -23,6 +23,15 @@
       "deviceId": "iPhone11MaxPro"
     },
     {
+      "name": "Galaxy Wide 2 - example - debug",
+      "cwd": "example",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "3300a275cab914b9"
+    },
+    {
       "name": "iPhone11MaxPro - example - release",
       "cwd": "example",
       "request": "launch",
