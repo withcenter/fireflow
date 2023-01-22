@@ -1,6 +1,8 @@
 apps/
 node_modules/
 
+firebase_options.dart
+
 # Miscellaneous
 *.class
 *.log

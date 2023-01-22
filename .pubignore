@@ -18,6 +18,7 @@ test/
 res/
 apps/
 firebase/
+firebase_options.dart
 
 # Miscellaneous
 *.class
