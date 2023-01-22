@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1091153425562',
     projectId: 'withcenter-fireflow',
     storageBucket: 'withcenter-fireflow.appspot.com',
-    androidClientId: '1091153425562-k902fmdi7bfrg0hh3euhgftholdoj086.apps.googleusercontent.com',
-    iosClientId: '1091153425562-g8rs75stp6aeoisf6ci0froob43jrq9t.apps.googleusercontent.com',
+    androidClientId:
+        '1091153425562-k902fmdi7bfrg0hh3euhgftholdoj086.apps.googleusercontent.com',
+    iosClientId:
+        '1091153425562-g8rs75stp6aeoisf6ci0froob43jrq9t.apps.googleusercontent.com',
     iosBundleId: 'com.fireflow.ex',
   );
 }

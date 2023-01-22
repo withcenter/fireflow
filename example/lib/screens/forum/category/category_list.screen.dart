@@ -28,17 +28,21 @@ class CategoryListScreen extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            if (snapshot.hasData == false) return const Text('No categories found');
-            if (snapshot.data!.size == 0) return const Text('No categories found');
+            if (snapshot.hasData == false)
+              return const Text('No categories found');
+            if (snapshot.data!.size == 0)
+              return const Text('No categories found');
 
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                final category = CategoryModel.fromSnapshot(snapshot.data!.docs[index]);
+                final category =
+                    CategoryModel.fromSnapshot(snapshot.data!.docs[index]);
                 return ListTile(
                   title: Text(category.title),
                   onTap: () {
-                    context.pushNamed('CategoryEdit', queryParams: {'category': category.category});
+                    context.pushNamed('CategoryEdit',
+                        queryParams: {'category': category.category});
                   },
                 );
               },

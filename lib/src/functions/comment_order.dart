@@ -47,7 +47,9 @@ String commentOrder(
   ///   어떤 것이 먼저 쓰였는지 구분하기 어렵게 된다.
   ///
   /// 참고, 총 90만개의 코멘트를 지원한다.
-  order = order == null || order == '' ? List<String>.filled(16, '100000').join(".") : order;
+  order = order == null || order == ''
+      ? List<String>.filled(16, '100000').join(".")
+      : order;
   depth ??= 0;
   noOfComments ??= 0;
   if (depth >= 16) return order;

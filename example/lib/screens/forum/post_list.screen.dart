@@ -23,7 +23,10 @@ class PostListScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder(
-        stream: PostService.instance.col.where('category', isEqualTo: category).orderBy('createdAt', descending: true).snapshots(),
+        stream: PostService.instance.col
+            .where('category', isEqualTo: category)
+            .orderBy('createdAt', descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(

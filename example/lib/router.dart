@@ -25,7 +25,8 @@ final router = GoRouter(
     GoRoute(
       name: 'CategoryEdit',
       path: '/categoryEdit',
-      builder: (context, state) => CategoryEditScreen(category: state.queryParams['category']),
+      builder: (context, state) =>
+          CategoryEditScreen(category: state.queryParams['category']),
     ),
     GoRoute(
       name: 'CustomPopup',
