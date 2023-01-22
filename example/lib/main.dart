@@ -37,7 +37,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    /// AppService 초기화
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       AppService.instance.init(
         context: router.routerDelegate.navigatorKey.currentContext!,

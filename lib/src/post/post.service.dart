@@ -28,8 +28,6 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    ///
-    /// send message to the post's owner and comment's owners of the hierachical ancestors
     final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
     if (snapshot.size > 0) {
       final List<DocumentReference> userRefs = [];
