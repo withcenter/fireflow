@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/supabase/supabase_tables.dart';
+import 'package:fireflow/src/supabase/supabase_options.dart';
 import 'package:flutter/material.dart';
 
 /// AppService is a singleton class that provides necessary service for Fireflow.
@@ -35,9 +35,6 @@ class AppService {
   /// This is used to determine whether to show the push notification from chat message or not.
   DocumentReference? currentChatRoomDocumentReference;
 
-  /// If [supabase] is set to true, then fireflow will interact with Supabase.
-  late final bool supabase;
-
   /// AppService constructor
   ///
   /// AppService is a singleton. So, this constructor will be called only one time.
@@ -67,16 +64,14 @@ class AppService {
   void init({
     required BuildContext context,
     bool debug = false,
-    bool supabase = false,
     Function(String, Map<String, dynamic>)? onTapMessage,
-    SupabaseTables? tables,
+    SupabaseOptions? supabase,
   }) {
     dog('AppService.instance.init()');
     this.context = context;
     gDebug = debug;
-    this.supabase = supabase;
     if (onTapMessage != null) this.onTapMessage = onTapMessage;
-    Config.instance.supabase.tables = tables ?? SupabaseTables();
+    Config.instance.supabase = supabase;
   }
 
   /// Initialize the user functions.

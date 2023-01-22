@@ -121,7 +121,7 @@ class UserService {
     publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
-        if (AppService.instance.supabase) {
+        if (SupabaseService.instance.backupUsersPubicData) {
           /// Upsert the user public data to Supabase.
           // await Supabase.instance.client
           //     .from(Config.instance.supabase.usersPublicData)

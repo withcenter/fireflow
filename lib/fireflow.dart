@@ -21,7 +21,7 @@ export 'src/post/post.model.dart';
 export 'src/comment/comment.service.dart';
 export 'src/comment/comment.model.dart';
 
-export 'src/supabase/supabase_tables.dart';
+export 'src/supabase/supabase_options.dart';
 export 'src/supabase/supabase.service.dart';
 
 /// Utils, Functions, Actions

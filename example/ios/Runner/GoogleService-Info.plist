@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1091153425562-soi02rpuqnicf7l7l84kk7qpio5rrq90.apps.googleusercontent.com</string>
+	<string>1091153425562-g8rs75stp6aeoisf6ci0froob43jrq9t.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1091153425562-soi02rpuqnicf7l7l84kk7qpio5rrq90</string>
+	<string>com.googleusercontent.apps.1091153425562-g8rs75stp6aeoisf6ci0froob43jrq9t</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>1091153425562-k902fmdi7bfrg0hh3euhgftholdoj086.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.example</string>
+	<string>com.fireflow.ex</string>
 	<key>PROJECT_ID</key>
 	<string>withcenter-fireflow</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1091153425562:ios:0b923824c4872c2afa9b23</string>
+	<string>1:1091153425562:ios:9ce15fa0ffdcce44fa9b23</string>
 </dict>
 </plist>

@@ -78,7 +78,7 @@ class CommentService {
       },
     );
 
-    if (AppService.instance.supabase) {
+    if (SupabaseService.instance.backupComments) {
       await supabase.comments.insert(
         {
           'commentId': commentDocumentReference.id,
@@ -106,7 +106,7 @@ class CommentService {
       },
     );
 
-    if (AppService.instance.supabase) {
+    if (SupabaseService.instance.backupComments) {
       await supabase.comments.update(
         {
           'updated_at': comment.updatedAt.toDate().toIso8601String(),
@@ -135,7 +135,7 @@ class CommentService {
 
     // don't decrease no of comments in post.
 
-    if (AppService.instance.supabase) {
+    if (SupabaseService.instance.backupComments) {
       await supabase.comments.delete().eq('commentId', comment.id);
     }
   }

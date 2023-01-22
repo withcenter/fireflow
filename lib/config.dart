@@ -4,9 +4,7 @@ class Config {
   static Config get instance => _instance ??= Config();
   static Config? _instance;
 
-  SupabaseConfig supabase = SupabaseConfig();
-}
-
-class SupabaseConfig {
-  late final SupabaseTables tables;
+  /// [supa] returns true if supabase is enabled.
+  bool get supa => supabase != null;
+  SupabaseOptions? supabase;
 }

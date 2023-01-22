@@ -58,7 +58,7 @@ class PostService {
       },
     );
 
-    if (AppService.instance.supabase) {
+    if (SupabaseService.instance.backupPosts) {
       await supabase.posts.insert(
         {
           'postId': postDocumentReference.id,
@@ -87,7 +87,7 @@ class PostService {
     /// Read the `updatdAt`
     post = PostModel.fromSnapshot(await postDocumentReference.get());
 
-    if (AppService.instance.supabase) {
+    if (SupabaseService.instance.backupPosts) {
       await supabase.posts.update(
         {
           'category': post.category,
@@ -122,7 +122,7 @@ class PostService {
       },
     );
 
-    if (AppService.instance.supabase) {
+    if (SupabaseService.instance.backupPosts) {
       await supabase.posts.delete().eq('postId', post.id);
     }
   }

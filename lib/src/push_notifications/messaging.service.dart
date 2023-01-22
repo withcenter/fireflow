@@ -27,10 +27,25 @@ class MessagingService {
 
     /// 푸시 알림 토큰 업데이트
     FirebaseAuth.instance.authStateChanges().where((user) => user != null).map((user) => user!.uid).distinct().listen((event) async {
+      if (Platform.isIOS) {
+        NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+          alert: true,
+          announcement: false,
+          badge: true,
+          carPlay: false,
+          criticalAlert: false,
+          provisional: false,
+          sound: true,
+        );
+        if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+          return;
+        }
+      }
       MessagingService.instance.updateToken(await FirebaseMessaging.instance.getToken());
       FirebaseMessaging.instance.onTokenRefresh.listen(MessagingService.instance.updateToken);
     });
 
+    /// Foreground Message Listening
     FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
       /// This will triggered while the app is opened
       /// If the message has data, then do some extra work based on the data.
@@ -52,6 +67,26 @@ class MessagingService {
         onTap: () => onTapMessage(message),
       );
     });
+
+    /// Background Message Listening
+    setupInteractedMessage();
+  }
+
+  // It is assumed that all messages contain a data field with the key 'type'
+  Future<void> setupInteractedMessage() async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+    // If the message also contains a data property with a "type" of "chat",
+    // navigate to a chat screen
+    if (initialMessage != null) {
+      onTapMessage(MessageModel.fromRemoteMessage(initialMessage));
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen((initialMessage) => onTapMessage(MessageModel.fromRemoteMessage(initialMessage)));
   }
 
   /// User tapped on the notification.
