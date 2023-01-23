@@ -1,3 +1,7 @@
+## 0.0.78
+
+* Fix. comments files.
+
 ## 0.0.77
 
 * Fix. add posts_and_comments option in supabase.
