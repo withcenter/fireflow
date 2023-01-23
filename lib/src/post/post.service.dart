@@ -28,7 +28,9 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
+    final snapshot = await UserSettingService.instance.col
+        .where('postSubscriptions', arrayContains: category.ref)
+        .get();
     if (snapshot.size > 0) {
       final List<DocumentReference> userRefs = [];
       for (final doc in snapshot.docs) {
@@ -107,14 +109,13 @@ class PostService {
     post = PostModel.fromSnapshot(await postDocumentReference.get());
 
     if (SupabaseService.instance.backupPosts) {
-      await supabase.posts.update(
-        {
-          'category': post.category,
-          'updated_at': post.updatedAt.toDate().toIso8601String(),
-          'title': post.title,
-          'content': post.content,
-        },
-      ).eq('postId', postDocumentReference.id);
+      await supabase.posts.upsert({
+        'postId': postDocumentReference.id,
+        'category': post.category,
+        'updated_at': post.updatedAt.toDate().toIso8601String(),
+        'title': post.title,
+        'content': post.content,
+      }, onConflict: 'postId');
     }
   }
 

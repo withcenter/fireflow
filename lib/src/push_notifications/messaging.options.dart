@@ -15,7 +15,8 @@ import 'package:fireflow/fireflow.dart';
 class MessagingOptions {
   final bool foreground;
   final bool background;
-  final void Function(String initialPageName, Map<String, String> parameterData) onTap;
+  final void Function(String initialPageName, Map<String, String> parameterData)
+      onTap;
 
   MessagingOptions({
     this.foreground = false,

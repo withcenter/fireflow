@@ -6,14 +6,19 @@ import 'package:flutter/material.dart';
 /// UserSettingModel is a class that represents a user's setting.
 ///
 class UserSettingService {
-  static UserSettingService get instance => _instance ?? (_instance = UserSettingService());
+  static UserSettingService get instance =>
+      _instance ?? (_instance = UserSettingService());
   static UserSettingService? _instance;
 
   String get uid => FirebaseAuth.instance.currentUser!.uid;
-  CollectionReference get col => FirebaseFirestore.instance.collection('user_settings');
-  DocumentReference doc(String id) => FirebaseFirestore.instance.collection('user_settings').doc(id);
-  DocumentReference get ref => FirebaseFirestore.instance.collection('user_settings').doc(uid);
-  DocumentReference get myUserDocumentReference => FirebaseFirestore.instance.collection('users').doc(uid);
+  CollectionReference get col =>
+      FirebaseFirestore.instance.collection('user_settings');
+  DocumentReference doc(String id) =>
+      FirebaseFirestore.instance.collection('user_settings').doc(id);
+  DocumentReference get ref =>
+      FirebaseFirestore.instance.collection('user_settings').doc(uid);
+  DocumentReference get myUserDocumentReference =>
+      FirebaseFirestore.instance.collection('users').doc(uid);
 
   User get my => FirebaseAuth.instance.currentUser!;
 

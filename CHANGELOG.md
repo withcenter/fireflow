@@ -1,4 +1,8 @@
-## 0.0.74
+## 0.0.76
+
+* Fix. upsert on post/comment update.
+
+## 0.0.75
 
 * Update. push notification.
 

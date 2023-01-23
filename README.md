@@ -269,7 +269,6 @@ Note that, these local state variables may be changed based on your app logic.
 - `anonymousFemaleUrl` is the female picture url that will be used when the user is female and has no profile photo.
 - `chatSendMessageAskResult` is the state that will hold the result of chat send option. When the user sends a message, he can choose an option whether to query to GPT or not.
 - `gptLoader` is the state that when the user query to GPT, it will show the loading indicator.
-
 - `anonymousEmail` is used for guest login.
 - `anonymousPassword` is used for guest password. It's okay that the guest password is revealed to the public. Anonyone can login anyway.
 - `isGuest` is needed to be set to true on home screen if the user signed in as guest.

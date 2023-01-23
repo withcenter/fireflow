@@ -36,8 +36,10 @@ class UserSettingModel {
       id: id,
       userDocumentReference: json['userDocumentReference'],
       notifyNewComments: json['notifyNewComments'] ?? false,
-      postSubscriptions: List<DocumentReference>.from(json['postSubscriptions'] ?? []),
-      commentSubscriptions: List<DocumentReference>.from(json['commentSubscriptions'] ?? []),
+      postSubscriptions:
+          List<DocumentReference>.from(json['postSubscriptions'] ?? []),
+      commentSubscriptions:
+          List<DocumentReference>.from(json['commentSubscriptions'] ?? []),
       data: json,
     );
   }

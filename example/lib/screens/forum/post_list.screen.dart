@@ -29,17 +29,20 @@ class PostListScreen extends StatelessWidget {
               }
 
               final setting = UserSettingModel.fromSnapshot(snapshot.data!);
-              final categoryDocumentReference = CategoryService.instance.doc(category);
+              final categoryDocumentReference =
+                  CategoryService.instance.doc(category);
 
               return IconButton(
                   onPressed: () {
                     UserSettingService.instance.ref.update({
-                      'postSubscriptions': setting.postSubscriptions.contains(categoryDocumentReference)
+                      'postSubscriptions': setting.postSubscriptions
+                              .contains(categoryDocumentReference)
                           ? FieldValue.arrayRemove([categoryDocumentReference])
                           : FieldValue.arrayUnion([categoryDocumentReference])
                     });
                   },
-                  icon: setting.postSubscriptions.contains(categoryDocumentReference)
+                  icon: setting.postSubscriptions
+                          .contains(categoryDocumentReference)
                       ? Icon(Icons.notifications_active_outlined)
                       : Icon(Icons.notifications_off_outlined));
             },
@@ -58,17 +61,22 @@ class PostListScreen extends StatelessWidget {
               }
 
               final setting = UserSettingModel.fromSnapshot(snapshot.data!);
-              final categoryDocumentReference = CategoryService.instance.doc(category);
+              final categoryDocumentReference =
+                  CategoryService.instance.doc(category);
 
               return IconButton(
                   onPressed: () {
                     UserSettingService.instance.ref.update({
-                      'commentSubscriptions': setting.commentSubscriptions.contains(categoryDocumentReference)
+                      'commentSubscriptions': setting.commentSubscriptions
+                              .contains(categoryDocumentReference)
                           ? FieldValue.arrayRemove([categoryDocumentReference])
                           : FieldValue.arrayUnion([categoryDocumentReference])
                     });
                   },
-                  icon: setting.commentSubscriptions.contains(categoryDocumentReference) ? Icon(Icons.comment) : Icon(Icons.comments_disabled_outlined));
+                  icon: setting.commentSubscriptions
+                          .contains(categoryDocumentReference)
+                      ? Icon(Icons.comment)
+                      : Icon(Icons.comments_disabled_outlined));
             },
           ),
           IconButton(
@@ -80,7 +88,10 @@ class PostListScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder(
-        stream: PostService.instance.col.where('category', isEqualTo: category).orderBy('createdAt', descending: true).snapshots(),
+        stream: PostService.instance.col
+            .where('category', isEqualTo: category)
+            .orderBy('createdAt', descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
