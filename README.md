@@ -146,6 +146,7 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
 
 # TODO
 
+- Tracking the file uploads and deletes. those should be by `uploadImage` and `deleteImage` methods.
 
 - Forum
   The complete forum functionality including;

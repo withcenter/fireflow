@@ -62,7 +62,7 @@ class CommentModel {
       order: json['order'] ?? '',
       depth: json['depth'] ?? 0,
       deleted: json['deleted'] ?? false,
-      files: json['files'] ?? [],
+      files: List<String>.from(json['files'] ?? []),
       createdAt: json['createdAt'] ?? Timestamp.now(),
       updatedAt: json['updatedAt'] ?? Timestamp.now(),
       ref: CommentService.instance.doc(id),
