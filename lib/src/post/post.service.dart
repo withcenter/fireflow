@@ -28,9 +28,11 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    final snapshot = await UserSettingService.instance.col
-        .where('postSubscriptions', arrayContains: category.ref)
-        .get();
+    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
+
+    List<Future> futures = [];
+
+    /// send push notifications to the subscribers of the category
     if (snapshot.size > 0) {
       final List<DocumentReference> userRefs = [];
       for (final doc in snapshot.docs) {
@@ -38,60 +40,72 @@ class PostService {
         userRefs.add(setting.userDocumentReference);
       }
 
-      MessagingService.instance.send(
-        notificationTitle: post.safeTitle,
-        notificationText: post.safeContent,
-        notificationSound: 'default',
-        notificationImageUrl: post.files.firstOrNull,
-        userRefs: userRefs,
-        initialPageName: 'PostView',
-        parameterData: {'postDocumentReference': post.ref},
+      futures.add(
+        MessagingService.instance.send(
+          notificationTitle: post.safeTitle,
+          notificationText: post.safeContent,
+          notificationSound: 'default',
+          notificationImageUrl: post.files.firstOrNull,
+          userRefs: userRefs,
+          initialPageName: 'PostView',
+          parameterData: {'postDocumentReference': post.ref},
+        ),
       );
     }
 
-    await postDocumentReference.update({
-      'userDocumentReference': UserService.instance.ref,
-      'createdAt': FieldValue.serverTimestamp(),
-      'updatedAt': FieldValue.serverTimestamp(),
-      if (post.files.isEmpty) 'files': [],
-      'hasPhoto': post.files.isNotEmpty,
-      'noOfComments': 0,
-      'hasComment': false,
-      'deleted': false,
-      'likes': [],
-      'noOfLikes': 0,
-      'hasLike': false,
-      'wasPremiumUser': UserService.instance.my.isPremiumUser,
-      'emphasizePremiumUserPost': category.emphasizePremiumUserPost
-    });
+    futures.add(
+      postDocumentReference.update({
+        'userDocumentReference': UserService.instance.ref,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+        if (post.files.isEmpty) 'files': [],
+        'hasPhoto': post.files.isNotEmpty,
+        'noOfComments': 0,
+        'hasComment': false,
+        'deleted': false,
+        'likes': [],
+        'noOfLikes': 0,
+        'hasLike': false,
+        'wasPremiumUser': UserService.instance.my.isPremiumUser,
+        'emphasizePremiumUserPost': category.emphasizePremiumUserPost
+      }),
+    );
 
     // update the user's post count
-    await UserService.instance.publicRef.update(
-      {
-        'noOfPosts': FieldValue.increment(1),
-      },
+    futures.add(
+      UserService.instance.publicRef.update(
+        {
+          'noOfPosts': FieldValue.increment(1),
+        },
+      ),
     );
 
     //
-    await categoryDoc.update(
-      {
-        'noOfPosts': FieldValue.increment(1),
-      },
+    futures.add(
+      categoryDoc.update(
+        {
+          'noOfPosts': FieldValue.increment(1),
+        },
+      ),
     );
 
     if (SupabaseService.instance.backupPosts) {
-      await supabase.posts.insert(
-        {
-          'postId': postDocumentReference.id,
-          'category': post.category,
-          'uid': my.uid,
-          'created_at': post.createdAt.toDate().toIso8601String(),
-          'updated_at': post.updatedAt.toDate().toIso8601String(),
-          'title': post.title,
-          'content': post.content,
-        },
+      futures.add(
+        supabase.posts.insert(
+          {
+            'post_id': postDocumentReference.id,
+            'category': post.category,
+            'uid': my.uid,
+            'created_at': post.createdAt.toDate().toIso8601String(),
+            'updated_at': post.updatedAt.toDate().toIso8601String(),
+            'title': post.title,
+            'content': post.content,
+          },
+        ),
       );
     }
+
+    await Future.wait(futures);
   }
 
   Future afterUpdate({
@@ -99,24 +113,30 @@ class PostService {
   }) async {
     PostModel post = PostModel.fromSnapshot(await postDocumentReference.get());
 
+    List<Future> futures = [];
+
     /// Update `updatedAt`
-    await postDocumentReference.update({
-      'updatedAt': FieldValue.serverTimestamp(),
-      'hasPhoto': post.files.isNotEmpty,
-    });
+    futures.add(
+      postDocumentReference.update({
+        'updatedAt': FieldValue.serverTimestamp(),
+        'hasPhoto': post.files.isNotEmpty,
+      }),
+    );
 
-    /// Read the `updatdAt`
-    post = PostModel.fromSnapshot(await postDocumentReference.get());
-
+    /// Note, the `updatedAt` field here is not the last time the post was updated.
     if (SupabaseService.instance.backupPosts) {
-      await supabase.posts.upsert({
-        'postId': postDocumentReference.id,
-        'category': post.category,
-        'updated_at': post.updatedAt.toDate().toIso8601String(),
-        'title': post.title,
-        'content': post.content,
-      }, onConflict: 'postId');
+      futures.add(
+        supabase.posts.upsert({
+          'post_id': postDocumentReference.id,
+          'category': post.category,
+          'updated_at': post.updatedAt.toDate().toIso8601String(),
+          'title': post.title,
+          'content': post.content,
+        }, onConflict: 'post_id'),
+      );
     }
+
+    await Future.wait(futures);
   }
 
   /// post create method
@@ -128,22 +148,32 @@ class PostService {
     final categoryDoc = CategoryService.instance.doc(post.category);
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
+    List<Future> futures = [];
+
     // update the user's post count
-    await UserService.instance.publicRef.update(
-      {
-        'noOfPosts': FieldValue.increment(-1),
-      },
+    futures.add(
+      UserService.instance.publicRef.update(
+        {
+          'noOfPosts': FieldValue.increment(-1),
+        },
+      ),
     );
 
     //
-    await categoryDoc.update(
-      {
-        'noOfPosts': FieldValue.increment(-1),
-      },
+    futures.add(
+      categoryDoc.update(
+        {
+          'noOfPosts': FieldValue.increment(-1),
+        },
+      ),
     );
 
     if (SupabaseService.instance.backupPosts) {
-      await supabase.posts.delete().eq('postId', post.id);
+      futures.add(
+        supabase.posts.delete().eq('post_id', post.id),
+      );
     }
+
+    await Future.wait(futures);
   }
 }
