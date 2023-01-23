@@ -149,6 +149,16 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+
+    // bookmarks
+    match /bookmarks/{document} {
+      allow create: if true;
+      allow read: if isMyDoc();
+      allow update: if false;
+      allow delete: if isMyDoc();
+    }
+
+
     
     // check if the user is admin.
     function isAdmin() {

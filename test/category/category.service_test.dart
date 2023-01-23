@@ -14,6 +14,7 @@ void main() async {
       emphasizePremiumUserPost: false,
       waitMinutesForNextPost: 0,
       waitMinutesForPremiumUserNextPost: 0,
+      ref: CategoryService.instance.doc('id'),
     );
     expect(category.category, 'id');
   });
