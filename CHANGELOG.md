@@ -1,3 +1,8 @@
+## 0.0.77
+
+* Fix. add posts_and_comments option in supabase.
+
+
 ## 0.0.76
 
 * Fix. upsert on post/comment update.
