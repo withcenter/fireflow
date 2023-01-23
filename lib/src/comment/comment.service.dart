@@ -100,21 +100,37 @@ class CommentService {
       ),
     );
 
-    if (SupabaseService.instance.backupComments) {
+    if (SupabaseService.instance.storeComments) {
       futures.add(
         supabase.comments.insert(
           {
-            'commentId': commentDocumentReference.id,
+            'comment_id': commentDocumentReference.id,
             'category': post.category,
-            'postId': post.id,
-            'uid': post.userDocumentReference.id,
+            'post_id': post.id,
+            'uid': comment.userDocumentReference.id,
             'created_at': comment.createdAt.toDate().toIso8601String(),
-            'updated_at': comment.updatedAt.toDate().toIso8601String(),
             'content': comment.content,
           },
         ),
       );
     }
+    if (SupabaseService.instance.storePostsAndComments) {
+      futures.add(
+        supabase.postsAndComments.insert(
+          {
+            'id': commentDocumentReference.id,
+            'post_id': post.id,
+            'comment_id': commentDocumentReference.id,
+            'category': post.category,
+            'uid': comment.userDocumentReference.id,
+            'created_at': comment.createdAt.toDate().toIso8601String(),
+            'content': comment.content,
+          },
+        ),
+      );
+    }
+
+    await Future.wait(futures);
   }
 
   afterUpdate({required DocumentReference commentDocumentReference}) async {
@@ -133,15 +149,35 @@ class CommentService {
       ),
     );
 
-    if (SupabaseService.instance.backupComments) {
+    if (SupabaseService.instance.storeComments) {
       futures.add(
         supabase.comments.upsert(
           {
-            'commentId': commentDocumentReference.id,
-            'updated_at': comment.updatedAt.toDate().toIso8601String(),
+            'comment_id': commentDocumentReference.id,
+            'post_id': comment.postDocumentReference.id,
+            'category': comment.category,
+            'uid': comment.userDocumentReference.id,
+            'created_at': comment.createdAt.toDate().toIso8601String(),
             'content': comment.content,
           },
-          onConflict: 'commentId',
+          onConflict: 'comment_id',
+        ),
+      );
+    }
+
+    if (SupabaseService.instance.storePostsAndComments) {
+      futures.add(
+        supabase.postsAndComments.upsert(
+          {
+            'id': commentDocumentReference.id,
+            'post_id': comment.postDocumentReference.id,
+            'comment_id': commentDocumentReference.id,
+            'category': comment.category,
+            'uid': comment.userDocumentReference.id,
+            'created_at': comment.createdAt.toDate().toIso8601String(),
+            'content': comment.content,
+          },
+          onConflict: 'id',
         ),
       );
     }
@@ -171,11 +207,14 @@ class CommentService {
       ),
     );
 
-    // don't decrease no of comments in post.
-
-    if (SupabaseService.instance.backupComments) {
+    if (SupabaseService.instance.storeComments) {
       futures.add(
-        supabase.comments.delete().eq('commentId', comment.id),
+        supabase.comments.delete().eq('comment_id', comment.id),
+      );
+    }
+    if (SupabaseService.instance.storePostsAndComments) {
+      futures.add(
+        supabase.postsAndComments.delete().eq('id', comment.id),
       );
     }
 

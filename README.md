@@ -950,13 +950,13 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 # Supabase
 
 - We support the supabase for the text search and the complicated conditional filterings.
-  - User profile, post, comment, chat title will be automatically saved into supabase the option is enabled.
+  - User profile, post, are comment are automatically saved into supabase if the option is enabled.
   - Only the public data (non-sensitive private information of the user) should be saved in the supabase.
 
 - See the offical document for understanding [the Supabase](https://docs.flutterflow.io/data-and-backend/supabase).
 
 - To enable the Supabase in the fireflow,
-  - And prepare `users_public_data`, `posts`, `comments` schemas like below.
+  - Create tabls `users_public_data`, `posts`, `comments`, and `posts_and_comments` in Supabase.
   ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-supabase.jpg?raw=true "Supabase")
   - set the `supabase` options like below.
     - `AppService.instance.init(supabase: SupabaseOptions(...))`.

@@ -89,7 +89,7 @@ class PostService {
       ),
     );
 
-    if (SupabaseService.instance.backupPosts) {
+    if (SupabaseService.instance.storePosts) {
       futures.add(
         supabase.posts.insert(
           {
@@ -97,7 +97,21 @@ class PostService {
             'category': post.category,
             'uid': my.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
-            'updated_at': post.updatedAt.toDate().toIso8601String(),
+            'title': post.title,
+            'content': post.content,
+          },
+        ),
+      );
+    }
+    if (SupabaseService.instance.storePostsAndComments) {
+      futures.add(
+        supabase.postsAndComments.insert(
+          {
+            'id': postDocumentReference.id,
+            'post_id': postDocumentReference.id,
+            'category': post.category,
+            'uid': my.uid,
+            'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
             'content': post.content,
           },
@@ -124,15 +138,36 @@ class PostService {
     );
 
     /// Note, the `updatedAt` field here is not the last time the post was updated.
-    if (SupabaseService.instance.backupPosts) {
+    if (SupabaseService.instance.storePosts) {
       futures.add(
-        supabase.posts.upsert({
-          'post_id': postDocumentReference.id,
-          'category': post.category,
-          'updated_at': post.updatedAt.toDate().toIso8601String(),
-          'title': post.title,
-          'content': post.content,
-        }, onConflict: 'post_id'),
+        supabase.posts.upsert(
+          {
+            'post_id': postDocumentReference.id,
+            'category': post.category,
+            'uid': my.uid,
+            'created_at': post.createdAt.toDate().toIso8601String(),
+            'title': post.title,
+            'content': post.content,
+          },
+          onConflict: 'post_id',
+        ),
+      );
+    }
+
+    if (SupabaseService.instance.storePosts) {
+      futures.add(
+        supabase.postsAndComments.upsert(
+          {
+            'id': postDocumentReference.id,
+            'post_id': postDocumentReference.id,
+            'category': post.category,
+            'uid': my.uid,
+            'created_at': post.createdAt.toDate().toIso8601String(),
+            'title': post.title,
+            'content': post.content,
+          },
+          onConflict: 'id',
+        ),
       );
     }
 
@@ -168,9 +203,14 @@ class PostService {
       ),
     );
 
-    if (SupabaseService.instance.backupPosts) {
+    if (SupabaseService.instance.storePosts) {
       futures.add(
         supabase.posts.delete().eq('post_id', post.id),
+      );
+    }
+    if (SupabaseService.instance.storePostsAndComments) {
+      futures.add(
+        supabase.postsAndComments.delete().eq('id', post.id),
       );
     }
 
