@@ -102,8 +102,9 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // reports
     match /reports/{document} {
-      allow read: if true;
+      allow read: if isMyDoc() || isAdmin();
       allow write: if isMyDoc() || willBeMyDoc() || isAdmin();
     }
 

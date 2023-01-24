@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Simulator J. Macbook - example - debug",
+      "name": "example - debug - Simulator J. Macbook",
       "cwd": "example",
       "request": "launch",
       "type": "dart",
@@ -14,7 +14,7 @@
       "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     },
     {
-      "name": "iPhone11MaxPro - example - debug",
+      "name": "example - debug - iPhone11MaxPro",
       "cwd": "example",
       "request": "launch",
       "type": "dart",
@@ -23,7 +23,7 @@
       "deviceId": "iPhone11MaxPro"
     },
     {
-      "name": "Galaxy Wide 2 - example - debug",
+      "name": "example - debug - Galaxy Wide 2",
       "cwd": "example",
       "request": "launch",
       "type": "dart",
@@ -32,7 +32,7 @@
       "deviceId": "3300a275cab914b9"
     },
     {
-      "name": "iPhone11MaxPro - example - release",
+      "name": "example - release - iPhone11MaxPro",
       "cwd": "example",
       "request": "launch",
       "type": "dart",
@@ -41,7 +41,7 @@
       "deviceId": "iPhone11MaxPro"
     },
     {
-      "name": "Simulator J. Macbook - sample - debug",
+      "name": "sample - debug - Simulator J. Macbook",
       "cwd": "apps/sample",
       "request": "launch",
       "type": "dart",
@@ -50,7 +50,7 @@
       "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     },
     {
-      "name": "iPhone11MaxPro - sample - debug",
+      "name": "sample - debug - iPhone11MaxPro",
       "cwd": "apps/sample",
       "request": "launch",
       "type": "dart",
@@ -59,13 +59,22 @@
       "deviceId": "iPhone11MaxPro"
     },
     {
-      "name": "iPhone11MaxPro - sample - release",
+      "name": "sample - release - iPhone11MaxPro",
       "cwd": "apps/sample",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "release",
       "deviceId": "iPhone11MaxPro"
+    },
+    {
+      "name": "sample - debug - Galaxy Wide 2",
+      "cwd": "apps/sample",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "3300a275cab914b9"
     },
     {
       "name": "Simulator - philov - debug",
