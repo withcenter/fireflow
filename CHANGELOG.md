@@ -1,3 +1,8 @@
+## 0.0.80
+
+* Fix. push notification.
+
+
 ## 0.0.79
 
 * Fix. guest sign in. email error.

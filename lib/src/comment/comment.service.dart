@@ -38,7 +38,9 @@ class CommentService {
     //   parent = CommentModel.fromSnapshot(await comment.parentCommentDocumentReference!.get());
     // }
 
+    // Get the reference of the category of the post.
     final categoryDoc = CategoryService.instance.doc(post.category);
+
     // update comment
     // add category of the post, update `order` field.
     await commentDocumentReference.update({
@@ -75,7 +77,9 @@ class CommentService {
         notificationImageUrl: comment.files.firstOrNull,
         userRefs: userRefs,
         initialPageName: 'PostView',
-        parameterData: {'postDocumentReference': comment.postDocumentReference},
+        parameterData: {
+          'postDocumentReference': comment.postDocumentReference.id
+        },
       ),
     );
 

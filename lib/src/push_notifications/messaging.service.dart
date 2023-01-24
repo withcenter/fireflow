@@ -65,6 +65,8 @@ class MessagingService {
   }
 
   _foregroundMessageHandler() {
+    if (Config.instance.messaging?.foreground == false) return;
+
     /// Foreground Message Listening
     FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
       /// This will triggered while the app is opened
@@ -93,6 +95,7 @@ class MessagingService {
 
   // It is assumed that all messages contain a data field with the key 'type'
   Future<void> _backgroundMessageHandler() async {
+    if (Config.instance.messaging?.background == false) return;
     // Get any messa
     //_foregroundMessageHandler() {
     //ges which caused the application to open from

@@ -34,7 +34,7 @@ class PostService {
 
     List<Future> futures = [];
 
-    /// send push notifications to the subscribers of the category
+    /// Send push notifications to the subscribers of the category
     if (snapshot.size > 0) {
       final List<DocumentReference> userRefs = [];
       for (final doc in snapshot.docs) {
@@ -50,7 +50,7 @@ class PostService {
           notificationImageUrl: post.files.firstOrNull,
           userRefs: userRefs,
           initialPageName: 'PostView',
-          parameterData: {'postDocumentReference': post.ref},
+          parameterData: {'postDocumentReference': post.ref.id},
         ),
       );
     }

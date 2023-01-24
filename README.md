@@ -11,6 +11,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 * `Fireflow` is developped with Flutter (Not FlutterFlow) and is primarily desinged for the both of `Flutter` and `FlutterFlow`.
   * For the example code of Flutter, see [the example project](https://github.com/withcenter/fireflow/tree/main/example).
 
+* If you encounter an error, please create an issue in [fireflow git issue](https://github.com/withcenter/fireflow/issues).
 
 - [Fireflow](#fireflow)
 - [Overview](#overview)
