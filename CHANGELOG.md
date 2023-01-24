@@ -1,3 +1,7 @@
+## 0.0.81
+
+* Fix. push notification for foreground and background compatibility.
+
 ## 0.0.80
 
 * Fix. push notification.

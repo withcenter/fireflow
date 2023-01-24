@@ -50,7 +50,7 @@ class PostService {
           notificationImageUrl: post.files.firstOrNull,
           userRefs: userRefs,
           initialPageName: 'PostView',
-          parameterData: {'postDocumentReference': post.ref.id},
+          parameterData: {'postDocumentReference': post.ref},
         ),
       );
     }

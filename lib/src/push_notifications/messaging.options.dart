@@ -6,8 +6,9 @@ import 'package:fireflow/fireflow.dart';
 /// foreground and background messages.
 ///
 /// Set the [forground] to true if you want to handle foreground messages.
+///
 /// Set the [background] to true if you want to handle background messages. For
-/// FlutterFlow, you may not need to set it to true because the FlutterFlow
+/// FlutterFlow, do not set it to true because the FlutterFlow
 /// handles background messages by itself.
 ///
 /// [onTapMessage] is a callback method and is called when the user taps on

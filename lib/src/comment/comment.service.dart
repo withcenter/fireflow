@@ -77,9 +77,7 @@ class CommentService {
         notificationImageUrl: comment.files.firstOrNull,
         userRefs: userRefs,
         initialPageName: 'PostView',
-        parameterData: {
-          'postDocumentReference': comment.postDocumentReference.id
-        },
+        parameterData: {'postDocumentReference': comment.postDocumentReference},
       ),
     );
 

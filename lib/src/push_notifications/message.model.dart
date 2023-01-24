@@ -34,7 +34,7 @@ class MessageModel {
 ///
 /// See the [Push Notification Data Modeling](https://docs.google.com/document/d/1oZUnw60kcYuf-I5aIzETeD9ioqjydNTot1qhZ0q7MNY/edit#heading=h.3b8fun9rsitr) in document for more details.
 class MessageDataModel {
-  final DocumentReference? chatRoomDocumentReference;
+  // final DocumentReference? chatRoomDocumentReference;
   final DocumentReference? senderUserDocumentReference;
   final String initialPageName;
   final Map<String, String> parameterData;
@@ -44,29 +44,41 @@ class MessageDataModel {
     required this.initialPageName,
     required this.parameterData,
     required this.senderUserDocumentReference,
-    this.chatRoomDocumentReference,
+    // this.chatRoomDocumentReference,
     this.chatRoomId,
   });
 
   static FirebaseFirestore get db => FirebaseFirestore.instance;
 
+  /// Parse push notifiation data
+  ///
+  /// Note that, json['parameterData'] is a String. it needs to be converted as JSON.
   factory MessageDataModel.fromJson(Map<String, dynamic> json) {
-    final params = jsonDecode(json['parameterData']);
+    final params = jsonDecode(json['parameterData'] ?? {});
+    final data = Map<String, String>.from(params);
+
+    /// For forground push notification, the value of the Document or DocumentReference must be the ID of the document.
+    //
+    for (final key in data.keys) {
+      if (key.endsWith('Document') || key.endsWith('DocumentReference')) {
+        if (data[key]!.contains('/')) {
+          data[key] = data[key]!.split('/').last;
+        }
+      }
+    }
+
     return MessageDataModel(
-      chatRoomDocumentReference: params['chatRoomDocument'] == null
-          ? null
-          : db.doc(params['chatRoomDocument']),
       senderUserDocumentReference: params['senderUserDocumentReference'] == null
           ? null
           : db.doc(params['senderUserDocumentReference']),
       initialPageName: json['initialPageName'],
-      parameterData: Map<String, String>.from(params),
+      parameterData: data,
       chatRoomId: params['chatRoomId'],
     );
   }
   @override
   toString() {
-    return 'MessageDataModel(initialPageName: $initialPageName, parameterData: $parameterData, senderUserDocumentReference: $senderUserDocumentReference, chatRoomDocumentReference: $chatRoomDocumentReference, chatRoomId: $chatRoomId)';
+    return 'MessageDataModel(initialPageName: $initialPageName, parameterData: $parameterData, senderUserDocumentReference: $senderUserDocumentReference, chatRoomDocumentReference: chatRoomId: $chatRoomId)';
   }
 }
 
