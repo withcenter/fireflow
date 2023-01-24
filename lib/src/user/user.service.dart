@@ -26,14 +26,12 @@ class UserService {
   String get uid => FA.FirebaseAuth.instance.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
@@ -91,7 +89,7 @@ class UserService {
         'registeredAt': FieldValue.serverTimestamp(),
       });
 
-      /// Create user's document.
+      /// Create user's document under `/users` collection.
       /// Mostly, user document will be created automatically by flutterflow
       /// when the user is signed in. But there are some cases where the
       /// app is not developed by fireflow.
@@ -102,6 +100,7 @@ class UserService {
       if (snapshot.exists == false) {
         await myRef.set({
           'uid': uid,
+          if ((currentUser.email ?? '').isNotEmpty) 'email': currentUser.email,
           'created_time': FieldValue.serverTimestamp(),
         });
       }
@@ -124,9 +123,7 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (SupabaseService.instance.storeUsersPubicData) {

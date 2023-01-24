@@ -1,3 +1,8 @@
+## 0.0.79
+
+* Fix. guest sign in. email error.
+
+
 ## 0.0.78
 
 * Fix. comments files.
