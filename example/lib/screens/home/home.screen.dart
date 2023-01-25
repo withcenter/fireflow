@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             ElevatedButton(
-              onPressed: () => StorageService.instance.updateFileList(),
+              onPressed: () => StorageService.instance.updateStorageFiles(),
               child: const Text('Update file list'),
             ),
           ],

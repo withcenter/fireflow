@@ -389,7 +389,7 @@ class StorageService {
   }
 
   /// Get all the files from Firebase Storage and store them into /storage-files collection.
-  updateFileList() async {
+  updateStorageFiles() async {
     final storageRef = FirebaseStorage.instance.ref().child("users");
     final listResult = await storageRef.listAll();
 
@@ -401,7 +401,7 @@ class StorageService {
       final userUploadRef = FirebaseStorage.instance.ref().child(path);
       final userUploads = await userUploadRef.listAll();
 
-      dog('path: $path, items: ${userUploads.items.length}');
+      // dog('path: $path, items: ${userUploads.items.length}');
       for (final item in userUploads.items) {
         allFiles.add(item);
       }
@@ -431,6 +431,7 @@ class StorageService {
           'fullPath': meta.fullPath,
           'size': meta.size,
           'contentType': meta.contentType,
+          'createdAt': meta.timeCreated,
         };
 
         docs.add(data);
