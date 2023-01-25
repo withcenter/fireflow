@@ -92,6 +92,10 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () => StorageService.instance.updateStorageFiles(),
               child: const Text('Update file list'),
             ),
+            ElevatedButton(
+              onPressed: () => StorageService.instance.deleteStorageFiles(),
+              child: const Text('Delete all files on storage'),
+            ),
           ],
         ),
       ),

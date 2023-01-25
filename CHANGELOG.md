@@ -1,6 +1,11 @@
 ## 0.0.88
 
-* Update. refactoring function name.
+* Update. reset the storage_files.
+
+
+## 0.0.87
+
+* Update. refactoring function name. reset the storage_files.
 
 
 ## 0.0.86

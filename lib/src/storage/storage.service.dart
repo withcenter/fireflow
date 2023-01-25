@@ -389,7 +389,9 @@ class StorageService {
   }
 
   /// Get all the files from Firebase Storage and store them into /storage-files collection.
-  updateStorageFiles() async {
+  Future updateStorageFiles() async {
+    await deleteStorageFiles();
+
     final storageRef = FirebaseStorage.instance.ref().child("users");
     final listResult = await storageRef.listAll();
 
@@ -447,5 +449,16 @@ class StorageService {
         batch.commit();
       }
     }
+  }
+
+  /// Delete all the documents under /storage_files collection.
+  Future deleteStorageFiles() async {
+    final ref = FirebaseFirestore.instance.collection('storage_files');
+    final snapshot = await ref.get();
+    final batch = FirebaseFirestore.instance.batch();
+    for (final doc in snapshot.docs) {
+      batch.delete(doc.reference);
+    }
+    return batch.commit();
   }
 }

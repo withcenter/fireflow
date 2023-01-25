@@ -987,16 +987,20 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 ## Logic of File management
 
-- `StorageService.instance.updateFileList()` will get all the files and store them into `/storage_files`.
+- `StorageService.instance.updateStorageFiles()` will get all the files and store them into `/storage_files`.
   - See [Storage - List all files](https://firebase.google.com/docs/storage/flutter/list-files#list_all_files) and [Firestore - Batch Write](https://firebase.google.com/docs/firestore/manage-data/transactions#batched-writes).
   - Since it may consume some resources, it is a good idea to display a confirm dialog to update the list when the admin enters the page.
   - That's it. You can customize from here for your projects. See the `Customizing File Managemnt`.
+
 
 
 ## Customizing File Management
 
 - Once you update(sync) the storage files into `/storage_files`, you have all the list of uploaded files with the fields of `url, uid, name, full path, size, contentType, createdAt`.
 - You can search the `url` in firestore to know which document that it is attached to.
+
+
+
 
 
 
@@ -1065,6 +1069,41 @@ In the screenshot, I display the members of the chat room. Yes, it is a real pop
 
 
 ```dart
+import 'package:app/components/icon_component_widget.dart';
+import 'package:app/components/popup_component_widget.dart';
+import 'package:fireflow/fireflow.dart';
+ 
+class PopupExample extends StatefulWidget {
+ const PopupExample({
+   Key? key,
+   this.width,
+   this.height,
+ }) : super(key: key);
+ 
+ final double? width;
+ final double? height;
+ 
+ @override
+ _PopupExampleSate createState() => _PopupExampleSate();
+}
+ 
+class _PopupExampleSate extends State<PopupExample> {
+ @override
+ Widget build(BuildContext context) {
+   return CustomPopup(
+     dx: 32,
+     dy: 38,
+     child: IconComponentWidget(),
+     popup: PopupComponentWidget(),
+   );
+ }
+}
+```
+
+- It can go much complicated customization like below.
+  - The custom widget `DisplayChatUsers` below takes a parameter of `chatRoom` and it passes over the child widget and popup widget. Then, the child and popup widget may display different information.
+
+```dart
 import '../../components/chat_group_user_icons_widget.dart';
 import '../../components/chat_group_users_widget.dart';
 import 'package:fireflow/fireflow.dart';
@@ -1103,6 +1142,7 @@ class _DisplayChatUsersState extends State<DisplayChatUsers> {
  }
 }
 ```
+
 
 
 ### Custom poup step by step example
@@ -1274,10 +1314,10 @@ Add snackBarWarning Custom Action like below.
 
 # Unit Testing
 
-The current version of fireflow has no backend or a minimum size of backend code. And most of the imporant part of fireflow is going under the scene. So, we have more unit test codes than widget test codes.
+The current version of fireflow has no backend. And most of the difficult logics goes under the scene. We have some tests and wil have more in the future.
 
 - [Firestore security rule - unit test](https://github.com/withcenter/fireflow/blob/main/firebase/firestore/tests/test.spec.js).
-- [Fireflow - unit test]()
+- [Fireflow - unit test](https://github.com/withcenter/fireflow/tree/main/test)
 
 # Developer coding guide
 
