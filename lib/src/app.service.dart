@@ -50,7 +50,9 @@ class AppService {
   /// call this method again to put the valid/alive BuildContext of a screen.
   ///
   /// [context] is the BuildContext of a screen. It must be valid and alive.
+  ///
   /// Set [debug] to true to print the logs in dev console.
+  ///
   /// If [supabase] is set, AppService will sync the user, post, comment data
   /// into Supabase. So, the app can do FULLTEXT search and more complicated
   /// conditional search. Note that, the supabase must be initialized in the app
