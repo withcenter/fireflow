@@ -8,7 +8,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 
 * `Fireflow` is an open source, easy and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
 
-* `Fireflow` is developped with Flutter (Not FlutterFlow) and is primarily desinged for the both of `Flutter` and `FlutterFlow`.
+* `Fireflow` is developped for `FlutterFlow`. But it can be used for `Flutter` also.
   * For the example code of Flutter, see [the example project](https://github.com/withcenter/fireflow/tree/main/example).
 
 * If you encounter an error, please create an issue in [fireflow git issue](https://github.com/withcenter/fireflow/issues).
@@ -706,9 +706,8 @@ The `MessageModel` will handle all kinds of push notification data including, bu
           * `Vaue Source` to custom function named `userDocumentReferenceOfChatRoomLastEnter` and set its parameter:
             * `chatRoom` equal to `chat_rooms Document`
 
-      - Note if the chat room don't have any user yet or it has only one user yet, then the photo of the creator of the chatroom will be displayed. Furthermore, since the first image widget will display the photo of the last message sender, if the last message sender is the same with the last person who entered the chat room, the photo of the predecessor of the last person who entered the chat room will be displayed to avoid displaying the same image on the two image widgets.
+      Note if the chat room don't have any user yet or it has only one user yet, then the photo of the creator of the chatroom will be displayed. Furthermore, since the first image widget will display the photo of the last message sender, if the last message sender is the same with the last person who entered the chat room, the photo of the predecessor of the last person who entered the chat room will be displayed to avoid displaying the same image on the two image widgets.
 
-                        
       ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-enter-user-photo-backend-query.png?raw=true "Chat rooms collection")
 
       * To display the number of users in the group chat room:
@@ -742,9 +741,6 @@ The `MessageModel` will handle all kinds of push notification data including, bu
         * Add conditional visibility to check if the `lastMessageSent` is set
 
         ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat-group-chat-last-message-timestamp-visibility.png?raw=true "Chat rooms collection")
-
-            
-
 
 
 ### How to display menu when the chat message has tapped.
