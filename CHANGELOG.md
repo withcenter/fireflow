@@ -1,3 +1,8 @@
+## 0.0.82
+
+* Update. document.
+
+
 ## 0.0.81
 
 * Fix. push notification for foreground and background compatibility.
