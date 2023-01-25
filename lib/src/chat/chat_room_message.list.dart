@@ -49,7 +49,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
   bool ensureChatRoomExists = false;
 
-  UserPublicDataModel get my => UserService.instance.my!;
+  UserPublicDataModel get my => UserService.instance.my;
 
   /// The chat room document references of the 1:1 chat room between you and the other user.
   List<DocumentReference> get youAndMeRef => [

@@ -1,6 +1,7 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class CustomPopupScreen extends StatelessWidget {
   const CustomPopupScreen({super.key});
@@ -24,11 +25,9 @@ class CustomPopupScreen extends StatelessWidget {
                     height: 24,
                   ),
                   const Text('Content of the popup, long before'),
-                  const Text(
-                      'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                  const Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                   const Text('Content of the popup, long before'),
-                  const Text(
-                      'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                  const Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                   TextButton.icon(
                     onPressed: Navigator.of(context).pop,
                     icon: const Icon(Icons.close),
@@ -40,9 +39,7 @@ class CustomPopupScreen extends StatelessWidget {
                 ],
               ),
             ),
-            child: Container(
-                padding: const EdgeInsets.all(8),
-                child: const Icon(Icons.settings)),
+            child: Container(padding: const EdgeInsets.all(8), child: const Icon(Icons.settings)),
           ),
         ],
       ),
@@ -67,11 +64,9 @@ class CustomPopupScreen extends StatelessWidget {
                       children: [
                         const Text('Custom Popup'),
                         const Text('Content of the popup, long before'),
-                        const Text(
-                            'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                        const Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                         const Text('Content of the popup, long before'),
-                        const Text(
-                            'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                        const Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                         TextButton.icon(
                           onPressed: Navigator.of(context).pop,
                           icon: const Icon(Icons.close),
@@ -102,11 +97,9 @@ class CustomPopupScreen extends StatelessWidget {
                     children: const [
                       Text('Custom Popup'),
                       Text('Content of the popup, long before'),
-                      Text(
-                          'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                      Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                       Text('Content of the popup, long before'),
-                      Text(
-                          'Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
+                      Text('Apple, Banana, Cherry, Durian, Eggplant, Fig, Grape'),
                     ],
                   ),
                 ),

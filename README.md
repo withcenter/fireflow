@@ -84,6 +84,10 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
     - [Logic of post creation](#logic-of-post-creation)
   - [Updating post](#updating-post)
   - [Comment creation](#comment-creation)
+- [Files](#files)
+  - [Overview of file management](#overview-of-file-management)
+  - [Logic of File management](#logic-of-file-management)
+  - [Customizing File Management](#customizing-file-management)
 - [Supabase](#supabase)
   - [Supabase Table](#supabase-table)
     - [users\_public\_data](#users_public_data)
@@ -193,6 +197,14 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
 - Since the `AppCheck` is built-in by Flutterflow, why don't fireflow remove the security rules and `/users_public_data`?
 
 - Image cropping before uploading.
+
+- Sample application "Schedule management" app.
+  - It can be a kind of todo app, calendar app, task app.
+  - Works based on time line.
+  - An event can be repeat.
+  - With push notification. Scheduling push notification in advance will not work here. There must be a cron like scheduler which send push notificatoin by search the event date on every minute.
+
+
 
 # Getting started
 
@@ -355,7 +367,8 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 - `updatedAt` is the time that this document was updated.
 - `gender` can be one of `M` or `F`. M as Male or F as Female
 - `birthday` is the birthday of the user
-- `followers` is the list of user document references who follow the user.
+- `followers` is the list of user document references who follow me(the login user).
+  Meaning, the login user can add other user reference into the `followers` field in his document. Others don't have permission to update the `followers` field in other user's document.
 - `hasPhoto` is set to `true` if the user has the primary profile photo. Or false.
 - `isProfileComplete` is set to `true` if the user filled in the necessary fields in his profile. Or false.
 - `coverPhotoUrl` is the url of the cover photo of the user.
@@ -956,6 +969,35 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 - The `createdAt` field must be set to Firestore.serverTimestamp by flutterflow. `updatedAt` is optional.
 - The `order` field must be set by Flutterflow. It's not an ideal for the fireflow to update the `order` field since fireflow is a bit slow. And the flutterflow needs it immediately after it creates a comment to display the comments in nested position.
+
+
+
+
+# Files
+
+## Overview of file management
+
+- If you(as an admin of your app) could see what files are uploaded, Iit would be helpful to manage.
+- It would be helplful if you can
+  - list images and videos to see if there are any malicious photos, videos.
+  - list by size, file type, users.
+
+- It is recommended to update the stroage files list on desktop(or laptop) computer since it consumes more resouces.
+
+
+## Logic of File management
+
+- `StorageService.instance.updateFileList()` will get all the files and store them into `/storage_files`.
+  - See [Storage - List all files](https://firebase.google.com/docs/storage/flutter/list-files#list_all_files) and [Firestore - Batch Write](https://firebase.google.com/docs/firestore/manage-data/transactions#batched-writes).
+  - Since it may consume some resources, it is a good idea to display a confirm dialog to update the list when the admin enters the page.
+  - That's it. You can customize from here for your projects. See the `Customizing File Managemnt`.
+
+
+## Customizing File Management
+
+- Once you update(sync) the storage files into `/storage_files`, you have all the list of uploaded files with the fields of `url, uid, name, full path, size, contentType`.
+- You can search the `url` in firestore to know which document that it is attached to.
+
 
 
 # Supabase

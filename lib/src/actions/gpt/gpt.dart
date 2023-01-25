@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -19,10 +20,7 @@ Future<String> queryGpt({
 
   model ??= "text-davinci-003";
 
-  final headers = {
-    'Authorization': 'Bearer ${AppService.instance.keys.openAiApiKey}',
-    'Content-Type': 'application/json'
-  };
+  final headers = {'Authorization': 'Bearer ${AppService.instance.keys.openAiApiKey}', 'Content-Type': 'application/json'};
   final request = Request(
     'POST',
     Uri.parse('https://api.openai.com/v1/engines/$model/completions'),
@@ -36,7 +34,7 @@ Future<String> queryGpt({
     final jsonResponse = json.decode(await httpResponse.stream.bytesToString());
     return jsonResponse['choices'][0]['text'];
   } else {
-    print(httpResponse.reasonPhrase);
+    debugPrint(httpResponse.reasonPhrase);
     return '';
   }
 }

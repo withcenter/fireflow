@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/functions/serialization_util.dart';
-import 'package:fireflow/src/push_notifications/message.model.dart';
 import 'package:flutter/foundation.dart';
 
 class MessagingService {
@@ -15,12 +14,11 @@ class MessagingService {
   final kUserPushNotificationsCollectionName = 'ff_user_push_notifications';
 
   /// my token collection
-  get fcmTokensGroupCol =>
-      FirebaseFirestore.instance.collectionGroup('fcm_tokens');
+  get fcmTokensGroupCol => FirebaseFirestore.instance.collectionGroup('fcm_tokens');
   get myTokensCol => UserService.instance.ref.collection('fcm_tokens');
 
   MessagingService() {
-    print('MessagingService()');
+    dog('MessagingService()');
   }
 
   init() async {
@@ -31,8 +29,7 @@ class MessagingService {
     /// Push notification permission
     ///
     /// It's better to ask the premission when app starts.
-    NotificationSettings settings =
-        await FirebaseMessaging.instance.requestPermission(
+    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -44,17 +41,10 @@ class MessagingService {
     if (settings.authorizationStatus != AuthorizationStatus.authorized) {
       return;
     }
-    FirebaseAuth.instance
-        .authStateChanges()
-        .where((user) => user != null)
-        .map((user) => user!.uid)
-        .distinct()
-        .listen((event) async {
+    FirebaseAuth.instance.authStateChanges().where((user) => user != null).map((user) => user!.uid).distinct().listen((event) async {
       if (Platform.isIOS) {}
-      MessagingService.instance
-          .updateToken(await FirebaseMessaging.instance.getToken());
-      FirebaseMessaging.instance.onTokenRefresh
-          .listen(MessagingService.instance.updateToken);
+      MessagingService.instance.updateToken(await FirebaseMessaging.instance.getToken());
+      FirebaseMessaging.instance.onTokenRefresh.listen(MessagingService.instance.updateToken);
     });
 
     /// 푸시 알림 토큰 업데이트
@@ -79,9 +69,7 @@ class MessagingService {
       // log('Notification: ${message.notification}, ${message.notification.title}, ${message.notification.body}');
 
       /// Is this message coming from the chat room I am chatting in?
-      if (AppService.instance.currentChatRoomDocumentReference != null &&
-          AppService.instance.currentChatRoomDocumentReference?.id ==
-              message.data.chatRoomId) {
+      if (AppService.instance.currentChatRoomDocumentReference != null && AppService.instance.currentChatRoomDocumentReference?.id == message.data.chatRoomId) {
         dog('I am chatting with this user already. Do not show a notification.');
         return;
       }
@@ -100,8 +88,7 @@ class MessagingService {
     //_foregroundMessageHandler() {
     //ges which caused the application to open from
     // a terminated state.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
@@ -111,8 +98,7 @@ class MessagingService {
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen((initialMessage) =>
-        onTapMessage(MessageModel.fromRemoteMessage(initialMessage)));
+    FirebaseMessaging.onMessageOpenedApp.listen((initialMessage) => onTapMessage(MessageModel.fromRemoteMessage(initialMessage)));
   }
 
   /// User tapped on the notification.
@@ -121,8 +107,7 @@ class MessagingService {
   ///
   onTapMessage(MessageModel message) async {
     dog('onTapMessage: $message');
-    Config.instance.messaging
-        ?.onTap(message.data.initialPageName, message.data.parameterData);
+    Config.instance.messaging?.onTap(message.data.initialPageName, message.data.parameterData);
   }
 
   /// Send push message.
@@ -163,8 +148,7 @@ class MessagingService {
     final pushNotificationData = {
       'notification_title': notificationTitle,
       'notification_text': notificationText,
-      if (notificationImageUrl != null)
-        'notification_image_url': notificationImageUrl,
+      if (notificationImageUrl != null) 'notification_image_url': notificationImageUrl,
       if (scheduledTime != null) 'scheduled_time': scheduledTime,
       if (notificationSound != null) 'notification_sound': notificationSound,
       'user_refs': userRefs.map((u) => u.path).join(','),
@@ -173,10 +157,7 @@ class MessagingService {
       'sender': UserService.instance.ref,
       'timestamp': DateTime.now(),
     };
-    return FirebaseFirestore.instance
-        .collection(kUserPushNotificationsCollectionName)
-        .doc()
-        .set(pushNotificationData);
+    return FirebaseFirestore.instance.collection(kUserPushNotificationsCollectionName).doc().set(pushNotificationData);
   }
 
   /// Returns the fcm_tokens documents of the users who have the same FCM token.

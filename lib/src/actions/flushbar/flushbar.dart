@@ -20,7 +20,7 @@ showFlushbar({
     mainButton: IconButton(
       icon: Icon(Icons.close, color: Colors.white.withAlpha(150)),
       onPressed: () {
-        print('pressed');
+        dog('onPressed');
         flush.dismiss();
       },
     ),

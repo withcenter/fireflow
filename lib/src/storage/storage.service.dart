@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,14 +35,12 @@ enum MediaSource {
 /// Refer readme file for details.
 ///
 class StorageService {
-  static StorageService get instance =>
-      _instance ?? (_instance = StorageService());
+  static StorageService get instance => _instance ?? (_instance = StorageService());
   static StorageService? _instance;
 
   final storage = FirebaseStorage.instance;
 
-  Reference get uploadsFolder =>
-      storage.ref().child('users').child(UserService.instance.uid);
+  Reference get uploadsFolder => storage.ref().child('users').child(UserService.instance.uid);
 
   Reference ref(String url) {
     return storage.refFromURL(url);
@@ -104,9 +105,7 @@ class StorageService {
     ///   - the app is running as mobile app(not web)
     ///   - the user selects 'Upload Images' from the menu
     ///
-    if (mediaSource == MediaSource.photoGallery &&
-        multiImage &&
-        kIsWeb == false) {
+    if (mediaSource == MediaSource.photoGallery && multiImage && kIsWeb == false) {
       final pickedMediaFuture = picker.pickMultiImage(
         maxWidth: maxWidth,
         maxHeight: maxHeight,
@@ -154,9 +153,7 @@ class StorageService {
 
     /// When a user selects one of 'Upload Image', 'Upload Video' or 'Camera'
     /// from the menu, then it will open image picker or video picker.
-    final source = mediaSource == MediaSource.camera
-        ? ImageSource.camera
-        : ImageSource.gallery;
+    final source = mediaSource == MediaSource.camera ? ImageSource.camera : ImageSource.gallery;
     final pickedMediaFuture = isVideo
         ? picker.pickVideo(source: source)
         : picker.pickImage(
@@ -195,8 +192,7 @@ class StorageService {
     return 'users/$uid/uploads/$timestamp$indexStr.$ext';
   }
 
-  void showUploadMessage(BuildContext context, String message,
-      {bool showLoading = false}) {
+  void showUploadMessage(BuildContext context, String message, {bool showLoading = false}) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
@@ -204,7 +200,7 @@ class StorageService {
           content: Row(
             children: [
               if (showLoading)
-                Padding(
+                const Padding(
                   padding: EdgeInsetsDirectional.only(end: 10.0),
                   child: CircularProgressIndicator(),
                 ),
@@ -219,9 +215,7 @@ class StorageService {
     final storageRef = FirebaseStorage.instance.ref().child(path);
     final metadata = SettableMetadata(contentType: mime(path));
     final result = await storageRef.putData(data, metadata);
-    return result.state == TaskState.success
-        ? result.ref.getDownloadURL()
-        : null;
+    return result.state == TaskState.success ? result.ref.getDownloadURL() : null;
   }
 
   /// Upload media to firebase storage.
@@ -243,7 +237,7 @@ class StorageService {
     required double maxHeight,
     required int imageQuality,
   }) async {
-    print(
+    dog(
       'uploadMedia() called with context: ..., maxWidth: $maxWidth, maxHeight: $maxHeight, imageQuality: $imageQuality, allowPhoto: $allowPhoto',
     );
 
@@ -251,8 +245,7 @@ class StorageService {
     final textColor = Theme.of(context).colorScheme.primary;
 
     /// * It's a function inside a function. Display bottomsheet to choose media source
-    createUploadMediaListTile(String label, MediaSource mediaSource) =>
-        ListTile(
+    createUploadMediaListTile(String label, MediaSource mediaSource) => ListTile(
           title: Text(
             label,
             textAlign: TextAlign.center,
@@ -338,8 +331,7 @@ class StorageService {
       maxWidth: maxWidth,
       maxHeight: maxHeight,
       imageQuality: imageQuality,
-      isVideo: mediaSource == MediaSource.videoGallery ||
-          (mediaSource == MediaSource.camera && allowVideo && !allowPhoto),
+      isVideo: mediaSource == MediaSource.videoGallery || (mediaSource == MediaSource.camera && allowVideo && !allowPhoto),
       mediaSource: mediaSource,
       multiImage: multiImage,
     );
@@ -349,27 +341,21 @@ class StorageService {
     }
 
     /// If user selected a 'Upload Any File', then don't check the file format.
-    if (mediaSource == MediaSource.file ||
-        selectedMedia
-            .every((m) => validateFileFormat(m.storagePath, context))) {
+    if (mediaSource == MediaSource.file || selectedMedia.every((m) => validateFileFormat(m.storagePath, context))) {
       showUploadMessage(
         context,
         'Uploading file...',
         showLoading: true,
       );
-      final List<String> downloadUrls = List<String>.from((await Future.wait(
-              selectedMedia
-                  .map((m) async => await uploadData(m.storagePath, m.bytes))))
-          .where((u) => u != null)
-          .map((u) => u!)
-          .toList());
+      final List<String> downloadUrls = List<String>.from(
+          (await Future.wait(selectedMedia.map((m) async => await uploadData(m.storagePath, m.bytes)))).where((u) => u != null).map((u) => u!).toList());
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       if (downloadUrls.length == selectedMedia.length) {
         showUploadMessage(
           context,
           'Success!',
         );
-        print('---> uploaded $downloadUrls');
+        dog('---> uploaded $downloadUrls');
         return downloadUrls;
       } else {
         showUploadMessage(
@@ -383,5 +369,64 @@ class StorageService {
     /// Return empty array if the user cancelled the upload
     /// Or contains any image/video that has wrong format.
     return [];
+  }
+
+  /// Get all the files from Firebase Storage and store them into /storage-files collection.
+  updateFileList() async {
+    final storageRef = FirebaseStorage.instance.ref().child("users");
+    final listResult = await storageRef.listAll();
+
+    List<Reference> allFiles = [];
+
+    /// Get files by user
+    for (final prefix in listResult.prefixes) {
+      final path = "users/${prefix.name}/uploads";
+      final userUploadRef = FirebaseStorage.instance.ref().child(path);
+      final userUploads = await userUploadRef.listAll();
+
+      dog('path: $path, items: ${userUploads.items.length}');
+      for (final item in userUploads.items) {
+        allFiles.add(item);
+      }
+    }
+
+    /// chunk the items into 100 items each.
+    final List chunks = chunkArray<Reference>(allFiles, 100);
+    for (final chunk in chunks) {
+      List<Future> futures = [];
+      for (final Reference item in chunk) {
+        futures.add(item.getDownloadURL());
+        futures.add(item.getMetadata());
+      }
+      List results = await Future.wait(futures);
+
+      /// results is a list of [url, meta, url, meta, ...]
+      final List<Map<String, dynamic>> docs = [];
+      for (int i = 0; i < results.length; i += 2) {
+        final url = results[i];
+        final meta = results[i + 1];
+        final uid = meta.fullPath.split('/')[1];
+        final data = {
+          'url': url,
+          'uid': uid,
+          'userDocumentReference': UserService.instance.doc(uid),
+          'name': meta.name,
+          'fullPath': meta.fullPath,
+          'size': meta.size,
+          'contentType': meta.contentType,
+        };
+
+        docs.add(data);
+      }
+      if (docs.isNotEmpty) {
+        final batch = FirebaseFirestore.instance.batch();
+        for (final doc in docs) {
+          final path = doc['uid'] + '-' + doc['name'];
+          final ref = FirebaseFirestore.instance.collection('storage_files').doc(path);
+          batch.set(ref, doc);
+        }
+        batch.commit();
+      }
+    }
   }
 }

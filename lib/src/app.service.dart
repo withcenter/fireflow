@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/supabase/supabase.options.dart';
 import 'package:flutter/material.dart';
 
 /// AppService is a singleton class that provides necessary service for Fireflow.
@@ -90,8 +89,6 @@ class AppService {
   _initUser() {
     dog('AppService._initUser()');
 
-    /// TODO - Use `distinct` to reduce the multiple event handling.
-    /// TODO - FirebaseAuth.instance.authStateChanges().distinct((p, c) => p?.user?.uid == c?.user?.uid)
     FirebaseAuth.instance.authStateChanges().listen((user) async {
       // User singed in
       if (user != null) {

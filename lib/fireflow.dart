@@ -37,6 +37,7 @@ export 'src/actions/gpt/gpt.dart';
 export 'src/actions/flushbar/flushbar.dart';
 export 'src/functions/country_code.dart';
 export 'src/functions/comment_order.dart';
+export 'src/functions/array_functions.dart';
 
 /// Widgets
 export 'src/widgets/custom_popup/custom_popup.dart';

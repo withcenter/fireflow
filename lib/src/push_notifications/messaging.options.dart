@@ -1,5 +1,3 @@
-import 'package:fireflow/fireflow.dart';
-
 /// MessagingOptions
 ///
 /// If the MessgingOptions is set to null, then the FlutterFlow will not handle
@@ -16,8 +14,7 @@ import 'package:fireflow/fireflow.dart';
 class MessagingOptions {
   final bool foreground;
   final bool background;
-  final void Function(String initialPageName, Map<String, String> parameterData)
-      onTap;
+  final void Function(String initialPageName, Map<String, String> parameterData) onTap;
 
   MessagingOptions({
     this.foreground = false,

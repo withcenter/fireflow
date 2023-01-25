@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as FA;
+import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:fireflow/fireflow.dart';
 import 'package:path/path.dart' as p;
 
@@ -23,25 +23,23 @@ class UserService {
   DocumentReference doc(String id) => col.doc(id);
 
   /// The login user's uid
-  String get uid => FA.FirebaseAuth.instance.currentUser!.uid;
+  String get uid => fa.FirebaseAuth.instance.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
   /// The login user's Firebase User object.
-  FA.User get currentUser => FA.FirebaseAuth.instance.currentUser!;
+  fa.User get currentUser => fa.FirebaseAuth.instance.currentUser!;
 
   /// Returns true if the user is logged in.
-  bool get isLoggedIn => FA.FirebaseAuth.instance.currentUser != null;
+  bool get isLoggedIn => fa.FirebaseAuth.instance.currentUser != null;
   bool get notLoggedIn => !isLoggedIn;
 
   StreamSubscription? publicDataSubscription;
@@ -125,9 +123,7 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (SupabaseService.instance.storeUsersPubicData) {
