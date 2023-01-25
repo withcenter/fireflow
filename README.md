@@ -123,10 +123,14 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
 
 # Features
 
-- Enhanced user management.
+- Enhanced user management
   - The documents of the `/users` collection have private information and shouldn't be disclosed. But the user information is needed to be disclosed for the most app features. To make it happen, I created another collection named `/users_public_data` that does not hold user's prviate information.
 
-- Chat.
+- File upload and display.
+  - Any kinds of files can be uploaded and displayed like Image, Video, TXT, PDF, ZIP, etc.
+  - It can be used in Chat, Forum and for any features.
+
+- Chat
   - Custom design.
     - Tap on chat message to delete, edit, copy, open, etc.
   - Push notification. User can subscribe/unsubscribe chat room.
@@ -137,9 +141,19 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
   - Moderator can remove a user.
 
 
-- Push Notification.
-  - Sending push notification is handled by fireflow.
-  - Display the foreground push notification on the top snackbar.
+- Forum
+  - Complete functionalities of forum including
+    - uploading multiple files.
+    - displaying nested comments.
+    - etc.
+  - Forum is the based of all functions. You can create whatever features extending the forum.
+
+- Push Notification
+  - Sending push notification to all users.
+  - Display the push notification while the app is on foreground.
+  - Subscribe new comments under my posts and comments.
+  - Subscribe new posts of a category.
+  - Subscribe new comments of a category.
 
 - Enhanced Firestore Security Rules
 
@@ -148,6 +162,7 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
 # TODO
 
 - Tracking the file uploads and deletes. those should be by `uploadImage` and `deleteImage` methods.
+  - For the search/list functionality of uploaded files.
 
 - Forum
   The complete forum functionality including;
