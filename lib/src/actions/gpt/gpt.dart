@@ -20,7 +20,10 @@ Future<String> queryGpt({
 
   model ??= "text-davinci-003";
 
-  final headers = {'Authorization': 'Bearer ${AppService.instance.keys.openAiApiKey}', 'Content-Type': 'application/json'};
+  final headers = {
+    'Authorization': 'Bearer ${AppService.instance.keys.openAiApiKey}',
+    'Content-Type': 'application/json'
+  };
   final request = Request(
     'POST',
     Uri.parse('https://api.openai.com/v1/engines/$model/completions'),

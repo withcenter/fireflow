@@ -69,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     shrinkWrap: true,
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      final category = CategoryModel.fromSnapshot(snapshot.data!.docs[index]);
+                      final category = CategoryModel.fromSnapshot(
+                          snapshot.data!.docs[index]);
                       return ListTile(
                         title: Text(category.title),
                         subtitle: Text('category: ${category.category}'),

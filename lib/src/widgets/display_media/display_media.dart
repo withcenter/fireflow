@@ -10,9 +10,11 @@ import 'package:path/path.dart' as p;
 
 const _kSupportedVideoMimes = {'video/mp4', 'video/mpeg'};
 
-bool _isVideoPath(String path) => _kSupportedVideoMimes.contains(mime(path.split('?').first));
+bool _isVideoPath(String path) =>
+    _kSupportedVideoMimes.contains(mime(path.split('?').first));
 
-bool _isImagePath(String path) => mime(path.split('?').first)?.startsWith('image/') ?? false;
+bool _isImagePath(String path) =>
+    mime(path.split('?').first)?.startsWith('image/') ?? false;
 
 class FlutterFlowMediaDisplay extends StatelessWidget {
   const FlutterFlowMediaDisplay({
@@ -102,14 +104,23 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer> {
     super.dispose();
   }
 
-  double get width => widget.width == null || widget.width! >= double.infinity ? MediaQuery.of(context).size.width : widget.width!;
+  double get width => widget.width == null || widget.width! >= double.infinity
+      ? MediaQuery.of(context).size.width
+      : widget.width!;
 
-  double get height => widget.height == null || widget.height! >= double.infinity ? width / aspectRatio : widget.height!;
+  double get height =>
+      widget.height == null || widget.height! >= double.infinity
+          ? width / aspectRatio
+          : widget.height!;
 
-  double get aspectRatio => _chewieController?.videoPlayerController.value.aspectRatio ?? kDefaultAspectRatio;
+  double get aspectRatio =>
+      _chewieController?.videoPlayerController.value.aspectRatio ??
+      kDefaultAspectRatio;
 
   Future initializePlayer() async {
-    _videoPlayerController = widget.videoType == VideoType.network ? VideoPlayerController.network(widget.path) : VideoPlayerController.asset(widget.path);
+    _videoPlayerController = widget.videoType == VideoType.network
+        ? VideoPlayerController.network(widget.path)
+        : VideoPlayerController.asset(widget.path);
     if (kIsWeb && widget.autoPlay) {
       // Browsers generally don't allow autoplay unless it's muted.
       // Ideally this should be configurable, but for now we just automatically
@@ -144,7 +155,8 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer> {
       // Stop all other players when one video is playing.
       if (_videoPlayerController!.value.isPlaying) {
         for (var otherPlayer in _videoPlayers) {
-          if (otherPlayer != _videoPlayerController && otherPlayer.value.isPlaying) {
+          if (otherPlayer != _videoPlayerController &&
+              otherPlayer.value.isPlaying) {
             setState(() {
               otherPlayer.pause();
             });
@@ -162,9 +174,13 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer> {
         child: SizedBox(
           height: height,
           width: width,
-          child: _chewieController != null && (widget.lazyLoad || _chewieController!.videoPlayerController.value.isInitialized)
+          child: _chewieController != null &&
+                  (widget.lazyLoad ||
+                      _chewieController!
+                          .videoPlayerController.value.isInitialized)
               ? Chewie(controller: _chewieController!)
-              : (_chewieController != null && _chewieController!.videoPlayerController.value.hasError)
+              : (_chewieController != null &&
+                      _chewieController!.videoPlayerController.value.hasError)
                   ? const Text('Error playing video')
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -203,7 +219,8 @@ class _UploadedMediaState extends State<DisplayMedia> {
           path: widget.url,
           imageBuilder: (path) => CachedNetworkImage(
                 imageUrl: path,
-                placeholder: (context, url) => const CircularProgressIndicator.adaptive(),
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator.adaptive(),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
                 width: MediaQuery.of(context).size.width,
                 fit: BoxFit.cover,
@@ -237,8 +254,14 @@ class _UploadedMediaState extends State<DisplayMedia> {
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 36.0),
                                 child: Text(
-                                  path.split('.').last.split('?').first.toUpperCase(),
-                                  style: const TextStyle(color: Colors.white, fontSize: 24),
+                                  path
+                                      .split('.')
+                                      .last
+                                      .split('?')
+                                      .first
+                                      .toUpperCase(),
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 24),
                                 ),
                               ),
                             ),
@@ -246,7 +269,8 @@ class _UploadedMediaState extends State<DisplayMedia> {
                         ],
                       ),
                       Text(
-                        p.basename(path.replaceAll('%2F', '/').split('?').first),
+                        p.basename(
+                            path.replaceAll('%2F', '/').split('?').first),
                         style: const TextStyle(fontSize: 11),
                       ),
                     ],
