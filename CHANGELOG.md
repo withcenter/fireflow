@@ -1,3 +1,7 @@
+## 0.0.89
+
+* Update. Adding file type in the storage_files.
+
 ## 0.0.88
 
 * Update. reset the storage_files.

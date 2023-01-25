@@ -996,7 +996,10 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 ## Customizing File Management
 
-- Once you update(sync) the storage files into `/storage_files`, you have all the list of uploaded files with the fields of `url, uid, name, full path, size, contentType, createdAt`.
+- Once you update(sync) the storage files into `/storage_files`, you have all the list of uploaded files with the fields of `url, uid, name, full path, size, contentType, type, createdAt`.
+  - `type` is coming from the `contentType`.
+    - It can be `image`, `video`, `audio`, `text`, etc.
+    - If the `contentType` is `aplication/...`, then it will take the type of the file like `zip`, `pdf`, etc.
 - You can search the `url` in firestore to know which document that it is attached to.
 
 

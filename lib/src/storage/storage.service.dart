@@ -425,6 +425,13 @@ class StorageService {
         final url = results[i];
         final meta = results[i + 1];
         final uid = meta.fullPath.split('/')[1];
+
+        String type = meta.contentType?.split('/')[0];
+        if ((meta.contentType as String).contains('/')) {
+          final category = meta.contentType?.split('/')[0];
+          final ext = meta.contentType?.split('/')[1];
+          type = category == 'application' ? ext : category;
+        }
         final data = {
           'url': url,
           'uid': uid,
@@ -433,6 +440,7 @@ class StorageService {
           'fullPath': meta.fullPath,
           'size': meta.size,
           'contentType': meta.contentType,
+          'type': type,
           'createdAt': meta.timeCreated,
         };
 
