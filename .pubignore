@@ -1,3 +1,5 @@
+doc/
+
 example/.dart_tool
 example/.idea
 example/android
