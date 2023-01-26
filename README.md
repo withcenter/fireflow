@@ -85,6 +85,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
     - [Logic of post creation](#logic-of-post-creation)
   - [Updating post](#updating-post)
   - [Comment creation](#comment-creation)
+  - [Last post](#last-post)
 - [Feed, recentPosts](#feed-recentposts)
 - [Files](#files)
   - [Overview of file management](#overview-of-file-management)
@@ -179,9 +180,6 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
 - Hard limit on wait minutes for post creation.
   - Add a security rules for timestamp check.
 
-- Optional push notification.
-  - There will be an option to enable or disable push notification.
-
 - Display user online/offline status without Cloud function.
   - Record on/offline status on Realtime database only and create a widget to display whether the user is online or offline.
   - If the on/off status is not save in firestore, it cannot be searched. but it can display.
@@ -203,7 +201,6 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
   - Works based on time line.
   - An event can be repeat.
   - With push notification. Scheduling push notification in advance will not work here. There must be a cron like scheduler which send push notificatoin by search the event date on every minute.
-
 
 - Delete the post document itself if the post has no comments or all the comments has been deleted.
 - Delete the comment document if it has no decendants or all the decendants are deleted.
@@ -375,7 +372,7 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 - `hasPhoto` is set to `true` if the user has the primary profile photo. Or false.
 - `isProfileComplete` is set to `true` if the user filled in the necessary fields in his profile. Or false.
 - `coverPhotoUrl` is the url of the cover photo of the user.
-- `recentPosts` is the list of the last recent 50 document references that the user posts. Note, create /posts collections and `recentPosts` Data Type first to add this field.
+- `recentPosts` is the list of the last recent posts that the user created. Note that, to create the `recentPosts` field in `posts` collection, you will need to create the `recentPosts` Data Type first.
 - `lastPostCreatedAt` is the time that the user created the last post.
 - `isPremiumUser` is set to `true` if the user is paid for premium service.
 
@@ -884,7 +881,7 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 ### recentPosts
 
-The recent 50 posts of each users wil be saved in `recentPosts`.
+- See [recentPosts](#feed-recentposts).
 
 - Create the `recentPosts` Date Types like below.
 
@@ -982,7 +979,10 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 - The `order` field must be set by Flutterflow. It's not an ideal for the fireflow to update the `order` field since fireflow is a bit slow. And the flutterflow needs it immediately after it creates a comment to display the comments in nested position.
 
 
+## Last post
 
+
+- `lastPost` has the last post that user created.
 
 # Feed, recentPosts
 
@@ -998,6 +998,8 @@ AppService.instance.init(
   // ...
 );
 ```
+
+- The last post will be at first of the `recentPosts` array field.
 
 - There are multiple ways of how you want to display the feed.
   - You may order by `lastPostCreatedAt` of the `users_public_data` collection. So, you can display the last post of each user.
