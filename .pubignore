@@ -1,4 +1,5 @@
 doc/
+etc/
 
 example/.dart_tool
 example/.idea

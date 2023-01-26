@@ -94,6 +94,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
     - [posts](#posts)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
+    - [Custom Popup Tips](#custom-popup-tips)
     - [How to implement the custom ppup](#how-to-implement-the-custom-ppup)
     - [Custom poup step by step example](#custom-poup-step-by-step-example)
       - [Create a child Component](#create-a-child-component)
@@ -142,7 +143,10 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
   - Open AI. GPT query. Chat members can query to GPT and share.
   - Uploading any kinds of files like Image, Video, TXT, PDF, ZIP, etc.
   - User invite and leave in Group chat.
-  - Moderator can remove a user.
+  - Moderators can remove a user.
+  - Moderators can't leave the chat room. But he can break the room. All users are no longer to use the chat room after admin breaks the room.
+  - Moderators can block user.
+  - Moderators can send push notification to all users even if some of them disabled the subscription.
 
 
 - Forum
@@ -1039,7 +1043,7 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 ## Custom Popup widget.
 
-FF provides the bottom shee widget. But it is way different from the popup menu.
+FF provides the bottom sheet widget. But it is a bit different from the popup menu.
 
 So, I made a widget named `CustomPopup` that does something like the popup menu in the following screenshot.
 
@@ -1049,6 +1053,9 @@ In the screenshot, I display the members of the chat room. Yes, it is a real pop
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/custom-popup.gif?raw=true "Custom Popup")
 
+### Custom Popup Tips
+
+- When you want to display dynamic content in the popup box, you would set the width and height bound on the popup box. Or you would see an error of `NEEDS-LAYOUT NEEDS-PAINT`.
 
 ### How to implement the custom ppup
 

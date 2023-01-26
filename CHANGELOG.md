@@ -1,3 +1,7 @@
+## 0.0.92
+
+* Update. document.
+
 ## 0.0.91
 
 * Bump. 91
