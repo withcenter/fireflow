@@ -8,6 +8,11 @@ String? firstString(List<String> strings) {
   return strings.isEmpty ? null : strings.first;
 }
 
+/// Safe string from a text.
+///
+/// In some cases the string should be in a moderate format. Like when the post
+/// content is delivered over push notification, it should not be too long and
+/// should not contain any special characters, nor HTML tags.
 String safeString(String? content) {
   if (content == null) {
     return '';
@@ -16,6 +21,6 @@ String safeString(String? content) {
   content = content.replaceAll('\r', '');
   content = content.replaceAll('\n', ' ');
   content = content.replaceAll('\t', ' ');
-  content = content.substring(0, min(content.length, 64));
+  content = content.substring(0, min(content.length, 128));
   return content;
 }

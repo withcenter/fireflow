@@ -41,6 +41,7 @@ class _MyAppState extends State<MyApp> {
       AppService.instance.init(
         context: router.routerDelegate.navigatorKey.currentContext!,
         debug: true,
+        noOfRecentPosts: 4,
         supabase: SupabaseOptions(
           usersPublicData: 'users_public_data',
           posts: 'posts',
@@ -52,8 +53,7 @@ class _MyAppState extends State<MyApp> {
           background: true,
           onTap: (String initialPageName, Map<String, String> parameterData) {
             dog('on message tap: $initialPageName, Map<String, String> $parameterData');
-            AppService.instance.context
-                .pushNamed(initialPageName, queryParams: parameterData);
+            AppService.instance.context.pushNamed(initialPageName, queryParams: parameterData);
           },
         ),
       );

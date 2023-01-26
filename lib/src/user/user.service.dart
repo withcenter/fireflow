@@ -26,14 +26,12 @@ class UserService {
   String get uid => fa.FirebaseAuth.instance.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
@@ -48,8 +46,10 @@ class UserService {
 
   /// The login user's public data model.
   ///
-  /// The app is listening the changes of the user's public data document and update this model.
-  /// So, [my] will always have the latest data.
+  /// It listens the changes of the user's public data document and update [my] variable.
+  /// Note that, this is always upto date. So, you don't have to get the login user's
+  /// public data document from the firestore.
+  ///
   late UserPublicDataModel my;
 
   /// check if user's public data document exists
@@ -125,9 +125,7 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (SupabaseService.instance.storeUsersPubicData) {

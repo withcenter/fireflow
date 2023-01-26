@@ -64,12 +64,14 @@ class AppService {
   void init({
     required BuildContext context,
     bool debug = false,
+    int noOfRecentPosts = 20,
     SupabaseOptions? supabase,
     MessagingOptions? messaging,
   }) {
     dog('AppService.instance.init()');
     this.context = context;
     gDebug = debug;
+    Config.instance.noOfRecentPosts = noOfRecentPosts;
     Config.instance.supabase = supabase;
     Config.instance.messaging = messaging;
 

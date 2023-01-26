@@ -28,9 +28,7 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    final snapshot = await UserSettingService.instance.col
-        .where('postSubscriptions', arrayContains: category.ref)
-        .get();
+    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
 
     List<Future> futures = [];
 
@@ -55,6 +53,7 @@ class PostService {
       );
     }
 
+    // update the post
     futures.add(
       postDocumentReference.update({
         'userDocumentReference': UserService.instance.ref,
@@ -73,16 +72,7 @@ class PostService {
       }),
     );
 
-    // update the user's post count
-    futures.add(
-      UserService.instance.publicRef.update(
-        {
-          'noOfPosts': FieldValue.increment(1),
-        },
-      ),
-    );
-
-    //
+    // update the category's post count
     futures.add(
       categoryDoc.update(
         {
@@ -91,6 +81,39 @@ class PostService {
       ),
     );
 
+    // // update the user's post count
+    // futures.add(
+    //   UserService.instance.publicRef.update(
+    //     {
+    //       'noOfPosts': FieldValue.increment(1),
+    //     },
+    //   ),
+    // );
+
+    /// Update the user's post count together with feed.
+
+    // Update last 50 posts. Remove last one and add the new one.
+    final posts = my.recentPosts;
+    if (posts.length >= Config.instance.noOfRecentPosts) {
+      posts.sublist(0, Config.instance.noOfRecentPosts - 2);
+    }
+    posts.insert(0, {
+      'id': post.id,
+      'createdAt': post.createdAt,
+      'title': post.safeTitle,
+      'content': post.safeContent,
+      if (post.files.isNotEmpty) 'photoUrl': post.files.first,
+    });
+    futures.add(
+      UserService.instance.publicRef.update(
+        {
+          'recentPosts': posts,
+          'noOfPosts': FieldValue.increment(1),
+        },
+      ),
+    );
+
+    // backup the post to supabase
     if (SupabaseService.instance.storePosts) {
       futures.add(
         supabase.posts.insert(
@@ -105,6 +128,8 @@ class PostService {
         ),
       );
     }
+
+    // backup the post to supabase
     if (SupabaseService.instance.storePostsAndComments) {
       futures.add(
         supabase.postsAndComments.insert(

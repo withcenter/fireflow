@@ -66,7 +66,7 @@ class UserPublicDataModel {
       hasPhoto: json['hasPhoto'] ?? false,
       isProfileComplete: json['isProfileComplete'] ?? false,
       coverPhotoUrl: json['coverPhotoUrl'] ?? '',
-      recentPosts: json['recentPosts'] ?? [],
+      recentPosts: List<Map<String, dynamic>>.from(json['recentPosts'] ?? []),
       lastPostCreatedAt: json['lastPostCreatedAt'] ?? Timestamp.now(),
       isPremiumUser: json['isPremiumUser'] ?? false,
       data: json,

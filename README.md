@@ -84,6 +84,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
     - [Logic of post creation](#logic-of-post-creation)
   - [Updating post](#updating-post)
   - [Comment creation](#comment-creation)
+- [Feed, recentPosts](#feed-recentposts)
 - [Files](#files)
   - [Overview of file management](#overview-of-file-management)
   - [Logic of File management](#logic-of-file-management)
@@ -110,6 +111,9 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Country Code](#country-code)
 - [Unit Testing](#unit-testing)
 - [Developer coding guide](#developer-coding-guide)
+  - [Developing with Fireflow](#developing-with-fireflow)
+  - [Development tips](#development-tips)
+    - [Safe string](#safe-string)
 - [Sponsors](#sponsors)
 - [Known Issues](#known-issues)
   - [Push notification and back navigation](#push-notification-and-back-navigation)
@@ -977,6 +981,23 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 
 
+# Feed, recentPosts
+
+- Displaying the feed is very simply with fireflow. Just get the recent posts of the users who you follow and disply it.
+- `/users_public_data/<uid> { recentPosts: ... }` has the user's recent posts and you can use this to display the feeds of the users who you follow.
+  - You can get the `/users_public_data` documents of the users who you follow by searching the `followers` field that contains your ref.
+- The `users_public_data.recentPosts` field is a map of `recentPosts` which has `postDocumentReference`, `title`, `content`, `createdAt`, and optional `photoUrl`. The `title` and `content` are in the safe string format. See the [safeString](#safe-string) function. If the post has no url, the `photoUrl` would not exists and this would lead an empty string when it is parsed by the model or by the flutterflow.
+- You can set the number of recent posts to store the last recent posts of each user by passing a number in `AppService.instance.init()`.
+```dart
+AppService.instance.init(
+  context: ...,
+  noOfRecentPosts: 4,
+  // ...
+);
+```
+
+
+
 # Files
 
 ## Overview of file management
@@ -1331,6 +1352,9 @@ The current version of fireflow has no backend. And most of the difficult logics
 
 # Developer coding guide
 
+
+## Developing with Fireflow
+
 If you want to update/improve the fireflow or if you want to work on your project other with fireflow, then follow the steps below.
 
 1. Fork fireflow.
@@ -1340,6 +1364,13 @@ If you want to update/improve the fireflow or if you want to work on your projec
 5. Change the path of fireflow package to `path: ../..` in the pubspec.yaml of your project.
 6. One you have updated fireflow, create PR.
 
+
+## Development tips
+
+### Safe string
+
+- In some cases the string should be in a moderate format. Like when the post content is delivered over push notification, it should not be too long and should not contain any special characters, nor HTML tags.
+- To use the user input value over those cases, fireflow uses the [`safeString` function](https://pub.dev/documentation/fireflow/latest/fireflow/safeString.html).
 
 # Sponsors
 
