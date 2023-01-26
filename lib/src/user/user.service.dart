@@ -26,14 +26,12 @@ class UserService {
   String get uid => fa.FirebaseAuth.instance.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
@@ -127,9 +125,7 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (SupabaseService.instance.storeUsersPubicData) {
@@ -229,13 +225,17 @@ class UserService {
     if (posts.length >= Config.instance.noOfRecentPosts) {
       posts.removeRange(Config.instance.noOfRecentPosts - 1, posts.length);
     }
-    posts.insert(0, {
+    posts.insert(0, feed(post));
+    return posts;
+  }
+
+  Map<String, dynamic> feed(PostModel post) {
+    return {
       'id': post.id,
       'createdAt': post.createdAt,
       'title': post.safeTitle,
       'content': post.safeContent,
       if (post.files.isNotEmpty) 'photoUrl': post.files.first,
-    });
-    return posts;
+    };
   }
 }

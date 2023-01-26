@@ -981,8 +981,7 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 ## Last post
 
-
-- `lastPost` has the last post that user created.
+- `users_public_data.lastPost` has the last post that user created.
 
 # Feed, recentPosts
 

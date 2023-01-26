@@ -28,9 +28,7 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    final snapshot = await UserSettingService.instance.col
-        .where('postSubscriptions', arrayContains: category.ref)
-        .get();
+    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
 
     List<Future> futures = [];
 
@@ -78,9 +76,12 @@ class PostService {
     futures.add(category.increaseNoOfPosts());
 
     /// Update the user's post count together with feed.
+    ///
+    ///
     futures.add(
       UserService.instance.publicRef.update(
         {
+          'lastPost': UserService.instance.feed(post),
           'recentPosts': UserService.instance.recentPosts(post),
           'noOfPosts': FieldValue.increment(1),
           'lastPostCreatedAt': FieldValue.serverTimestamp(),

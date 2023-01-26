@@ -54,8 +54,9 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Note that, admin can read all chat room messages for the safety reason. If you don't like it, remove the isAdmin() from the read rule.
     match /chat_room_messages/{document} {
-      allow read: if get(resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAny([myReference()]);
+      allow read: if get(resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAny([myReference()]) || isAdmin();
       allow create: if get(request.resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAny([myReference()]) && willBeMyDoc();
       allow update, delete: if isMyDoc();
     }
