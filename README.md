@@ -987,7 +987,7 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 - `/users_public_data/<uid> { recentPosts: ... }` has the user's recent posts and you can use this to display the feeds of the users who you follow.
   - You can get the `/users_public_data` documents of the users who you follow by searching the `followers` field that contains your ref.
 - The `users_public_data.recentPosts` field is a map of `recentPosts` which has `postDocumentReference`, `title`, `content`, `createdAt`, and optional `photoUrl`. The `title` and `content` are in the safe string format. See the [safeString](#safe-string) function. If the post has no url, the `photoUrl` would not exists and this would lead an empty string when it is parsed by the model or by the flutterflow.
-- You can set the number of recent posts to store the last recent posts of each user by passing a number in `AppService.instance.init()`.
+- You can set the number of recent posts to store the last recent posts of each user by passing a number in `AppService.instance.init()`. It's 20 by default. See the API reference for details.
 ```dart
 AppService.instance.init(
   context: ...,
