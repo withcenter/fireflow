@@ -28,7 +28,9 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
+    final snapshot = await UserSettingService.instance.col
+        .where('postSubscriptions', arrayContains: category.ref)
+        .get();
 
     List<Future> futures = [];
 
