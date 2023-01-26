@@ -1,3 +1,8 @@
+## 0.0.98
+
+* Fix. updating system settings with user permission.
+
+
 ## 0.0.96
 
 * Add. last post.

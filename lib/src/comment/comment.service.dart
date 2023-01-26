@@ -84,8 +84,10 @@ class CommentService {
     futures.add(post.increaseNoOfComment());
     futures.add(categoryDoc.update({'noOfComments': FieldValue.increment(1)}));
 
-    // update the no of comments on system settings
-    futures.add(SystemSettingService.instance.increaseNoOfComments());
+    /// Update the no of comments on system settings
+    ///
+    /// Note that, user cannot update system settings.
+    // futures.add(SystemSettingService.instance.increaseNoOfComments());
 
     // update the user's post count
     futures.add(

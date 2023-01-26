@@ -91,8 +91,10 @@ class PostService {
       ),
     );
 
-    // update the no of posts on system settings
-    futures.add(SystemSettingService.instance.increaseNoOfPosts());
+    /// Update the no of posts on system settings
+    ///
+    /// Note that, user cannot update system settings.
+    /// futures.add(SystemSettingService.instance.increaseNoOfPosts());
 
     // backup the post to supabase
     if (SupabaseService.instance.storePosts) {
