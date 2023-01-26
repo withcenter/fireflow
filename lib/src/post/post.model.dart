@@ -93,5 +93,6 @@ class PostModel {
   /// increase noOfComments by 1.
   ///
   /// This method is used when a new comment is created.
-  Future increaseNoOfComment() => ref.update({'noOfComments': FieldValue.increment(1)});
+  Future increaseNoOfComment() =>
+      ref.update({'noOfComments': FieldValue.increment(1)});
 }

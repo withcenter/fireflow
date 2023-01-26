@@ -5,12 +5,15 @@ import 'package:fireflow/fireflow.dart';
 /// SystemSettingModel is a class that represents a user's setting.
 ///
 class SystemSettingService {
-  static SystemSettingService get instance => _instance ?? (_instance = SystemSettingService());
+  static SystemSettingService get instance =>
+      _instance ?? (_instance = SystemSettingService());
   static SystemSettingService? _instance;
 
   String get uid => FirebaseAuth.instance.currentUser!.uid;
-  CollectionReference get col => FirebaseFirestore.instance.collection('system_settings');
-  DocumentReference doc(String id) => FirebaseFirestore.instance.collection('system_settings').doc(id);
+  CollectionReference get col =>
+      FirebaseFirestore.instance.collection('system_settings');
+  DocumentReference doc(String id) =>
+      FirebaseFirestore.instance.collection('system_settings').doc(id);
   DocumentReference get counters => doc('counters');
 
   User get my => FirebaseAuth.instance.currentUser!;
@@ -24,10 +27,12 @@ class SystemSettingService {
   /// increase noOfPosts by 1.
   ///
   /// This method is used when a new post is created.
-  Future increaseNoOfPosts() => counters.update({'noOfPosts': FieldValue.increment(1)});
+  Future increaseNoOfPosts() =>
+      counters.update({'noOfPosts': FieldValue.increment(1)});
 
   /// increase noOfComments by 1.
   ///
   /// This method is used when a new comment is created.
-  Future increaseNoOfComments() => counters.update({'noOfComments': FieldValue.increment(1)});
+  Future increaseNoOfComments() =>
+      counters.update({'noOfComments': FieldValue.increment(1)});
 }
