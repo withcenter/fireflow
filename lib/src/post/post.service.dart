@@ -28,9 +28,7 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    final snapshot = await UserSettingService.instance.col
-        .where('postSubscriptions', arrayContains: category.ref)
-        .get();
+    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
 
     List<Future> futures = [];
 
@@ -75,45 +73,21 @@ class PostService {
     );
 
     // update the category's post count
-    futures.add(
-      categoryDoc.update(
-        {
-          'noOfPosts': FieldValue.increment(1),
-        },
-      ),
-    );
-
-    // // update the user's post count
-    // futures.add(
-    //   UserService.instance.publicRef.update(
-    //     {
-    //       'noOfPosts': FieldValue.increment(1),
-    //     },
-    //   ),
-    // );
+    futures.add(category.increaseNoOfPosts());
 
     /// Update the user's post count together with feed.
-
-    // Update last 50 posts. Remove last one and add the new one.
-    List<Map<String, dynamic>> posts = my.recentPosts;
-    if (posts.length >= Config.instance.noOfRecentPosts) {
-      posts.removeRange(Config.instance.noOfRecentPosts - 1, posts.length);
-    }
-    posts.insert(0, {
-      'id': post.id,
-      'createdAt': post.createdAt,
-      'title': post.safeTitle,
-      'content': post.safeContent,
-      if (post.files.isNotEmpty) 'photoUrl': post.files.first,
-    });
     futures.add(
       UserService.instance.publicRef.update(
         {
-          'recentPosts': posts,
+          'recentPosts': UserService.instance.recentPosts(post),
           'noOfPosts': FieldValue.increment(1),
+          'lastPostCreatedAt': FieldValue.serverTimestamp(),
         },
       ),
     );
+
+    // update the no of posts on system settings
+    futures.add(SystemSettingService.instance.increaseNoOfPosts());
 
     // backup the post to supabase
     if (SupabaseService.instance.storePosts) {

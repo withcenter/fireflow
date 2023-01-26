@@ -29,6 +29,8 @@ export 'src/supabase/supabase.service.dart';
 /// Utils, Functions, Actions
 export 'src/app.service.dart';
 export 'src/system_settings/keys.model.dart';
+export 'src/system_settings/system_setting.service.dart';
+export 'src/system_settings/system_setting.model.dart';
 export 'src/utils.dart';
 export 'src/functions/file_functions.dart';
 export 'src/functions/string_functions.dart';

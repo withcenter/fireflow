@@ -89,4 +89,9 @@ class PostModel {
   String toString() {
     return 'PostModel{ id: $id, category: $category, title: $title, content: $content, userDocumentReference: $userDocumentReference, createdAt: $createdAt, updatedAt: $updatedAt, hasPhoto: $hasPhoto, noOfComments: $noOfComments, hasComment: $hasComment, deleted: $deleted, likes: $likes, hasLike: $hasLike, files: $files, wasPremiumUser: $wasPremiumUser, emphasizePremiumUserPost: $emphasizePremiumUserPost}';
   }
+
+  /// increase noOfComments by 1.
+  ///
+  /// This method is used when a new comment is created.
+  Future increaseNoOfComment() => ref.update({'noOfComments': FieldValue.increment(1)});
 }

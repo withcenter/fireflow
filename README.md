@@ -40,6 +40,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Forum Category Subscription](#forum-category-subscription)
 - [System setting](#system-setting)
   - [Admin](#admin)
+  - [Counters](#counters)
 - [Push notification](#push-notification)
   - [Push notification data](#push-notification-data)
     - [Push notification data of post and comment](#push-notification-data-of-post-and-comment)
@@ -173,18 +174,7 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
 
 # TODO
 
-- Tracking the file uploads and deletes. those should be by `uploadImage` and `deleteImage` methods.
-  - For the search/list functionality of uploaded files.
-
-- Forum
-  The complete forum functionality including;
-  - Category management (o)
-  - User role management
-  - Post and comment management including (o)
-    - Nested (threaded) comments (o)
-  - Push notification
-    - Subscribing/Unsubscribing a category
-    - Sending push notifications to the author of the parent comments and post.
+- Chat welcome message for newly signed(registered) users.
 
 - Hard limit on wait minutes for post creation.
   - Add a security rules for timestamp check.
@@ -195,6 +185,8 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
 - Display user online/offline status without Cloud function.
   - Record on/offline status on Realtime database only and create a widget to display whether the user is online or offline.
   - If the on/off status is not save in firestore, it cannot be searched. but it can display.
+
+- How to display online/offline users by creating a function in GCP.
 
 - Chat
   - Block the moderator to leave the chat room when there are other members in the room.
@@ -212,6 +204,9 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
   - An event can be repeat.
   - With push notification. Scheduling push notification in advance will not work here. There must be a cron like scheduler which send push notificatoin by search the event date on every minute.
 
+
+- Delete the post document itself if the post has no comments or all the comments has been deleted.
+- Delete the comment document if it has no decendants or all the decendants are deleted.
 
 
 # Getting started
@@ -470,6 +465,14 @@ at /system_settings/admins { <USER_UID>: true }
 You need to add {admin: true} in the `/users/{uid} {admin: true}` document. It's `/users` collection. Not the `/users_public_data` collection.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/set-admin.gif?raw=true "How to set admin")
+
+
+
+## Counters
+
+- `/settings/counters` has the number posts and comments.
+  - `noOfPosts` has the number of posts.
+  - `noOfComments` has the number of comments.
 
 
 
@@ -995,6 +998,10 @@ AppService.instance.init(
   // ...
 );
 ```
+
+- There are multiple ways of how you want to display the feed.
+  - You may order by `lastPostCreatedAt` of the `users_public_data` collection. So, you can display the last post of each user.
+  - You may use `UserService.instance.feeds` method and put it as an FF custom action to get the whole list of `recentPosts` of your followers.
 
 
 

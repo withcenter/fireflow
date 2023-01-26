@@ -44,12 +44,10 @@ class CategoryModel {
       title: json['title'] ?? '',
       noOfPosts: json['noOfPosts'] ?? 0,
       noOfComments: json['noOfComments'] ?? 0,
-      enablePushNotificationSubscription:
-          json['enablePushNotificationSubscription'] ?? false,
+      enablePushNotificationSubscription: json['enablePushNotificationSubscription'] ?? false,
       emphasizePremiumUserPost: json['emphasizePremiumUserPost'] ?? false,
       waitMinutesForNextPost: json['waitMinutesForNextPost'] ?? 0,
-      waitMinutesForPremiumUserNextPost:
-          json['waitMinutesForPremiumUserNextPost'] ?? 0,
+      waitMinutesForPremiumUserNextPost: json['waitMinutesForPremiumUserNextPost'] ?? 0,
       ref: CategoryService.instance.doc(json['category'] ?? id),
     );
   }
@@ -59,4 +57,14 @@ class CategoryModel {
   String toString() {
     return 'CategoryModel{ category: $category, title: $title, noOfPosts: $noOfPosts, noOfComments: $noOfComments, enablePushNotificationSubscription: $enablePushNotificationSubscription, emphasizePremiumUserPost: $emphasizePremiumUserPost, waitMinutesForNextPost: $waitMinutesForNextPost, waitMinutesForPremiumUserNextPost: $waitMinutesForPremiumUserNextPost}';
   }
+
+  /// increase noOfPosts by 1.
+  ///
+  /// This method is used when a new post is created.
+  Future increaseNoOfPosts() => ref.update({'noOfPosts': FieldValue.increment(1)});
+
+  /// increase noOfComments by 1.
+  ///
+  /// This method is used when a new comment is created.
+  Future increaseNoOfComment() => ref.update({'noOfComments': FieldValue.increment(1)});
 }

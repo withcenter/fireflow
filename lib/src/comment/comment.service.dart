@@ -16,8 +16,7 @@ class CommentService {
   /// Use this to list the comments on post view screen.
   Stream<QuerySnapshot<Object?>> children(String postId) {
     return CommentService.instance.col
-        .where('postDocumentReference',
-            isEqualTo: PostService.instance.doc(postId))
+        .where('postDocumentReference', isEqualTo: PostService.instance.doc(postId))
         .orderBy('order', descending: false)
         .snapshots();
   }
@@ -28,20 +27,14 @@ class CommentService {
   }
 
   afterCreate({required DocumentReference commentDocumentReference}) async {
-    final comment =
-        CommentModel.fromSnapshot(await commentDocumentReference.get());
-    final post =
-        PostModel.fromSnapshot(await comment.postDocumentReference.get());
-
-    // CommentModel? parent;
-    // if (comment.parentCommentDocumentReference != null) {
-    //   parent = CommentModel.fromSnapshot(await comment.parentCommentDocumentReference!.get());
-    // }
+    final comment = CommentModel.fromSnapshot(await commentDocumentReference.get());
+    final post = PostModel.fromSnapshot(await comment.postDocumentReference.get());
 
     // Get the reference of the category of the post.
     final categoryDoc = CategoryService.instance.doc(post.category);
 
-    // update comment
+    // update comment meta
+    //
     // add category of the post, update `order` field.
     await commentDocumentReference.update({
       'category': post.category,
@@ -50,15 +43,12 @@ class CommentService {
     // send push notification
     // send message to the post's owner and comment's owners of the hierachical ancestors
     final ancestorReferences = await _getAncestorsUid(comment);
-    final userRefs =
-        await UserService.instance.newCommentSubscribers(ancestorReferences);
+    final userRefs = await UserService.instance.newCommentSubscribers(ancestorReferences);
 
     /// send push notifications to the subscribers of the category
     ///
     /// send message to the post's owner and comment's owners of the hierachical ancestors
-    final snapshot = await UserSettingService.instance.col
-        .where('commentSubscriptions', arrayContains: categoryDoc)
-        .get();
+    final snapshot = await UserSettingService.instance.col.where('commentSubscriptions', arrayContains: categoryDoc).get();
     if (snapshot.size > 0) {
       for (final doc in snapshot.docs) {
         final setting = UserSettingModel.fromSnapshot(doc);
@@ -74,8 +64,7 @@ class CommentService {
         notificationTitle: '${UserService.instance.my.displayName} says ...',
         notificationText: comment.safeContent,
         notificationSound: 'default',
-        notificationImageUrl:
-            comment.files.isNotEmpty ? comment.files.first : null,
+        notificationImageUrl: comment.files.isNotEmpty ? comment.files.first : null,
         userRefs: userRefs,
         initialPageName: 'PostView',
         parameterData: {'postDocumentReference': comment.postDocumentReference},
@@ -85,21 +74,12 @@ class CommentService {
     // increase on of comments in category docuemnt, user doucment, post document
 
     // update the user's post count
-    futures.add(
-      post.ref.update(
-        {
-          'noOfComments': FieldValue.increment(1),
-        },
-      ),
-    );
+    futures.add(post.increaseNoOfComment());
+    futures.add(categoryDoc.update({'noOfComments': FieldValue.increment(1)}));
 
-    futures.add(
-      categoryDoc.update(
-        {
-          'noOfComments': FieldValue.increment(1),
-        },
-      ),
-    );
+    // update the no of comments on system settings
+    futures.add(SystemSettingService.instance.increaseNoOfComments());
+
     // update the user's post count
     futures.add(
       UserService.instance.publicRef.update(
@@ -146,8 +126,7 @@ class CommentService {
     // send push notification
     // send message to the post's owner and comment's owners of the hierachical ancestors
 
-    final comment =
-        CommentModel.fromSnapshot(await commentDocumentReference.get());
+    final comment = CommentModel.fromSnapshot(await commentDocumentReference.get());
 
     List<Future> futures = [];
     // update the user's post count
@@ -196,8 +175,7 @@ class CommentService {
   }
 
   afterDelete({required DocumentReference commentDocumentReference}) async {
-    final comment =
-        CommentModel.fromSnapshot(await commentDocumentReference.get());
+    final comment = CommentModel.fromSnapshot(await commentDocumentReference.get());
     final categoryDoc = CategoryService.instance.doc(comment.category);
 
     List<Future> futures = [];
@@ -239,16 +217,14 @@ class CommentService {
   Future<List<DocumentReference>> _getAncestorsUid(CommentModel comment) async {
     final List<DocumentReference> ancestors = [];
     ancestors.add(comment.userDocumentReference);
-    final post =
-        await PostService.instance.get(comment.postDocumentReference.id);
+    final post = await PostService.instance.get(comment.postDocumentReference.id);
     ancestors.add(post.userDocumentReference);
 
     /// Get ancestors comments and post.
     ///
     /// Cannot use `Future.all()` here.
     while (comment.parentCommentDocumentReference != null) {
-      final parent = await CommentService.instance
-          .get(comment.parentCommentDocumentReference!.id);
+      final parent = await CommentService.instance.get(comment.parentCommentDocumentReference!.id);
       ancestors.add(parent.userDocumentReference);
       comment = parent;
     }
