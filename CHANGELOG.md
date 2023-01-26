@@ -1,3 +1,7 @@
+## 0.0.93
+
+* Fix. remove `collection` package that produce dependency problem on pub.dev score page.
+
 ## 0.0.92
 
 * Update. document.

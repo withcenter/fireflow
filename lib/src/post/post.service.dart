@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:collection/collection.dart';
+// import 'package:collection/collection.dart';
 
 class PostService {
   static PostService get instance => _instance ??= PostService();
@@ -28,9 +28,7 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    final snapshot = await UserSettingService.instance.col
-        .where('postSubscriptions', arrayContains: category.ref)
-        .get();
+    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
 
     List<Future> futures = [];
 
@@ -47,7 +45,7 @@ class PostService {
           notificationTitle: post.safeTitle,
           notificationText: post.safeContent,
           notificationSound: 'default',
-          notificationImageUrl: post.files.firstOrNull,
+          notificationImageUrl: post.files.isNotEmpty ? post.files.first : null,
           userRefs: userRefs,
           initialPageName: 'PostView',
           parameterData: {'postDocumentReference': post.ref},
