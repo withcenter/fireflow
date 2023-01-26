@@ -1,6 +1,12 @@
+## 0.0.96
+
+* Add. last post.
+
+
 ## 0.0.95
 
 * Add. counters on system settings.
+
 
 ## 0.0.94
 
