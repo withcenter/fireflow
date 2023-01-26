@@ -983,7 +983,7 @@ The recent 50 posts of each users wil be saved in `recentPosts`.
 
 # Feed, recentPosts
 
-- Displaying the feed is very simply with fireflow. Just get the recent posts of the users who you follow and disply it.
+- Displaying the feed is very simple with fireflow. Just get the public data document of the users who you follow and disply the posts in `recentPosts` field. Note that, the `recentPosts` are updated when the app create a post with `afterPostCreate` action.
 - `/users_public_data/<uid> { recentPosts: ... }` has the user's recent posts and you can use this to display the feeds of the users who you follow.
   - You can get the `/users_public_data` documents of the users who you follow by searching the `followers` field that contains your ref.
 - The `users_public_data.recentPosts` field is a map of `recentPosts` which has `postDocumentReference`, `title`, `content`, `createdAt`, and optional `photoUrl`. The `title` and `content` are in the safe string format. See the [safeString](#safe-string) function. If the post has no url, the `photoUrl` would not exists and this would lead an empty string when it is parsed by the model or by the flutterflow.

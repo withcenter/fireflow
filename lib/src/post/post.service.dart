@@ -28,7 +28,9 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
+    final snapshot = await UserSettingService.instance.col
+        .where('postSubscriptions', arrayContains: category.ref)
+        .get();
 
     List<Future> futures = [];
 
@@ -93,9 +95,9 @@ class PostService {
     /// Update the user's post count together with feed.
 
     // Update last 50 posts. Remove last one and add the new one.
-    final posts = my.recentPosts;
+    List<Map<String, dynamic>> posts = my.recentPosts;
     if (posts.length >= Config.instance.noOfRecentPosts) {
-      posts.sublist(0, Config.instance.noOfRecentPosts - 2);
+      posts.removeRange(Config.instance.noOfRecentPosts - 1, posts.length);
     }
     posts.insert(0, {
       'id': post.id,

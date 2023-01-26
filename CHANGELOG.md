@@ -1,3 +1,8 @@
+## 0.0.94
+
+* Add. feed.
+
+
 ## 0.0.93
 
 * Fix. remove `collection` package that produce dependency problem on pub.dev score page.
