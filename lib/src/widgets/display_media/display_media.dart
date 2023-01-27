@@ -10,11 +10,9 @@ import 'package:path/path.dart' as p;
 
 const _kSupportedVideoMimes = {'video/mp4', 'video/mpeg'};
 
-bool _isVideoPath(String path) =>
-    _kSupportedVideoMimes.contains(mime(path.split('?').first));
+bool _isVideoPath(String path) => _kSupportedVideoMimes.contains(mime(path.split('?').first));
 
-bool _isImagePath(String path) =>
-    mime(path.split('?').first)?.startsWith('image/') ?? false;
+bool _isImagePath(String path) => mime(path.split('?').first)?.startsWith('image/') ?? false;
 
 class FlutterFlowMediaDisplay extends StatelessWidget {
   const FlutterFlowMediaDisplay({
@@ -104,23 +102,14 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer> {
     super.dispose();
   }
 
-  double get width => widget.width == null || widget.width! >= double.infinity
-      ? MediaQuery.of(context).size.width
-      : widget.width!;
+  double get width => widget.width == null || widget.width! >= double.infinity ? MediaQuery.of(context).size.width : widget.width!;
 
-  double get height =>
-      widget.height == null || widget.height! >= double.infinity
-          ? width / aspectRatio
-          : widget.height!;
+  double get height => widget.height == null || widget.height! >= double.infinity ? width / aspectRatio : widget.height!;
 
-  double get aspectRatio =>
-      _chewieController?.videoPlayerController.value.aspectRatio ??
-      kDefaultAspectRatio;
+  double get aspectRatio => _chewieController?.videoPlayerController.value.aspectRatio ?? kDefaultAspectRatio;
 
   Future initializePlayer() async {
-    _videoPlayerController = widget.videoType == VideoType.network
-        ? VideoPlayerController.network(widget.path)
-        : VideoPlayerController.asset(widget.path);
+    _videoPlayerController = widget.videoType == VideoType.network ? VideoPlayerController.network(widget.path) : VideoPlayerController.asset(widget.path);
     if (kIsWeb && widget.autoPlay) {
       // Browsers generally don't allow autoplay unless it's muted.
       // Ideally this should be configurable, but for now we just automatically
@@ -147,23 +136,24 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer> {
     );
 
     _videoPlayers.add(_videoPlayerController!);
-    _videoPlayerController!.addListener(() {
-      if (_videoPlayerController!.value.hasError && !_loggedError) {
-        dog('Error playing video: ${_videoPlayerController!.value.errorDescription}');
-        _loggedError = true;
-      }
-      // Stop all other players when one video is playing.
-      if (_videoPlayerController!.value.isPlaying) {
-        for (var otherPlayer in _videoPlayers) {
-          if (otherPlayer != _videoPlayerController &&
-              otherPlayer.value.isPlaying) {
-            setState(() {
-              otherPlayer.pause();
-            });
+    _videoPlayerController!.addListener(
+      () {
+        if (_videoPlayerController!.value.hasError && !_loggedError) {
+          dog('Error playing video: ${_videoPlayerController!.value.errorDescription}');
+          _loggedError = true;
+        }
+        // Stop all other players when one video is playing.
+        if (_videoPlayerController!.value.isPlaying) {
+          for (var otherPlayer in _videoPlayers) {
+            if (otherPlayer != _videoPlayerController && otherPlayer.value.isPlaying) {
+              setState(() {
+                otherPlayer.pause();
+              });
+            }
           }
         }
-      }
-    });
+      },
+    );
 
     setState(() {});
   }
@@ -174,13 +164,9 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer> {
         child: SizedBox(
           height: height,
           width: width,
-          child: _chewieController != null &&
-                  (widget.lazyLoad ||
-                      _chewieController!
-                          .videoPlayerController.value.isInitialized)
+          child: _chewieController != null && (widget.lazyLoad || _chewieController!.videoPlayerController.value.isInitialized)
               ? Chewie(controller: _chewieController!)
-              : (_chewieController != null &&
-                      _chewieController!.videoPlayerController.value.hasError)
+              : (_chewieController != null && _chewieController!.videoPlayerController.value.hasError)
                   ? const Text('Error playing video')
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -194,6 +180,20 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer> {
       );
 }
 
+/// Display Media
+///
+/// It displays the media from the given [url]. It can be a video, an image
+/// or any file.
+///
+/// The [width] and [height] are respected. You may pass `Inf` to adjust its
+/// size by parent.
+///
+/// Images are displayed with [CachedNetworkImage]. It means, it will cache
+/// the image and display a placeholder while loading.
+///
+/// Videos are displayed with [Chewie]. It will not display the controller
+/// if the width is less than 160.
+///
 class DisplayMedia extends StatefulWidget {
   const DisplayMedia({
     Key? key,
@@ -216,67 +216,63 @@ class _UploadedMediaState extends State<DisplayMedia> {
     return Container(
       key: ValueKey(widget.url),
       child: FlutterFlowMediaDisplay(
-          path: widget.url,
-          imageBuilder: (path) => CachedNetworkImage(
-                imageUrl: path,
-                placeholder: (context, url) =>
-                    const CircularProgressIndicator.adaptive(),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.cover,
+        path: widget.url,
+        imageBuilder: (path) => CachedNetworkImage(
+          imageUrl: path,
+          placeholder: (context, url) => const CircularProgressIndicator.adaptive(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
+        ),
+        videoPlayerBuilder: (path) => FlutterFlowVideoPlayer(
+          path: path,
+          width: widget.width,
+          height: widget.height,
+          autoPlay: false,
+          looping: true,
+          showControls: (widget.width ?? double.infinity) > 160,
+          allowFullScreen: true,
+          allowPlaybackSpeedMenu: false,
+        ),
+        fileBuilder: (path) => SizedBox(
+          width: widget.width,
+          height: widget.height,
+          // color: Colors.blue,
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: LayoutBuilder(builder: (context, constraint) {
+                  return Icon(Icons.insert_drive_file, size: constraint.biggest.height);
+                }),
               ),
-          videoPlayerBuilder: (path) => FlutterFlowVideoPlayer(
-                path: path,
+              SizedBox(
                 width: widget.width,
                 height: widget.height,
-                autoPlay: false,
-                looping: true,
-                showControls: true,
-                allowFullScreen: true,
-                allowPlaybackSpeedMenu: false,
-              ),
-          fileBuilder: (path) => Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Stack(
-                        children: [
-                          const Icon(
-                            Icons.insert_drive_file,
-                            size: 120,
-                          ),
-                          SizedBox(
-                            width: 120,
-                            height: 120,
-                            child: Align(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 36.0),
-                                child: Text(
-                                  path
-                                      .split('.')
-                                      .last
-                                      .split('?')
-                                      .first
-                                      .toUpperCase(),
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 24),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        p.basename(
-                            path.replaceAll('%2F', '/').split('?').first),
-                        style: const TextStyle(fontSize: 11),
-                      ),
-                    ],
+                child: Align(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 36.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          path.split('.').last.split('?').first.toUpperCase(),
+                          style: const TextStyle(color: Colors.white, fontSize: 24),
+                        ),
+                        Text(
+                          p.basename(path.replaceAll('%2F', '/').split('?').first),
+                          style: const TextStyle(fontSize: 6, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              )),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

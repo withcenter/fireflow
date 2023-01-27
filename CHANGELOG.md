@@ -1,5 +1,10 @@
 ## 0.0.98
 
+* Fix. DisplayMedia widget. Make it better display media.
+
+
+## 0.0.97
+
 * Fix. updating system settings with user permission.
 
 

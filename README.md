@@ -1244,9 +1244,11 @@ For the example of the code above, the Custom widget is ChatRoomMenu. And I adde
 
 This widget accepts a String of URL together with width and height.
 
-The widget and height is used to size video.
+The width and height are respected to size the DisplayMedia widget.
 
 This widget displays any kind of url like photo, video, audio, txt, pdf, etc.
+
+See the details on the API Reference.
 
 
 Below is an example of displaying media by giving a photo url. 
