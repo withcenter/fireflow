@@ -206,6 +206,8 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
 - Delete the comment document if it has no decendants or all the decendants are deleted.
 
 
+- Doc. not to follow himself.
+
 # Getting started
 
 To get started, you would need to install the necessary parts of the Fireflow.
