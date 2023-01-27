@@ -35,6 +35,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
   - [Profile photo upload](#profile-photo-upload)
   - [Adding extra fields on users\_public\_data schema](#adding-extra-fields-on-users_public_data-schema)
+  - [User coding guideline](#user-coding-guideline)
 - [User setting](#user-setting)
   - [New Comment Notification](#new-comment-notification)
   - [Forum Category Subscription](#forum-category-subscription)
@@ -92,6 +93,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Logic of File management](#logic-of-file-management)
   - [Customizing File Management](#customizing-file-management)
 - [Supabase](#supabase)
+  - [Supabase settings](#supabase-settings)
   - [Supabase Table](#supabase-table)
     - [users\_public\_data](#users_public_data)
     - [posts](#posts)
@@ -417,6 +419,16 @@ Note, that the `userPublicDataDocumentReference` in `users` collection is set on
 ## Adding extra fields on users_public_data schema
 
 - You can simply add more fields on users_public_data schema.
+
+
+## User coding guideline
+
+- `UserService.instance.loginOrRegister()` creates an account or logs in if the account is already exists. You can use it for user sign-in. Or guest sign-in. You may create an account in FirebaseAuth and let all the guest users to sign-in with that account.
+
+
+- `UserService.instance.feeds()` returns the feeds of the users who the log-in user follows.
+
+- There are many methods you may want to use as a custom action.
 
 
 # User setting
@@ -1057,7 +1069,17 @@ AppService.instance.init(
     - `AppService.instance.init(supabase: SupabaseOptions(...))`.
     - See [the API reference](https://pub.dev/documentation/fireflow/latest/fireflow/SupabaseOptions-class.html) for details.
 
+## Supabase settings
 
+- Initialize supabase first, then put supabase options on AppService.
+
+```dart
+Supabase.initialize(
+  url: 'https://crhqrbyjksnyqdrpqedr.supabase.co',
+  anonKey:'eyJhbGc----xxxx---3bCoIh8is',
+);
+AppService.instance.init(supbase: SupabaseOptions( ... ));
+```
 
 
 

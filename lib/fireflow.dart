@@ -46,3 +46,6 @@ export 'src/widgets/custom_popup/custom_popup.dart';
 export 'src/widgets/display_media/display_media.dart';
 export 'src/widgets/safe_area/safe_area_top.dart';
 export 'src/widgets/safe_area/safe_area_bottom.dart';
+
+/// TEST
+export 'src/test/test.service.dart';

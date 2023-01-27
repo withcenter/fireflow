@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:example/firebase_options.dart';
+import 'package:example/key.dart';
 import 'package:example/router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fireflow/fireflow.dart';
@@ -13,8 +16,7 @@ void main() async {
 
   Supabase.initialize(
     url: 'https://crhqrbyjksnyqdrpqedr.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNyaHFyYnlqa3NueXFkcnBxZWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzQxODg0NDksImV4cCI6MTk4OTc2NDQ0OX0.r1Ke5LhgAYDDgBwH_4zJJaqWr_txUPWQGh3bCoIh8is',
+    anonKey: supabaseAnonKey,
   );
   runApp(const MyApp());
 }
@@ -61,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
@@ -79,8 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(title: Text('Home')),
       body: Center(
         child: ElevatedButton(
-          child: Text('Go to Profile'),
-          onPressed: () => AppService.instance.context.pushNamed('/profile'),
+          child: Text('Go'),
+          onPressed: TestService.instance.run,
         ),
       ),
     );

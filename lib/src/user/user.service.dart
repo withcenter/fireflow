@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
@@ -13,6 +14,8 @@ class UserService {
   static UserService get instance => _instance ?? (_instance = UserService());
   static UserService? _instance;
 
+  fa.FirebaseAuth get auth => fa.FirebaseAuth.instance;
+
   /// The Firebase Firestore instance
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -23,25 +26,25 @@ class UserService {
   DocumentReference doc(String id) => col.doc(id);
 
   /// The login user's uid
-  String get uid => fa.FirebaseAuth.instance.currentUser!.uid;
+  String get uid => auth.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
+  CollectionReference get publicDataCol => db.collection('users_public_data');
+
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
   /// The login user's Firebase User object.
-  fa.User get currentUser => fa.FirebaseAuth.instance.currentUser!;
+  fa.User get currentUser => auth.currentUser!;
 
   /// Returns true if the user is logged in.
-  bool get isLoggedIn => fa.FirebaseAuth.instance.currentUser != null;
+  bool get isLoggedIn => auth.currentUser != null;
   bool get notLoggedIn => !isLoggedIn;
 
   StreamSubscription? publicDataSubscription;
@@ -127,9 +130,7 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (SupabaseService.instance.storeUsersPubicData) {
@@ -235,11 +236,102 @@ class UserService {
 
   Map<String, dynamic> feed(PostModel post) {
     return {
-      'id': post.id,
+      'postDocumentReference': post.ref,
       'createdAt': post.createdAt,
       'title': post.safeTitle,
       'content': post.safeContent,
       if (post.files.isNotEmpty) 'photoUrl': post.files.first,
     };
+  }
+
+  /// Login or register.
+  ///
+  /// If the user is not found, it will create a new user.
+  ///
+  /// Use this for anonymous login, or for test.
+  Future loginOrRegister(String email, String password) async {
+    try {
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+    } on fa.FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        await auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      } else if (e.code == 'wrong-password') {
+        log('Wrong password provided for that user.');
+        rethrow;
+      } else {
+        log(e.toString());
+        rethrow;
+      }
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  /// Get the user's public data.
+  ///
+  /// User's email is a private information and should be accessed by the user.
+  /// Use this for test purpose. Save the user's email in the user's public data.
+  /// And serach it.
+  Future<UserModel> getByEmail(String email) async {
+    final snapshot = await publicDataCol.where('email', isEqualTo: email).get();
+    if (snapshot.docs.isEmpty) {
+      throw Exception("User not found.");
+    }
+    return UserModel.fromSnapshot(snapshot.docs.first);
+  }
+
+  /// Follow a user
+  ///
+  Future follow(DocumentReference userDocumentReference) async {
+    await publicRef.update({
+      'followings': FieldValue.arrayUnion([userDocumentReference]),
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> feeds({
+    int no = 10,
+  }) async {
+    final myUid = auth.currentUser!.uid;
+    final myReference = db.collection('users').doc(myUid);
+
+    /// Get the users that I follow, ordered by last post created at.
+    ///
+    Query q = db.collection('users_public_data').where('likes', arrayContains: myReference).orderBy('lastPostCreatedAt', descending: true);
+
+    /// Limit the number of (following) users to get if the app needs to display only a few posts.
+    if (no > 0) {
+      q = q.limit(no);
+    }
+
+    final usersQuerySnapshot = await q.get();
+
+    if (usersQuerySnapshot.size == 0 || usersQuerySnapshot.docs.isEmpty) {
+      return [];
+    }
+
+    // Merge the objects inside the array of usersQuerySnapshot.docs into a single array
+    // order by the feild timestamp in that object in descending order.
+    final List<Map<String, dynamic>> allRecentPosts = [];
+    for (final doc in usersQuerySnapshot.docs) {
+      final data = doc.data() as Map<String, dynamic>;
+      allRecentPosts.addAll(data['recentPosts'] as List<Map<String, dynamic>>? ?? []);
+    }
+    if (allRecentPosts.isEmpty) {
+      return [];
+    }
+
+    /// sort allRecentPosts by timestamp
+    /// 모든 사용자의 최근 게시물 ID 가져와서, timestamp 를 기준으로 정렬.
+    allRecentPosts.sort((a, b) {
+      final aTimestamp = DateTime.fromMillisecondsSinceEpoch(a['timestamp']);
+      final bTimestamp = DateTime.fromMillisecondsSinceEpoch(b['timestamp']);
+      return bTimestamp.compareTo(aTimestamp);
+    });
+
+    return allRecentPosts;
   }
 }

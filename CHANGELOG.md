@@ -1,3 +1,10 @@
+##
+
+* Fix. userDocumentReference in feed.
+* Add. more unit tests.
+* Add. feeds method.
+* Add. loginOrRegister.
+
 ## 0.0.98
 
 * Fix. DisplayMedia widget. Make it better display media.
