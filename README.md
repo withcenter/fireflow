@@ -1248,7 +1248,7 @@ The width and height are respected to size the DisplayMedia widget.
 
 This widget displays any kind of url like photo, video, audio, txt, pdf, etc.
 
-See the details on the API Reference.
+See the details on the [API reference - MediaDisplay](https://pub.dev/documentation/fireflow/latest/fireflow/DisplayMedia-class.html).
 
 
 Below is an example of displaying media by giving a photo url. 

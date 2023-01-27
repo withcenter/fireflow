@@ -182,8 +182,8 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer> {
 
 /// Display Media
 ///
-/// It displays the media from the given [url]. It can be a video, an image
-/// or any file.
+/// It displays any kinds of files based on the given [url] string. It can be
+/// used for the other pair of [UploadMedia] widget.
 ///
 /// The [width] and [height] are respected. You may pass `Inf` to adjust its
 /// size by parent.
