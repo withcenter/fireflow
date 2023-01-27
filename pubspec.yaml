@@ -70,8 +70,10 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   fake_cloud_firestore: ^2.3.0+3
+  firebase_auth_mocks: ^0.10.3
 
-# dependency_overrides:
-#   fake_cloud_firestore: ^2.3.0+3
+dependency_overrides:
+  # This is for firebase_auth_mocks. If it produces problem on deploying, remove it.
+  firebase_auth_platform_interface: 6.11.4
 
 flutter:

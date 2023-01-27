@@ -14,10 +14,11 @@ class AppService {
   static AppService? _instance;
 
   bool initialized = false;
-  late BuildContext context;
+  BuildContext? _context;
+  BuildContext get context => _context!;
 
   late final FirebaseFirestore db;
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  late final FirebaseAuth auth;
   CollectionReference get usersCol => db.collection('users');
   CollectionReference get systemSettingsCol => db.collection('system_settings');
   DocumentReference get keysRef => systemSettingsCol.doc('keys');
@@ -74,15 +75,16 @@ class AppService {
   ///
   ///
   void init({
-    required BuildContext context,
+    required BuildContext? context,
     bool debug = false,
     int noOfRecentPosts = 20,
     SupabaseOptions? supabase,
     MessagingOptions? messaging,
     FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
   }) {
     dog('AppService.instance.init()');
-    this.context = context;
+    _context = context;
     gDebug = debug;
     Config.instance.noOfRecentPosts = noOfRecentPosts;
     Config.instance.supabase = supabase;
@@ -96,6 +98,7 @@ class AppService {
       ///
       /// This is the only place where Firebase is initialized.
       db = firestore ?? FirebaseFirestore.instance;
+      this.auth = auth ?? FirebaseAuth.instance;
 
       ///
       initialized = true;
