@@ -1,5 +1,7 @@
 doc/
 etc/
+key.dart
+
 
 example/.dart_tool
 example/.idea
