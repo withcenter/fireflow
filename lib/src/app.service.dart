@@ -16,7 +16,7 @@ class AppService {
   bool initialized = false;
   late BuildContext context;
 
-  final FirebaseFirestore db = FirebaseFirestore.instance;
+  late final FirebaseFirestore db;
   final FirebaseAuth auth = FirebaseAuth.instance;
   CollectionReference get usersCol => db.collection('users');
   CollectionReference get systemSettingsCol => db.collection('system_settings');
@@ -42,7 +42,18 @@ class AppService {
     dog("AppService.constructor() called.");
   }
 
-  /// Initialize the settings of AppService.
+  /// Initialize the AppService.
+  ///
+  /// AppService is a singleton and must be called at immediately after the app
+  /// starts. You can call the init method multiple times to change the
+  /// settings. But the initialization will be done only once.
+  ///
+  /// The [context] is the BuildContext of the root level screen. It must be
+  /// valid and alive.
+  ///
+  /// The [debug] is to turn on/off the debug mode. It will print the logs in
+  /// the dev console.
+  ///
   ///
   /// This method must be called after the app boots and should be
   /// called on every root level screen with valid BuildContext. In other words,
@@ -61,12 +72,14 @@ class AppService {
   /// See the API reference for details.
   /// will be no snackbar.
   ///
+  ///
   void init({
     required BuildContext context,
     bool debug = false,
     int noOfRecentPosts = 20,
     SupabaseOptions? supabase,
     MessagingOptions? messaging,
+    FirebaseFirestore? firestore,
   }) {
     dog('AppService.instance.init()');
     this.context = context;
@@ -78,6 +91,13 @@ class AppService {
     ///
     if (initialized == false) {
       dog("AppService.instance.init() - initializing...");
+
+      /// Setup Firebase.
+      ///
+      /// This is the only place where Firebase is initialized.
+      db = firestore ?? FirebaseFirestore.instance;
+
+      ///
       initialized = true;
       _initSystemKeys();
       _initUser();
