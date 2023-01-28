@@ -1,7 +1,7 @@
-import 'dart:developer';
-
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/test/test.config.dart';
+import 'package:fireflow/src/test/test.feeds.dart';
+import 'package:fireflow/src/test/test.follow.dart';
+import 'package:fireflow/src/test/test.utils.dart';
 
 class TestService {
   static final TestService instance = _instance ??= TestService();
@@ -11,18 +11,16 @@ class TestService {
   Future run() async {
     await loadUsers();
     await clear();
-    await loginA();
-    await createPost();
-    await loginB();
-    await follow(TestConfig.emailA);
-    await feeds();
+
+    await testFollow();
+    await testFeeds();
   }
 
   /// Prepare test.
   ///
   /// Call this only one time if the test has been run before.
   Future prepare() async {
-    log('Prepare test. Create test users.');
+    dog('Prepare test. Create test users.');
     await loginA();
     await wait(1000);
     await loginB();
@@ -30,77 +28,8 @@ class TestService {
     await loginC();
     await wait(1000);
     await loginD();
-    await wait(2000);
+    await wait(1000);
     await loginAsAdmin();
     await wait();
-  }
-
-  Future loadUsers() async {
-    log('Load test users');
-    TestConfig.a = await UserService.instance.getByEmail(TestConfig.emailA);
-    TestConfig.b = await UserService.instance.getByEmail(TestConfig.emailB);
-    TestConfig.c = await UserService.instance.getByEmail(TestConfig.emailC);
-    TestConfig.d = await UserService.instance.getByEmail(TestConfig.emailD);
-  }
-
-  Future clear() async {
-    log('Clear all posts of test users');
-    loginAsAdmin();
-    wait(1000);
-    final snapshot = await PostService.instance.col.where('userDocumentReference', whereIn: [
-      TestConfig.a.ref,
-      TestConfig.b.ref,
-      TestConfig.c.ref,
-      TestConfig.d.ref,
-    ]).get();
-
-    print('Got ${snapshot.size} posts to delete');
-
-    for (final doc in snapshot.docs) {
-      final post = PostModel.fromSnapshot(doc);
-      print('Deleting, title: ${post.title}');
-      await doc.reference.delete();
-    }
-  }
-
-  Future wait([int? ms]) async {
-    await Future.delayed(Duration(milliseconds: ms ?? 200));
-  }
-
-  Future loginAsAdmin() async {
-    return loginAs(TestConfig.adminEmail, TestConfig.adminPassword);
-  }
-
-  Future loginAs(String email, [String? password]) async {
-    log('Login as $email');
-    await UserService.instance.loginOrRegister(email, password ?? TestConfig.password);
-    await UserService.instance.publicRef.update({'email': email});
-    log('uid: ${UserService.instance.uid}');
-  }
-
-  Future loginA() => loginAs(TestConfig.emailA);
-  Future loginB() => loginAs(TestConfig.emailB);
-  Future loginC() => loginAs(TestConfig.emailC);
-  Future loginD() => loginAs(TestConfig.emailD);
-
-  Future createPost() async {
-    log('Create a post');
-    final ref = await PostService.instance.col.add({
-      'category': 'qna',
-      'userDocumentReference': UserService.instance.ref,
-      'title': 'Created by ${UserService.instance.my.data['email']} at ${DateTime.now()}',
-      'content': 'Content. Created by ${UserService.instance.my.data['email']} at ${DateTime.now()}',
-    });
-    await PostService.instance.afterCreate(postDocumentReference: ref);
-  }
-
-  Future follow(String email) async {
-    log('Follow $email');
-    final user = await UserService.instance.getByEmail(email);
-    await UserService.instance.follow(user.ref);
-  }
-
-  Future feeds() async {
-    log('Feeds');
   }
 }

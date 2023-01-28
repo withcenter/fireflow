@@ -13,4 +13,5 @@ class TestConfig {
   static late UserModel b;
   static late UserModel c;
   static late UserModel d;
+  static late UserModel admin;
 }

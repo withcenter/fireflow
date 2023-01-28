@@ -114,6 +114,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 - [Functions](#functions)
   - [Country Code](#country-code)
 - [Unit Testing](#unit-testing)
+  - [Fireflow real test](#fireflow-real-test)
 - [Developer coding guide](#developer-coding-guide)
   - [Developing with Fireflow](#developing-with-fireflow)
   - [Development tips](#development-tips)
@@ -939,6 +940,7 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 ### Post Delete
 
 - call `PostService.instance.afterDelete` after delete a post.
+- Note that, when you develop app with fireflow, it is recommended not to actually delete the posts and comments even if the security rules allow to do so. It's up to you how you design the logic of your app. You may mark the app as deleted and may delete the title, comment, etc.
 
 
 ## Comment
@@ -1383,7 +1385,14 @@ The current version of fireflow has no backend. And most of the difficult logics
 
 - [Firestore security rule - unit test](https://github.com/withcenter/fireflow/blob/main/firebase/firestore/tests/test.spec.js).
 - Refere some of the [Fireflow - unit test](https://github.com/withcenter/fireflow/tree/main/test).
-- Fireflow has its own unit test code to make it easy to test on real server. See [Unit test of fireflow version](https://github.com/withcenter/fireflow/blob/main/example/lib/test.dart).
+- Fireflow has its own unit test to make it easy for running the test on the real servers. let's call it [fireflow real test](#fireflow-real-test).
+
+## Fireflow real test
+
+- See [the source code for fireflow real test](https://github.com/withcenter/fireflow/blob/main/example/lib/test.dart).
+- To make it run,
+  - You may need to set the `key.dart` file for the keys that you are going to test. (You may probably not need it)
+  - Hot restart after updating the code.
 
 # Developer coding guide
 

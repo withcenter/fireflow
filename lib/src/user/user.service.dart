@@ -72,14 +72,17 @@ class UserService {
   }
 
   /// Returns the user's public data model.
-  Future<UserPublicDataModel> getUserPublicData() async {
+  Future<UserPublicDataModel> getPublicData() async {
     // get the user's public data from the database
     final snapshot = await myUserPublicDataRef.get();
     return UserPublicDataModel.fromSnapshot(snapshot);
   }
 
-  Future<UserPublicDataModel> get(String id) async {
-    return UserPublicDataModel.fromSnapshot(await doc(id).get());
+  /// Get user document by uid.
+  ///
+  /// Note, it's not getting the user's public data.
+  Future<UserPublicDataModel> get([String? id]) async {
+    return UserPublicDataModel.fromSnapshot(await doc(id ?? uid).get());
   }
 
   /// Creates /users_public_data/{uid} if it does not exist.
@@ -174,7 +177,7 @@ class UserService {
       return;
     }
 
-    final userPublicData = await getUserPublicData();
+    final userPublicData = await getPublicData();
 
     String? fieldNameValue = userPublicData.data[fieldName];
 
@@ -289,6 +292,14 @@ class UserService {
   Future follow(DocumentReference userDocumentReference) async {
     await publicRef.update({
       'followings': FieldValue.arrayUnion([userDocumentReference]),
+    });
+  }
+
+  /// Reset the followings
+  ///
+  Future clearFollowings() async {
+    await publicRef.update({
+      'followings': [],
     });
   }
 
