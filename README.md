@@ -1381,7 +1381,7 @@ Add snackBarWarning Custom Action like below.
 
 # Unit Testing
 
-The current version of fireflow has no backend. And most of the difficult logics goes under the scene. We have some tests and wil have more in the future.
+The current version of fireflow has no backend. ([The previous version of fireflow](https://github.com/thruthesky/fireflow_202211/tree/main/functions/src) was developed heavily based on Cloud Functions.) Now in this version, it simply works as a custom action and the most of the complicated logic goes under the scene. And yes, we need tests to give some trust on our code.
 
 - [Firestore security rule - unit test](https://github.com/withcenter/fireflow/blob/main/firebase/firestore/tests/test.spec.js).
 - Refere some of the [Fireflow - unit test](https://github.com/withcenter/fireflow/tree/main/test).
