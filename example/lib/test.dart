@@ -79,10 +79,21 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Home')),
-      body: Center(
-        child: ElevatedButton(
-          child: Text('Go'),
-          onPressed: TestService.instance.run,
+      body: Container(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              child: Text('Prepare'),
+              onPressed: TestService.instance.prepare,
+            ),
+            ElevatedButton(
+              child: Text('Run'),
+              onPressed: TestService.instance.run,
+            ),
+          ],
         ),
       ),
     );

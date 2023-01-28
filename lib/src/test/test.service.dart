@@ -9,6 +9,8 @@ class TestService {
   TestService();
 
   Future run() async {
+    await clear();
+    await loadUsers();
     await loginA();
     await createPost();
     await loginB();
@@ -16,31 +18,65 @@ class TestService {
     await feeds();
   }
 
-  Future loginA() async {
-    log('Login as A');
-    await UserService.instance.loginOrRegister(TestConfig.emailA, TestConfig.password);
-    await UserService.instance.publicRef.update({'email': TestConfig.emailA});
+  /// Prepare test.
+  ///
+  /// Call this only one time if the test has been run before.
+  Future prepare() async {
+    log('Prepare test. Create test users.');
+    await loginA();
+    await wait();
+    await loginB();
+    await wait();
+    await loginC();
+    await wait();
+    await loginD();
+    await wait();
+    await loginAsAdmin();
+    await wait();
+  }
+
+  Future loadUsers() async {
+    log('Load test users');
+    TestConfig.a = await UserService.instance.getByEmail(TestConfig.emailA);
+    TestConfig.b = await UserService.instance.getByEmail(TestConfig.emailB);
+    TestConfig.c = await UserService.instance.getByEmail(TestConfig.emailC);
+    TestConfig.d = await UserService.instance.getByEmail(TestConfig.emailD);
+  }
+
+  Future clear() async {
+    log('Clear all posts of test users');
+    loginAsAdmin();
+    wait();
+    final snapshot = await PostService.instance.col.where('userDocumentReference', arrayContainsAny: [
+      TestConfig.a.ref,
+      TestConfig.b.ref,
+      TestConfig.c.ref,
+      TestConfig.d.ref,
+    ]).get();
+    for (final doc in snapshot.docs) {
+      await doc.reference.delete();
+    }
+  }
+
+  Future wait() async {
+    await Future.delayed(const Duration(milliseconds: 200));
+  }
+
+  Future loginAsAdmin() async {
+    return loginAs(TestConfig.adminEmail, TestConfig.adminPassword);
+  }
+
+  Future loginAs(String email, [String? password]) async {
+    log('Login as $email');
+    await UserService.instance.loginOrRegister(email, password ?? TestConfig.password);
+    await UserService.instance.publicRef.update({'email': email});
     log('uid: ${UserService.instance.uid}');
   }
 
-  Future loginB() async {
-    log('Login as B');
-    await UserService.instance.loginOrRegister(TestConfig.emailB, TestConfig.password);
-    await UserService.instance.publicRef.update({'email': TestConfig.emailB});
-    log('uid: ${UserService.instance.uid}');
-  }
-
-  Future loginC() async {
-    log('Login as C');
-    await UserService.instance.loginOrRegister(TestConfig.emailC, TestConfig.password);
-    await UserService.instance.publicRef.update({'email': TestConfig.emailC});
-  }
-
-  Future loginD() async {
-    log('Login as D');
-    await UserService.instance.loginOrRegister(TestConfig.emailD, TestConfig.password);
-    await UserService.instance.publicRef.update({'email': TestConfig.emailD});
-  }
+  Future loginA() => loginAs(TestConfig.emailA);
+  Future loginB() => loginAs(TestConfig.emailB);
+  Future loginC() => loginAs(TestConfig.emailC);
+  Future loginD() => loginAs(TestConfig.emailD);
 
   Future createPost() async {
     log('Create a post');
