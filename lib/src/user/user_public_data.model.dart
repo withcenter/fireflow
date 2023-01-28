@@ -16,7 +16,8 @@ class UserPublicDataModel {
   bool hasPhoto;
   bool isProfileComplete;
   String coverPhotoUrl;
-  List<Map<String, dynamic>> recentPosts;
+  UserPublicDataRecentPostModel? lastPost;
+  List<UserPublicDataRecentPostModel>? recentPosts;
   Timestamp lastPostCreatedAt;
   bool isPremiumUser;
   List<DocumentReference> followings;
@@ -36,6 +37,7 @@ class UserPublicDataModel {
     required this.hasPhoto,
     required this.isProfileComplete,
     required this.coverPhotoUrl,
+    required this.lastPost,
     required this.recentPosts,
     required this.lastPostCreatedAt,
     required this.isPremiumUser,
@@ -70,7 +72,8 @@ class UserPublicDataModel {
       hasPhoto: json['hasPhoto'] ?? false,
       isProfileComplete: json['isProfileComplete'] ?? false,
       coverPhotoUrl: json['coverPhotoUrl'] ?? '',
-      recentPosts: List<Map<String, dynamic>>.from(json['recentPosts'] ?? []),
+      lastPost: json['lastPost'] != null ? UserPublicDataRecentPostModel.fromJson(json['lastPost']) : null,
+      recentPosts: json['recentPosts'] != null ? (json['recentPosts'] as List).map((e) => UserPublicDataRecentPostModel.fromJson(e)).toList() : null,
       lastPostCreatedAt: json['lastPostCreatedAt'] ?? Timestamp.now(),
       isPremiumUser: json['isPremiumUser'] ?? false,
       followings: List<DocumentReference>.from(json['followings'] ?? []),
@@ -82,5 +85,40 @@ class UserPublicDataModel {
   @override
   String toString() {
     return "UserPublicDataModel(uid: $uid, userDocumentReference: $userDocumentReference, displayName: $displayName, photoUrl: $photoUrl, gender: $gender, registeredAt: $registeredAt, updatedAt: $updatedAt, birthday: $birthday, hasPhoto: $hasPhoto, isProfileComplete: $isProfileComplete, coverPhotoUrl: $coverPhotoUrl, recentPosts: $recentPosts, lastPostCreatedAt: $lastPostCreatedAt, isPremiumUser: $isPremiumUser, followings: $followings, data: $data)";
+  }
+}
+
+class UserPublicDataRecentPostModel {
+  final DocumentReference postDocumentReference;
+  final String title;
+  final String content;
+  final String? photoUrl;
+  final Timestamp createdAt;
+
+  UserPublicDataRecentPostModel({
+    required this.postDocumentReference,
+    required this.title,
+    required this.content,
+    required this.photoUrl,
+    required this.createdAt,
+  });
+
+  factory UserPublicDataRecentPostModel.fromJson(Map<String, dynamic> json) {
+    return UserPublicDataRecentPostModel(
+      postDocumentReference: json['postDocumentReference'],
+      title: json['title'] ?? '',
+      content: json['content'] ?? '',
+      photoUrl: json['photoUrl'],
+      createdAt: json['createdAt'] ?? Timestamp.now(),
+    );
+  }
+  toJson() {
+    return {
+      'postDocumentReference': postDocumentReference,
+      'title': title,
+      'content': content,
+      if (photoUrl != null) 'photoUrl': photoUrl,
+      'createdAt': createdAt,
+    };
   }
 }

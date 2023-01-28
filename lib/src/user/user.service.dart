@@ -229,22 +229,23 @@ class UserService {
   /// If the number of recentPosts is greater than Config.instance.noOfRecentPosts,
   /// it will remove the oldest post.
   recentPosts(PostModel post) {
-    List<Map<String, dynamic>> posts = my.recentPosts;
-    if (posts.length >= Config.instance.noOfRecentPosts) {
-      posts.removeRange(Config.instance.noOfRecentPosts - 1, posts.length);
+    List recentPosts = my.recentPosts ?? [];
+    if (recentPosts.length >= Config.instance.noOfRecentPosts) {
+      recentPosts.removeRange(Config.instance.noOfRecentPosts - 1, recentPosts.length);
     }
-    posts.insert(0, feed(post));
-    return posts;
+    recentPosts.insert(0, feed(post));
+    return recentPosts;
   }
 
-  Map<String, dynamic> feed(PostModel post) {
-    return {
-      'postDocumentReference': post.ref,
-      'createdAt': post.createdAt,
-      'title': post.safeTitle,
-      'content': post.safeContent,
-      if (post.files.isNotEmpty) 'photoUrl': post.files.first,
-    };
+  /// Get feed data from the post.
+  UserPublicDataRecentPostModel feed(PostModel post) {
+    return UserPublicDataRecentPostModel(
+      postDocumentReference: post.ref,
+      createdAt: post.createdAt,
+      title: post.safeTitle,
+      content: post.safeContent,
+      photoUrl: post.files.isNotEmpty ? post.files.first : null,
+    );
   }
 
   /// Login or register.
@@ -303,19 +304,19 @@ class UserService {
     });
   }
 
-  Future<List<Map<String, dynamic>>> feeds({
-    int no = 10,
+  /// Get feeds of the login user
+  ///
+  /// [noOfFollowers] is the number of followers to get. If it is 0, it will get all the followers.
+  Future<List<UserPublicDataRecentPostModel>> feeds({
+    int noOfFollowers = 0,
   }) async {
-    final myUid = auth.currentUser!.uid;
-    final myReference = db.collection('users').doc(myUid);
-
     /// Get the users that I follow, ordered by last post created at.
     ///
-    Query q = db.collection('users_public_data').where('likes', arrayContains: myReference).orderBy('lastPostCreatedAt', descending: true);
+    Query q = db.collection('users_public_data').where('userDocumentReference', whereIn: my.followings).orderBy('lastPostCreatedAt', descending: true);
 
     /// Limit the number of (following) users to get if the app needs to display only a few posts.
-    if (no > 0) {
-      q = q.limit(no);
+    if (noOfFollowers > 0) {
+      q = q.limit(noOfFollowers);
     }
 
     final usersQuerySnapshot = await q.get();
@@ -326,22 +327,18 @@ class UserService {
 
     // Merge the objects inside the array of usersQuerySnapshot.docs into a single array
     // order by the feild timestamp in that object in descending order.
-    final List<Map<String, dynamic>> allRecentPosts = [];
+    final List<UserPublicDataRecentPostModel> allRecentPosts = [];
     for (final doc in usersQuerySnapshot.docs) {
-      final data = doc.data() as Map<String, dynamic>;
-      allRecentPosts.addAll(data['recentPosts'] as List<Map<String, dynamic>>? ?? []);
+      // final data = doc.data() as Map<String, dynamic>;
+      final user = UserPublicDataModel.fromSnapshot(doc);
+      if (user.recentPosts != null) allRecentPosts.addAll(user.recentPosts!);
     }
     if (allRecentPosts.isEmpty) {
       return [];
     }
 
     /// sort allRecentPosts by timestamp
-    /// 모든 사용자의 최근 게시물 ID 가져와서, timestamp 를 기준으로 정렬.
-    allRecentPosts.sort((a, b) {
-      final aTimestamp = DateTime.fromMillisecondsSinceEpoch(a['timestamp']);
-      final bTimestamp = DateTime.fromMillisecondsSinceEpoch(b['timestamp']);
-      return bTimestamp.compareTo(aTimestamp);
-    });
+    allRecentPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     return allRecentPosts;
   }

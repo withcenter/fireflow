@@ -1381,7 +1381,7 @@ Add snackBarWarning Custom Action like below.
 
 # Unit Testing
 
-The current version of fireflow has no backend. ([The previous version of fireflow](https://github.com/thruthesky/fireflow_202211/tree/main/functions/src) was developed heavily based on Cloud Functions.) Now in this version, it simply works as a custom action and the most of the complicated logic goes under the scene. And yes, we need tests to give some trust on our code.
+The current version of fireflow has no backend. ([The previous version of fireflow](https://github.com/thruthesky/fireflow_202211/tree/main/functions/src) was developed heavily based on Cloud Functions.) Now in this version, it simply works as a custom action and the most of the complicated logic goes under the scene. Yes, we need tests to give some trust on our code. And it's a bit different from the standard Flutter test.
 
 - [Firestore security rule - unit test](https://github.com/withcenter/fireflow/blob/main/firebase/firestore/tests/test.spec.js).
 - Refere some of the [Fireflow - unit test](https://github.com/withcenter/fireflow/tree/main/test).
@@ -1389,6 +1389,7 @@ The current version of fireflow has no backend. ([The previous version of firefl
 
 ## Fireflow real test
 
+- Fireflow needs unit test with full functional app features and servers. The Integration test is too slow and I cannot work with it. So, I made one by myself. The test runs after boot or by manual trigger. And it does not report the test result. So, it's not fit for the test in CI/CD pipeline. But will do the unit test.
 - See [the source code for fireflow real test](https://github.com/withcenter/fireflow/blob/main/example/lib/test.dart).
 - To make it run,
   - You may need to set the `key.dart` file for the keys that you are going to test. (You may probably not need it)

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/test/test.config.dart';
 
@@ -60,4 +61,22 @@ Future createPost() async {
     'content': 'Content. Created by ${UserService.instance.my.data['email']} at ${DateTime.now()}',
   });
   await PostService.instance.afterCreate(postDocumentReference: ref);
+}
+
+/// Deletes all the posts of the login user.
+Future deletePosts() async {
+  dog('Delete all posts');
+  final snapshot = await PostService.instance.col.where('userDocumentReference', isEqualTo: UserService.instance.ref).get();
+  for (final doc in snapshot.docs) {
+    await doc.reference.delete();
+  }
+}
+
+/// Clear feeds of the login user.
+Future clearFeeds() async {
+  dog('Clear all feeds of ${UserService.instance.my.data['email']}}');
+  await UserService.instance.publicRef.update({
+    'lastPost': FieldValue.delete(),
+    'recentPosts': FieldValue.delete(),
+  });
 }
