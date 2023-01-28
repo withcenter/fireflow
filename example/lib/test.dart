@@ -45,8 +45,8 @@ class _MyAppState extends State<MyApp> {
           postsAndComments: 'posts_and_comments',
         ),
         messaging: MessagingOptions(
-          foreground: true,
-          background: true,
+          foreground: false,
+          background: false,
           onTap: (String initialPageName, Map<String, String> parameterData) {
             dog('on message tap: $initialPageName, Map<String, String> $parameterData');
             AppService.instance.context.pushNamed(initialPageName, queryParams: parameterData);

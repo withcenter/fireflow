@@ -9,8 +9,8 @@ class TestService {
   TestService();
 
   Future run() async {
-    await clear();
     await loadUsers();
+    await clear();
     await loginA();
     await createPost();
     await loginB();
@@ -24,13 +24,13 @@ class TestService {
   Future prepare() async {
     log('Prepare test. Create test users.');
     await loginA();
-    await wait();
+    await wait(1000);
     await loginB();
-    await wait();
+    await wait(1000);
     await loginC();
-    await wait();
+    await wait(1000);
     await loginD();
-    await wait();
+    await wait(2000);
     await loginAsAdmin();
     await wait();
   }
@@ -46,20 +46,25 @@ class TestService {
   Future clear() async {
     log('Clear all posts of test users');
     loginAsAdmin();
-    wait();
-    final snapshot = await PostService.instance.col.where('userDocumentReference', arrayContainsAny: [
+    wait(1000);
+    final snapshot = await PostService.instance.col.where('userDocumentReference', whereIn: [
       TestConfig.a.ref,
       TestConfig.b.ref,
       TestConfig.c.ref,
       TestConfig.d.ref,
     ]).get();
+
+    print('Got ${snapshot.size} posts to delete');
+
     for (final doc in snapshot.docs) {
+      final post = PostModel.fromSnapshot(doc);
+      print('Deleting, title: ${post.title}');
       await doc.reference.delete();
     }
   }
 
-  Future wait() async {
-    await Future.delayed(const Duration(milliseconds: 200));
+  Future wait([int? ms]) async {
+    await Future.delayed(Duration(milliseconds: ms ?? 200));
   }
 
   Future loginAsAdmin() async {
@@ -83,8 +88,8 @@ class TestService {
     final ref = await PostService.instance.col.add({
       'category': 'qna',
       'userDocumentReference': UserService.instance.ref,
-      'title': 'Hello World',
-      'content': 'This is a test post.',
+      'title': 'Created by ${UserService.instance.my.data['email']} at ${DateTime.now()}',
+      'content': 'Content. Created by ${UserService.instance.my.data['email']} at ${DateTime.now()}',
     });
     await PostService.instance.afterCreate(postDocumentReference: ref);
   }
