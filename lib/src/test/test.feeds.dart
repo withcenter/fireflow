@@ -45,7 +45,9 @@ Future testFeeds() async {
 
   List<Map<String, dynamic>> json = await UserService.instance.jsonFeeds();
   assert(json.length == 4, 'Feeds must have 4 items');
-  assert(json.first['title'] == feeds3.first.title && json.first['title'] == '4', 'The first feed title must be letter 4');
+  assert(
+      json.first['title'] == feeds3.first.title && json.first['title'] == '4',
+      'The first feed title must be letter 4');
 
   json = await UserService.instance.jsonFeeds(noOfFollowers: 1);
   assert(json.length == 2, 'Feeds must have 2 items');

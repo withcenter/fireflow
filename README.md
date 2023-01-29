@@ -87,7 +87,10 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Updating post](#updating-post)
   - [Comment creation](#comment-creation)
   - [Last post](#last-post)
-- [Feed, recentPosts](#feed-recentposts)
+- [Feeds, recentPosts](#feeds-recentposts)
+  - [How to display feeds](#how-to-display-feeds)
+    - [Display the recent feed](#display-the-recent-feed)
+    - [Display the list of recent feeds](#display-the-list-of-recent-feeds)
 - [Files](#files)
   - [Overview of file management](#overview-of-file-management)
   - [Logic of File management](#logic-of-file-management)
@@ -1000,11 +1003,10 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 - `users_public_data.lastPost` has the last post that user created.
 
-# Feed, recentPosts
+# Feeds, recentPosts
 
-- Displaying the feed is very simple with fireflow. Just get the public data document of the users who you follow and disply the posts in `recentPosts` field. Note that, the `recentPosts` are updated when the app create a post with `afterPostCreate` action.
+- Displaying the feed is very simple with fireflow. See [How to display feeds](#how-to-display-feeds).
 - `/users_public_data/<uid> { recentPosts: ... }` has the user's recent posts and you can use this to display the feeds of the users who you follow.
-  - You can get the `/users_public_data` documents of the users who you follow by searching the `followers` field that contains your ref.
 - The `users_public_data.recentPosts` field is a map of `recentPosts` which has `postDocumentReference`, `title`, `content`, `createdAt`, and optional `photoUrl`. The `title` and `content` are in the safe string format. See the [safeString](#safe-string) function. If the post has no url, the `photoUrl` would not exists and this would lead an empty string when it is parsed by the model or by the flutterflow.
 - You can set the number of recent posts to store the last recent posts of each user by passing a number in `AppService.instance.init()`. It's 20 by default. See the API reference for details.
 ```dart
@@ -1017,10 +1019,21 @@ AppService.instance.init(
 
 - The last post will be at first of the `recentPosts` array field.
 
-- There are multiple ways of how you want to display the feed.
-  - You may order by `lastPostCreatedAt` of the `users_public_data` collection. So, you can display the last post of each user.
-  - You may use `UserService.instance.feeds` method and put it as an FF custom action to get the whole list of `recentPosts` of your followers.
 
+## How to display feeds
+
+
+### Display the recent feed
+
+- To display the last post of the users that the login-in user follows,
+  - Get the followings order by `lastPostCreatedAt`.
+  - Display the feed in `lastPost`.
+
+
+### Display the list of recent feeds
+
+- To display the recent feeds(posts) of the users that the login-in user follows,
+  - Call `UserService.instance.jsonFeeds` to get the list of the feeds and display.
 
 
 # Files
