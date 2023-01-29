@@ -77,7 +77,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       TestService.instance.run();
@@ -87,20 +86,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home')),
-      body: Container(
+      appBar: AppBar(title: const Text('Home')),
+      body: SizedBox(
         width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              child: Text('Prepare'),
               onPressed: TestService.instance.prepare,
+              child: const Text('Prepare'),
             ),
             ElevatedButton(
-              child: Text('Run'),
               onPressed: TestService.instance.run,
+              child: const Text('Run'),
             ),
           ],
         ),

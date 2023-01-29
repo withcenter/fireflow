@@ -16,6 +16,7 @@ class AppService {
   bool initialized = false;
   BuildContext? _context;
   BuildContext get context => _context!;
+  set context(BuildContext context) => _context = context;
 
   late final FirebaseFirestore db;
   late final FirebaseAuth auth;

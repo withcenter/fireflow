@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fireflow/fireflow.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
 void main() async {
   test('Category Model', () {
+    CategoryService.instance.firestore = FakeFirebaseFirestore();
     final category = CategoryModel(
       category: 'id',
       title: 'name',

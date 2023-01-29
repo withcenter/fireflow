@@ -33,6 +33,17 @@ class CustomStyleArrow extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+/// Show the snackbar
+showSnackBar(BuildContext? context, SnackBar snackBarContent) {
+  if (context != null) {
+    AppService.instance.context = context;
+  }
+  ScaffoldMessenger.of(context ?? AppService.instance.context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(snackBarContent);
+}
+
+/// Create the snackbar content
 SnackBar snackBarContent({
   required String title,
   required String message,
@@ -79,8 +90,7 @@ SnackBar snackBarContent({
             ),
             IconButton(
               onPressed: () {
-                ScaffoldMessenger.of(AppService.instance.context)
-                    .hideCurrentSnackBar();
+                ScaffoldMessenger.of(AppService.instance.context).hideCurrentSnackBar();
               },
               icon: Icon(
                 Icons.close,
@@ -113,50 +123,57 @@ SnackBar snackBarContent({
   );
 }
 
-/// show a modal on top.
+/// Show a snackbar with success icon.
 ///
 /// showModalTopSheet is a custom action that shows a modal top sheet.
 /// It can be used to display a snackbar on top.
+///
+/// [context] is the context of the widget that is calling the action. It is
+/// optional. If you don't initialize the AppService, you must pass the context
+/// here. And the [context] will be set to the AppService.
+///
+/// [title] is the title of the snackbar.
+///
+/// [message] is the message of the snackbar.
 snackBarSuccess({
   required String title,
   required String message,
+  BuildContext? context,
   int? seconds,
 }) {
-  ScaffoldMessenger.of(AppService.instance.context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(
-      snackBarContent(
-        title: title,
-        message: message,
-        backgroundColor: Colors.black,
-        closeButtonColor: Colors.amber,
-        icon: const Icon(Icons.check_circle, color: Colors.green, size: 28),
-        arrowBackgroundColor: Colors.white,
-        seconds: seconds,
-      ),
-    );
+  showSnackBar(
+    context,
+    snackBarContent(
+      title: title,
+      message: message,
+      backgroundColor: Colors.black,
+      closeButtonColor: Colors.amber,
+      icon: const Icon(Icons.check_circle, color: Colors.green, size: 28),
+      arrowBackgroundColor: Colors.white,
+      seconds: seconds,
+    ),
+  );
 }
 
-/// show a modal on top.
+/// Show a snackbar with error icon.
 ///
-/// showModalTopSheet is a custom action that shows a modal top sheet.
-/// It can be used to display a snackbar on top.
+/// See [snackBarSuccess] for more information.
 snackBarWarning({
   required String title,
   required String message,
   int? seconds,
+  BuildContext? context,
 }) {
-  ScaffoldMessenger.of(AppService.instance.context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(
-      snackBarContent(
-        title: title,
-        message: message,
-        backgroundColor: Colors.amber.shade700,
-        closeButtonColor: Colors.white,
-        icon: Icon(Icons.error, color: Colors.amber.shade800, size: 28),
-        arrowBackgroundColor: Colors.white,
-        seconds: seconds,
-      ),
-    );
+  showSnackBar(
+    context,
+    snackBarContent(
+      title: title,
+      message: message,
+      backgroundColor: Colors.amber.shade700,
+      closeButtonColor: Colors.white,
+      icon: Icon(Icons.error, color: Colors.amber.shade800, size: 28),
+      arrowBackgroundColor: Colors.white,
+      seconds: seconds,
+    ),
+  );
 }
