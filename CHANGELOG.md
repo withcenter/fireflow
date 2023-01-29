@@ -1,6 +1,6 @@
 ## 0.0.101
 
-* Fix. dependencies
+* Fix. dependencies.
 
 
 ## 0.0.100
