@@ -123,6 +123,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 - [Known Issues](#known-issues)
   - [Push notification and back navigation](#push-notification-and-back-navigation)
   - [\[cloud\_firestore/permission\_denied\] The caller does not have permission to execute the specified operation.](#cloud_firestorepermission_denied-the-caller-does-not-have-permission-to-execute-the-specified-operation)
+  - [Snackbar](#snackbar)
 
 
 # Overview
@@ -1448,3 +1449,10 @@ This permission error may not appear always.
 
 [cloud_firestore/permission_denied] happens often when the app is listening to some documents and suddenly user login status changes. For instance, the app is listening to a chat room and the user suddenly leaves the chat room. And it would be best if the app handles all the [cloud_firestore/permission_denied] exceptions nicely, but in some cases (or in many cases) it is just okay with the permission exceptions.
 
+
+## Snackbar
+
+
+The issue below happens only when you zoom in the browser while running debug run.
+
+![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-snackbar-issue.jpg?raw=true)
