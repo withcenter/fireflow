@@ -53,7 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () => snackBarSuccess(context: context, title: 'title', message: 'message'),
+              onPressed: () => snackBarSuccess(
+                  context: context, title: 'title', message: 'message'),
               child: const Text('snackbar'),
             ),
           ],

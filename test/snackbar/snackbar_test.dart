@@ -11,7 +11,8 @@ void main() {
           body: Builder(builder: (context) {
             return ElevatedButton(
               onPressed: () {
-                snackBarSuccess(context: context, title: 'Hello,', message: 'How are you?');
+                snackBarSuccess(
+                    context: context, title: 'Hello,', message: 'How are you?');
               },
               child: const Text('snackbar'),
             );

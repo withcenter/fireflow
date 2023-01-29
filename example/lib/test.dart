@@ -49,7 +49,8 @@ class _MyAppState extends State<MyApp> {
           background: false,
           onTap: (String initialPageName, Map<String, String> parameterData) {
             dog('on message tap: $initialPageName, Map<String, String> $parameterData');
-            AppService.instance.context.pushNamed(initialPageName, queryParams: parameterData);
+            AppService.instance.context
+                .pushNamed(initialPageName, queryParams: parameterData);
           },
         ),
       );

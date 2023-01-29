@@ -1,5 +1,7 @@
-##
+## 0.0.99
 
+* Fix. test.
+* Update. snackbar now works without app service init.
 * Fix. userDocumentReference in feed.
 * Add. more unit tests.
 * Add. feeds method.

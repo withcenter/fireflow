@@ -90,7 +90,8 @@ SnackBar snackBarContent({
             ),
             IconButton(
               onPressed: () {
-                ScaffoldMessenger.of(AppService.instance.context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(AppService.instance.context)
+                    .hideCurrentSnackBar();
               },
               icon: Icon(
                 Icons.close,

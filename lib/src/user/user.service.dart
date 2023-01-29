@@ -29,14 +29,16 @@ class UserService {
   String get uid => auth.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref =>
+      FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
   CollectionReference get publicDataCol => db.collection('users_public_data');
 
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef =>
+      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
@@ -133,7 +135,9 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef
+        .snapshots()
+        .listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         if (SupabaseService.instance.storeUsersPubicData) {
@@ -231,7 +235,8 @@ class UserService {
   recentPosts(PostModel post) {
     List recentPosts = my.recentPosts ?? [];
     if (recentPosts.length >= Config.instance.noOfRecentPosts) {
-      recentPosts.removeRange(Config.instance.noOfRecentPosts - 1, recentPosts.length);
+      recentPosts.removeRange(
+          Config.instance.noOfRecentPosts - 1, recentPosts.length);
     }
     recentPosts.insert(0, feed(post));
     return recentPosts;
@@ -312,7 +317,10 @@ class UserService {
   }) async {
     /// Get the users that I follow, ordered by last post created at.
     ///
-    Query q = db.collection('users_public_data').where('userDocumentReference', whereIn: my.followings).orderBy('lastPostCreatedAt', descending: true);
+    Query q = db
+        .collection('users_public_data')
+        .where('userDocumentReference', whereIn: my.followings)
+        .orderBy('lastPostCreatedAt', descending: true);
 
     /// Limit the number of (following) users to get if the app needs to display only a few posts.
     if (noOfFollowers > 0) {
