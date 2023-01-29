@@ -1,3 +1,7 @@
+## 0.0.100
+
+* Fix. .pubignore
+
 ## 0.0.99
 
 * Fix. test.
