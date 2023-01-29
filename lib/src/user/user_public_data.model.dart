@@ -61,8 +61,7 @@ class UserPublicDataModel {
     return UserPublicDataModel(
       uid: json['uid'],
       // userDocumentReference may not be set for some cases like in unit tests.
-      userDocumentReference:
-          json['userDocumentReference'] ?? UserService.instance.doc(id),
+      userDocumentReference: json['userDocumentReference'] ?? UserService.instance.doc(id),
       displayName: json['displayName'] ?? '',
       photoUrl: json['photoUrl'] ?? '',
       registeredAt: json['registeredAt'] ?? Timestamp.now(),
@@ -73,14 +72,8 @@ class UserPublicDataModel {
       hasPhoto: json['hasPhoto'] ?? false,
       isProfileComplete: json['isProfileComplete'] ?? false,
       coverPhotoUrl: json['coverPhotoUrl'] ?? '',
-      lastPost: json['lastPost'] != null
-          ? UserPublicDataRecentPostModel.fromJson(json['lastPost'])
-          : null,
-      recentPosts: json['recentPosts'] != null
-          ? (json['recentPosts'] as List)
-              .map((e) => UserPublicDataRecentPostModel.fromJson(e))
-              .toList()
-          : null,
+      lastPost: json['lastPost'] != null ? UserPublicDataRecentPostModel.fromJson(json['lastPost']) : null,
+      recentPosts: json['recentPosts'] != null ? (json['recentPosts'] as List).map((e) => UserPublicDataRecentPostModel.fromJson(e)).toList() : null,
       lastPostCreatedAt: json['lastPostCreatedAt'] ?? Timestamp.now(),
       isPremiumUser: json['isPremiumUser'] ?? false,
       followings: List<DocumentReference>.from(json['followings'] ?? []),
@@ -119,7 +112,7 @@ class UserPublicDataRecentPostModel {
       createdAt: json['createdAt'] ?? Timestamp.now(),
     );
   }
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'postDocumentReference': postDocumentReference,
       'title': title,
@@ -127,5 +120,10 @@ class UserPublicDataRecentPostModel {
       if (photoUrl != null) 'photoUrl': photoUrl,
       'createdAt': createdAt,
     };
+  }
+
+  @override
+  String toString() {
+    return "UserPublicDataRecentPostModel(postDocumentReference: $postDocumentReference, title: $title, content: $content, photoUrl: $photoUrl, createdAt: $createdAt)";
   }
 }
