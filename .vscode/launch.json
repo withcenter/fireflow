@@ -23,6 +23,15 @@
       "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     },
     {
+      "name": "example - snackbar - debug - Chrome",
+      "cwd": "example",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/snackbar.dart",
+      "flutterMode": "debug",
+      "deviceId": "chrome"
+    },
+    {
       "name": "example - debug - Simulator J. Macbook",
       "cwd": "example",
       "request": "launch",
