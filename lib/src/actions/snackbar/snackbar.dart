@@ -60,7 +60,6 @@ SnackBar snackBarContent({
       children: [
         Container(
           margin: const EdgeInsets.only(top: 20),
-          height: 64,
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(10),

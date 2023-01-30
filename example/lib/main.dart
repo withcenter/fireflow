@@ -14,11 +14,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  Supabase.initialize(
+  await Supabase.initialize(
     url: 'https://crhqrbyjksnyqdrpqedr.supabase.co',
     anonKey: supabaseAnonKey,
   );
@@ -41,6 +43,7 @@ class _MyAppState extends State<MyApp> {
       AppService.instance.init(
         context: router.routerDelegate.navigatorKey.currentContext!,
         debug: true,
+        displayError: true,
         noOfRecentPosts: 4,
         supabase: SupabaseOptions(
           usersPublicData: 'users_public_data',
@@ -69,6 +72,16 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       routerConfig: router,
+      locale: null,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ko'),
+      ],
     );
   }
 }

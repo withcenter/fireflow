@@ -12,4 +12,7 @@ class Config {
   bool get supa => supabase != null;
   SupabaseOptions? supabase;
   MessagingOptions? messaging;
+
+  /// [displayError] returns true if error should be displayed.
+  bool displayError = false;
 }

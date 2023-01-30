@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// AppService is a singleton class that provides necessary service for Fireflow.
@@ -18,8 +19,8 @@ class AppService {
   BuildContext get context => _context!;
   set context(BuildContext context) => _context = context;
 
-  late final FirebaseFirestore db;
-  late final FirebaseAuth auth;
+  FirebaseFirestore get db => FirebaseFirestore.instance;
+  FirebaseAuth get auth => FirebaseAuth.instance;
   CollectionReference get usersCol => db.collection('users');
   CollectionReference get systemSettingsCol => db.collection('system_settings');
   DocumentReference get keysRef => systemSettingsCol.doc('keys');
@@ -78,11 +79,10 @@ class AppService {
   void init({
     required BuildContext? context,
     bool debug = false,
+    bool displayError = false,
     int noOfRecentPosts = 20,
     SupabaseOptions? supabase,
     MessagingOptions? messaging,
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
   }) {
     dog('AppService.instance.init()');
     _context = context;
@@ -90,21 +90,18 @@ class AppService {
     Config.instance.noOfRecentPosts = noOfRecentPosts;
     Config.instance.supabase = supabase;
     Config.instance.messaging = messaging;
+    Config.instance.displayError = displayError;
 
     ///
     if (initialized == false) {
       dog("AppService.instance.init() - initializing...");
 
-      /// Setup Firebase.
-      ///
-      /// This is the only place where Firebase is initialized.
-      db = firestore ?? FirebaseFirestore.instance;
-      this.auth = auth ?? FirebaseAuth.instance;
-
       ///
       initialized = true;
+      _initErrorHandler();
       _initSystemKeys();
       _initUser();
+      TranslationService.instance.init();
       MessagingService.instance.init();
     }
   }
@@ -115,7 +112,7 @@ class AppService {
   _initUser() {
     dog('AppService._initUser()');
 
-    FirebaseAuth.instance.authStateChanges().listen((user) async {
+    auth.authStateChanges().listen((user) async {
       // User singed in
       if (user != null) {
         dog('AppService._initUser() - user is logged in');
@@ -133,5 +130,23 @@ class AppService {
   /// Get keys from Firestore.
   _initSystemKeys() async {
     keys = KeyModel.fromSnapshot(await getKeys);
+  }
+
+  _initErrorHandler() async {
+    if (Config.instance.displayError == false) return;
+    FlutterError.onError = (FlutterErrorDetails details) async {
+      // if (kDebugMode) {
+      //   FlutterError.dumpErrorToConsole(details);
+      // } else {
+      //   FlutterError.presentError(details);
+      // }
+
+      FlutterError.presentError(details);
+      snackBarWarning(title: 'Error', message: details.exceptionAsString());
+    };
+    PlatformDispatcher.instance.onError = (error, stack) {
+      snackBarWarning(title: 'Error', message: error.toString());
+      return true;
+    };
   }
 }

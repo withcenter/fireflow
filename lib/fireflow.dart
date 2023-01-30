@@ -25,6 +25,11 @@ export 'src/comment/comment.model.dart';
 
 export 'src/supabase/supabase.options.dart';
 export 'src/supabase/supabase.service.dart';
+export 'src/system_settings/translation/translation.service.dart';
+
+/// Widgets that depends on Fireflow
+export 'src/system_settings/translation/translation.dart';
+export 'src/user/my.doc.dart';
 
 /// Utils, Functions, Actions
 export 'src/app.service.dart';
@@ -41,7 +46,7 @@ export 'src/functions/country_code.dart';
 export 'src/functions/comment_order.dart';
 export 'src/functions/array_functions.dart';
 
-/// Widgets
+/// Utility Widgets (independent from Fireflow)
 export 'src/widgets/custom_popup/custom_popup.dart';
 export 'src/widgets/display_media/display_media.dart';
 export 'src/widgets/safe_area/safe_area_top.dart';

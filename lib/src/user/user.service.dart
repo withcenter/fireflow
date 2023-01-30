@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:fireflow/fireflow.dart';
 import 'package:path/path.dart' as p;
+import 'package:rxdart/subjects.dart';
 
 /// UserService is a singleton class that provides necessary service for user
 /// related features.
@@ -49,6 +50,7 @@ class UserService {
   bool get isLoggedIn => auth.currentUser != null;
   bool get notLoggedIn => !isLoggedIn;
 
+  /// The login user's public data document stream.
   StreamSubscription? publicDataSubscription;
 
   /// The login user's public data model.
@@ -58,6 +60,9 @@ class UserService {
   /// public data document from the firestore.
   ///
   late UserPublicDataModel my;
+
+  final BehaviorSubject<UserPublicDataModel?> onChange =
+      BehaviorSubject<UserPublicDataModel?>.seeded(null);
 
   /// check if user's public data document exists
   userPublicDataDocumentExists() async {
@@ -140,6 +145,7 @@ class UserService {
         .listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
+        onChange.add(my);
         if (SupabaseService.instance.storeUsersPubicData) {
           /// Upsert the user public data to Supabase.
           // await Supabase.instance.client

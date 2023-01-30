@@ -100,6 +100,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Supabase Table](#supabase-table)
     - [users\_public\_data](#users_public_data)
     - [posts](#posts)
+- [Text translation support](#text-translation-support)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
     - [Custom Popup Tips](#custom-popup-tips)
@@ -175,6 +176,15 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
   - Subscribe new comments under my posts and comments.
   - Subscribe new posts of a category.
   - Subscribe new comments of a category.
+
+- Admin features
+  - User management
+  - Forum category management
+  - Post & comment management
+  - Uploaded file management
+
+
+- Muti language support
 
 - Enhanced Firestore Security Rules
 
@@ -291,6 +301,12 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-on-page-load-app-service.jpg?raw=true "Adding App Service")
+
+
+
+- If `debug` is set to true, then it prints the debug message to console.
+- If `displayError` is set to true, then it display error messages as snackbar.
+
 
 
 ## Local State Variable
@@ -1105,6 +1121,22 @@ AppService.instance.init(supbase: SupabaseOptions( ... ));
 ### users_public_data
 
 ### posts
+
+
+
+
+# Text translation support
+
+- Why do we need another text translation support while flutterflow has one?
+  - There are some parts that flutterflow can't cover.
+  - For instance, the admin can create(or delete) a forum category and it appears dynamically on the screen. And you want to translation the category name in many other language. But flutterflow cannot translate a text that is dynamically appears on the screen.
+- It is working by default whether the app uses it or not.
+- To use translation,
+  - Update the translation. Only admin can create or delete.
+  - Use it in your app by creating a custom action like below.
+
+```dart
+```
 
 
 
