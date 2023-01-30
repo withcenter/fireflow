@@ -1,4 +1,8 @@
-## 105
+## 0.0.106
+
+* Bump 106.
+
+## 0.0.105
 
 * Fix. translation default string.
 * Update. translation.
