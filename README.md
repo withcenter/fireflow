@@ -101,6 +101,8 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
     - [users\_public\_data](#users_public_data)
     - [posts](#posts)
 - [Text translation support](#text-translation-support)
+  - [Translate widget](#translate-widget)
+  - [List of translations](#list-of-translations)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
     - [Custom Popup Tips](#custom-popup-tips)
@@ -1128,15 +1130,36 @@ AppService.instance.init(supbase: SupabaseOptions( ... ));
 # Text translation support
 
 - Why do we need another text translation support while flutterflow has one?
-  - There are some parts that flutterflow can't cover.
-  - For instance, the admin can create(or delete) a forum category and it appears dynamically on the screen. And you want to translation the category name in many other language. But flutterflow cannot translate a text that is dynamically appears on the screen.
+  - That is because the fireflow displays somet text depending on its usage and it needs a way to show in the user's language.
 - It is working by default whether the app uses it or not.
-- To use translation,
-  - Update the translation. Only admin can create or delete.
-  - Use it in your app by creating a custom action like below.
+- To use the translation,
+  - Create a page and add the `Translation` widget to update the translation.
+  - Only admin can create or delete.
 
-```dart
-```
+
+## Translate widget
+
+- With `Translate` widget, you can
+  - add
+  - search
+  - delete
+  the translations.
+
+
+## List of translations
+
+
+- Below are the necessary translation codes for media upload.
+  - `Choose Source`
+  - `Gallery (Photo)`
+  - `Gallery (Video)`
+  - `Gallery`
+  - `Camera`
+  - `Upload Any File`
+  - `Success to upload media`
+  - `Failed to upload media`
+
+
 
 
 

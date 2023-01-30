@@ -44,7 +44,7 @@ class TranslationService {
 
   /// Get a text by code.
   String get(String code) {
-    final dynamic text = texts[code] ?? '';
+    final dynamic text = texts[code] ?? code;
     if (text! is String) {
       return text.toString();
     } else {

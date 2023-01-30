@@ -4,122 +4,162 @@ import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/system_settings/system_setting.service.dart';
 import 'package:flutter/material.dart';
 
-class Translation extends StatelessWidget {
+class Translation extends StatefulWidget {
   const Translation({Key? key, required this.languages}) : super(key: key);
   final List<String> languages;
 
   @override
+  createState() => _TranslationState();
+}
+
+class _TranslationState extends State<Translation> {
+  String searchWord = '';
+
+  Map<String, dynamic> data = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    SystemSettingService.instance.col
+        .doc('translations')
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.exists == false || snapshot.data() == null) {
+        return;
+      }
+
+      data = snapshot.data() as Map<String, dynamic>;
+
+      setState(() {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream:
-            SystemSettingService.instance.col.doc('translations').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error.toString()));
-          }
-          if (!snapshot.hasData ||
-              snapshot.data == null ||
-              !snapshot.data!.exists) {
-            return const Center(child: Text('No data'));
-          }
-          final Map<String, dynamic> data =
-              snapshot.data!.data() as Map<String, dynamic>;
-          print('data; $data');
-
-          final keys = data.keys;
-
-          /// 여기서 부터, ... 글 쓸 때 자동 저장하고,
-          /// AppService 에서 자동으로 이 값을 listen 하고, AppService.instance.translations 에 보관한다.
-          /// $.name, $.home 과 같이 할 수 있지만, .... 좀 고민을 해야 할 것 같다.
-          /// 그래서 그냥 ln('code') 입력 변수 하나만으로 모두 처리 할 수 있도록 한다. (JSON 이게 더 좋을 듯) 둘 다  쓸 수  있도록 한다.
-          return ListView.separated(
-            itemBuilder: (context, index) {
-              final code = keys.elementAt(index);
-              final texts = data[code];
-              return Container(
-                key: ValueKey(code),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (index == 0)
-                      Container(
-                        padding: const EdgeInsets.all(0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text('Translations',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20)),
-                            TransationAdd(),
-                          ],
-                        ),
-                      ),
-                    Row(
-                      children: [
-                        Text(code,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 10)),
-                        const Spacer(),
-                        TextButton(
-                            onPressed: () {
-                              /// Show confirmation dialog asking if the user is sure they want to delete the item
-                              /// If the user confirms, delete the item from the database
-                              showDialog(
-                                context: context,
-                                builder: ((context) {
-                                  return AlertDialog(
-                                    title: const Text('Delete Translation'),
-                                    content: const Text(
-                                        'Are you sure you want to delete this translation?'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('Cancel'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          SystemSettingService.instance.col
-                                              .doc('translations')
-                                              .update(
-                                                  {code: FieldValue.delete()});
-                                        },
-                                        child: const Text('Delete'),
-                                      ),
-                                    ],
-                                  );
-                                }),
-                              );
-                            },
-                            child: const Text('Delete',
-                                style: TextStyle(fontSize: 10))),
-                      ],
-                    ),
-                    for (final ln in languages) ...[
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TranslationTextField(
-                                texts: texts, ln: ln, code: code),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SearchKeyword(
+                    onChange: (word) => setState(() => searchWord = word),
+                  ),
                 ),
-              );
-            },
-            itemCount: keys.length,
-            separatorBuilder: (context, index) => const Divider(),
-          );
-        });
+                const SizedBox(width: 32),
+                const TransationAdd(),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Divider(),
+          for (final code in data.keys)
+            TranslationCode(
+              key: ValueKey(code),
+              code: code,
+              languages: widget.languages,
+              data: data,
+              searchWord: searchWord,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class TranslationCode extends StatelessWidget {
+  const TranslationCode({
+    Key? key,
+    required this.code,
+    required this.languages,
+    required this.data,
+    required this.searchWord,
+  }) : super(key: key);
+
+  final String code;
+  final List<String> languages;
+  final Map<String, dynamic> data;
+  final String searchWord;
+
+  @override
+  Widget build(BuildContext context) {
+    final Map<String, dynamic> texts = data[code];
+
+    bool contains = code.toLowerCase().contains(searchWord.toLowerCase());
+    if (contains == false) {
+      for (final key in texts.keys) {
+        final value = texts[key];
+        if (value.toString().toLowerCase().contains(searchWord.toLowerCase())) {
+          contains = true;
+          break;
+        }
+      }
+    }
+    if (contains == false) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(code,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 10)),
+              const Spacer(),
+              TextButton(
+                  onPressed: () {
+                    /// Show confirmation dialog asking if the user is sure they want to delete the item
+                    /// If the user confirms, delete the item from the database
+                    showDialog(
+                      context: context,
+                      builder: ((context) {
+                        return AlertDialog(
+                          title: const Text('Delete Translation'),
+                          content: const Text(
+                              'Are you sure you want to delete this translation?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                SystemSettingService.instance.col
+                                    .doc('translations')
+                                    .update({code: FieldValue.delete()});
+                              },
+                              child: const Text('Delete'),
+                            ),
+                          ],
+                        );
+                      }),
+                    );
+                  },
+                  child: const Text('Delete', style: TextStyle(fontSize: 10))),
+            ],
+          ),
+          for (final ln in languages) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: TranslationTextField(texts: texts, ln: ln, code: code),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }
 
@@ -185,10 +225,10 @@ class TransationAdd extends StatelessWidget {
           }),
         );
       },
-      icon: Icon(
+      icon: const Icon(
         Icons.add,
       ),
-      label: Text('Add'),
+      label: const Text('Add'),
     );
   }
 }
@@ -222,7 +262,6 @@ class _TranslationTextFieldState extends State<TranslationTextField> {
   Widget build(BuildContext context) {
     final code = "${widget.code}.${widget.ln}";
     return TextField(
-      key: ValueKey(code),
       controller: text,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
@@ -237,6 +276,33 @@ class _TranslationTextFieldState extends State<TranslationTextField> {
           ),
         );
       },
+    );
+  }
+}
+
+class SearchKeyword extends StatefulWidget {
+  const SearchKeyword({Key? key, required this.onChange}) : super(key: key);
+
+  final Function(String) onChange;
+
+  @override
+  State<SearchKeyword> createState() => _SearchKeywordState();
+}
+
+class _SearchKeywordState extends State<SearchKeyword> {
+  final search = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    print('build search: ${search.text}');
+    return TextField(
+      controller: search,
+      decoration: const InputDecoration(
+        prefixIcon: Icon(Icons.search),
+        border: OutlineInputBorder(),
+        labelText: 'Search',
+        isDense: true,
+      ),
+      onChanged: (uovalue) => widget.onChange(search.text),
     );
   }
 }

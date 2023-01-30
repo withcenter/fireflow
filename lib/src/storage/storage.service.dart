@@ -284,7 +284,7 @@ class StorageService {
                   padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                   child: ListTile(
                     title: Text(
-                      'Choose Source',
+                      TranslationService.instance.get('Choose Source'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: textColor.withOpacity(0.65),
@@ -300,31 +300,37 @@ class StorageService {
               ],
               if (allowPhoto && allowVideo) ...[
                 createUploadMediaListTile(
-                  'Gallery (Photo)',
+                  TranslationService.instance.get('Gallery (Photo)'),
                   MediaSource.photoGallery,
                 ),
                 const Divider(),
                 createUploadMediaListTile(
-                  'Gallery (Video)',
+                  TranslationService.instance.get('Gallery (Video)'),
                   MediaSource.videoGallery,
                 ),
               ] else if (allowPhoto)
                 createUploadMediaListTile(
-                  'Gallery',
+                  TranslationService.instance.get('Gallery'),
                   MediaSource.photoGallery,
                 )
               else
                 createUploadMediaListTile(
-                  'Gallery',
+                  TranslationService.instance.get('Gallery'),
                   MediaSource.videoGallery,
                 ),
               if (allowAnyfile) ...[
                 const Divider(),
-                createUploadMediaListTile('Upload Any File', MediaSource.file),
+                createUploadMediaListTile(
+                  TranslationService.instance.get('Upload Any File'),
+                  MediaSource.file,
+                ),
               ],
               if (!kIsWeb) ...[
                 const Divider(),
-                createUploadMediaListTile('Camera', MediaSource.camera),
+                createUploadMediaListTile(
+                  TranslationService.instance.get('Camera'),
+                  MediaSource.camera,
+                ),
                 const Divider(),
               ],
               const SizedBox(height: 10),
@@ -370,14 +376,14 @@ class StorageService {
       if (downloadUrls.length == selectedMedia.length) {
         showUploadMessage(
           context,
-          'Success!',
+          TranslationService.instance.get('Success to upload media'),
         );
         dog('---> uploaded $downloadUrls');
         return downloadUrls;
       } else {
         showUploadMessage(
           context,
-          'Failed to upload media',
+          TranslationService.instance.get('Failed to upload media'),
         );
         return [];
       }
