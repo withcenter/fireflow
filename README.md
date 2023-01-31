@@ -92,8 +92,10 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
     - [Display the recent feed](#display-the-recent-feed)
     - [Display the list of recent feeds](#display-the-list-of-recent-feeds)
 - [Files](#files)
+  - [Storage Files Schema](#storage-files-schema)
   - [Overview of file management](#overview-of-file-management)
   - [Logic of File management](#logic-of-file-management)
+    - [Triggering UpdateStorageFiles](#triggering-updatestoragefiles)
   - [Customizing File Management](#customizing-file-management)
 - [Supabase](#supabase)
   - [Supabase settings](#supabase-settings)
@@ -369,7 +371,7 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 ## users schema
 
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users-schema.jpg?raw=true "Flutterflow users schmea")
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users-schema.jpg?raw=true "Flutterflow users schema")
 
 
 - Add `userPublicDataDocumentReference` to `users` schema. This is the connection to `users_public_data` schema.
@@ -384,7 +386,7 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 
 - Create the `users_public_data` schema in Flutterflow like below.
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users_public_data-schema.jpg?raw=true "Flutterflow users_public_data schmea")
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users_public_data-schema.jpg?raw=true "Flutterflow users_public_data schema")
 
 
 - `uid` is the the uid of the user.
@@ -1057,22 +1059,57 @@ AppService.instance.init(
 
 # Files
 
+## Storage Files Schema
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-schema.jpg?raw=true "Flutterflow storage_files schema")
+
 ## Overview of file management
 
-- If you(as an admin of your app) could see what files are uploaded, Iit would be helpful to manage.
+- If you(as an admin of your app) could see what files are uploaded, It would be helpful to manage.
 - It would be helplful if you can
   - list images and videos to see if there are any malicious photos, videos.
   - list by size, file type, users.
 
-- It is recommended to update the stroage files list on desktop(or laptop) computer since it consumes more resouces.
+- It is recommended to update the storage files list on desktop(or laptop) computer since it consumes more resouces.
 
 
 ## Logic of File management
 
+Updating storage files
+
+- Create Custom Action  
+- Add fireflow as dependencies
+- Add the following code
+
+```dart
+import 'package:fireflow/fireflow.dart';
+
+Future updateStorageFiles() async {
+  return StorageService.instance.updateStorageFiles();
+}
+```
+
 - `StorageService.instance.updateStorageFiles()` will get all the files and store them into `/storage_files`.
   - See [Storage - List all files](https://firebase.google.com/docs/storage/flutter/list-files#list_all_files) and [Firestore - Batch Write](https://firebase.google.com/docs/firestore/manage-data/transactions#batched-writes).
   - Since it may consume some resources, it is a good idea to display a confirm dialog to update the list when the admin enters the page.
-  - That's it. You can customize from here for your projects. See the `Customizing File Managemnt`.
+  - That's it. You can customize from here for your projects. See the `Customizing File Management`.
+
+### Triggering UpdateStorageFiles
+
+
+- add page parameter named `firstEntry` with type `boolean` and set to `false`.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-first-entry.jpg?raw=true "Flutterflow storage_files firstEntry parameters")
+
+- On page load
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load-click.jpg?raw=true "Flutterflow storage_files navigate on page load")
+  
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load.jpg.jpg?raw=true "Flutterflow storage_files confirmation action chain")
+
+
+
+
 
 
 
