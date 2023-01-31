@@ -1115,17 +1115,26 @@ Future updateStorageFiles() async {
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load-click.jpg?raw=true "Flutterflow storage_files navigate on page load")
 
-- Add `contional action` and choose the `firstEntry` from parameters as conditional value.
+- Add `conditional action` and choose the `firstEntry` from parameters as conditional value.
 - If true, Show an `Alert Dialog`(Confirm Dialog) asking if you want to update the Storage Files Information.
 - If true, Call the custom action `updateStorageFiles` that we added. and show `alert dialog` that it was done updating.
   
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load.jpg?raw=true "Flutterflow storage_files confirmation action chain")
 
-- To trigger the action we just need to define an action `navigate to` our storagefile page and pass the `firstEntry` parameter set to `true`.
-- 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-navigate.jpg?raw=true "Flutterflow storage_files confirmation action chain")
+- To trigger the action we just need to define an action `navigate to` our storagefile page and pass the `firstEntry` parameter and set it to `true`.
+  
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-navigate.jpg?raw=true "Flutterflow storage_files page navigate")
+
+- When the page is loaded a Confirm Dialog should appear. Confirming if you want to update the current StorageFiles Information.
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-update-confirm-dialog.jpg?raw=true "Flutterflow storage_files page navigate")
+
+- Once done it should display another Alert Dialog displaying that the changes are now updated.
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-update-success.jpg?raw=true "Flutterflow storage_files page navigate")
 
 
+- Alternatively you can also add a `Button Widget` to trigger the same `action chain` without the `conditional action` for `firstEntry`. By starting with the Alert Dialog(Confirm Dialog) to confirm the update then call the custom action `updateStorageFiles` to update the `storageFiles` Information and show `alert dialog` to confirm the changes.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-update-from-button-click.jpg?raw=true "Flutterflow storage_files update from button click")
 
 
 
@@ -1136,6 +1145,14 @@ Future updateStorageFiles() async {
     - It can be `image`, `video`, `audio`, `text`, etc.
     - If the `contentType` is `aplication/...`, then it will take the type of the file like `zip`, `pdf`, etc.
 - You can search the `url` in firestore to know which document that it is attached to.
+
+- Once we have data in `/storage_files` we can simply add a ListView and add a query.
+- Select `Query Collection` from query type.
+- Select `storage_files` from collection.
+- Select `List of Document` from return type.
+- Optionally you can turn on `Enable Infinite Scroll` and add `page size`.
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-simple-query.jpg?raw=true "Flutterflow storage_files simple query")
 
 
 
