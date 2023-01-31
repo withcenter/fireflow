@@ -97,6 +97,8 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Logic of File management](#logic-of-file-management)
     - [Triggering UpdateStorageFiles](#triggering-updatestoragefiles)
   - [Customizing File Management](#customizing-file-management)
+    - [Simple File Listing](#simple-file-listing)
+    - [File Listing with Filters and Order](#file-listing-with-filters-and-order)
 - [Supabase](#supabase)
   - [Supabase settings](#supabase-settings)
   - [Supabase Table](#supabase-table)
@@ -1108,33 +1110,33 @@ Future updateStorageFiles() async {
 
 
 - Add page parameter named `firstEntry` with type `boolean` and set default value to `false`.
-
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-first-entry.jpg?raw=true "Flutterflow storage_files firstEntry parameters")
+  ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-first-entry.jpg?raw=true "Flutterflow storage_files firstEntry parameters")
 
 - Select the base page in widget tree in the example it is named `AdminStorageFiles`, in the scaffold settings click `Actions` and click `Open` to open the action flow editor.
+  ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load-click.jpg?raw=true "Flutterflow storage_files navigate on page load")
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load-click.jpg?raw=true "Flutterflow storage_files navigate on page load")
+- Add `Condition` action and choose the `firstEntry` from parameters as conditional value.
+- If `true`, Show an `Alert Dialog`(Confirm Dialog) asking if you want to update the Storage Files Information.
+- If `true`, Call the custom action `updateStorageFiles` that we added. and show `alert dialog` that it was done updating.
+  ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load.jpg?raw=true "Flutterflow storage_files confirmation action chain")
 
-- Add `conditional action` and choose the `firstEntry` from parameters as conditional value.
-- If true, Show an `Alert Dialog`(Confirm Dialog) asking if you want to update the Storage Files Information.
-- If true, Call the custom action `updateStorageFiles` that we added. and show `alert dialog` that it was done updating.
+- To trigger the action we just need to define an action `Navigate to` page `Admin Storage Files`
+- Pass the `firstEntry` parameter and set its value to `true`.
   
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load.jpg?raw=true "Flutterflow storage_files confirmation action chain")
+  ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-navigate.jpg?raw=true "Flutterflow storage_files page navigate")
 
-- To trigger the action we just need to define an action `navigate to` our storagefile page and pass the `firstEntry` parameter and set it to `true`.
-  
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-navigate.jpg?raw=true "Flutterflow storage_files page navigate")
-
-- When the page is loaded a Confirm Dialog should appear. Confirming if you want to update the current StorageFiles Information.
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-update-confirm-dialog.jpg?raw=true "Flutterflow storage_files page navigate")
+- When the page is loaded a Confirm Dialog should appear. Confirming if you want to update the current StorageFiles Information
+  ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-update-confirm-dialog.jpg?raw=true "Flutterflow storage_files page navigate")
 
 - Once done it should display another Alert Dialog displaying that the changes are now updated.
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-update-success.jpg?raw=true "Flutterflow storage_files page navigate")
+  ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-update-success.jpg?raw=true "Flutterflow storage_files page navigate")
 
 
-- Alternatively you can also add a `Button Widget` to trigger the same `action chain` without the `conditional action` for `firstEntry`. By starting with the Alert Dialog(Confirm Dialog) to confirm the update then call the custom action `updateStorageFiles` to update the `storageFiles` Information and show `alert dialog` to confirm the changes.
-
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-update-from-button-click.jpg?raw=true "Flutterflow storage_files update from button click")
+- Alternatively you can also add a `Button Widget` to trigger the same `action chain` without the `Condition` action for `firstEntry`. 
+- Starting with the `Alert Dialog`(Confirm Dialog) to confirm if you want to update the storageFiles information.
+- If `true`, call the custom action `updateStorageFiles` to update the `storageFiles` Information and show `Alert dialog` to confirm the changes.
+  
+  ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-update-from-button-click.jpg?raw=true "Flutterflow storage_files update from button click")
 
 
 
@@ -1146,13 +1148,73 @@ Future updateStorageFiles() async {
     - If the `contentType` is `aplication/...`, then it will take the type of the file like `zip`, `pdf`, etc.
 - You can search the `url` in firestore to know which document that it is attached to.
 
-- Once we have data in `/storage_files` we can simply add a ListView and add a query.
+### Simple File Listing
+- Add a `ListView Widget` to our page and add a Query.
 - Select `Query Collection` from query type.
 - Select `storage_files` from collection.
-- Select `List of Document` from return type.
-- Optionally you can turn on `Enable Infinite Scroll` and add `page size`.
+- Select `List of Documents` from return type.
+- Optionally you can turn on `Enable Infinite Scroll` and add `Page Size`.
+  
+  ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-simple-query.jpg?raw=true "Flutterflow storage_files simple query")
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-simple-query.jpg?raw=true "Flutterflow storage_files simple query")
+- Under the `ListView`
+- We will add the [DisplayMedia widget](#displaymedia-widget) to show a preview of our file.
+- Set the width and height
+- Pass the file url to DisplayMedia Widget
+
+  ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-simple-page.jpg?raw=true "Flutterflow storage_files simple page")
+
+### File Listing with Filters and Order
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-search-options.jpg?raw=true "Flutterflow storage_files search options")
+
+Search Options
+
+- We will search with the following filters
+
+  - `userDocumentReference` filter user who upload the file
+  - `type` filter by specific type
+  - `createdAt` order by date and filtering with date
+  - `size` order by size
+  
+  Since we are using firebase as our database we cant OrderBy the `createdAt` and `size` at the same time as it return undesirable results. What we will do is we will have different query filters to support order by `createdAt` and `size`. 
+
+
+- To get `userDocumentReference`
+  - Add a IconButton
+  - Add an Action to show a buttomSheet and search for user
+- Dropdown button with the list of `filetype`
+- Dropdown button with list of possible Orderby
+  
+- DateRange Selection
+  - `beginDate` DatePicker
+  - `endDate` DatePicker
+  
+- Submit Button
+
+
+Query Filter sample
+
+- userDocumentReference, type, dateRange, CreatedAt Desc
+- userDocumentReference, type, dateRange, CreatedAt Asc
+
+- userDocumentReference, type, Size Desc
+- userDocumentReference, type, Size Asc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
