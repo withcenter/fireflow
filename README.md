@@ -1140,7 +1140,13 @@ AppService.instance.init(supbase: SupabaseOptions( ... ));
 
 ## Putting translations directly into the Firestore
 
+- Open Firebase console -> Firestore Database.
+- Create a document `/system_settings/translations`.
+- Add a document with
+  - `Camera` as the key
+  - `{ en: Camera, ko: 카메라 }` as the value in map.
 
+Below is the example screen.
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-translation.jpg?raw=true "Translation")
 
 
