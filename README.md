@@ -1012,7 +1012,7 @@ AppService.instance.init(
 
 ## Overview of file management
 
-- If you(as an admin of your app) could see what files are uploaded, Iit would be helpful to manage.
+- If you(as an admin of your app) could see what files are uploaded, It would be helpful to manage.
 - It would be helplful if you can
   - list images and videos to see if there are any malicious photos, videos.
   - list by size, file type, users.
