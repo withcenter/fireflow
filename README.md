@@ -101,6 +101,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
     - [users\_public\_data](#users_public_data)
     - [posts](#posts)
 - [Text translation support](#text-translation-support)
+  - [Putting translations directly into the Firestore](#putting-translations-directly-into-the-firestore)
   - [Translate widget](#translate-widget)
   - [List of translations](#list-of-translations)
 - [Widgets](#widgets)
@@ -1130,11 +1131,18 @@ AppService.instance.init(supbase: SupabaseOptions( ... ));
 # Text translation support
 
 - Why do we need another text translation support while flutterflow has one?
-  - That is because the fireflow displays somet text depending on its usage and it needs a way to show in the user's language.
+  - That is because we cannot translate a text that is dynamically generated and the fireflow displays somet text depending on its usage and it needs a way to show in the user's language.
 - It is working by default whether the app uses it or not.
 - To use the translation,
-  - Create a page and add the `Translation` widget to update the translation.
-  - Only admin can create or delete.
+  - You can simply add translation data into the firestore.
+  - Or you can use `Translation` widget to update the translation.
+    - Only admin can create or delete.
+
+## Putting translations directly into the Firestore
+
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-translation.jpg?raw=true "Translation")
+
 
 
 ## Translate widget
