@@ -1061,8 +1061,18 @@ AppService.instance.init(
 
 ## Storage Files Schema
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-schema.jpg?raw=true "Flutterflow storage_files schema")
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-schema-storage-files.jpg?raw=true "Flutterflow storage_files schema")
 
+ - `userDocumentReferences` is the uploader document reference.
+ - `uid` it was the uploader uid.
+ - `createdAt` is the timestamp it was created.
+ - `contentType` is the mime type.
+ - `size` is the file size.
+ - `url` is the file url.
+ - `fullPath` is the file full path.
+ - `name` is the file name.
+ - `type` is the file type base on contentType. If the `contentType` is `aplication/...`, then it will take the type of the file like `zip`, `pdf`, etc.
+  
 ## Overview of file management
 
 - If you(as an admin of your app) could see what files are uploaded, It would be helpful to manage.
@@ -1097,17 +1107,23 @@ Future updateStorageFiles() async {
 ### Triggering UpdateStorageFiles
 
 
-- add page parameter named `firstEntry` with type `boolean` and set to `false`.
+- Add page parameter named `firstEntry` with type `boolean` and set default value to `false`.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-first-entry.jpg?raw=true "Flutterflow storage_files firstEntry parameters")
 
-- On page load
+- Select the base page in widget tree in the example it is named `AdminStorageFiles`, in the scaffold settings click `Actions` and click `Open` to open the action flow editor.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load-click.jpg?raw=true "Flutterflow storage_files navigate on page load")
+
+- Add `contional action` and choose the `firstEntry` from parameters as conditional value.
+- If true, Show an `Alert Dialog`(Confirm Dialog) asking if you want to update the Storage Files Information.
+- If true, Call the custom action `updateStorageFiles` that we added. and show `alert dialog` that it was done updating.
   
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load.jpg.jpg?raw=true "Flutterflow storage_files confirmation action chain")
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-on-page-load.jpg?raw=true "Flutterflow storage_files confirmation action chain")
 
-
+- To trigger the action we just need to define an action `navigate to` our storagefile page and pass the `firstEntry` parameter set to `true`.
+- 
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-storage-files-navigate.jpg?raw=true "Flutterflow storage_files confirmation action chain")
 
 
 
