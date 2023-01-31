@@ -1,3 +1,14 @@
+## 0.0.108
+
+* Fix. photo_url in supabase.
+
+
+## 0.0.107
+
+* Update. document.
+* Add. photoUrl on Supabase.
+
+
 ## 0.0.106
 
 * Bump 106.
