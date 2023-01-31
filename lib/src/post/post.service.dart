@@ -58,6 +58,7 @@ class PostService {
     // update the post
     futures.add(
       postDocumentReference.update({
+        'postId': postDocumentReference.id,
         'userDocumentReference': UserService.instance.ref,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),

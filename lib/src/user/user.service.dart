@@ -148,18 +148,17 @@ class UserService {
         onChange.add(my);
         if (SupabaseService.instance.storeUsersPubicData) {
           /// Upsert the user public data to Supabase.
-          // await Supabase.instance.client
-          //     .from(Config.instance.supabase.usersPublicData)
-
+          final data = {
+            'uid': my.uid,
+            'display_name': my.displayName,
+            'photo_url': my.photoUrl,
+            'gender': my.gender,
+            'birthday': my.birthday.toDate().toIso8601String(),
+            'registered_at': my.registeredAt.toDate().toIso8601String(),
+          };
+          dog('Supabase upsert: $data');
           await supabase.usersPublicData.upsert(
-            {
-              'uid': my.uid,
-              'display_name': my.displayName,
-              'photo_url': my.photoUrl,
-              'gender': my.gender,
-              'birthday': my.birthday.toDate().toIso8601String(),
-              'registered_at': my.registeredAt.toDate().toIso8601String(),
-            },
+            data,
             onConflict: 'uid',
           );
         }

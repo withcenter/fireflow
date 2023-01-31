@@ -41,6 +41,7 @@ class CommentService {
     // add category of the post, update `order` field.
     await commentDocumentReference.update({
       'category': post.category,
+      'commentId': commentDocumentReference.id,
     });
 
     // send push notification

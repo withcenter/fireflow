@@ -1,5 +1,10 @@
 ## 0.0.108
 
+* Add. postId and commentId in their documents.
+
+
+## 0.0.108
+
 * Fix. photo_url in supabase.
 
 
