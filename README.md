@@ -35,6 +35,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
   - [Profile photo upload](#profile-photo-upload)
   - [Adding extra fields on users\_public\_data schema](#adding-extra-fields-on-users_public_data-schema)
+  - [User coding guideline](#user-coding-guideline)
 - [User setting](#user-setting)
   - [New Comment Notification](#new-comment-notification)
   - [Forum Category Subscription](#forum-category-subscription)
@@ -86,15 +87,23 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Updating post](#updating-post)
   - [Comment creation](#comment-creation)
   - [Last post](#last-post)
-- [Feed, recentPosts](#feed-recentposts)
+- [Feeds, recentPosts](#feeds-recentposts)
+  - [How to display feeds](#how-to-display-feeds)
+    - [Display the recent feed](#display-the-recent-feed)
+    - [Display the list of recent feeds](#display-the-list-of-recent-feeds)
 - [Files](#files)
   - [Overview of file management](#overview-of-file-management)
   - [Logic of File management](#logic-of-file-management)
   - [Customizing File Management](#customizing-file-management)
 - [Supabase](#supabase)
+  - [Supabase settings](#supabase-settings)
   - [Supabase Table](#supabase-table)
     - [users\_public\_data](#users_public_data)
     - [posts](#posts)
+- [Text translation support](#text-translation-support)
+  - [Putting translations directly into the Firestore](#putting-translations-directly-into-the-firestore)
+  - [Translate widget](#translate-widget)
+  - [List of translations](#list-of-translations)
 - [Widgets](#widgets)
   - [Custom Popup widget.](#custom-popup-widget)
     - [Custom Popup Tips](#custom-popup-tips)
@@ -111,7 +120,8 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [snackBarWarning](#snackbarwarning)
 - [Functions](#functions)
   - [Country Code](#country-code)
-- [Unit Testing](#unit-testing)
+- [Testing](#testing)
+  - [Fireflow real test](#fireflow-real-test)
 - [Developer coding guide](#developer-coding-guide)
   - [Developing with Fireflow](#developing-with-fireflow)
   - [Development tips](#development-tips)
@@ -120,6 +130,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 - [Known Issues](#known-issues)
   - [Push notification and back navigation](#push-notification-and-back-navigation)
   - [\[cloud\_firestore/permission\_denied\] The caller does not have permission to execute the specified operation.](#cloud_firestorepermission_denied-the-caller-does-not-have-permission-to-execute-the-specified-operation)
+  - [Snackbar](#snackbar)
 
 
 # Overview
@@ -168,6 +179,15 @@ Fireflow encapsulates all the complicated logics and serve most of the common us
   - Subscribe new comments under my posts and comments.
   - Subscribe new posts of a category.
   - Subscribe new comments of a category.
+
+- Admin features
+  - User management
+  - Forum category management
+  - Post & comment management
+  - Uploaded file management
+
+
+- Muti language support
 
 - Enhanced Firestore Security Rules
 
@@ -284,6 +304,12 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-on-page-load-app-service.jpg?raw=true "Adding App Service")
+
+
+
+- If `debug` is set to true, then it prints the debug message to console.
+- If `displayError` is set to true, then it display error messages as snackbar.
+
 
 
 ## Local State Variable
@@ -417,6 +443,16 @@ Note, that the `userPublicDataDocumentReference` in `users` collection is set on
 ## Adding extra fields on users_public_data schema
 
 - You can simply add more fields on users_public_data schema.
+
+
+## User coding guideline
+
+- `UserService.instance.loginOrRegister()` creates an account or logs in if the account is already exists. You can use it for user sign-in. Or guest sign-in. You may create an account in FirebaseAuth and let all the guest users to sign-in with that account.
+
+
+- `UserService.instance.feeds()` returns the feeds of the users who the log-in user follows.
+
+- There are many methods you may want to use as a custom action.
 
 
 # User setting
@@ -927,6 +963,7 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 ### Post Delete
 
 - call `PostService.instance.afterDelete` after delete a post.
+- Note that, when you develop app with fireflow, it is recommended not to actually delete the posts and comments even if the security rules allow to do so. It's up to you how you design the logic of your app. You may mark the app as deleted and may delete the title, comment, etc.
 
 
 ## Comment
@@ -985,11 +1022,10 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 - `users_public_data.lastPost` has the last post that user created.
 
-# Feed, recentPosts
+# Feeds, recentPosts
 
-- Displaying the feed is very simple with fireflow. Just get the public data document of the users who you follow and disply the posts in `recentPosts` field. Note that, the `recentPosts` are updated when the app create a post with `afterPostCreate` action.
+- Displaying the feed is very simple with fireflow. See [How to display feeds](#how-to-display-feeds).
 - `/users_public_data/<uid> { recentPosts: ... }` has the user's recent posts and you can use this to display the feeds of the users who you follow.
-  - You can get the `/users_public_data` documents of the users who you follow by searching the `followers` field that contains your ref.
 - The `users_public_data.recentPosts` field is a map of `recentPosts` which has `postDocumentReference`, `title`, `content`, `createdAt`, and optional `photoUrl`. The `title` and `content` are in the safe string format. See the [safeString](#safe-string) function. If the post has no url, the `photoUrl` would not exists and this would lead an empty string when it is parsed by the model or by the flutterflow.
 - You can set the number of recent posts to store the last recent posts of each user by passing a number in `AppService.instance.init()`. It's 20 by default. See the API reference for details.
 ```dart
@@ -1002,10 +1038,21 @@ AppService.instance.init(
 
 - The last post will be at first of the `recentPosts` array field.
 
-- There are multiple ways of how you want to display the feed.
-  - You may order by `lastPostCreatedAt` of the `users_public_data` collection. So, you can display the last post of each user.
-  - You may use `UserService.instance.feeds` method and put it as an FF custom action to get the whole list of `recentPosts` of your followers.
 
+## How to display feeds
+
+
+### Display the recent feed
+
+- To display the last post of the users that the login-in user follows,
+  - Get the followings order by `lastPostCreatedAt`.
+  - Display the feed in `lastPost`.
+
+
+### Display the list of recent feeds
+
+- To display the recent feeds(posts) of the users that the login-in user follows,
+  - Call `UserService.instance.jsonFeeds` to get the list of the feeds and display.
 
 
 # Files
@@ -1057,7 +1104,17 @@ AppService.instance.init(
     - `AppService.instance.init(supabase: SupabaseOptions(...))`.
     - See [the API reference](https://pub.dev/documentation/fireflow/latest/fireflow/SupabaseOptions-class.html) for details.
 
+## Supabase settings
 
+- Initialize supabase first, then put supabase options on AppService.
+
+```dart
+Supabase.initialize(
+  url: 'https://crhqrbyjksnyqdrpqedr.supabase.co',
+  anonKey:'eyJhbGc----xxxx---3bCoIh8is',
+);
+AppService.instance.init(supbase: SupabaseOptions( ... ));
+```
 
 
 
@@ -1067,6 +1124,50 @@ AppService.instance.init(
 ### users_public_data
 
 ### posts
+
+
+
+
+# Text translation support
+
+- Why do we need another text translation support while flutterflow has one?
+  - That is because we cannot translate a text that is dynamically generated and the fireflow displays somet text depending on its usage and it needs a way to show in the user's language.
+- It is working by default whether the app uses it or not.
+- To use the translation,
+  - You can simply add translation data into the firestore.
+  - Or you can use `Translation` widget to update the translation.
+    - Only admin can create or delete.
+
+## Putting translations directly into the Firestore
+
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-translation.jpg?raw=true "Translation")
+
+
+
+## Translate widget
+
+- With `Translate` widget, you can
+  - add
+  - search
+  - delete
+  the translations.
+
+
+## List of translations
+
+
+- Below are the necessary translation codes for media upload.
+  - `Choose Source`
+  - `Gallery (Photo)`
+  - `Gallery (Video)`
+  - `Gallery`
+  - `Camera`
+  - `Upload Any File`
+  - `Success to upload media`
+  - `Failed to upload media`
+
+
 
 
 
@@ -1248,7 +1349,7 @@ The width and height are respected to size the DisplayMedia widget.
 
 This widget displays any kind of url like photo, video, audio, txt, pdf, etc.
 
-See the details on the API Reference.
+See the details on the [API reference - MediaDisplay](https://pub.dev/documentation/fireflow/latest/fireflow/DisplayMedia-class.html).
 
 
 Below is an example of displaying media by giving a photo url. 
@@ -1324,11 +1425,26 @@ Be sure that you disable the `Enforce Width and Height` option.
 
 # Actions
 
-The snackbar in FF is okay. But I want to have my own design of snackbars. So, here are the two. It's relatively easy to design the snackbar.
-
 
 ## snackBarSuccess
 
+The snackbar in the flutterflow is okay. But I want to have my own design of snackbars. So, here are the two. It's relatively easy to apply the snackbar.
+
+Example custom action code for applying fireflow snackbar.
+```dart
+import 'package:fireflow/fireflow.dart';
+
+Future snackBar(
+  BuildContext context,
+  String title,
+  String message,
+) async {
+  // Add your function code here!
+  snackBarSuccess(context: context, title: title, message: message);
+}
+```
+
+The snackbar applied to the app.
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/snackbar-1.jpg?raw=true "Snackbar")
 
 
@@ -1355,12 +1471,23 @@ Add snackBarWarning Custom Action like below.
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-dial-code-picker-code-expression.jpg?raw=true "Country Dial Code Picker")
 
 
-# Unit Testing
+# Testing
 
-The current version of fireflow has no backend. And most of the difficult logics goes under the scene. We have some tests and wil have more in the future.
+The current version of fireflow has no backend. ([The previous version of fireflow](https://github.com/thruthesky/fireflow_202211/tree/main/functions/src) was developed heavily based on Cloud Functions.) Now in this version, it simply works as a custom action and the most of the complicated logic goes under the scene. Yes, we need tests to give some trust on our code. And it's a bit different from the standard Flutter test.
 
 - [Firestore security rule - unit test](https://github.com/withcenter/fireflow/blob/main/firebase/firestore/tests/test.spec.js).
-- [Fireflow - unit test](https://github.com/withcenter/fireflow/tree/main/test)
+- [Unit test and Widget test](https://github.com/withcenter/fireflow/tree/main/test).
+  - These unit tests and widget tests follow the [flutter standart testing](https://docs.flutter.dev/cookbook/testing/widget/introduction) mechanism.
+  - To run the test, simply run the `flutter test` command.
+- Fireflow has its own unit test to make it easy for running the test on the real servers. It's called [fireflow real test](#fireflow-real-test).
+
+## Fireflow real test
+
+- Fireflow needs the tests run in the full functional app features and servers. The Integration test is too slow and I cannot work with it. So, I made one by myself. The test runs after boot or by manual trigger. And it does not report the test result. So, it's not fit for the test in CI/CD pipeline. But will do the unit test.
+- See [the source code for fireflow real test](https://github.com/withcenter/fireflow/blob/main/example/lib/test.dart).
+- To make it run,
+  - You may need to set the `key.dart` file for the keys that you are going to test. (You may probably not need it)
+  - Hot restart after updating the code.
 
 # Developer coding guide
 
@@ -1413,3 +1540,10 @@ This permission error may not appear always.
 
 [cloud_firestore/permission_denied] happens often when the app is listening to some documents and suddenly user login status changes. For instance, the app is listening to a chat room and the user suddenly leaves the chat room. And it would be best if the app handles all the [cloud_firestore/permission_denied] exceptions nicely, but in some cases (or in many cases) it is just okay with the permission exceptions.
 
+
+## Snackbar
+
+
+The issue below happens only when you zoom in the browser while running debug run.
+
+![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-snackbar-issue.jpg?raw=true)

@@ -1,5 +1,7 @@
 doc/
 etc/
+key.dart
+
 
 example/.dart_tool
 example/.idea
@@ -17,7 +19,7 @@ example/pubspec.lock
 
 analysis_options.yaml
 
-test/
+./test/
 res/
 apps/
 firebase/

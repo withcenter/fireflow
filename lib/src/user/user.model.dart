@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflow/fireflow.dart';
 
 /// UserModel is a class that represents a user.
 ///
@@ -9,6 +10,8 @@ class UserModel {
   String displayName;
   String photoUrl;
 
+  DocumentReference ref;
+
   /// UserModel constructor.
   UserModel({
     required this.uid,
@@ -16,6 +19,7 @@ class UserModel {
     required this.phoneNumber,
     required this.displayName,
     required this.photoUrl,
+    required this.ref,
   });
 
   /// Create a UserModel object from a snapshot of a document.
@@ -29,7 +33,7 @@ class UserModel {
   /// Create a UserModel object from a json object.
   factory UserModel.fromJson(
     Map<String, dynamic> json, {
-    String? id,
+    required String id,
   }) {
     return UserModel(
       uid: json['uid'],
@@ -37,6 +41,7 @@ class UserModel {
       phoneNumber: json['phone_number'] ?? '',
       displayName: json['displayName'] ?? '',
       photoUrl: json['photoUrl'] ?? '',
+      ref: UserService.instance.doc(id),
     );
   }
 

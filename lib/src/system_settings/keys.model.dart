@@ -9,10 +9,15 @@ class KeyModel {
   });
 
   factory KeyModel.fromSnapshot(DocumentSnapshot snapshot) {
-    return KeyModel.fromJson(
-      snapshot.data() as Map<String, dynamic>,
-      id: snapshot.id,
-    );
+    /// If the document does not exist, return an empty object.
+    if (snapshot.exists == false) {
+      return KeyModel.fromJson({}, id: '');
+    } else {
+      return KeyModel.fromJson(
+        snapshot.data() as Map<String, dynamic>,
+        id: snapshot.id,
+      );
+    }
   }
 
   factory KeyModel.fromJson(

@@ -138,8 +138,8 @@ service cloud.firestore {
         ||
         onlyUpdating(['likes', 'noOfLikes', 'noOfComments'])
       ;
-      // Post deletion is not allowed.
-      allow delete: if false;
+      // See the readme for post and comment deletion.
+      allow delete: if isMyDoc() || isAdmin();
     }
 
     // comments
@@ -153,7 +153,8 @@ service cloud.firestore {
         ||
         onlyUpdating(['likes', 'noOfLikes'])
       ;
-      allow delete: if false;
+      // See the readme for post and comment deletion.
+      allow delete: if isMyDoc() || isAdmin();
     }
 
 

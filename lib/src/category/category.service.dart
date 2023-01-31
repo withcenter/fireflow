@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflow/fireflow.dart';
 
 class CategoryService {
   static CategoryService get instance => _instance ??= CategoryService();
   static CategoryService? _instance;
 
-  FirebaseFirestore get db => FirebaseFirestore.instance;
+  FirebaseFirestore get db => firestore ?? AppService.instance.db;
   CollectionReference get col => db.collection('categories');
   DocumentReference doc(String category) => col.doc(category);
+
+  /// For testing purpose.
+  FirebaseFirestore? firestore;
 
   Future<DocumentReference> create({
     required String category,

@@ -18,6 +18,7 @@ class PostEditScreen extends StatefulWidget {
 class _PostEditScreenState extends State<PostEditScreen> {
   final title = TextEditingController();
   final content = TextEditingController();
+  final List<String> files = [];
 
   late final PostModel post;
 
@@ -32,6 +33,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
         post = PostModel.fromSnapshot(value);
         title.text = post.title;
         content.text = post.content;
+        files.addAll(post.files);
         setState(() {});
       });
     }
@@ -58,16 +60,76 @@ class _PostEditScreenState extends State<PostEditScreen> {
                 hintText: 'Content',
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                if (isCreate)
-                  await create();
-                else
-                  await update();
+            Row(
+              children: [
+                IconButton(
+                    onPressed: () async {
+                      final uploadedUrls =
+                          await StorageService.instance.uploadMedia(
+                        context: context,
+                        allowPhoto: true,
+                        allowAnyfile: true,
+                        allowVideo: true,
+                        multiImage: false,
+                        maxHeight: 1024,
+                        maxWidth: 1024,
+                        imageQuality: 80,
+                      );
+                      setState(() {
+                        files.addAll(uploadedUrls);
+                      });
+                    },
+                    icon: Icon(Icons.camera_alt)),
+                Spacer(),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (isCreate)
+                      await create();
+                    else
+                      await update();
 
-                context.pop();
-              },
-              child: const Text('Submit'),
+                    context.pop();
+                  },
+                  child: const Text('Submit'),
+                ),
+              ],
+            ),
+            Container(
+              width: double.infinity,
+              child: Wrap(
+                runAlignment: WrapAlignment.start,
+                alignment: WrapAlignment.start,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                children: files.map((url) {
+                  return Stack(
+                    children: [
+                      SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: Image.network(url),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await StorageService.instance.delete(url);
+                          files.remove(url);
+                          if (isCreate == false) {
+                            await PostService.instance
+                                .doc(widget.postId!)
+                                .update({
+                              'files': FieldValue.arrayRemove([url]),
+                            });
+                          }
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red.shade700,
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
             ),
           ],
         ),
@@ -82,6 +144,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
       'title': title.text,
       'content': content.text,
       'createdAt': FieldValue.serverTimestamp(),
+      'files': files,
     };
     final ref = await PostService.instance.col.add(data);
     PostService.instance.afterCreate(postDocumentReference: ref);
@@ -91,6 +154,7 @@ class _PostEditScreenState extends State<PostEditScreen> {
     final data = {
       'title': title.text,
       'content': content.text,
+      'files': files,
     };
     await PostService.instance.doc(widget.postId!).update(data);
     PostService.instance.afterUpdate(

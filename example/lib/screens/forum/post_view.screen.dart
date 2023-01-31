@@ -53,10 +53,26 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       "post id: ${post.id}, uid: ${post.userDocumentReference.id}",
                       style: const TextStyle(color: Colors.grey, fontSize: 10)),
                   Container(
-                      width: double.infinity,
-                      color: Colors.grey.shade200,
-                      padding: const EdgeInsets.all(24.0),
-                      child: Text(post.content)),
+                    width: double.infinity,
+                    color: Colors.grey.shade200,
+                    padding: const EdgeInsets.all(24.0),
+                    child: Text(post.content),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: Wrap(
+                      runAlignment: WrapAlignment.start,
+                      alignment: WrapAlignment.start,
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      children: post.files.map((url) {
+                        return Container(
+                          width: 100,
+                          height: 100,
+                          child: Image.network(url),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                   TextField(
                     controller: comment,
                     decoration: const InputDecoration(

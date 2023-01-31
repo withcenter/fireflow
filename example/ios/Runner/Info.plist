@@ -52,5 +52,10 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+    <string>The FireflowEx app requires the permission to access Camera in order to take photos and upload on forum to share with other users.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>The FireflowEx app requires the permission to access Photo Library in order to upload photos on forum and to share with other users.</string>
+	
 </dict>
 </plist>

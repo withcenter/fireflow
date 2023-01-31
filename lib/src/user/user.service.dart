@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:fireflow/fireflow.dart';
 import 'package:path/path.dart' as p;
+import 'package:rxdart/subjects.dart';
 
 /// UserService is a singleton class that provides necessary service for user
 /// related features.
@@ -12,6 +14,8 @@ class UserService {
   // create a singleton method of UserService
   static UserService get instance => _instance ?? (_instance = UserService());
   static UserService? _instance;
+
+  fa.FirebaseAuth get auth => fa.FirebaseAuth.instance;
 
   /// The Firebase Firestore instance
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -23,13 +27,15 @@ class UserService {
   DocumentReference doc(String id) => col.doc(id);
 
   /// The login user's uid
-  String get uid => fa.FirebaseAuth.instance.currentUser!.uid;
+  String get uid => auth.currentUser!.uid;
 
   /// The login user's document reference
   DocumentReference get ref =>
       FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
+
+  CollectionReference get publicDataCol => db.collection('users_public_data');
 
   /// The login user's public data document reference
   DocumentReference get myUserPublicDataRef =>
@@ -38,12 +44,13 @@ class UserService {
   get publicRef => myUserPublicDataRef;
 
   /// The login user's Firebase User object.
-  fa.User get currentUser => fa.FirebaseAuth.instance.currentUser!;
+  fa.User get currentUser => auth.currentUser!;
 
   /// Returns true if the user is logged in.
-  bool get isLoggedIn => fa.FirebaseAuth.instance.currentUser != null;
+  bool get isLoggedIn => auth.currentUser != null;
   bool get notLoggedIn => !isLoggedIn;
 
+  /// The login user's public data document stream.
   StreamSubscription? publicDataSubscription;
 
   /// The login user's public data model.
@@ -53,6 +60,9 @@ class UserService {
   /// public data document from the firestore.
   ///
   late UserPublicDataModel my;
+
+  final BehaviorSubject<UserPublicDataModel?> onChange =
+      BehaviorSubject<UserPublicDataModel?>.seeded(null);
 
   /// check if user's public data document exists
   userPublicDataDocumentExists() async {
@@ -69,14 +79,17 @@ class UserService {
   }
 
   /// Returns the user's public data model.
-  Future<UserPublicDataModel> getUserPublicData() async {
+  Future<UserPublicDataModel> getPublicData() async {
     // get the user's public data from the database
     final snapshot = await myUserPublicDataRef.get();
     return UserPublicDataModel.fromSnapshot(snapshot);
   }
 
-  Future<UserPublicDataModel> get(String id) async {
-    return UserPublicDataModel.fromSnapshot(await doc(id).get());
+  /// Get user document by uid.
+  ///
+  /// Note, it's not getting the user's public data.
+  Future<UserPublicDataModel> get([String? id]) async {
+    return UserPublicDataModel.fromSnapshot(await doc(id ?? uid).get());
   }
 
   /// Creates /users_public_data/{uid} if it does not exist.
@@ -132,6 +145,7 @@ class UserService {
         .listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
+        onChange.add(my);
         if (SupabaseService.instance.storeUsersPubicData) {
           /// Upsert the user public data to Supabase.
           // await Supabase.instance.client
@@ -173,7 +187,7 @@ class UserService {
       return;
     }
 
-    final userPublicData = await getUserPublicData();
+    final userPublicData = await getPublicData();
 
     String? fieldNameValue = userPublicData.data[fieldName];
 
@@ -225,21 +239,136 @@ class UserService {
   /// If the number of recentPosts is greater than Config.instance.noOfRecentPosts,
   /// it will remove the oldest post.
   recentPosts(PostModel post) {
-    List<Map<String, dynamic>> posts = my.recentPosts;
-    if (posts.length >= Config.instance.noOfRecentPosts) {
-      posts.removeRange(Config.instance.noOfRecentPosts - 1, posts.length);
+    List recentPosts = my.recentPosts ?? [];
+    if (recentPosts.length >= Config.instance.noOfRecentPosts) {
+      recentPosts.removeRange(
+          Config.instance.noOfRecentPosts - 1, recentPosts.length);
     }
-    posts.insert(0, feed(post));
-    return posts;
+    recentPosts.insert(0, feed(post));
+    return recentPosts;
   }
 
-  Map<String, dynamic> feed(PostModel post) {
-    return {
-      'id': post.id,
-      'createdAt': post.createdAt,
-      'title': post.safeTitle,
-      'content': post.safeContent,
-      if (post.files.isNotEmpty) 'photoUrl': post.files.first,
-    };
+  /// Get feed data from the post.
+  UserPublicDataRecentPostModel feed(PostModel post) {
+    return UserPublicDataRecentPostModel(
+      postDocumentReference: post.ref,
+      createdAt: post.createdAt,
+      title: post.safeTitle,
+      content: post.safeContent,
+      photoUrl: post.files.isNotEmpty ? post.files.first : null,
+    );
+  }
+
+  /// Login or register.
+  ///
+  /// If the user is not found, it will create a new user.
+  ///
+  /// Use this for anonymous login, or for test.
+  Future loginOrRegister(String email, String password) async {
+    try {
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+    } on fa.FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        await auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      } else if (e.code == 'wrong-password') {
+        log('Wrong password provided for that user.');
+        rethrow;
+      } else {
+        log(e.toString());
+        rethrow;
+      }
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  /// Get the user's public data.
+  ///
+  /// User's email is a private information and should be accessed by the user.
+  /// Use this for test purpose. Save the user's email in the user's public data.
+  /// And serach it.
+  Future<UserModel> getByEmail(String email) async {
+    final snapshot = await publicDataCol.where('email', isEqualTo: email).get();
+    if (snapshot.docs.isEmpty) {
+      throw Exception("User not found.");
+    }
+    return UserModel.fromSnapshot(snapshot.docs.first);
+  }
+
+  /// Follow a user
+  ///
+  Future follow(DocumentReference userDocumentReference) async {
+    await publicRef.update({
+      'followings': FieldValue.arrayUnion([userDocumentReference]),
+    });
+  }
+
+  /// Reset the followings
+  ///
+  Future clearFollowings() async {
+    await publicRef.update({
+      'followings': [],
+    });
+  }
+
+  /// Get feeds of the login user
+  ///
+  /// [noOfFollowers] is the number of followers to get. If it is 0, it will get all the followers.
+  ///
+  /// If it has no feeds, it will return an empty array.
+  Future<List<UserPublicDataRecentPostModel>> feeds({
+    int noOfFollowers = 0,
+  }) async {
+    /// Get the users that I follow, ordered by last post created at.
+    ///
+    Query q = db
+        .collection('users_public_data')
+        .where('userDocumentReference', whereIn: my.followings)
+        .orderBy('lastPostCreatedAt', descending: true);
+
+    /// Limit the number of (following) users to get if the app needs to display only a few posts.
+    if (noOfFollowers > 0) {
+      q = q.limit(noOfFollowers);
+    }
+
+    final usersQuerySnapshot = await q.get();
+
+    if (usersQuerySnapshot.size == 0 || usersQuerySnapshot.docs.isEmpty) {
+      return [];
+    }
+
+    // Merge the objects inside the array of usersQuerySnapshot.docs into a single array
+    // order by the feild timestamp in that object in descending order.
+    final List<UserPublicDataRecentPostModel> allRecentPosts = [];
+    for (final doc in usersQuerySnapshot.docs) {
+      // final data = doc.data() as Map<String, dynamic>;
+      final user = UserPublicDataModel.fromSnapshot(doc);
+      if (user.recentPosts != null) allRecentPosts.addAll(user.recentPosts!);
+    }
+    if (allRecentPosts.isEmpty) {
+      return [];
+    }
+
+    /// sort allRecentPosts by timestamp
+    allRecentPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    return allRecentPosts;
+  }
+
+  /// Get feeds of the login user
+  ///
+  /// If it has no feeds, it will return an empty array.
+  Future<List<Map<String, dynamic>>> jsonFeeds({
+    int noOfFollowers = 0,
+  }) async {
+    final List<UserPublicDataRecentPostModel> feeds = await this.feeds(
+      noOfFollowers: noOfFollowers,
+    );
+
+    return feeds.map((e) => e.toJson()).toList();
   }
 }

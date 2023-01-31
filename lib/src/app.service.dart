@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// AppService is a singleton class that provides necessary service for Fireflow.
@@ -14,10 +15,12 @@ class AppService {
   static AppService? _instance;
 
   bool initialized = false;
-  late BuildContext context;
+  BuildContext? _context;
+  BuildContext get context => _context!;
+  set context(BuildContext context) => _context = context;
 
-  final FirebaseFirestore db = FirebaseFirestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore get db => FirebaseFirestore.instance;
+  FirebaseAuth get auth => FirebaseAuth.instance;
   CollectionReference get usersCol => db.collection('users');
   CollectionReference get systemSettingsCol => db.collection('system_settings');
   DocumentReference get keysRef => systemSettingsCol.doc('keys');
@@ -42,7 +45,18 @@ class AppService {
     dog("AppService.constructor() called.");
   }
 
-  /// Initialize the settings of AppService.
+  /// Initialize the AppService.
+  ///
+  /// AppService is a singleton and must be called at immediately after the app
+  /// starts. You can call the init method multiple times to change the
+  /// settings. But the initialization will be done only once.
+  ///
+  /// The [context] is the BuildContext of the root level screen. It must be
+  /// valid and alive.
+  ///
+  /// The [debug] is to turn on/off the debug mode. It will print the logs in
+  /// the dev console.
+  ///
   ///
   /// This method must be called after the app boots and should be
   /// called on every root level screen with valid BuildContext. In other words,
@@ -61,26 +75,33 @@ class AppService {
   /// See the API reference for details.
   /// will be no snackbar.
   ///
+  ///
   void init({
-    required BuildContext context,
+    required BuildContext? context,
     bool debug = false,
+    bool displayError = false,
     int noOfRecentPosts = 20,
     SupabaseOptions? supabase,
     MessagingOptions? messaging,
   }) {
     dog('AppService.instance.init()');
-    this.context = context;
+    _context = context;
     gDebug = debug;
     Config.instance.noOfRecentPosts = noOfRecentPosts;
     Config.instance.supabase = supabase;
     Config.instance.messaging = messaging;
+    Config.instance.displayError = displayError;
 
     ///
     if (initialized == false) {
       dog("AppService.instance.init() - initializing...");
+
+      ///
       initialized = true;
+      _initErrorHandler();
       _initSystemKeys();
       _initUser();
+      TranslationService.instance.init();
       MessagingService.instance.init();
     }
   }
@@ -91,7 +112,7 @@ class AppService {
   _initUser() {
     dog('AppService._initUser()');
 
-    FirebaseAuth.instance.authStateChanges().listen((user) async {
+    auth.authStateChanges().listen((user) async {
       // User singed in
       if (user != null) {
         dog('AppService._initUser() - user is logged in');
@@ -109,5 +130,23 @@ class AppService {
   /// Get keys from Firestore.
   _initSystemKeys() async {
     keys = KeyModel.fromSnapshot(await getKeys);
+  }
+
+  _initErrorHandler() async {
+    if (Config.instance.displayError == false) return;
+    FlutterError.onError = (FlutterErrorDetails details) async {
+      // if (kDebugMode) {
+      //   FlutterError.dumpErrorToConsole(details);
+      // } else {
+      //   FlutterError.presentError(details);
+      // }
+
+      FlutterError.presentError(details);
+      snackBarWarning(title: 'Error', message: details.exceptionAsString());
+    };
+    PlatformDispatcher.instance.onError = (error, stack) {
+      snackBarWarning(title: 'Error', message: error.toString());
+      return true;
+    };
   }
 }

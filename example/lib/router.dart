@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:example/screens/admin/translation.screen.dart';
 import 'package:example/screens/forum/category/category_edit.screen.dart';
 import 'package:example/screens/forum/category/category_list.screen.dart';
 import 'package:example/screens/forum/post_view.screen.dart';
@@ -64,17 +65,22 @@ final router = GoRouter(
     GoRoute(
       name: 'Register',
       path: '/register',
-      builder: (context, state) => RegisterScreen(),
+      builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
       name: 'Login',
       path: '/login',
-      builder: (context, state) => LoginScreen(),
+      builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       name: 'Setting',
       path: '/setting',
-      builder: (context, state) => SettingScreen(),
+      builder: (context, state) => const SettingScreen(),
+    ),
+    GoRoute(
+      name: 'AdminTranslation',
+      path: '/adminTranslation',
+      builder: (context, state) => const AdminTranslationScreen(),
     ),
   ],
 );

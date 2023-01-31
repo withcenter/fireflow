@@ -1,3 +1,46 @@
+## 0.0.106
+
+* Bump 106.
+
+## 0.0.105
+
+* Fix. translation default string.
+* Update. translation.
+
+
+## 0.0.104
+
+* Add. UserDoc
+* Add. Admin Translation.
+* Add. displaying error.
+
+## 0.0.103
+
+* Add. jsonFeeds
+
+## 0.0.102
+
+* Doc
+
+
+## 0.0.101
+
+* Fix. dependencies.
+
+
+## 0.0.100
+
+* Fix. .pubignore
+
+## 0.0.99
+
+* Fix. test.
+* Update. snackbar now works without app service init.
+* Fix. userDocumentReference in feed.
+* Add. more unit tests.
+* Add. feeds method.
+* Add. loginOrRegister.
+
 ## 0.0.98
 
 * Fix. DisplayMedia widget. Make it better display media.
