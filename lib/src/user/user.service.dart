@@ -155,6 +155,7 @@ class UserService {
             {
               'uid': my.uid,
               'display_name': my.displayName,
+              'photoUrl': my.photoUrl,
               'gender': my.gender,
               'birthday': my.birthday.toDate().toIso8601String(),
               'registered_at': my.registeredAt.toDate().toIso8601String(),
