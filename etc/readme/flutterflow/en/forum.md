@@ -55,6 +55,7 @@ Schema **posts**
 | updatedAt | Timestamp |
 | title | String |
 | content | String |
+| files | List < String > |
 | hasPhoto | Boolean |
 | noOfComments | Integer |
 | hasComment | Boolean |
@@ -64,7 +65,6 @@ Schema **posts**
 | hasLike | Boolean |
 | wasPremiumUser | Boolean |
 | emphasizePremiumUser | Boolean |
-| files | List < String > |
 
 * Use `postId` to get the post document by `collection query`.
 
@@ -96,10 +96,10 @@ Schema **comments**
 | Field Name    | Data Type |
 | ------------- |----------:|
 | commentId | String |
+| category | String |
 | userDocumentReference     | Doc Reference (users) |
 | postDocumentReference     | Doc Reference (posts) |
 | parentCommentDocumentReference | Doc Reference (comments) |
-| category | String |
 | createdAt | Timestamp |
 | content | String |
 | files | List < String > |

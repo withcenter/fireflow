@@ -30,7 +30,7 @@ Schema **users**
 - Since `users` collection has private information like email and phone number, fireflow saves public information into `users_public_data` collection.
   - Even if the app adopts `App Check`, it needs more to secure the data. Since firestore always delivers the whole document to the client, it is vulnerable if you don't keep the private information in seperate document. The abusers can look at the data in the app or browser transfered over the network.
 
-- Create the `users_public_data` schema in Flutterflow like below.
+- Create the [`recentPosts` data type](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/forum.md) first, then `users_public_data` schema in Flutterflow like below.
 
 Schema **users_public_data**
 
