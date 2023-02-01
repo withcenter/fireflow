@@ -15,6 +15,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 
 
 
+
 ## Table of Contents
 
 - [About the FireFlow](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/about.md)
@@ -26,7 +27,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 - [Push Notifications](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/push.md)
 - [Chat](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/chat.md)
 - [Forum](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/forum.md)
-- [file](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/file.md)
+- [Storage Files](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/file.md)
 
 - [Supabase](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/supabase.md)
 - [Text Translation](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/translation.md)

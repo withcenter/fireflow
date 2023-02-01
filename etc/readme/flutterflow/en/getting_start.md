@@ -1,8 +1,6 @@
-
 # Getting start
 
-- To get started, you would need to install the necessary parts of the Fireflow.
-- You may find more details on the sections of each feature.
+- This is a short description. You may find more details on the sections of each feature.
 
 ## Setting up Firebase
 
@@ -12,7 +10,7 @@ Fireflow has its own Firestore Security Rules to protect the app safer.
 
 You may think `App check` will do for the security. Partly, yes. While `App Check` adds an important layer of protection against some (not all) abuse towards your backend, it does not replace Firebase's server-side security rules. See [the App Check offical document](https://firebase.google.com/docs/app-check#how_strong_is_the_security_provided_by).
 
-To apply it, you will need to check the `Exclude` buttons on the Collections like below. 
+To apply it, you will need to check the `Exclude` buttons on the Collections in `Firestore Rules` section of FlutterFlow.
 
 ![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-firestore-deploy-1.jpg?raw=true)
 
