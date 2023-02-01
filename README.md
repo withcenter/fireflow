@@ -13,9 +13,20 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 
 * If you encounter an error, please create an issue in [fireflow git issue](https://github.com/withcenter/fireflow/issues).
 
+
+
+## Table of Contents
+
+- [About the FireFlow](https://github.com/withcenter/fireflow/etc/readme/flutter/en/user.md)
+- [User](https://github.com/withcenter/fireflow/etc/readme/flutter/en/user.md)
+- [User setting](https://github.com/withcenter/fireflow/etc/readme/flutter/en/user_setting.md)
+
+
+--------
+**old documentations**
+
 - [Fireflow](#fireflow)
-- [Overview](#overview)
-- [Features](#features)
+  - [Table of Contents](#table-of-contents)
 - [TODO](#todo)
 - [Getting started](#getting-started)
   - [Setting up Firebase](#setting-up-firebase)
@@ -28,17 +39,6 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
     - [Open AI Keys](#open-ai-keys)
 - [The structure of Fireflow](#the-structure-of-fireflow)
   - [Files and folders](#files-and-folders)
-- [User](#user)
-  - [users schema](#users-schema)
-  - [users\_public\_data schema](#users_public_data-schema)
-  - [Register and sign-in](#register-and-sign-in)
-  - [How to get users\_public\_data document](#how-to-get-users_public_data-document)
-  - [Profile photo upload](#profile-photo-upload)
-  - [Adding extra fields on users\_public\_data schema](#adding-extra-fields-on-users_public_data-schema)
-  - [User coding guideline](#user-coding-guideline)
-- [User setting](#user-setting)
-  - [New Comment Notification](#new-comment-notification)
-  - [Forum Category Subscription](#forum-category-subscription)
 - [System setting](#system-setting)
   - [Admin](#admin)
   - [Counters](#counters)
@@ -138,66 +138,6 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [\[cloud\_firestore/permission\_denied\] The caller does not have permission to execute the specified operation.](#cloud_firestorepermission_denied-the-caller-does-not-have-permission-to-execute-the-specified-operation)
   - [Snackbar](#snackbar)
 
-
-# Overview
-
-Flutterflow is a gorgeous platform to build mobile apps rapidly. The developers can build whatever apps they like without any limitations.
-
-Flutterflow comes easy when the project is relatively small. But when the project grows with complicated functionalities and logics, you will feel the pressure of what the professional developer feels.
-
-To make the apps fully functional, the developers definitely need the use of custom code. It's important, but many of Flutterflow developers are stuck with Custom functions, custom widgets, and custom actions.  That's where **Fireflow** came in.
-
-Fireflow encapsulates all the complicated logics and serve most of the common use cases. Use it build professional apps like chat apps, SNS apps, community apps, and more.
-
-# Features
-
-- Enhanced user management
-  - The documents of the `/users` collection have private information and shouldn't be disclosed. But the user information is needed to be disclosed for the most app features. To make it happen, I created another collection named `/users_public_data` that does not hold user's prviate information.
-
-- File upload and display.
-  - Any kinds of files can be uploaded and displayed like Image, Video, TXT, PDF, ZIP, etc.
-  - It can be used in Chat, Forum and for any features.
-
-- Chat
-  - Custom design.
-    - Tap on chat message to delete, edit, copy, open, etc.
-  - Push notification. User can subscribe/unsubscribe chat room.
-  - Display the number of chat room that has unread messages.
-  - Open AI. GPT query. Chat members can query to GPT and share.
-  - Uploading any kinds of files like Image, Video, TXT, PDF, ZIP, etc.
-  - User invite and leave in Group chat.
-  - Moderators can remove a user.
-  - Moderators can't leave the chat room. But he can break the room. All users are no longer to use the chat room after admin breaks the room.
-  - Moderators can block user.
-  - Moderators can send push notification to all users even if some of them disabled the subscription.
-
-
-- Forum
-  - Complete functionalities of forum including
-    - uploading multiple files.
-    - displaying nested comments.
-    - etc.
-  - Forum is the based of all functions. You can create whatever features extending the forum.
-
-- Push Notification
-  - Sending push notification to all users.
-  - Display the push notification while the app is on foreground.
-  - Subscribe new comments under my posts and comments.
-  - Subscribe new posts of a category.
-  - Subscribe new comments of a category.
-
-- Admin features
-  - User management
-  - Forum category management
-  - Post & comment management
-  - Uploaded file management
-
-
-- Muti language support
-
-- Enhanced Firestore Security Rules
-
-- Custom widgets
 
 # TODO
 
@@ -370,120 +310,6 @@ The fireflow reuses the code of the flutterflow since fireflow depends on flutte
 
 
 
-# User
-
-## users schema
-
-
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users-schema.jpg?raw=true "Flutterflow users schema")
-
-
-- Add `userPublicDataDocumentReference` to `users` schema. This is the connection to `users_public_data` schema.
-
-- Add `admin` boolean. If this is set to true, the user will see admin menu. To give the user admin permission, you need to add the uid of the user into the system_settings collection.
-
-
-## users_public_data schema
-
-- Since `users` collection has private information like email and phone number, fireflow saves public information into `users_public_data` collection.
-  - Even if the app adopts `App Check`, it needs more to secure the data. Since firestore always delivers the whole document to the client, it is vulnerable if you don't keep the private information in seperate document. The abusers can look at the data in the app or browser transfered over the network.
-
-- Create the `users_public_data` schema in Flutterflow like below.
-
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users_public_data-schema.jpg?raw=true "Flutterflow users_public_data schema")
-
-
-- `uid` is the the uid of the user.
-- `userDocumentReference` is the document reference of the user.
-- `displayName` is the display name of the user.
-- `photoUrl` is the primary profile photo url of the user.
-- `registeredAt` is the time that this document was created.
-- `updatedAt` is the time that this document was updated.
-- `gender` can be one of `M` or `F`. M as Male or F as Female
-- `birthday` is the birthday of the user
-- `followers` is the list of user document references who follow me(the login user).
-  Meaning, the login user can add other user reference into the `followers` field in his document. Others don't have permission to update the `followers` field in other user's document.
-- `hasPhoto` is set to `true` if the user has the primary profile photo. Or false.
-- `isProfileComplete` is set to `true` if the user filled in the necessary fields in his profile. Or false.
-- `coverPhotoUrl` is the url of the cover photo of the user.
-- `recentPosts` is the list of the last recent posts that the user created. Note that, to create the `recentPosts` field in `posts` collection, you will need to create the `recentPosts` Data Type first.
-- `lastPostCreatedAt` is the time that the user created the last post.
-- `isPremiumUser` is set to `true` if the user is paid for premium service.
-
-## Register and sign-in
-
-- As long as the user signs in with Firebase Auth `sign-in logic` applies the same.
-
-- When a user signs in, Fireflow will create
-  - `/users_public_data/<uid>` document if it does not exists.
-  - `/settings/<uid>` document if it does not exsits.
-
-- When a user signs in for the first time, fireflow will send a welcome chat message to user.
-
-
-## How to get users_public_data document
-
-
-- When you need to get the public data document of a user, filter the `userDocumentReference` in the `users_public_data` schema with the `userPublicDataDocumentReference` of `Authenticated User`.
-
-Note, that the `userPublicDataDocumentReference` in `users` collection is set on the very first time the app runs by `AppService`. So, it may be a good idea to not use it on the first screen of the app. You may use it on the second page and after.
-
-
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-get-user-pub-doc.jpg?raw=true "How to get user public data document")
-
-
-## Profile photo upload
-
-- Uploading the profile photo of the user is much complicated than you may think.
-  - If a user cancels on the following(immediate) upload after the user has just uploaded a profile photo, the app maintains the same URL on the widget state. So, it should simply ignore when the user canceled the upload.
-  - The existing profile photo should be deleted (or continue to work) even if the actual file does not exist. There might be some cases where the photo fields have urls but the photos are not actually exists and this would cause a problem.
-
-
-- When the user uploads his profile photo, use the `Upload Media Action` in fireflow (not in flutterflow), then pass the uploaded URL to `afterProfilePhotoUpload`. And leave all the other works to fireflow.
-
-- For cover photo upload, update the photo using `Upload Media Action` in fireflow and url to `afterCoverPhotoUpload` action.
-
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-photo.jpg?raw=true "User photo")
-
-
-## Adding extra fields on users_public_data schema
-
-- You can simply add more fields on users_public_data schema.
-
-
-## User coding guideline
-
-- `UserService.instance.loginOrRegister()` creates an account or logs in if the account is already exists. You can use it for user sign-in. Or guest sign-in. You may create an account in FirebaseAuth and let all the guest users to sign-in with that account.
-
-
-- `UserService.instance.feeds()` returns the feeds of the users who the log-in user follows.
-
-- There are many methods you may want to use as a custom action.
-
-
-# User setting
-
-- User settigns are kept in `/user_settings/<uid>` document.
-  - It could be saved in `/users_public_data/<uid>` collection. But the problem is when the client lists/searches user information based on the settings, the firestore downloads the whole document whether is it big or small. And this leads the waste of network bandwidth, time consuming and lagging on the app. And even worse it costs more.
-
-- You just set the settings. That's it. It will work.
-
-
-## New Comment Notification
-
-- If a user enable this option, the user will get push notification on every new comments under his posts or comments.
-- To enable it, simple set `notifyNewComments` to true. Example) `/user_settings/<uid> {notifyNewComments: true}`.
-- To disable it, set it to false or delete the field.
-
-
-## Forum Category Subscription
-
-- There are two types of push notification subscriptions. One is the post subscription, the other is the comment subscription.
-- If a user subscribes for the post, then he will get a push notification whenever there is a new post under the category.
-- If a user subscribes for the comment, he will get a push notification on very new comments under the category.
-- To enable the post subscription, add the category reference into `postSubscriptions` array. Example) `/user_settings/<uid> {postSubscriptions: ['category/qnaCategoryReference']}`.
-- To enable the comment subscription, add the category reference into `commentSubscriptions` array. Example) `/user_settings/<uid> {commentSubscriptions: ['category/qna']}`.
-
 
 
 
@@ -579,7 +405,22 @@ The `MessageModel` will handle all kinds of push notification data including, bu
 ### Chat Room collection
 
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-schema-chat-rooms.jpg?raw=true "Chat rooms collection")
+Schema **chat_rooms**
+
+|Field Name | Data Type |
+|--------|-------:|
+| userDocumentReference | List < Doc Reference (users) > |
+| lastMessage | String |
+| lastMessageSentAt | Timestamp |
+| lastMessageSeenBy | List < Doc Reference (users) > |
+| lastMessageSentBy | Doc Reference (users) |
+| title | String |
+| unsubscribedUserDocumentReferences | List < Doc Reference (users) > |
+| moderatorUserDocumentReferences | List < Doc Reference (users) > |
+| isGroupChat | Boolean |
+| isOpenChat | Boolean |
+
+
 
 - `userDocumentReferences` is the participants document reference of the chat room.
 - `lastMessage` is the last chat message.
@@ -591,8 +432,6 @@ The `MessageModel` will handle all kinds of push notification data including, bu
 - `unsubscribedUserDocumentReferences` is the document references of the users who disabled the notification of a new message for the chat room.
 - `isGroupChat` is set to `true` if it's a group chat. Otherwise, false.
 - `isOpenChat` is set to `true` if the chat room is open to anyone. When it is set to true, users can join the chat room.
-
-
 
 
 
