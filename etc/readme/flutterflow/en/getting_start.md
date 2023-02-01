@@ -10,11 +10,11 @@ Fireflow has its own Firestore Security Rules to protect the app safer.
 
 You may think `App check` will do for the security. Partly, yes. While `App Check` adds an important layer of protection against some (not all) abuse towards your backend, it does not replace Firebase's server-side security rules. See [the App Check offical document](https://firebase.google.com/docs/app-check#how_strong_is_the_security_provided_by).
 
-To apply it, you will need to check the `Exclude` buttons on the Collections in `Firestore Rules` section of FlutterFlow.
+1. To apply it, you will need to check the `Exclude` buttons on the Collections in `Firestore Rules` section of FlutterFlow.
 
 ![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-firestore-deploy-1.jpg?raw=true)
 
-And copy the [fireflow security rules](https://raw.githubusercontent.com/withcenter/fireflow/main/firebase/firestore.rules) and paste it into your Firebase firestore security rules.
+2. And copy the [fireflow security rules](https://raw.githubusercontent.com/withcenter/fireflow/main/firebase/firestore.rules) and paste it into your Firebase firestore security rules.
 
 ![Firestore Security Rules](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-rules.gif?raw=true)
 
@@ -22,13 +22,28 @@ And copy the [fireflow security rules](https://raw.githubusercontent.com/withcen
 
 - Enable the Deeplink in FlutterFlow.
 
-## Enable Push notifications
+## Enable Supabase
 
-- The fireflow is tightly coupled with the Push Notification as of now. So, you need to enable push notification on Flutterflow.
+- You need to enable supabase even if you are not using it because supabase depends on `rxdart ^0.27.5` and flutterflow depends on `rxdart ^0.27.4` and when supabase is enabled, flutterflow overrides the dependency to `rxdart ^0.27.4`.
 
 ## AppService
 
 - `AppService` will serve with the core services of fireflow through the lifecyle of the app. You can initialize like below.
+
+```dart
+import 'package:fireflow/fireflow.dart';
+
+Future appService(BuildContext context) async {
+  // Add your function code here!
+  AppService.instance.init(
+    context: context,
+  );
+}
+```
+
+
+_ If you would like to use `Supabase` for full text search and push notification, you may set more options like below.
+
 
 ```dart
 import '../../backend/push_notifications/push_notifications_handler.dart';

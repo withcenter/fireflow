@@ -7,6 +7,11 @@ There are some differences from the notification logic of FF.
 - Foreground push notification works.
 
 
+## Enable Push notifications
+
+- The fireflow is tightly coupled with the Push Notification as of now. So, you need to enable push notification on Flutterflow.
+
+
 ## Push notification data
 
 
