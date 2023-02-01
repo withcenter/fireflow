@@ -29,6 +29,23 @@ Schema **recentPosts**
   - To delete a category, just delete it.
 
 
+### Category schema
+
+Schema **categories**
+| Field Name    | Data Type |
+| ------------- |----------:|
+| category     | String |
+| title | String |
+| noOfPosts | Integer |
+| noOfComments | Integer |
+| enablePushNotificationSubscription | Boolean |
+| emphasizePremiumUserPost | Boolean |
+| waitMinutesForNextPost | Integer |
+| waitMinutesForPremiumUserNextPost | Integer |
+
+
+
+
 
 
 

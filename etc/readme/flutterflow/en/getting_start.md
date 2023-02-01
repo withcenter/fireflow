@@ -106,6 +106,9 @@ The `onTapMessage` is the push notification handler while the app is foreground.
   - create **users_public_data** schema (See [the users section](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/user.md))
   - create **user_setting** schema. (See [the user session section](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/user_setting.md))
 
+
+
+
 ## Enable Push notification for Phone Signin
 
 - Enable push notification in FlutterFlow if your app is going to use Phone sign-in in iOS.
