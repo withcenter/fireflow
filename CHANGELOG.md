@@ -1,3 +1,8 @@
+## 0.0.113
+
+* Fix. noOfRecentPosts.
+
+
 ## 0.0.112
 
 * Fix. rxdart conflict.

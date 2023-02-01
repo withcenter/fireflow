@@ -6,7 +6,7 @@ class Config {
 
   /// No of recent posts to store as feed in user's public data document.
   /// Recommendation is between 10 ~ 50.
-  late final int noOfRecentPosts;
+  int noOfRecentPosts = 20;
 
   /// [supa] returns true if supabase is enabled.
   bool get supa => supabase != null;
