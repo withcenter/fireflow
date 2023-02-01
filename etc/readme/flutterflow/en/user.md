@@ -52,7 +52,7 @@ Schema **users_public_data**
 | recentPosts | List < Data ( recentPosts) > |
 | isPremiumUser | Boolean |
 | noOfPosts | Integer |
-| noofComments | Integer |
+| noOfComments | Integer |
 | followings | List < Doc Reference (users) > |
 
 - `uid` is the the uid of the user.
