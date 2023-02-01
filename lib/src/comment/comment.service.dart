@@ -27,6 +27,27 @@ class CommentService {
     return CommentModel.fromSnapshot(snapshot);
   }
 
+  /// Finishes the comment creation.
+  ///
+  /// To create a comment, add a document under the comment collection in Firestore. Then call `afterCreate`.
+  /// The `depth` field must be set to 1.
+  /// ```dart
+  /// ElevatedButton(
+  ///     onPressed: () async {
+  ///     final ref = await CommentService.instance.col.add({
+  ///         'postDocumentReference': PostService.instance.doc(widget.postId),
+  ///         'userDocumentReference': UserService.instance.ref,
+  ///         'content': comment.text,
+  ///         'createdAt': FieldValue.serverTimestamp(),
+  ///         'order': commentOrder(null, null, post.noOfComments),
+  ///         'depth': 1,
+  ///     });
+  ///     await CommentService.instance.afterCreate(commentDocumentReference: ref);
+  ///     },
+  ///     child: const Text('Submit'),
+  /// ),
+  /// ```
+  ///
   afterCreate({required DocumentReference commentDocumentReference}) async {
     final comment =
         CommentModel.fromSnapshot(await commentDocumentReference.get());

@@ -76,6 +76,23 @@ class AppService {
   /// will be no snackbar.
   ///
   ///
+  /// * To initialize the app service, you need to pass proper (alive) build context for navigation. It will be used for navigating when the push message has been tapped.
+  /// ```dart
+  /// final router = GoRouter( ... );
+  /// SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+  ///   AppService.instance.init(
+  ///     context: router.routerDelegate.navigatorKey.currentContext!,
+  ///     debug: true,
+  ///     supabase: true,
+  ///     tables: SupabaseTables(
+  ///       usersPublicData: 'users_public_data',
+  ///       posts: 'posts',
+  ///       comments: 'comments',
+  ///     ),
+  ///   );
+  /// });
+  /// ```
+  ///
   void init({
     required BuildContext? context,
     bool debug = false,

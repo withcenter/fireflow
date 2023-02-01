@@ -76,10 +76,12 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Category](#category)
     - [Category Logic](#category-logic)
   - [Post](#post)
+    - [Post Schema](#post-schema)
     - [Post Create](#post-create)
     - [Post Update](#post-update)
     - [Post Delete](#post-delete)
   - [Comment](#comment)
+    - [Comment Schema](#comment-schema)
     - [Comment Create](#comment-create)
     - [Comment Update](#comment-update)
     - [Comment Delete](#comment-delete)
@@ -88,7 +90,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   - [Comment creation](#comment-creation)
   - [Last post](#last-post)
 - [Feeds, recentPosts](#feeds-recentposts)
-  - [How to display feeds](#how-to-display-feeds)
+  - [How to get feeds](#how-to-get-feeds)
     - [Display the recent feed](#display-the-recent-feed)
     - [Display the list of recent feeds](#display-the-list-of-recent-feeds)
 - [Files](#files)
@@ -927,8 +929,14 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 - Create the `recentPosts` Date Types like below.
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-schema-recent-posts.jpg?raw=true "Recent posts")
-
+Schema **recentPosts**
+| Field Name    | Data Type |
+| ------------- |----------:|
+| postDocumentReference     | Doc Reference (psots) |
+| createdAt     | Timestamp |
+| title | String |
+| content | String |
+| photoUrl | String |
 
 
 ## Category
@@ -953,6 +961,34 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 ## Post
 
 
+### Post Schema
+
+
+Schema **posts**
+| Field Name    | Data Type |
+| ------------- |----------:|
+| category     | String |
+| postId | String |
+| userDocumentReference     | Doc Reference (users) |
+| createdAt | Timestamp |
+| updatedAt | Timestamp |
+| title | String |
+| content | String |
+| hasPhoto | Boolean |
+| noOfComments | Integer |
+| hasComment | Boolean |
+| deleted | Boolean |
+| likes | List < Doc Reference (users) > |
+| noOfLikes | Integer |
+| hasLike | Boolean |
+| wasPremiumUser | Boolean |
+| emphasizePremiumUser | Boolean |
+| files | List < String > |
+
+* Use `postId` to get the post document by `collection query`.
+
+
+
 ### Post Create
 - `createdAt` must be set to `Firestore.serverTimestamp` when the post is created by Flutterflow.
 - `updatedAt` is optional. And it is set by the fireflow.
@@ -971,6 +1007,30 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 
 ## Comment
+
+### Comment Schema
+
+Schema **comments**
+
+| Field Name    | Data Type |
+| ------------- |----------:|
+| commentId | String |
+| userDocumentReference     | Doc Reference (users) |
+| postDocumentReference     | Doc Reference (posts) |
+| parentCommentDocumentReference | Doc Reference (comments) |
+| category | String |
+| createdAt | Timestamp |
+| content | String |
+| files | List < String > |
+| order | String |
+| depth | Integer |
+| likes | List < Doc Reference (users) > |
+| noOfLikes | Integer |
+| deleted | Boolean |
+
+* Use `commentId` to get the comment document by `collection query`.
+
+
 
 ### Comment Create
 
@@ -1043,7 +1103,48 @@ AppService.instance.init(
 - The last post will be at first of the `recentPosts` array field.
 
 
-## How to display feeds
+## How to get feeds
+
+
+- You can get feeds in two ways.
+
+Example 1)
+
+- Below gets the feeds using `Data Type` in FF. It helps with validation.
+
+```dart
+import 'package:fireflow/fireflow.dart';
+
+Future<List<RecentPostsStruct>> feeds(int noOfFollowers) async {
+  // Add your function code here!
+
+  final feeds = await UserService.instance.feeds(noOfFollowers: noOfFollowers);
+
+  return feeds
+      .map((e) => createRecentPostsStruct(
+          postDocumentReference: e.postDocumentReference,
+          createdAt: e.createdAt.toDate(),
+          title: e.title,
+          content: e.content,
+          photoUrl: e.photoUrl))
+      .toList() as List<RecentPostsStruct>;
+}
+```
+
+Example 2)
+
+- Blow gets the feeds in JSON.
+
+```dart
+import 'package:fireflow/fireflow.dart';
+
+Future<List<RecentPostsStruct>> feeds(int noOfFollowers) async {
+  // Add your function code here!
+
+  final feeds = await UserService.instance.jsonFeeds(noOfFollowers: noOfFollowers);
+
+}
+```
 
 
 ### Display the recent feed

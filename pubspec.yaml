@@ -1,6 +1,6 @@
 name: fireflow
 description: This package is designed for FlutterFlow app to provide enhanced features.
-version: 0.0.109
+version: 0.0.110
 homepage: https://github.com/withcenter/fireflow
 
 environment:
