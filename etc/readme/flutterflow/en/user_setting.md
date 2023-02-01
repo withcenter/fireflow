@@ -5,6 +5,20 @@
 
 - You just set the settings. That's it. It will work.
 
+## user_settings schema
+
+Schema **user_settings**
+
+| Field Name | Data Type |
+|------------|----------:|
+| userDocumentReference | Doc Reference (users) |
+| type | String |
+| action | String |
+| category | String |
+| notifyNewComments | Boolean |
+| postSubscriptions | List < Doc Reference (categories) > |
+| commentSubscriptions | List < Doc Reference (categories) > |
+
 
 ## New Comment Notification
 

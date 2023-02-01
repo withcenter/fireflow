@@ -24,8 +24,8 @@ You may think `App check` will do for the security. Partly, yes. While `App Chec
 
 ## Enable Supabase
 
-- You need to enable supabase even if you are not using it because supabase depends on `rxdart ^0.27.5` and flutterflow depends on `rxdart ^0.27.4` and when supabase is enabled, flutterflow overrides the dependency to `rxdart ^0.27.4`.
-
+- Enable supabase even if you are not using it.
+- See the [known issues](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/known-issue.md#supabase-and-rxdart)
 ## AppService
 
 - `AppService` will serve with the core services of fireflow through the lifecyle of the app. You can initialize like below.
@@ -96,6 +96,21 @@ The `onTapMessage` is the push notification handler while the app is foreground.
 - If `displayError` is set to true, then it display error messages as snackbar.
 
 
+## Authentication
+
+- You may enable `Email/Password` in Firestore authentication section for email and password login.
+
+
+- For authentication, you need to
+  - update **users** schema (See [the users section](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/user.md))
+  - create **users_public_data** schema (See [the users section](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/user.md))
+  - create **user_setting** schema. (See [the user session section](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/user_setting.md))
+
+## Enable Push notification for Phone Signin
+
+- Enable push notification in FlutterFlow if your app is going to use Phone sign-in in iOS.
+
+
 
 ## Local State Variable
 
@@ -129,5 +144,7 @@ Note that, these local state variables may be changed based on your app logic.
 - Save the Open AI Keys at `/system_settings/keys {openAiApiKey: ... }`.
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-keys.jpg?raw=true "Open AI API Keys")
+
+
 
 

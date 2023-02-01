@@ -4,7 +4,20 @@
 ## users schema
 
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users-schema.jpg?raw=true "Flutterflow users schema")
+Schema **users**
+
+| Field Name | Data Type |
+|------------|----------:|
+| email | String |
+| display_name | String |
+| photo_url | Image Path |
+| uid | String |
+| created_time | Timestamp |
+| phone_number | String |
+| userPublicDocumentReference | Doc Reference (users_public_data) |
+| admin | Boolean |
+| blockedUsers | List < Doc Reference (users) > |
+
 
 
 - Add `userPublicDataDocumentReference` to `users` schema. This is the connection to `users_public_data` schema.
@@ -19,8 +32,28 @@
 
 - Create the `users_public_data` schema in Flutterflow like below.
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-users_public_data-schema.jpg?raw=true "Flutterflow users_public_data schema")
+Schema **users_public_data**
 
+| Field Name | Data Type |
+|------------|----------:|
+| uid | String |
+| userDocumentReference | Doc Reference (users) |
+| registeredAt | Timestamp |
+| updatedAt | Timestamp |
+| displayName | String |
+| photoUrl | Image Path |
+| coverPhotoUrl | ImagePath |
+| gender | String |
+| birthday | Timestamp |
+| hasPhoto | Boolean |
+| isProfileComplete | Boolean |
+| lastPostCreatedAt | Timestamp |
+| lastPost | Data (recentPosts) |
+| recentPosts | List < Data ( recentPosts) > |
+| isPremiumUser | Boolean |
+| noOfPosts | Integer |
+| noofComments | Integer |
+| followings | List < Doc Reference (users) > |
 
 - `uid` is the the uid of the user.
 - `userDocumentReference` is the document reference of the user.

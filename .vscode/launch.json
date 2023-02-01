@@ -104,6 +104,33 @@
       "deviceId": "3300a275cab914b9"
     },
     {
+      "name": "How About Here - debug - iPhone11MaxPro",
+      "cwd": "apps/how-about-here",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone11MaxPro"
+    },
+    {
+      "name": "How About Here - debug - Galaxy A04",
+      "cwd": "apps/how-about-here",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "R9ATA00LMJM"
+    },
+    {
+      "name": "How About Here - debug - Galaxy Wide 3",
+      "cwd": "apps/how-about-here",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "3300a275cab914b9"
+    },
+    {
       "name": "Simulator - philov - debug",
       "cwd": "apps/philov",
       "request": "launch",
