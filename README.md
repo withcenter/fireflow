@@ -35,6 +35,8 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 - [Widgets](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/widget.md)
 - [Actions](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/.md)
 - [Development Tips](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/tip.md)
+- [Known Issues](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/known-issue.md)
+- [Trouble Shooting](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/trouble-shooting.md)
 # TODO
 
 - Chat welcome message for newly signed(registered) users.
@@ -66,55 +68,3 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 
 - Delete the post document itself if the post has no comments or all the comments has been deleted.
 - Delete the comment document if it has no decendants or all the decendants are deleted.
-
-
-# Known Issues
-
-## Push notification and back navigation
-
-There is [an issue regarding the push notification](https://github.com/FlutterFlow/flutterflow-issues/issues/228). This bug produces an error on back navigation when the app is opened by tapping on the push message.
-
-
-## [cloud_firestore/permission_denied] The caller does not have permission to execute the specified operation.
-
-Most of the time, it really causes problems. But in a few cases, it is designed to produce permission errors while it is working fine.
-
-For instance, in the `ChatRoomMessageList` widget of fireflow,
-
-The chat room for 1:1 chat will be created in `initState` asynchronously while the app queries to read the messages in the ListView widget.
-
-The app will first read the chat messages before the chat room exists. But to read chat messages, the chat room must exist. This is why there is a permission error.
-The permission error may appear in the console, but still it works fine.
-This permission error may not appear always.
-
-
-[cloud_firestore/permission_denied] happens often when the app is listening to some documents and suddenly user login status changes. For instance, the app is listening to a chat room and the user suddenly leaves the chat room. And it would be best if the app handles all the [cloud_firestore/permission_denied] exceptions nicely, but in some cases (or in many cases) it is just okay with the permission exceptions.
-
-
-## Snackbar
-
-
-The issue below happens only when you zoom in the browser while running debug run.
-
-![Flutterflow Firestore Deploy](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-snackbar-issue.jpg?raw=true)
-
-
-
-# Trouble Shotting
-
-## Analyzing error
-
-If you see a message like `isn't defined` in the error like below, it would probably not use the latest version of fireflow.
-
-```txt
-The named parameter 'context' isn't defined.
-Try correcting the name to an existing named parameter's name, or defining a named parameter with the name 'context'.dartundefined_named_parameter
-```
-
-You need to put a version in package dependency like `fireflow: ^0.1.23`.
-
-## Error running "flutter pub get"
-
-When you see this error message, there is a problem while `flutter pub get`. This happens when you add a package that has conflict on other packages. Ask it to fireflow developer.
-
-Note that, as of Feb 1st, 2023, You need to enable Supabase even if you don't use it.
