@@ -35,7 +35,13 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 - [Development Tips](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/tip.md)
 - [Known Issues](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/known-issue.md)
 - [Trouble Shooting](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/trouble-shooting.md)
+
+
 # TODO
+
+- Make two fireflow
+  - One for including all features - `fireflow`.
+  - One for excluing `supabase` since `supabase` make a conflict on pubspec - `fireflow_light`.
 
 - Chat welcome message for newly signed(registered) users.
 

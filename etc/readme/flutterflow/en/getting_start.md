@@ -46,10 +46,14 @@ _ If you would like to use `Supabase` for full text search and push notification
 
 
 ```dart
-import '../../backend/push_notifications/push_notifications_handler.dart';
+
 import 'package:fireflow/fireflow.dart';
+import 'package:go_router/go_router.dart';
 
 Future appService(BuildContext context) async {
+  // Add your function code here!
+  print('appService()');
+
   AppService.instance.init(
     context: context,
     debug: true,
@@ -57,6 +61,7 @@ Future appService(BuildContext context) async {
       usersPublicData: 'users_public_data',
       posts: 'posts',
       comments: 'comments',
+      postsAndComments: 'posts_and_comments',
     ),
     messaging: MessagingOptions(
       foreground: true,
@@ -68,6 +73,7 @@ Future appService(BuildContext context) async {
     ),
   );
 }
+
 ```
 
 To see the details, refer the document of [AppService.init](https://pub.dev/documentation/fireflow/latest/fireflow/AppService/init.html)
