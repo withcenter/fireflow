@@ -1,3 +1,8 @@
+## 0.0.116
+
+* Update. setting default uid and ref information on every boot.
+
+
 ## 0.0.115
 
 * Update. log print with user public data path.

@@ -123,9 +123,14 @@ class UserService {
       }
     }
 
-    /// Update user's document with the user's public data document reference
+    /// Update the default uid and reference information
+    ///
     /// To make sure that the user's public data document reference always
     /// exists in /users/{uid}, it updates on every boot.
+    await myUserPublicDataRef.set({
+      'uid': uid,
+      'userDocumentReference': ref,
+    });
     await myRef.update({
       'userPublicDataDocumentReference': myUserPublicDataRef,
     });
