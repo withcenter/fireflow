@@ -169,6 +169,41 @@ For the example of the code above, the Custom widget is ChatRoomMenu. And I adde
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/custom-popup-4.jpg?raw=true "Custom Popup")
 
 
+## CustomIconPopup
+
+- You can use `Icon` instead of adding a child component.
+
+```dart
+CustomIconPopup(
+  popup: Container(
+    color: Colors.blue,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text('Custom Icon Popup '),
+        const Text('Content of the popup'),
+        const Text('Apple, Banana, Cherry'),
+        const Text(''),
+        const Text('Close'),
+        TextButton.icon(
+          onPressed: Navigator.of(context).pop,
+          icon: const Icon(Icons.close),
+          label: const Text(
+            'Close',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    ),
+  ),
+  icon: const Icon(
+    Icons.settings,
+    size: 18,
+  ),
+  iconPadding: 16,
+)
+```
+
 ## DisplayMedia widget
 
 This widget accepts a String of URL together with width and height.

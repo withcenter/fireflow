@@ -48,6 +48,7 @@ export 'src/functions/array_functions.dart';
 
 /// Utility Widgets (independent from Fireflow)
 export 'src/widgets/custom_popup/custom_popup.dart';
+export 'src/widgets/custom_popup/custom_icon_popup.dart';
 export 'src/widgets/display_media/display_media.dart';
 export 'src/widgets/safe_area/safe_area_top.dart';
 export 'src/widgets/safe_area/safe_area_bottom.dart';

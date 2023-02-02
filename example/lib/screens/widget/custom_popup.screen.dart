@@ -91,6 +91,38 @@ class CustomPopupScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 100),
+              Align(
+                alignment: Alignment.center,
+                child: CustomIconPopup(
+                  popup: Container(
+                    color: Colors.blue,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Custom Popup'),
+                        const Text('Content of the popup,'),
+                        const Text('Apple, Banana, Cherry,'),
+                        const Text('Content of the '),
+                        const Text('Apple, Banana,'),
+                        TextButton.icon(
+                          onPressed: Navigator.of(context).pop,
+                          icon: const Icon(Icons.close),
+                          label: const Text(
+                            'Close',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  icon: const Icon(
+                    Icons.settings,
+                    size: 18,
+                  ),
+                  iconPadding: 16,
+                ),
+              ),
+              const SizedBox(height: 100),
               const Text('Anonother Custom Popup'),
               const SizedBox(height: 10),
               CustomPopup(
