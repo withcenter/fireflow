@@ -159,6 +159,14 @@ class UserService {
     publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
+
+        /// Update user profile completion status
+        ///
+        /// TODO: Let's developer add more fields to check the profile completion. For instance, "displayName,photoUrl,gender,birthday"
+        await my.userDocumentReference.update({
+          'isProfileComplete': my.displayName.isNotEmpty && my.photoUrl.isNotEmpty,
+        });
+
         onChange.add(my);
         if (SupabaseService.instance.storeUsersPubicData) {
           /// Upsert the user public data to Supabase.
@@ -170,6 +178,7 @@ class UserService {
             'birthday': my.birthday.toDate().toIso8601String(),
             'registered_at': my.registeredAt.toDate().toIso8601String(),
           };
+
           dog('Supabase upsert: $data');
           await supabase.usersPublicData.upsert(
             data,

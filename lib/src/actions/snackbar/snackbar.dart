@@ -89,8 +89,7 @@ SnackBar snackBarContent({
             ),
             IconButton(
               onPressed: () {
-                ScaffoldMessenger.of(AppService.instance.context)
-                    .hideCurrentSnackBar();
+                ScaffoldMessenger.of(AppService.instance.context).hideCurrentSnackBar();
               },
               icon: Icon(
                 Icons.close,
@@ -175,5 +174,22 @@ snackBarWarning({
       arrowBackgroundColor: Colors.white,
       seconds: seconds,
     ),
+  );
+}
+
+/// Show a snackbar with error icon.
+///
+/// It's just an alias of [snackBarWarning].
+snackBarError({
+  required String title,
+  required String message,
+  int? seconds,
+  BuildContext? context,
+}) {
+  snackBarWarning(
+    title: title,
+    message: message,
+    seconds: seconds,
+    context: context,
   );
 }

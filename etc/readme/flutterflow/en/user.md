@@ -17,12 +17,19 @@ Schema **users**
 | userPublicDocumentReference | Doc Reference (users_public_data) |
 | admin | Boolean |
 | blockedUsers | List < Doc Reference (users) > |
+| isProfileComplete | Boolean |
 
 
 
 - Add `userPublicDataDocumentReference` to `users` schema. This is the connection to `users_public_data` schema.
 
 - Add `admin` boolean. If this is set to true, the user will see admin menu. To give the user admin permission, you need to add the uid of the user into the system_settings collection.
+
+
+- `isProfileComplete` is set to `true` if the user filled in the necessary fields in his profile. Or false.
+  - This field is updated when user updates his profile.
+  - As of now, the user must filled his display name and photo url.
+
 
 
 ## users_public_data schema
@@ -46,7 +53,6 @@ Schema **users_public_data**
 | gender | String |
 | birthday | Timestamp |
 | hasPhoto | Boolean |
-| isProfileComplete | Boolean |
 | lastPostCreatedAt | Timestamp |
 | lastPost | Data (recentPosts) |
 | recentPosts | List < Data ( recentPosts) > |
@@ -66,7 +72,6 @@ Schema **users_public_data**
 - `followers` is the list of user document references who follow me(the login user).
   Meaning, the login user can add other user reference into the `followers` field in his document. Others don't have permission to update the `followers` field in other user's document.
 - `hasPhoto` is set to `true` if the user has the primary profile photo. Or false.
-- `isProfileComplete` is set to `true` if the user filled in the necessary fields in his profile. Or false.
 - `coverPhotoUrl` is the url of the cover photo of the user.
 - `recentPosts` is the list of the last recent posts that the user created. Note that, to create the `recentPosts` field in `posts` collection, you will need to create the `recentPosts` Data Type first.
 - `lastPostCreatedAt` is the time that the user created the last post.
