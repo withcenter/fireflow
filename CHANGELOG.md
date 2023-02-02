@@ -1,5 +1,10 @@
 ## 0.0.116
 
+* Fix. merge set on ref update in user.service.dart.
+
+
+## 0.0.116
+
 * Update. setting default uid and ref information on every boot.
 
 
