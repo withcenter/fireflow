@@ -1,3 +1,7 @@
+## 0.0.118
+
+* Add. an alias of snackBarWarning. `isProfileComplete` field on users collection.
+
 ## 0.0.117
 
 * Fix. merge set on ref update in user.service.dart.
