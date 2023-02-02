@@ -181,8 +181,10 @@ service cloud.firestore {
     function isMyChatRoom() {
       return resource.data.userDocumentReferences.hasAny([myReference()]);
     }
+    
+    // check if the document has the login user's uid or reference.
     function isMyDoc() {
-      return resource.data.userDocumentReference == myReference();
+      return resource.data.userDocumentReference == myReference() || request.auth.uid == resource.data.uid;
     }
     
     function willBeMyDoc() {
