@@ -128,6 +128,9 @@ class UserService {
     /// Somehow, in some case (probably in test environment), it really
     /// happened that the uid and references are not properly set and
     /// produced an error.
+    ///
+    /// If the user's public data document has no uid and reference, it
+    /// will cause
     await myUserPublicDataRef.set(
       {
         'uid': uid,
