@@ -74,42 +74,42 @@ class _PopupExampleSate extends State<PopupExample> {
   - The custom widget `DisplayChatUsers` below takes a parameter of `chatRoom` and it passes over the child widget and popup widget. Then, the child and popup widget may display different information.
 
 ```dart
-import '../../components/chat_group_user_icons_widget.dart';
-import '../../components/chat_group_users_widget.dart';
 import 'package:fireflow/fireflow.dart';
- 
-class DisplayChatUsers extends StatefulWidget {
- const DisplayChatUsers({
-   Key? key,
-   this.width,
-   this.height,
-   required this.chatRoom,
- }) : super(key: key);
- 
- final double? width;
- final double? height;
- final ChatRoomsRecord chatRoom;
- 
- @override
- _DisplayChatUsersState createState() => _DisplayChatUsersState();
+import '../../components/user_photo_popup_icon_widget.dart';
+import '../../components/user_photo_popup_menu_widget.dart';
+
+class UserPhoto extends StatefulWidget {
+  const UserPhoto({
+    Key? key,
+    this.width,
+    this.height,
+    required this.userPublicDataDocument,
+  }) : super(key: key);
+
+  final double? width;
+  final double? height;
+  final UsersPublicDataRecord userPublicDataDocument;
+
+  @override
+  _UserPhotoState createState() => _UserPhotoState();
 }
- 
-class _DisplayChatUsersState extends State<DisplayChatUsers> {
- @override
- Widget build(BuildContext context) {
-   return CustomPopup(
-     dx: 32,
-     dy: 38,
-     child: ChatGroupUserIconsWidget(
-       chatRoom: widget.chatRoom,
-       width: 80,
-       iconSize: 42,
-     ),
-     popup: ChatGroupUsersWidget(
-       chatRoom: widget.chatRoom,
-     ),
-   );
- }
+
+class _UserPhotoState extends State<UserPhoto> {
+  @override
+  Widget build(BuildContext context) {
+    return CustomPopup(
+      dx: 32,
+      dy: 38,
+      popup: UserPhotoPopupMenuWidget(
+        userPublicDataDocument: widget.userPublicDataDocument,
+      ),
+      child: UserPhotoPopupIconWidget(
+        userPublicDataDocument: widget.userPublicDataDocument,
+        width: widget.width,
+        height: widget.height,
+      ),
+    );
+  }
 }
 ```
 

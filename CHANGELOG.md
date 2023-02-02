@@ -1,3 +1,7 @@
+## 0.0.115
+
+* Update. log print with user public data path.
+
 ## 0.0.114
 
 * Add. CustomIconPopup.

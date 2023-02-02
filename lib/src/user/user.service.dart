@@ -124,12 +124,13 @@ class UserService {
     }
 
     /// Update user's document with the user's public data document reference
-    /// Make sure that the user's public data document reference always exists in /users/{uid}.
+    /// To make sure that the user's public data document reference always
+    /// exists in /users/{uid}, it updates on every boot.
     await myRef.update({
       'userPublicDataDocumentReference': myUserPublicDataRef,
     });
 
-    dog("UserService.generateUserPublicData() - user public data created.");
+    dog("UserService.generateUserPublicData() - user public data generated at ${myUserPublicDataRef.path}");
   }
 
   /// Listen the changes of users_public_data/{uid}.
