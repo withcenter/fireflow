@@ -30,16 +30,14 @@ class UserService {
   String get uid => auth.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
   CollectionReference get publicDataCol => db.collection('users_public_data');
 
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
@@ -61,8 +59,7 @@ class UserService {
   ///
   late UserPublicDataModel my;
 
-  final BehaviorSubject<UserPublicDataModel?> onChange =
-      BehaviorSubject<UserPublicDataModel?>.seeded(null);
+  final BehaviorSubject<UserPublicDataModel?> onChange = BehaviorSubject<UserPublicDataModel?>.seeded(null);
 
   /// check if user's public data document exists
   userPublicDataDocumentExists() async {
@@ -127,6 +124,10 @@ class UserService {
     ///
     /// To make sure that the user's public data document reference always
     /// exists in /users/{uid}, it updates on every boot.
+    ///
+    /// Somehow, in some case (probably in test environment), it really
+    /// happened that the uid and references are not properly set and
+    /// produced an error.
     await myUserPublicDataRef.set({
       'uid': uid,
       'userDocumentReference': ref,
@@ -146,9 +147,7 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
         onChange.add(my);
@@ -247,8 +246,7 @@ class UserService {
   recentPosts(PostModel post) {
     List recentPosts = my.recentPosts ?? [];
     if (recentPosts.length >= Config.instance.noOfRecentPosts) {
-      recentPosts.removeRange(
-          Config.instance.noOfRecentPosts - 1, recentPosts.length);
+      recentPosts.removeRange(Config.instance.noOfRecentPosts - 1, recentPosts.length);
     }
     recentPosts.insert(0, feed(post));
     return recentPosts;
@@ -331,10 +329,7 @@ class UserService {
   }) async {
     /// Get the users that I follow, ordered by last post created at.
     ///
-    Query q = db
-        .collection('users_public_data')
-        .where('userDocumentReference', whereIn: my.followings)
-        .orderBy('lastPostCreatedAt', descending: true);
+    Query q = db.collection('users_public_data').where('userDocumentReference', whereIn: my.followings).orderBy('lastPostCreatedAt', descending: true);
 
     /// Limit the number of (following) users to get if the app needs to display only a few posts.
     if (noOfFollowers > 0) {
