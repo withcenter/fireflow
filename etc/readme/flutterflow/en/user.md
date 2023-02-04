@@ -29,6 +29,7 @@ Schema **users**
 - `isProfileComplete` is set to `true` if the user filled in the necessary fields in his profile. Or false.
   - This field is updated when user updates his profile.
   - As of now, the user must filled his display name and photo url.
+  - Note that, this field should be in `users` collection for easy access.
 
 
 

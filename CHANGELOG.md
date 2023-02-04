@@ -1,3 +1,7 @@
+## 0.0.119
+
+* Fix. `hasPhoto` in users_public_data.
+
 ## 0.0.118
 
 * Add. an alias of snackBarWarning. `isProfileComplete` field on users collection.

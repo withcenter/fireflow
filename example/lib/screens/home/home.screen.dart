@@ -122,11 +122,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () => StorageService.instance.deleteStorageFiles(),
                 child: const Text('Delete all files on storage'),
               ),
-              ElevatedButton(
-                onPressed: () =>
-                    snackBarSuccess(title: 'title', message: 'message'),
-                child: const Text('snackbar'),
-              ),
+              // ElevatedButton(
+              //   onPressed: () =>
+              //       snackBarSuccess(title: 'title', message: 'message'),
+              //   child: const Text('snackbar'),
+              // ),
             ],
           ),
         ),

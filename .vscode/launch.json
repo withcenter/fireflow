@@ -158,18 +158,13 @@
       "deviceId": "iPhone11MaxPro"
     },
     {
-      "name": "philov (profile mode)",
+      "name": "Philov - iPhone11MaxPro - release",
       "cwd": "apps/philov",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "philov (release mode)",
-      "cwd": "apps/philov",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "deviceId": "iPhone11MaxPro"
     },
     {
       "name": "sonub",

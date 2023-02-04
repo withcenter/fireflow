@@ -197,17 +197,24 @@ class UserService {
 
   /// Updates the user's public data with the given imagePath
   afterProfilePhotoUpload(String? imagePath) async {
-    return await afterUserPhotoUpload('photoUrl', imagePath);
+    return await afterUserPhotoUpload(
+      'photoUrl',
+      imagePath,
+    );
   }
 
   /// Updates the user's public data with the given imagePath
   Future<void> afterCoverPhotoUpload(String? imagePath) async {
-    return await afterUserPhotoUpload('coverPhotoUrl', imagePath);
+    return await afterUserPhotoUpload(
+      'coverPhotoUrl',
+      imagePath,
+    );
   }
 
   /// Works after the user's photo is uploaded.
   ///
   /// Deletes existing photo and updates the user's public data with the given imagePath
+  /// Updates 'hasPhoto' field in the user's pub data document.
   Future<void> afterUserPhotoUpload(String fieldName, String? imagePath) async {
     dog("UserService.afterUserPhotoUpload() called with fieldName: $fieldName");
 
@@ -239,6 +246,7 @@ class UserService {
     dog("Updating user public data.");
     await myUserPublicDataRef.update({
       fieldName: imagePath,
+      if (fieldName == 'photoUrl') 'hasPhoto': true,
     });
   }
 

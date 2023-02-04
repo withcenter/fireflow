@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
 /// AppService is a singleton class that provides necessary service for Fireflow.
 ///
@@ -159,10 +160,14 @@ class AppService {
       // }
 
       FlutterError.presentError(details);
-      snackBarWarning(title: 'Error', message: details.exceptionAsString());
+      snackBarWarning(
+          context: context,
+          title: 'Error',
+          message: details.exceptionAsString());
     };
     PlatformDispatcher.instance.onError = (error, stack) {
-      snackBarWarning(title: 'Error', message: error.toString());
+      snackBarWarning(
+          context: context, title: 'Error', message: error.toString());
       return true;
     };
   }
