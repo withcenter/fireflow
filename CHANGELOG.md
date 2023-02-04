@@ -1,3 +1,7 @@
+## 0.0.120
+
+* Fix. flutterflow_widget dependency.
+
 ## 0.0.119
 
 * Fix. `hasPhoto` in users_public_data.

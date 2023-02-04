@@ -1,6 +1,6 @@
 name: fireflow
 description: This package is designed for FlutterFlow app to provide enhanced features.
-version: 0.0.119
+version: 0.0.120
 homepage: https://github.com/withcenter/fireflow
 
 environment:
@@ -75,7 +75,7 @@ dependencies:
   #
   easy_debounce: 2.0.1
 
-  flutterflow_widgets: 0.0.11
+  flutterflow_widgets: ^0.0.13
 
 dev_dependencies:
   flutter_test:
