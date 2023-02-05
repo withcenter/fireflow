@@ -30,11 +30,19 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 - [Storage Files](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/file.md)
 - [Supabase](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/supabase.md)
 - [Text Translation](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/translation.md)
-- [Widgets](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/widget.md)
 - [Actions](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/.md)
 - [Development Tips](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/tip.md)
 - [Known Issues](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/known-issue.md)
 - [Trouble Shooting](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/trouble-shooting.md)
+
+
+- [Report](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/report.md)
+- [Bookmark](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/bookmark.md)
+
+
+
+
+
 
 
 # TODO
