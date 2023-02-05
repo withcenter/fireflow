@@ -9,6 +9,8 @@
 
 ## Schema
 
+Schema **reports**
+
 | Field Name | Data Type |
 |------------|----------:|
 | userDocumentReference | Doc Reference (users) |

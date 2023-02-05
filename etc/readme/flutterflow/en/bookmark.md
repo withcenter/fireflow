@@ -9,6 +9,8 @@
 
 ## Schema
 
+Schema **bookmarks**
+
 | Field Name | Data Type |
 |------------|----------:|
 | userDocumentReference | Doc Reference (users) |
