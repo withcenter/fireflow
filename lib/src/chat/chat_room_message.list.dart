@@ -100,6 +100,11 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
         await chatRoomRef.update({
           'userDocumentReferences': FieldValue.arrayUnion([myReference]),
         });
+        await ChatService.instance.sendMessage(
+          chatRoomDocumentReference: chatRoomRef,
+          protocol: 'enter',
+          protocolTargetUserDocumentReference: myReference,
+        );
       }
 
       // For group chat,

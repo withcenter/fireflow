@@ -1,3 +1,7 @@
+## 0.0.123
+
+* Add. leaving a message when user enters a chat room.
+
 ## 0.0.122
 
 * Fix. AppService.instance.user
