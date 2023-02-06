@@ -49,7 +49,9 @@ service cloud.firestore {
         )
         ||
         // if it's open group chat, he can enter without invitation.
-        isOpenChat() && request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.concat([myReference()]))
+        isOpenChat()
+        && onlyUpdating(["userDocumentReferences"])
+        && request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.concat([myReference()]))
         ;
       allow delete: if false;
     }
