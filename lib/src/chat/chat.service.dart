@@ -114,9 +114,9 @@ class ChatService {
     if ((text == null || text.isEmpty) &&
         (uploadUrl != null && uploadUrl.isNotEmpty)) {
       text = 'Tap to see the photo.';
-      title = '${AppService.instance.user?.displayName} sent a photo';
+      title = '${AppService.instance.my.displayName} sent a photo';
     } else {
-      title = '${AppService.instance.user?.displayName} say ...';
+      title = '${AppService.instance.my.displayName} say ...';
     }
 
     final room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());

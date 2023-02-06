@@ -88,7 +88,8 @@ Schema **posts**
 
 
 ### Post Create
-- `createdAt` must be set to `Firestore.serverTimestamp` when the post is created by Flutterflow.
+- `createdAt` should be set with `Current DateTime` by Feb 6, 2023. (There is a bug with `Firestore Server Timestamp`)
+  - `fireflow` will convert it to `Server Timestamp`.
 - `updatedAt` is optional. And it is set by the fireflow.
 - call `PostService.instance.afterCreate` after creating a post.
 

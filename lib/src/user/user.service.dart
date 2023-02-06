@@ -58,8 +58,10 @@ class UserService {
   /// It listens the changes of the user's public data document and update [my] variable.
   /// Note that, this is always upto date. So, you don't have to get the login user's
   /// public data document from the firestore.
-  ///
-  late UserPublicDataModel my;
+
+  UserPublicDataModel? _my;
+  UserPublicDataModel get my => _my!;
+  set my(UserPublicDataModel? value) => _my = value;
 
   final BehaviorSubject<UserPublicDataModel?> onChange =
       BehaviorSubject<UserPublicDataModel?>.seeded(null);

@@ -1,3 +1,8 @@
+## 0.0.122
+
+* Fix. AppService.instance.user
+
+
 ## 0.0.121
 
 * Fix. remove unnecessary code.

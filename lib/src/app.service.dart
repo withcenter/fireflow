@@ -30,7 +30,7 @@ class AppService {
   late final KeyModel keys;
 
   /// Keep the login user's public data up to date.
-  UserPublicDataModel? user;
+  UserPublicDataModel get my => UserService.instance.my;
 
   /// Current chat room reference.
   ///
@@ -139,8 +139,8 @@ class AppService {
         UserService.instance.listenUserPublicData();
         await UserSettingService.instance.generate();
       } else {
-        this.user = null;
         dog('AppService._initUser() - user is not logged in');
+        UserService.instance.my = null;
       }
     });
   }
