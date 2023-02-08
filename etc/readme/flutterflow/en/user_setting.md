@@ -20,6 +20,7 @@ Schema **user_settings**
 | commentSubscriptions | List < Doc Reference (categories) > |
 
 
+
 ## New Comment Notification
 
 - If a user enable this option, the user will get push notification on every new comments under his posts or comments.
