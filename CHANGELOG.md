@@ -1,3 +1,8 @@
+## 0.0.124
+
+* Add. full text search customization.
+
+
 ## 0.0.123
 
 * Add. leaving a message when user enters a chat room.

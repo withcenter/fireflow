@@ -1,6 +1,7 @@
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/test/test.feeds.dart';
 import 'package:fireflow/src/test/test.follow.dart';
+import 'package:fireflow/src/test/test.supabase.search.dart';
 import 'package:fireflow/src/test/test.utils.dart';
 
 class TestService {
@@ -12,8 +13,24 @@ class TestService {
     await loadUsers();
     await clear();
 
+    await follow();
+    await feeds();
+  }
+
+  Future follow() async {
+    await loadUsers();
+    await clear();
     await testFollow();
+  }
+
+  Future feeds() async {
+    await loadUsers();
+    await clear();
     await testFeeds();
+  }
+
+  Future supabaseSearch() async {
+    await testSupabaseSearch();
   }
 
   /// Prepare test.

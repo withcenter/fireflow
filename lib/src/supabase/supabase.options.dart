@@ -21,11 +21,13 @@ class SupabaseOptions {
   final String? posts;
   final String? comments;
   final String? postsAndComments;
+  final String? search;
 
   SupabaseOptions({
     this.usersPublicData,
     this.posts,
     this.comments,
     this.postsAndComments,
+    this.search,
   });
 }

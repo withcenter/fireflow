@@ -24,3 +24,17 @@ String safeString(String? content) {
   content = content.substring(0, min(content.length, 128));
   return content;
 }
+
+/// Get a random string of a given length.
+String randomString([int len = 32]) {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  final rnd = Random();
+  return String.fromCharCodes(
+    Iterable.generate(
+      len,
+      (_) => chars.codeUnitAt(
+        rnd.nextInt(chars.length),
+      ),
+    ),
+  );
+}

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'dart:developer';
 
 import 'package:example/firebase_options.dart';
@@ -9,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +47,7 @@ class _MyAppState extends State<MyApp> {
           posts: 'posts',
           comments: 'comments',
           postsAndComments: 'posts_and_comments',
+          search: 'search',
         ),
         messaging: MessagingOptions(
           foreground: false,
@@ -64,6 +69,16 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      locale: null,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ko'),
+      ],
       home: const HomeScreen(),
     );
   }
@@ -80,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      TestService.instance.run();
+      // TestService.instance.run();
     });
   }
 
@@ -101,6 +116,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: TestService.instance.run,
               child: const Text('Run'),
+            ),
+            ElevatedButton(
+              onPressed: TestService.instance.follow,
+              child: const Text('Test Follow'),
+            ),
+            ElevatedButton(
+              onPressed: TestService.instance.feeds,
+              child: const Text('Test Feeds'),
+            ),
+            ElevatedButton(
+              onPressed: TestService.instance.supabaseSearch,
+              child: const Text('Test Supbase Search'),
             ),
           ],
         ),
