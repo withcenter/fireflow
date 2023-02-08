@@ -70,4 +70,31 @@ AppService.instance.init(
 - Then, you will need to define custom actions to index the data.
   - There is only one field for text. You can combine tile and content or whatever into the text field.
 
+```dart
+import 'package:fireflow/fireflow.dart';
 
+Future searchUpdate(
+  String id,
+  String category,
+  String text,
+) async {
+  // Add your function code here!
+
+  await SupabaseService.instance.searchUpsert(
+    id: id,
+    category: category,
+    text: text,
+  );
+}
+```
+
+```dart
+
+import 'package:fireflow/fireflow.dart';
+
+Future searchDelete(String id) async {
+  // Add your function code here!
+  await SupabaseService.instance.searchDelete(id);
+}
+
+```
