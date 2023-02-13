@@ -25,19 +25,14 @@ class _TranslationState extends State<Translation> {
   init() {
     final doc = SystemSettingService.instance.col.doc('translations');
 
-    // final DocumentSnapshot snapshot = await doc.get();
-
-    // if (snapshot.exists == false || snapshot.data() == null) {
-    //   // Create if the document does not exist.
-    //   await doc.set({"code": ""});
-    // }
-
     doc.snapshots().listen((snapshot) {
       if (snapshot.exists == false || snapshot.data() == null) {
         return;
       }
 
-      data = snapshot.data() as Map<String, dynamic>;
+      // sort
+      final map = snapshot.data() as Map<String, dynamic>;
+      data = Map.fromEntries(map.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
 
       setState(() {});
     });
@@ -116,9 +111,7 @@ class TranslationCode extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(code,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 10)),
+              Text(code, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10)),
               const Spacer(),
               TextButton(
                   onPressed: () {
@@ -129,8 +122,7 @@ class TranslationCode extends StatelessWidget {
                       builder: ((context) {
                         return AlertDialog(
                           title: const Text('Delete Translation'),
-                          content: const Text(
-                              'Are you sure you want to delete this translation?'),
+                          content: const Text('Are you sure you want to delete this translation?'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -141,9 +133,7 @@ class TranslationCode extends StatelessWidget {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                SystemSettingService.instance.col
-                                    .doc('translations')
-                                    .update({code: FieldValue.delete()});
+                                SystemSettingService.instance.col.doc('translations').update({code: FieldValue.delete()});
                               },
                               child: const Text('Delete'),
                             ),
@@ -206,11 +196,7 @@ class TransationAdd extends StatelessWidget {
                       TranslationService.instance.add(code.text);
                       Navigator.pop(context);
                     },
-                    focusNode: FocusNode(
-                        canRequestFocus: true,
-                        skipTraversal: false,
-                        descendantsAreFocusable: true)
-                      ..requestFocus(),
+                    focusNode: FocusNode(canRequestFocus: true, skipTraversal: false, descendantsAreFocusable: true)..requestFocus(),
                   ),
                 ],
               ),
