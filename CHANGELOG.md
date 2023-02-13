@@ -1,3 +1,8 @@
+## 0.0.125
+
+* Update. document update on translation.
+
+
 ## 0.0.124
 
 * Add. full text search customization.

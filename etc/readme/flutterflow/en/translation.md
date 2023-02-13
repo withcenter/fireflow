@@ -2,11 +2,15 @@
 
 - Why do we need another text translation support while flutterflow has one?
   - That is because we cannot translate a text that is dynamically generated and the fireflow displays somet text depending on its usage and it needs a way to show in the user's language.
+
+
 - It is working by default whether the app uses it or not.
+
 - To use the translation,
   - You can simply add translation data into the firestore.
   - Or you can use `Translation` widget to update the translation.
     - Only admin can create or delete.
+
 
 ## Putting translations directly into the Firestore
 
@@ -23,11 +27,44 @@ Below is the example screen.
 
 ## Translate widget
 
-- With `Translate` widget, you can
+- The fireflow provides a ready-to-use wigdet that you can easily apply to your project.
+  With the `Translate` widget, you can
   - add
   - search
   - delete
   the translations.
+
+- To apply,
+  - Create a widget named `AdminTranslation` with no parameter. But you need the `fireflow` as dependency.
+  - And use it in your screen.
+
+```dart
+import 'package:fireflow/fireflow.dart';
+
+class AdminTranslation extends StatefulWidget {
+  const AdminTranslation({
+    Key? key,
+    this.width,
+    this.height,
+  }) : super(key: key);
+
+  final double? width;
+  final double? height;
+
+  @override
+  _AdminTranslationState createState() => _AdminTranslationState();
+}
+
+class _AdminTranslationState extends State<AdminTranslation> {
+  @override
+  Widget build(BuildContext context) {
+    return Translation(
+      languages: ['en', 'ko'],
+    );
+  }
+}
+```
+
 
 
 ## List of translations
