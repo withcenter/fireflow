@@ -81,3 +81,8 @@ class _AdminTranslationState extends State<AdminTranslation> {
   - `Failed to upload media`
 
 
+- Below are the example of how you can input the translation text.
+
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/firestore-system_settings-translations.jpg?raw=true "Translation")
+
