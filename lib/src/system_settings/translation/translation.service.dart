@@ -35,10 +35,11 @@ class TranslationService {
 
   /// Add a code to database.
   Future<void> add(String code) async {
-    return doc.update(
+    return doc.set(
       {
         code: {},
       },
+      SetOptions(merge: true),
     );
   }
 

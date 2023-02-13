@@ -19,11 +19,22 @@ class _TranslationState extends State<Translation> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  init() {
     final doc = SystemSettingService.instance.col.doc('translations');
+
+    // final DocumentSnapshot snapshot = await doc.get();
+
+    // if (snapshot.exists == false || snapshot.data() == null) {
+    //   // Create if the document does not exist.
+    //   await doc.set({"code": ""});
+    // }
+
     doc.snapshots().listen((snapshot) {
       if (snapshot.exists == false || snapshot.data() == null) {
-        // Create if the document does not exist.
-        doc.set({}, SetOptions(merge: true));
+        return;
       }
 
       data = snapshot.data() as Map<String, dynamic>;
