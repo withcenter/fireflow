@@ -79,6 +79,7 @@ class _AdminTranslationState extends State<AdminTranslation> {
   - `Upload Any File`
   - `Success to upload media`
   - `Failed to upload media`
+  - `Uploading file` - for displaying a message while a file is being uploaded.
 
 
 - Below are the example of how you can input the translation text.
