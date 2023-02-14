@@ -32,8 +32,8 @@ Schema **chat_rooms**
 
 
 - `userDocumentReferences` is the participants document reference of the chat room.
-- `lastMessage` is the last chat message. This field may not exist if there is no text.
-- `lastMessageUploadUrl` is the url of the upload. This field may not exist if there is no upload.
+- `lastMessage` is the last chat message if the user sent a text.
+- `lastMessageUploadUrl` is the url of the upload if the user uploaded a file(photo).
 - `lastMessageSentAt` is the timestamp of last message
 - `lastMessageSeenBy` is the list of user reference who have read the message
 - `lastMessageSentBy` is the user reference of the last chat message sender.

@@ -100,11 +100,11 @@ class ChatService {
     /// Update the chat room asynchronously.
     ///
     final info = {
-      if (uploadUrl != null) 'lastMessage': text,
+      'lastMessage': text ?? '',
       'lastMessageSentAt': FieldValue.serverTimestamp(),
       'lastMessageSentBy': UserService.instance.ref,
       'lastMessageSeenBy': [UserService.instance.ref],
-      if (uploadUrl != null) 'lastMessageUploadUrl': uploadUrl,
+      'lastMessageUploadUrl': uploadUrl ?? '',
     };
     chatRoomRef.set(info, SetOptions(merge: true));
 
