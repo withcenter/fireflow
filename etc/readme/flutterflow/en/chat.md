@@ -19,6 +19,7 @@ Schema **chat_rooms**
 |--------|-------:|
 | userDocumentReference | List < Doc Reference (users) > |
 | lastMessage | String |
+| lastMessageUploadUrl | String |
 | lastMessageSentAt | Timestamp |
 | lastMessageSeenBy | List < Doc Reference (users) > |
 | lastMessageSentBy | Doc Reference (users) |
@@ -31,7 +32,8 @@ Schema **chat_rooms**
 
 
 - `userDocumentReferences` is the participants document reference of the chat room.
-- `lastMessage` is the last chat message.
+- `lastMessage` is the last chat message. This field may not exist if there is no text.
+- `lastMessageUploadUrl` is the url of the upload. This field may not exist if there is no upload.
 - `lastMessageSentAt` is the timestamp of last message
 - `lastMessageSeenBy` is the list of user reference who have read the message
 - `lastMessageSentBy` is the user reference of the last chat message sender.

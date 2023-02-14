@@ -1,3 +1,8 @@
+## 0.0.130
+
+* Update. Chat message. adding `lastMessageUploadUrl`
+
+
 ## 0.0.129
 
 * Update. Translation widget. Sort by keys.
