@@ -1,3 +1,7 @@
+## 0.0.132
+
+* Update. Text translation update on file upload.
+
 ## 0.0.131
 
 * Update. Chat message.
