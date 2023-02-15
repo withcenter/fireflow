@@ -250,6 +250,50 @@ describe("Firestore security test", () => {
     // console.log(querySnapshot.docs);
     assert(querySnapshot.size === 1);
   });
+
+  it("Chat room update - Not by moderator", async () => {
+    // User A, C enters
+    const snapshot = await createChatRoom([A, C]);
+
+    // User B is not a moderator and tries to update
+    await firebase.assertFails(
+      db(authB).collection("chat_rooms").doc(snapshot.ref.id).update({
+        title: "yo",
+      })
+    );
+    // User C is not a moderator and tries to update
+    await firebase.assertFails(
+      db(authC).collection("chat_rooms").doc(snapshot.ref.id).update({
+        title: "yo",
+      })
+    );
+
+    // User C tries to make himself as a moderator
+    await firebase.assertFails(
+      db(authC)
+        .collection("chat_rooms")
+        .doc(snapshot.ref.id)
+        .update({
+          moderatorUserDocumentReferences: [userDoc(C)],
+        })
+    );
+
+    // Make user B a moderator
+    await admin()
+      .collection("chat_rooms")
+      .doc(snapshot.ref.id)
+      .update({
+        moderatorUserDocumentReferences: [userDoc(C)],
+      });
+
+    // User C is a moderator and tries to update the title
+    await firebase.assertSucceeds(
+      db(authC).collection("chat_rooms").doc(snapshot.ref.id).update({
+        title: "yo",
+      })
+    );
+  });
+
   it("Chat message edit", async () => {
     const snapshot = await createChatRoom([A, C]);
 

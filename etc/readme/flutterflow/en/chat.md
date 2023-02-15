@@ -359,7 +359,3 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 ### ChatRoomProtocolMessage
 
-
-
-
-
