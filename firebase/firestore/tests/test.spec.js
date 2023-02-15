@@ -231,6 +231,25 @@ describe("Firestore security test", () => {
     );
   });
 
+  it("Chat room collection query - by moderator", async () => {
+    const snapshot = await createChatRoom([A, C]);
+
+    await snapshot.ref.update({
+      moderatorUserDocumentReferences: [userDoc(B)],
+    });
+
+    const snapshotUp = await snapshot.ref.get();
+
+    const id = snapshotUp.data().moderatorUserDocumentReferences[0].id;
+    assert(id === B);
+
+    const querySnapshot = await db(authB)
+      .collection("chat_rooms")
+      .where("moderatorUserDocumentReferences", "array-contains", userDoc(B))
+      .get();
+    // console.log(querySnapshot.docs);
+    assert(querySnapshot.size === 1);
+  });
   it("Chat message edit", async () => {
     const snapshot = await createChatRoom([A, C]);
 
