@@ -15,11 +15,7 @@ service cloud.firestore {
       allow create: if true;
       allow update: if
         // moderator can update anything
-        (
-          'moderatorUserDocumentReferences' in resource.data
-          &&
-          myReference() in resource.data.moderatorUserDocumentReferences
-        )
+        isModerator()
         ||
         // chat member update last message fields.
         (
@@ -182,6 +178,14 @@ service cloud.firestore {
 
     function isMyChatRoom() {
       return resource.data.userDocumentReferences.hasAny([myReference()]);
+    }
+
+    function isModerator() {
+      return
+          'moderatorUserDocumentReferences' in resource.data
+          &&
+          myReference() in resource.data.moderatorUserDocumentReferences
+        ;
     }
     
     // check if the document has the login user's uid or reference.
