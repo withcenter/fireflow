@@ -28,6 +28,12 @@ Schema **chat_rooms**
 | moderatorUserDocumentReferences | List < Doc Reference (users) > |
 | isGroupChat | Boolean |
 | isOpenChat | Boolean |
+| reminder | String |
+| lastMessageUploadUrl | String |
+| backgroundColor | String |
+| urlClick | Boolean |
+| urlPreview | Boolean |
+
 
 
 
