@@ -20,10 +20,8 @@ class ChatRoomMessageList extends StatefulWidget {
     required this.onEmpty,
     this.onProtocolMessage,
   })  : assert(
-            (otherUserPublicDataDocument != null &&
-                    chatRoomDocumentReference == null) ||
-                (otherUserPublicDataDocument == null &&
-                    chatRoomDocumentReference != null),
+            (otherUserPublicDataDocument != null && chatRoomDocumentReference == null) ||
+                (otherUserPublicDataDocument == null && chatRoomDocumentReference != null),
             "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
         super(key: key);
 
@@ -42,11 +40,16 @@ class ChatRoomMessageList extends StatefulWidget {
 }
 
 class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
-  // User get my => UserService.instance.my;
   DocumentReference get myReference => UserService.instance.ref;
+
+  /// The chat room model.
+  ///
+  /// This is updated when the chat room is updated.
+  late ChatRoomModel room;
 
   late final StreamSubscription subscriptionNewMessage;
 
+  /// Ensure the chat room exists.
   bool ensureChatRoomExists = false;
 
   UserPublicDataModel get my => UserService.instance.my;
@@ -62,8 +65,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     if (isGroupChat) {
       return widget.chatRoomDocumentReference!;
     } else {
-      return ChatService.instance.room(
-          ([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
+      return ChatService.instance.room(([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
     }
   }
 
@@ -94,9 +96,8 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       }, SetOptions(merge: true));
     } else {
       // For the open group chat, any user can join the chat room.
-      final room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
-      if (room.userDocumentReferences.contains(myReference) == false &&
-          room.isOpenChat == true) {
+      room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
+      if (room.userDocumentReferences.contains(myReference) == false && room.isOpenChat == true) {
         await chatRoomRef.update({
           'userDocumentReferences': FieldValue.arrayUnion([myReference]),
         });
@@ -125,7 +126,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
     // Listen for new message, and make it read by you.
     subscriptionNewMessage = chatRoomRef.snapshots().listen((snapshot) {
-      final room = ChatRoomModel.fromSnapshot(snapshot);
+      room = ChatRoomModel.fromSnapshot(snapshot);
 
       /// If the signed-in user have not seen the message, then make it seen.
       if (room.lastMessageSeenBy.contains(myReference) == false) {
@@ -150,8 +151,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       reverse: true,
       // item builder type is compulsory.
       itemBuilder: (context, documentSnapshots, index) {
-        final message =
-            ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
+        final message = ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
 
         if (message.isProtocol) {
           if (widget.onProtocolMessage != null) {

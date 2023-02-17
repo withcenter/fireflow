@@ -74,7 +74,7 @@ dependencies:
   #
   easy_debounce: 2.0.1
 
-  flutterflow_widgets: ^0.0.13
+  flutterflow_widgets:
 
   # google map
   google_maps: 6.2.0
