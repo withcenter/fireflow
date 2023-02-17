@@ -1,5 +1,9 @@
 ## 0.0.132
 
+* Add. url preview on chat message.
+
+## 0.0.132
+
 * Update. Text translation update on file upload.
 
 ## 0.0.131

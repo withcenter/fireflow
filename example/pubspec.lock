@@ -308,7 +308,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.132"
+    version: "0.0.133"
   fixnum:
     dependency: transitive
     description:
@@ -391,7 +391,7 @@ packages:
       name: flutterflow_widgets
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.26"
+    version: "0.0.28"
   from_css_color:
     dependency: transitive
     description:

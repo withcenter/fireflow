@@ -17,7 +17,7 @@ Schema **chat_rooms**
 
 |Field Name | Data Type |
 |--------|-------:|
-| userDocumentReference | List < Doc Reference (users) > |
+| userDocumentReferences | List < Doc Reference (users) > |
 | lastMessage | String |
 | lastMessageUploadUrl | String |
 | lastMessageSentAt | Timestamp |
@@ -54,7 +54,22 @@ Schema **chat_rooms**
 
 ### Chat message collection
 
-![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-chat_room_messages.jpg?raw=true "Chat rooms collection")
+Schema **chat_room_messages**
+
+|Field Name | Data Type |
+|--------|-------:|
+| userDocumentReference | Doc Reference (users) |
+| chatRoomDocumentReference | Doc Reference (chat_rooms) |
+| text | String |
+| sentAt | Timestamp |
+| uploadUrl | String |
+| uploadUrlType | String |
+| protocol | String |
+| protocolTargetUserDocumentReference | Doc Reference (users) |
+| previewUrl | String |
+| previewTitle | String |
+| previewDescription | String |
+| previewImageUrl | Image Path |
 
 - `userDocumentReference` is the document reference of the user who sent this message.
 - `chatRoomDocumentReference` is the reference of the chat room document.
@@ -74,6 +89,7 @@ Schema **chat_rooms**
 - `protocolTargetUserDocumentReference` is the target user document reference who is being affected by the protocol. For instance, User A invites user B. then, the protocol is set to `invite`. And A's ref goes into userDocumentReference and B's ref goes into protocolTargetUserDocumentReference.
 - `sentAt` is the time that the message was sent.
 
+- When there is a url in the text, the fireflow will save the url preview information at `previewUrl`, `previewTitle`, `previewImageUrl`. If there is no value, then the field will not be set.
 
 
 ## Logic of chat
