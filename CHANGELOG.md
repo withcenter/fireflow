@@ -1,4 +1,9 @@
-## 0.0.132
+## 0.0.134
+
+* Fix. update url preview model.
+
+
+## 0.0.133
 
 * Add. url preview on chat message.
 

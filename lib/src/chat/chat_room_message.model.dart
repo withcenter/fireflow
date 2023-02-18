@@ -3,17 +3,20 @@ import 'package:fireflow/fireflow.dart';
 
 /// Chat message model
 class ChatRoomMessageModel {
-  ChatRoomMessageModel({
-    required this.userDocumentReference,
-    required this.chatRoomDocumentReference,
-    required this.text,
-    required this.sentAt,
-    required this.ref,
-    required this.uploadUrl,
-    required this.uploadUrlType,
-    required this.protocol,
-    required this.protocolTargetUserDocumentReference,
-  });
+  ChatRoomMessageModel(
+      {required this.userDocumentReference,
+      required this.chatRoomDocumentReference,
+      required this.text,
+      required this.sentAt,
+      required this.ref,
+      required this.uploadUrl,
+      required this.uploadUrlType,
+      required this.protocol,
+      required this.protocolTargetUserDocumentReference,
+      required this.previewUrl,
+      required this.previewTitle,
+      required this.previewDescription,
+      required this.previewImageUrl});
 
   final DocumentReference userDocumentReference;
   final DocumentReference chatRoomDocumentReference;
@@ -23,6 +26,11 @@ class ChatRoomMessageModel {
   final Timestamp sentAt;
   final String protocol;
   final DocumentReference? protocolTargetUserDocumentReference;
+
+  final String previewUrl;
+  final String previewTitle;
+  final String previewDescription;
+  final String previewImageUrl;
 
   final DocumentReference ref;
 
@@ -47,6 +55,10 @@ class ChatRoomMessageModel {
       protocol: json['protocol'] ?? "",
       protocolTargetUserDocumentReference:
           json['protocolTargetUserDocumentReference'],
+      previewUrl: json['previewUrl'] ?? "",
+      previewTitle: json['previewTitle'] ?? "",
+      previewDescription: json['previewDescription'] ?? "",
+      previewImageUrl: json['previewImageUrl'] ?? "",
     );
   }
 
@@ -62,6 +74,10 @@ class ChatRoomMessageModel {
       'protocol': protocol,
       'protocolTargetUserDocumentReference':
           protocolTargetUserDocumentReference,
+      'previewUrl': previewUrl,
+      'previewTitle': previewTitle,
+      'previewDescription': previewDescription,
+      'previewImageUrl': previewImageUrl,
     };
   }
 }

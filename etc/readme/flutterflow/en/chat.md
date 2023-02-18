@@ -89,8 +89,7 @@ Schema **chat_room_messages**
 - `protocolTargetUserDocumentReference` is the target user document reference who is being affected by the protocol. For instance, User A invites user B. then, the protocol is set to `invite`. And A's ref goes into userDocumentReference and B's ref goes into protocolTargetUserDocumentReference.
 - `sentAt` is the time that the message was sent.
 
-- When there is a url in the text, the fireflow will save the url preview information at `previewUrl`, `previewTitle`, `previewImageUrl`. If there is no value, then the field will not be set.
-
+- When there is a url in the text, the fireflow will save the url preview information at `previewUrl`, `previewTitle`, `previewDescription`, `previewImageUrl`. If there is no url in the text or it cannot save preview informatin, the fields become empty string.
 
 ## Logic of chat
 
