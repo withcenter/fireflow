@@ -90,6 +90,7 @@ Schema **chat_room_messages**
 - `sentAt` is the time that the message was sent.
 
 - When there is a url in the text, the fireflow will save the url preview information at `previewUrl`, `previewTitle`, `previewDescription`, `previewImageUrl`. If there is no url in the text or it cannot save preview informatin, the fields become empty string.
+  - The `previewDescriptoin` has the full description from the site. If you need to cut it short, you may use a custom fuction (or a code expression).
 
 ## Logic of chat
 
