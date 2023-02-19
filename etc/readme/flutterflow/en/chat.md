@@ -400,11 +400,54 @@ class _NoOfNewChatRoomState extends State<NoOfNewChatRoom> {
 When a user inputs and sends a message, simply call the `ChatService.instance.sendMessage()` method.
 You can create a custom action `onChatMessageSubmit` that wraps the `ChatService.instance.sendMessage()` method.
 
+```dart
+import 'package:fireflow/fireflow.dart';
+
+// Get document (Not reference) to make it easy on UI builder.
+Future chatSendMessage(
+  UsersPublicDataRecord? otherUserPublicDataDocument,
+  ChatRoomsRecord? chatRoomDocument,
+  String? text,
+  String? uploadUrl,
+) async {
+  // Add your function code here!
+
+  // Note, don't wait for the message to be sent. So, it will perform faster.
+  return ChatService.instance.sendMessage(
+    otherUserDocumentReference: otherUserPublicDataDocument?.reference,
+    chatRoomDocumentReference: chatRoomDocument?.reference,
+    text: text,
+    uploadUrl: uploadUrl,
+  );
+}
+```
 
 ### How to update chat message
 
 When a user updates a message, simply call the `ChatService.instance.updateMessage()` method.
 You can create a custom action `onChatMessageUpdate` that wraps the `ChatService.instance.updateMessage()` method.
+
+```dart
+import 'package:fireflow/fireflow.dart';
+
+// Get document (Not reference) to make it easy on UI builder.
+Future chatSendMessage(
+  UsersPublicDataRecord? otherUserPublicDataDocument,
+  ChatRoomsRecord? chatRoomDocument,
+  String? text,
+  String? uploadUrl,
+) async {
+  // Add your function code here!
+
+  // Note, don't wait for the message to be sent. So, it will perform faster.
+  return ChatService.instance.sendMessage(
+    otherUserDocumentReference: otherUserPublicDataDocument?.reference,
+    chatRoomDocumentReference: chatRoomDocument?.reference,
+    text: text,
+    uploadUrl: uploadUrl,
+  );
+}
+```
 
 
 
