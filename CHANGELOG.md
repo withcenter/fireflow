@@ -1,3 +1,11 @@
+## 0.0.136
+
+* Fix. Chat message update.
+
+
+## 0.0.135
+
+* Add. chat message update.
 ## 0.0.135
 
 * Fix. update url preview model.
