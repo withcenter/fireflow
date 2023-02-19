@@ -25,3 +25,12 @@ For `feeds` function to work, you will need to create an index by clicking the u
 Uncaught (in promise) Error: [cloud_firestore/failed-precondition] The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/phiter/firestore/indexes?create_composite=Cltwcm9qZWmZXJlbmNlEAEaFQoRbGFzdFBvc3RDcmVhdGVkQXQQAhoMCghfX25hbWVfXxAC
 ```
 
+
+
+## CORS problem
+
+If you see a CORS error on the console log in developer console, it means the client(your app) is not allowed to access the site. This may happens on URL preview. It really depends on each website. Some websites allow access to all clients while some other websites are not.
+
+```txt
+Access to XMLHttpRequest at 'https://yahoo.com/' from origin 'https://ff-debug-service-frontend-ygxkweukma-uc.a.run.app' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```

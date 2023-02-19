@@ -337,12 +337,53 @@ Schema **chat_room_messages**
 
 ### How to display the number of chat rooms with new messages.
 
-- Use `ChatNoOfRoomsWithNewMessage` widget.
+- Use `ChatNoOfRoomsWithNewMessage` widget like below.
+
+```dart
+import 'package:fireflow/fireflow.dart';
+
+class NoOfNewChatRoom extends StatefulWidget {
+  const NoOfNewChatRoom({
+    Key? key,
+    this.width,
+    this.height,
+    this.textSize,
+    this.backgroundColor,
+    this.textColor,
+  }) : super(key: key);
+
+  final double? width;
+  final double? height;
+  final double? textSize;
+  final Color? backgroundColor;
+  final Color? textColor;
+
+  @override
+  _NoOfNewChatRoomState createState() => _NoOfNewChatRoomState();
+}
+
+class _NoOfNewChatRoomState extends State<NoOfNewChatRoom> {
+  @override
+  Widget build(BuildContext context) {
+    return ChatNoOfRoomsWithNewMessage(
+      width: widget.width,
+      height: widget.height,
+      textSize: widget.textSize,
+      backgroundColor: widget.backgroundColor,
+      textColor: widget.textColor,
+    );
+  }
+}
+```
+
+![Image Link](https://github.com/withcenter/fireflow/blob/main/etc/readme/img/ff-new-chat-room.jpg?raw=true "No of new chat rooms")
+
 
 - It is counted by the number of rooms, not by the number of messages.
 - It is done in steps, 
   - Listen for the changes of my chat rooms,
   - Count the number of rooms that don’t have my user document reference in `lastMessageSeenBy` field.
+
 
 
 
@@ -356,7 +397,16 @@ Schema **chat_room_messages**
 
 ### How to send chat message
 
-When a user inputs and sends a message, simply pass the input over the `onChatMessageSubmit`.
+When a user inputs and sends a message, simply call the `ChatService.instance.sendMessage()` method.
+You can create a custom action `onChatMessageSubmit` that wraps the `ChatService.instance.sendMessage()` method.
+
+
+### How to update chat message
+
+When a user updates a message, simply call the `ChatService.instance.updateMessage()` method.
+You can create a custom action `onChatMessageUpdate` that wraps the `ChatService.instance.updateMessage()` method.
+
+
 
 
 
