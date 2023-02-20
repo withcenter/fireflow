@@ -89,6 +89,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       // For 1:1 chat,
       //  - create a chat room if it does not exist.
       //  - just make the last message seen by you.
+      /// Note that, this may produce a permission error on update. It's again the rule.
       await chatRoomRef.set({
         'userDocumentReferences': youAndMeRef,
         'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),

@@ -36,17 +36,25 @@ class ChatService {
     List<String>? userDocumentReferences,
   }) async {
     List<DocumentReference>? users;
+    late bool isGroupChat;
     if (userDocumentReferences != null) {
       users = userDocumentReferences
           .map((e) => db.collection('users').doc(e))
           .toList();
     }
 
+    if (id.contains('-')) {
+      isGroupChat = false;
+    } else {
+      isGroupChat = true;
+    }
+
     await rooms.doc(id).set({
-      'userDocumentReferences': users ??
-          [
-            UserService.instance.ref,
-          ],
+      'isGroupChat': isGroupChat,
+      'lastMessageSeenBy': FieldValue.arrayUnion([
+        UserService.instance.ref,
+      ]),
+      'userDocumentReferences': users ?? [UserService.instance.ref],
       'leaveProtocolMessage': true,
       'urlClick': true,
       'urlPreview': true,

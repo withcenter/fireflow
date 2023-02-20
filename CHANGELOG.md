@@ -1,3 +1,8 @@
+## 0.0.138
+
+* Fix. permission error on chat room create.
+
+
 ## 0.0.137
 
 * Fix. Chat update.
