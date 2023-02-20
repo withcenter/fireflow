@@ -38,10 +38,12 @@ service cloud.firestore {
           isMyChatRoom()
           &&
           onlyUpdating(["unsubscribedUserDocumentReferences"])
-          &&
-          request.resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).hasOnly(resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()])) 
-          &&
-          request.resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).size() == resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).size()
+          // TODO : write securiy rules for only adding or removing the current user.
+          
+          // &&
+          // request.resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).hasOnly(resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()])) 
+          // &&
+          // request.resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).size() == resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).size()
         )
         ||
         // if it's open group chat, he can enter without invitation.
