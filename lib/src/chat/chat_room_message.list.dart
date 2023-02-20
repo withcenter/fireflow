@@ -19,11 +19,7 @@ class ChatRoomMessageList extends StatefulWidget {
     required this.onOtherMessage,
     required this.onEmpty,
     this.onProtocolMessage,
-  })  : assert(
-            (otherUserPublicDataDocument != null &&
-                    chatRoomDocumentReference == null) ||
-                (otherUserPublicDataDocument == null &&
-                    chatRoomDocumentReference != null),
+  })  : assert(chatRoomDocumentReference != null,
             "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
         super(key: key);
 
@@ -72,8 +68,9 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     }
   }
 
-  bool get isGroupChat => widget.chatRoomDocumentReference != null;
-  bool get isSingleChat => !isGroupChat;
+  bool get isSingleChat => widget.otherUserPublicDataDocument != null;
+
+  bool get isGroupChat => !isSingleChat;
 
   @override
   void initState() {

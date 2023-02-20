@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 /// ChatService
 ///
 /// ChatService is a singleton class that provides the chat service.
@@ -27,6 +29,29 @@ class ChatService {
 
   /// Returns a chat room message document reference of the given id.
   DocumentReference message(String id) => messages.doc(id);
+
+  /// Creates a chat room.
+  createChatRoom({
+    required String id,
+    List<String>? userDocumentReferences,
+  }) async {
+    List<DocumentReference>? users;
+    if (userDocumentReferences != null) {
+      users = userDocumentReferences
+          .map((e) => db.collection('users').doc(e))
+          .toList();
+    }
+
+    await rooms.doc(id).set({
+      'userDocumentReferences': users ??
+          [
+            UserService.instance.ref,
+          ],
+      'leaveProtocolMessage': true,
+      'urlClick': true,
+      'urlPreview': true,
+    });
+  }
 
   /// Send a message
   ///
