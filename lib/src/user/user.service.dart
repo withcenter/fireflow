@@ -94,7 +94,8 @@ class UserService {
     return UserPublicDataModel.fromSnapshot(await doc(id ?? uid).get());
   }
 
-  /// Creates /users_public_data/{uid} if it does not exist.
+  /// Creates /users_public_data/{uid} on registration or if it does not exist by any chance.
+  ///
   /// This will crate /users_public_data/{uid} only if the user is logged in for the first time.
   generateUserPublicDataDocument() async {
     ///
@@ -106,6 +107,7 @@ class UserService {
         'uid': uid,
         'userDocumentReference': ref,
         'registeredAt': FieldValue.serverTimestamp(),
+        'notifyNewComments': true,
       });
 
       /// Create user's document under `/users` collection.

@@ -99,14 +99,16 @@ class ChatService {
     final db = FirebaseFirestore.instance;
     final myUid = UserService.instance.uid;
     DocumentReference chatRoomRef;
-    bool isGroupChat = chatRoomDocumentReference != null;
+
+    /// Note, chatRoomDocumentReference may always exists.
+    bool isGroupChat = otherUserDocumentReference == null;
 
     if (isGroupChat) {
-      chatRoomRef = chatRoomDocumentReference;
+      chatRoomRef = chatRoomDocumentReference!;
     } else {
       chatRoomRef = db
           .collection('chat_rooms')
-          .doc(([myUid, otherUserDocumentReference!.id]..sort()).join('-'));
+          .doc(([myUid, otherUserDocumentReference.id]..sort()).join('-'));
     }
 
     /// Send chat message asynchronously.
@@ -157,7 +159,7 @@ class ChatService {
     };
     chatRoomRef.set(info, SetOptions(merge: true));
 
-    /// Send push notifications
+    /// Send push notifications -----------------------------------
     ///
     /// Title and text for the notification
     late final String title;
@@ -188,9 +190,9 @@ class ChatService {
       initialPageName: 'ChatRoom',
       parameterData: {
         if (isGroupChat)
-          'chatRoomDocument': chatRoomRef
+          'chatRoomDocumentReference': chatRoomRef
         else
-          'otherUserPublicDataDocument': UserService.instance.publicRef,
+          'otherUserDocumentReference': UserService.instance.publicRef,
 
         /// Send the chat room id. This is being used to detect if the user
         /// is already in the chat room.

@@ -1,3 +1,13 @@
+## 0.0.140
+
+* Update. push notification handling.
+
+
+## 0.0.139
+
+* Update. Users subscribe new comments under their posts and comments by default.
+
+
 ## 0.0.138
 
 * Fix. permission error on chat room create.

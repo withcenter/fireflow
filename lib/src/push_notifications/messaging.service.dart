@@ -74,7 +74,7 @@ class MessagingService {
 
       final message = MessageModel.fromRemoteMessage(remoteMessage);
 
-      dog('--> initMessaging::onMessage; $message');
+      dog('--> _foregroundMessageHandler; $message');
       // log('Notification: ${message.notification}, ${message.notification.title}, ${message.notification.body}');
 
       /// Is this message coming from the chat room I am chatting in?
