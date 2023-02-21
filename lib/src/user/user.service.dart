@@ -412,4 +412,21 @@ class UserService {
 
     return feeds.map((e) => e.toJson()).toList();
   }
+
+  /// Accept referral invitation
+  ///
+  /// return [true] on sucess and [false] if the user already has a referral.
+  Future<bool> acceptInvitation(DocumentReference invitor) async {
+    final me = await getPublicData();
+    if (me.referral != null) {
+      return false;
+    }
+
+    await publicRef.update({
+      'referral': invitor,
+      'referralAcceptedAt': FieldValue.serverTimestamp(),
+    });
+
+    return true;
+  }
 }

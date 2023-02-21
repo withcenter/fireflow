@@ -22,6 +22,7 @@ class UserPublicDataModel {
   bool isPremiumUser;
   List<DocumentReference> followings;
 
+  DocumentReference? referral;
   Map<String, dynamic> data;
 
   UserPublicDataModel({
@@ -42,6 +43,7 @@ class UserPublicDataModel {
     required this.lastPostCreatedAt,
     required this.isPremiumUser,
     required this.followings,
+    required this.referral,
     required this.data,
   });
 
@@ -84,6 +86,7 @@ class UserPublicDataModel {
       lastPostCreatedAt: json['lastPostCreatedAt'] ?? Timestamp.now(),
       isPremiumUser: json['isPremiumUser'] ?? false,
       followings: List<DocumentReference>.from(json['followings'] ?? []),
+      referral: json['referral'],
       data: json,
     );
   }
@@ -91,7 +94,7 @@ class UserPublicDataModel {
   // create "toString()" method that returns a string of the object of this class
   @override
   String toString() {
-    return "UserPublicDataModel(uid: $uid, userDocumentReference: $userDocumentReference, displayName: $displayName, photoUrl: $photoUrl, gender: $gender, registeredAt: $registeredAt, updatedAt: $updatedAt, birthday: $birthday, hasPhoto: $hasPhoto, isProfileComplete: $isProfileComplete, coverPhotoUrl: $coverPhotoUrl, recentPosts: $recentPosts, lastPostCreatedAt: $lastPostCreatedAt, isPremiumUser: $isPremiumUser, followings: $followings, data: $data)";
+    return "UserPublicDataModel(uid: $uid, userDocumentReference: $userDocumentReference, displayName: $displayName, photoUrl: $photoUrl, gender: $gender, registeredAt: $registeredAt, updatedAt: $updatedAt, birthday: $birthday, hasPhoto: $hasPhoto, isProfileComplete: $isProfileComplete, coverPhotoUrl: $coverPhotoUrl, recentPosts: $recentPosts, lastPostCreatedAt: $lastPostCreatedAt, isPremiumUser: $isPremiumUser, followings: $followings, referral: $referral, data: $data)";
   }
 }
 

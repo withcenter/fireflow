@@ -1,3 +1,8 @@
+## 0.0.141
+
+* Update. friend invitation.
+
+
 ## 0.0.140
 
 * Update. push notification handling.

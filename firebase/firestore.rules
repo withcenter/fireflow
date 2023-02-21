@@ -51,7 +51,7 @@ service cloud.firestore {
         && onlyUpdating(["userDocumentReferences"])
         && request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.concat([myReference()]))
         ;
-      allow delete: if false;
+      allow delete: if isGroupChat() == false && isMyChatRoom();
     }
 
     // Note that, admin can read all chat room messages for the safety reason. If you don't like it, remove the isAdmin() from the read rule.
@@ -225,4 +225,6 @@ function isOpenChat() {
   return 'isOpenChat' in  resource.data && resource.data.isOpenChat == true;
 }
 
-
+function isGroupChat() {
+  return 'isGroupChat' in  resource.data && resource.data.isGroupChat == true;
+}
