@@ -30,16 +30,14 @@ class UserService {
   String get uid => auth.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
   CollectionReference get publicDataCol => db.collection('users_public_data');
 
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
@@ -63,8 +61,7 @@ class UserService {
   UserPublicDataModel get my => _my!;
   set my(UserPublicDataModel? value) => _my = value;
 
-  final BehaviorSubject<UserPublicDataModel?> onChange =
-      BehaviorSubject<UserPublicDataModel?>.seeded(null);
+  final BehaviorSubject<UserPublicDataModel?> onChange = BehaviorSubject<UserPublicDataModel?>.seeded(null);
 
   /// check if user's public data document exists
   userPublicDataDocumentExists() async {
@@ -108,7 +105,7 @@ class UserService {
         'userDocumentReference': ref,
         'registeredAt': FieldValue.serverTimestamp(),
         'notifyNewComments': true,
-      });
+      }, SetOptions(merge: true));
 
       /// Create user's document under `/users` collection.
       /// Mostly, user document will be created automatically by flutterflow
@@ -123,7 +120,7 @@ class UserService {
           'uid': uid,
           if ((currentUser.email ?? '').isNotEmpty) 'email': currentUser.email,
           'created_time': FieldValue.serverTimestamp(),
-        });
+        }, SetOptions(merge: true));
       }
     }
 
@@ -148,9 +145,9 @@ class UserService {
       ),
     );
 
-    await myRef.update({
+    await myRef.set({
       'userPublicDataDocumentReference': myUserPublicDataRef,
-    });
+    }, SetOptions(merge: true));
 
     dog("UserService.generateUserPublicData() - user public data generated at ${myUserPublicDataRef.path}");
   }
@@ -163,19 +160,16 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
         my = UserPublicDataModel.fromSnapshot(snapshot);
 
         /// Update user profile completion status
         ///
         /// TODO: Let's developer add more fields to check the profile completion. For instance, "displayName,photoUrl,gender,birthday"
-        await my.userDocumentReference.update({
-          'isProfileComplete':
-              my.displayName.isNotEmpty && my.photoUrl.isNotEmpty,
-        });
+        await my.userDocumentReference.set({
+          'isProfileComplete': my.displayName.isNotEmpty && my.photoUrl.isNotEmpty,
+        }, SetOptions(merge: true));
 
         onChange.add(my);
         if (SupabaseService.instance.storeUsersPubicData) {
@@ -282,8 +276,7 @@ class UserService {
   recentPosts(PostModel post) {
     List recentPosts = my.recentPosts ?? [];
     if (recentPosts.length >= Config.instance.noOfRecentPosts) {
-      recentPosts.removeRange(
-          Config.instance.noOfRecentPosts - 1, recentPosts.length);
+      recentPosts.removeRange(Config.instance.noOfRecentPosts - 1, recentPosts.length);
     }
     recentPosts.insert(0, feed(post));
     return recentPosts;
@@ -366,10 +359,7 @@ class UserService {
   }) async {
     /// Get the users that I follow, ordered by last post created at.
     ///
-    Query q = db
-        .collection('users_public_data')
-        .where('userDocumentReference', whereIn: my.followings)
-        .orderBy('lastPostCreatedAt', descending: true);
+    Query q = db.collection('users_public_data').where('userDocumentReference', whereIn: my.followings).orderBy('lastPostCreatedAt', descending: true);
 
     /// Limit the number of (following) users to get if the app needs to display only a few posts.
     if (noOfFollowers > 0) {
@@ -417,15 +407,22 @@ class UserService {
   ///
   /// return [true] on sucess and [false] if the user already has a referral.
   Future<bool> acceptInvitation(DocumentReference invitor) async {
-    final me = await getPublicData();
-    if (me.referral != null) {
-      return false;
+    try {
+      final me = await getPublicData();
+      if (me.referral != null) {
+        return false;
+      }
+    } catch (e) {
+      /// If the user is not found, it will create the public data document for the user.
     }
 
-    await publicRef.update({
-      'referral': invitor,
-      'referralAcceptedAt': FieldValue.serverTimestamp(),
-    });
+    await publicRef.set(
+      {
+        'referral': invitor,
+        'referralAcceptedAt': FieldValue.serverTimestamp(),
+      },
+      SetOptions(merge: true),
+    );
 
     return true;
   }

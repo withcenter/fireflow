@@ -1,3 +1,7 @@
+## 0.0.142
+
+* Fix. friend invitation.
+
 ## 0.0.141
 
 * Update. friend invitation.

@@ -54,6 +54,7 @@ Schema **users_public_data**
 | gender | String |
 | birthday | Timestamp |
 | hasPhoto | Boolean |
+| isProfileComplete | Boolean |
 | lastPostCreatedAt | Timestamp |
 | lastPost | Data (recentPosts) |
 | recentPosts | List < Data ( recentPosts) > |
@@ -61,6 +62,9 @@ Schema **users_public_data**
 | noOfPosts | Integer |
 | noOfComments | Integer |
 | followings | List < Doc Reference (users) > |
+| referral | Doc Reference (users) |
+| referralAcceptedAt | Timestamp |
+
 
 - `uid` is the the uid of the user.
 - `userDocumentReference` is the document reference of the user.
@@ -73,10 +77,13 @@ Schema **users_public_data**
 - `followers` is the list of user document references who follow me(the login user).
   Meaning, the login user can add other user reference into the `followers` field in his document. Others don't have permission to update the `followers` field in other user's document.
 - `hasPhoto` is set to `true` if the user has the primary profile photo. Or false.
+- `isProfileComplete` is set to true when the user completed his profile information.
 - `coverPhotoUrl` is the url of the cover photo of the user.
 - `recentPosts` is the list of the last recent posts that the user created. Note that, to create the `recentPosts` field in `posts` collection, you will need to create the `recentPosts` Data Type first.
 - `lastPostCreatedAt` is the time that the user created the last post.
 - `isPremiumUser` is set to `true` if the user is paid for premium service.
+- `referral` is the user document reference who invited me.
+- `referralAcceptedAt` is the time that he user accepted(registered) the invitation.
 
 ## Register and sign-in
 
