@@ -436,4 +436,23 @@ class UserService {
 
     return true;
   }
+
+  /// Count user's chat message sending on every minutes.
+  ///
+  /// If the user sends more than one message in a minute, it will count only 1.
+  DateTime? lastChatTime;
+  countChatMessage() {
+    lastChatTime ??= DateTime.now();
+    if (DateTime.now().difference(lastChatTime!).inSeconds <
+        Config.chatCountInterval) {
+      return;
+    }
+
+    /// 지정된 시간 [Config.chatCountInterval] 이 지났음. 초기화.
+    lastChatTime = DateTime.now();
+
+    publicRef.update({
+      'chatMessageCount': FieldValue.increment(1),
+    });
+  }
 }

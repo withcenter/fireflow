@@ -15,4 +15,9 @@ class Config {
 
   /// [displayError] returns true if error should be displayed.
   bool displayError = false;
+
+  /// Chat
+  ///
+  ///
+  static int chatCountInterval = 60;
 }

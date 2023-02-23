@@ -32,11 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Wrap(
                 children: [
-                  Text("Language code: ${Localizations.localeOf(context).languageCode}, "),
+                  Text(
+                      "Language code: ${Localizations.localeOf(context).languageCode}, "),
                   Text("home: ${TranslationService.instance.get('home')}"),
                 ],
               ),
-              Text('TODO: User registration and profile update.\nTODO: file upload on forum '),
+              Text(
+                  'TODO: User registration and profile update.\nTODO: file upload on forum '),
               ElevatedButton(
                   onPressed: () =>
 
@@ -109,7 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
-                        final category = CategoryModel.fromSnapshot(snapshot.data!.docs[index]);
+                        final category = CategoryModel.fromSnapshot(
+                            snapshot.data!.docs[index]);
                         return ListTile(
                           title: Text(category.title),
                           subtitle: Text('category: ${category.category}'),

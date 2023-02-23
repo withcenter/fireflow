@@ -1,3 +1,8 @@
+## 0.0.143
+
+* Update. Chat. Add the no of sending messages.
+
+
 ## 0.0.142
 
 * Fix. friend invitation.

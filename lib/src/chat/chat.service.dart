@@ -159,6 +159,9 @@ class ChatService {
     };
     chatRoomRef.set(info, SetOptions(merge: true));
 
+    /// Count chat message on every minutes
+    UserService.instance.countChatMessage();
+
     /// Send push notifications -----------------------------------
     ///
     /// Title and text for the notification

@@ -474,3 +474,14 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 ### ChatRoomProtocolMessage
 
+
+
+
+## Chat message count
+
+- Fireflow counts the no of chat message that a user sent. The count increases on every minutes. It's 60 seconds by default. You can change it in config.dart
+  - For instance, when the user sends a message for the first after app boots, it will not count. After the first message, it will count after a minutes if the user chats again. and from there it will count on every minutes. It will only increase by 1 even if the user sends chat messages more than 1 in a minute.
+
+- The no of count is saved in `/users_public_data/<uid> { chatMessageCount: xx }`.
+- You can use it for leveling user's activity or whatever.
+

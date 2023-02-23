@@ -5,6 +5,8 @@ class CalendarScreen extends StatelessWidget {
 
   @override
   build(context) {
-    return Scaffold(appBar: AppBar(title: const Text('Calendar')), body: const Text('아... FlutterFlow_Widget 에서 작업 해야 함.'));
+    return Scaffold(
+        appBar: AppBar(title: const Text('Calendar')),
+        body: const Text('아... FlutterFlow_Widget 에서 작업 해야 함.'));
   }
 }

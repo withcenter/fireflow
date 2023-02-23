@@ -1,6 +1,6 @@
 name: fireflow
 description: This package is designed for FlutterFlow app to provide enhanced features.
-version: 0.0.142
+version: 0.0.143
 homepage: https://github.com/withcenter/fireflow
 
 environment:
@@ -81,9 +81,6 @@ dependencies:
   google_maps_flutter: 2.1.8
   google_maps_flutter_platform_interface: 2.2.1
   google_maps_flutter_web: 0.4.0+1
-
-  # for CustomCalendar with the same version of FF
-  table_calendar: 3.0.6
 
 dev_dependencies:
   flutter_test:
