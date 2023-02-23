@@ -15,6 +15,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      context.pushNamed('Calendar');
+    });
   }
 
   @override
@@ -28,13 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Wrap(
                 children: [
-                  Text(
-                      "Language code: ${Localizations.localeOf(context).languageCode}, "),
+                  Text("Language code: ${Localizations.localeOf(context).languageCode}, "),
                   Text("home: ${TranslationService.instance.get('home')}"),
                 ],
               ),
-              Text(
-                  'TODO: User registration and profile update.\nTODO: file upload on forum '),
+              Text('TODO: User registration and profile update.\nTODO: file upload on forum '),
               ElevatedButton(
                   onPressed: () =>
 
@@ -75,17 +77,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              ElevatedButton(
-                onPressed: () => context.pushNamed('AdminTranslation'),
-                child: const Text('Language Settings'),
+              Wrap(
+                children: [
+                  ElevatedButton(
+                    onPressed: () => context.pushNamed('AdminTranslation'),
+                    child: const Text('Language Settings'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => context.pushNamed('CategoryList'),
+                    child: const Text('Category List'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => context.pushNamed('Setting'),
+                    child: const Text('Settings'),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () => context.pushNamed('CategoryList'),
-                child: const Text('Category List'),
-              ),
-              ElevatedButton(
-                onPressed: () => context.pushNamed('Setting'),
-                child: const Text('Settings'),
+              Wrap(
+                children: [
+                  ElevatedButton(
+                    onPressed: () => context.pushNamed('Calendar'),
+                    child: const Text('Calendar'),
+                  ),
+                ],
               ),
               StreamBuilder(
                 stream: CategoryService.instance.col.snapshots(),
@@ -95,8 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
-                        final category = CategoryModel.fromSnapshot(
-                            snapshot.data!.docs[index]);
+                        final category = CategoryModel.fromSnapshot(snapshot.data!.docs[index]);
                         return ListTile(
                           title: Text(category.title),
                           subtitle: Text('category: ${category.category}'),

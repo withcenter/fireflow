@@ -1,17 +1,11 @@
-import 'dart:io';
-
 import 'package:example/firebase_options.dart';
 import 'package:example/key.dart';
 import 'package:example/router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -56,8 +50,7 @@ class _MyAppState extends State<MyApp> {
           background: true,
           onTap: (String initialPageName, Map<String, String> parameterData) {
             dog('on message tap: $initialPageName, Map<String, String> $parameterData');
-            AppService.instance.context
-                .pushNamed(initialPageName, queryParams: parameterData);
+            AppService.instance.context.pushNamed(initialPageName, queryParams: parameterData);
           },
         ),
       );
@@ -73,7 +66,7 @@ class _MyAppState extends State<MyApp> {
       ),
       routerConfig: router,
       locale: null,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

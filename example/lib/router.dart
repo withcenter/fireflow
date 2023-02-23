@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:example/screens/admin/translation.screen.dart';
+import 'package:example/screens/calendar/calendar.screen.dart';
 import 'package:example/screens/forum/category/category_edit.screen.dart';
 import 'package:example/screens/forum/category/category_list.screen.dart';
 import 'package:example/screens/forum/post_view.screen.dart';
@@ -27,8 +28,7 @@ final router = GoRouter(
     GoRoute(
       name: 'CategoryEdit',
       path: '/categoryEdit',
-      builder: (context, state) =>
-          CategoryEditScreen(category: state.queryParams['category']),
+      builder: (context, state) => CategoryEditScreen(category: state.queryParams['category']),
     ),
     GoRoute(
       name: 'CustomPopup',
@@ -57,8 +57,7 @@ final router = GoRouter(
       path: '/postView',
       builder: (context, state) {
         return PostViewScreen(
-          postDocumentReference: FirebaseFirestore.instance
-              .doc(state.queryParams['postDocumentReference']!),
+          postDocumentReference: FirebaseFirestore.instance.doc(state.queryParams['postDocumentReference']!),
         );
       },
     ),
@@ -81,6 +80,11 @@ final router = GoRouter(
       name: 'AdminTranslation',
       path: '/adminTranslation',
       builder: (context, state) => const AdminTranslationScreen(),
+    ),
+    GoRoute(
+      name: 'Calendar',
+      path: '/calendar',
+      builder: (context, state) => const CalendarScreen(),
     ),
   ],
 );
