@@ -64,6 +64,7 @@ Schema **users_public_data**
 | followings | List < Doc Reference (users) > |
 | referral | Doc Reference (users) |
 | referralAcceptedAt | Timestamp |
+| chatMessageCount | Integer |
 
 
 - `uid` is the the uid of the user.
@@ -84,6 +85,7 @@ Schema **users_public_data**
 - `isPremiumUser` is set to `true` if the user is paid for premium service.
 - `referral` is the user document reference who invited me.
 - `referralAcceptedAt` is the time that he user accepted(registered) the invitation.
+- `chatMessageCount` is the no of chat that were sent by the user. See No of chat message in chat.md
 
 ## Register and sign-in
 

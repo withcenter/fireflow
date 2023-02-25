@@ -33,6 +33,11 @@ Schema **chat_rooms**
 | backgroundColor | String |
 | urlClick | Boolean |
 | urlPreview | Boolean |
+| parentChatRoomDocumentReference | Doc Reference (chat_rooms) |
+| subChatRoomCount | Integer |
+| subChatRoom | Integer |
+
+
 
 
 
@@ -48,7 +53,11 @@ Schema **chat_rooms**
 - `unsubscribedUserDocumentReferences` is the document references of the users who disabled the notification of a new message for the chat room.
 - `isGroupChat` is set to `true` if it's a group chat. Otherwise, false.
 - `isOpenChat` is set to `true` if the chat room is open to anyone. When it is set to true, users can join the chat room.
-
+- `urlClick` is set to `true` if the moderator lets users click the url.
+- `urlPreview` - Set it to `true` to show the preview of the url link.
+- `parentChatRoomDocumentReference` - This is the parent chat room document reference if the sub chat group functionality is enabled.
+- `subChatRoom` - This is `true` when the chat room is a sub chat room of a parent chat room. (updated by `ChatService.instance.chatRoomAfterCreate`)
+- `subChatRoomCount` - This has no the number of the sub chat room if the chat room is a parent chat room. (updated by `ChatService.instance.chatRoomAfterCreate`)
 
 
 
