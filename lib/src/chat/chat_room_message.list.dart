@@ -19,7 +19,8 @@ class ChatRoomMessageList extends StatefulWidget {
     required this.onOtherMessage,
     required this.onEmpty,
     this.onProtocolMessage,
-  })  : assert(chatRoomDocumentReference != null, "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
+  })  : assert(chatRoomDocumentReference != null,
+            "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
         super(key: key);
 
   final double? width;
@@ -62,7 +63,8 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     if (isGroupChat) {
       return widget.chatRoomDocumentReference!;
     } else {
-      return ChatService.instance.room(([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
+      return ChatService.instance.room(
+          ([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
     }
   }
 
@@ -96,7 +98,8 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     } else {
       // For the open group chat, any user can join the chat room.
       room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
-      if (room.userDocumentReferences.contains(myReference) == false && room.isOpenChat == true) {
+      if (room.userDocumentReferences.contains(myReference) == false &&
+          room.isOpenChat == true) {
         await chatRoomRef.update({
           'userDocumentReferences': FieldValue.arrayUnion([myReference]),
         });
@@ -150,7 +153,8 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       reverse: true,
       // item builder type is compulsory.
       itemBuilder: (context, documentSnapshots, index) {
-        final message = ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
+        final message =
+            ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
 
         if (message.isProtocol) {
           if (widget.onProtocolMessage != null) {
