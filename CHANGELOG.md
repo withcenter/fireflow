@@ -1,3 +1,7 @@
+## 0.0.146
+
+* Fix. Chat. sub chat room.
+
 ## 0.0.145
 
 * Fix. Chat. sub chat room.

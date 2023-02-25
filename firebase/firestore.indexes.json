@@ -79,6 +79,56 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "isOpenChat",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "parentChatRoomDocumentReference",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastMessageSentAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "chat_rooms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isOpenChat",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "parentChatRoomDocumentReference",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastMessageSentAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "chat_rooms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "parentChatRoomDocumentReference",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastMessageSentAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "chat_rooms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
           "fieldPath": "userDocumentReferences",
           "arrayConfig": "CONTAINS"
         },
@@ -538,6 +588,20 @@
         },
         {
           "fieldPath": "lastPostCreatedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "users_public_data",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "referral",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "referralAcceptedAt",
           "order": "DESCENDING"
         }
       ]

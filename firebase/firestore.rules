@@ -28,7 +28,7 @@ service cloud.firestore {
         (
           isMyChatRoom()
           &&
-          onlyUpdating(["userDocumentReferences"])
+          onlyUpdating(["userDocumentReferences", "subChatRoomCount", "subChatRoom"])
           &&
           request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.removeAll([myReference()]))
         )
