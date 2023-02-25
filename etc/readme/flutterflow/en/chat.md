@@ -35,7 +35,7 @@ Schema **chat_rooms**
 | urlPreview | Boolean |
 | parentChatRoomDocumentReference | Doc Reference (chat_rooms) |
 | subChatRoomCount | Integer |
-| subChatRoom | Integer |
+| subChatRoom | Boolean |
 
 
 

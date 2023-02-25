@@ -314,11 +314,11 @@ class ChatService {
         ChatRoomModel.fromSnapshot(await chatRoomDocumentReference.get());
 
     if (room.parentChatRoomDocumentReference != null) {
-      final count = await rooms
+      final snapshot = await rooms
           .where('parentChatRoomDocumentReference',
               isEqualTo: room.parentChatRoomDocumentReference)
-          .count()
           .get();
+      final count = snapshot.docs.length;
       await room.parentChatRoomDocumentReference!.update({
         'subChatRoomCount': count,
         'subChatRoom': false,
