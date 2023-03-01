@@ -77,10 +77,10 @@ dependencies:
   flutterflow_widgets: ^0.0.29
 
   # google map
-  google_maps: 6.2.0
-  google_maps_flutter: 2.1.8
-  google_maps_flutter_platform_interface: 2.2.1
-  google_maps_flutter_web: 0.4.0+1
+  # google_maps: 6.2.0
+  # google_maps_flutter: 2.1.8
+  # google_maps_flutter_platform_interface: 2.2.1
+  # google_maps_flutter_web: 0.4.0+1
 
 dev_dependencies:
   flutter_test:
