@@ -8,6 +8,13 @@ service cloud.firestore {
       allow delete: if false;
     }
     
+    // For GPT & ChatGPT only.
+    // You can delete this if you don't use GPT & ChatGPT.
+    // TODO : write better security rules for GPT & ChatGPT. `allow write: if myDoc()` will be enough.
+    match /gpt/{document} {
+      allow read: if true;
+      allow write: if true;
+    }
 
     match /chat_rooms/{document} {
       allow get: if isMyChatRoom() || isOpenChat() || isModerator();
