@@ -42,12 +42,7 @@ Future<String> queryGpt({
   }
 }
 
-Future<String> queryChatGpt({
-  required String prompt,
-  String? model,
-  double? temperature,
-  int? length,
-}) async {
+Future<String> queryChatGpt({required String prompt}) async {
   // Add your function code here!
   final data = {
     'model': 'gpt-3.5-turbo',
@@ -59,15 +54,13 @@ Future<String> queryChatGpt({
     ],
   };
 
-  model ??= "text-davinci-003";
-
   final headers = {
     'Authorization': 'Bearer ${AppService.instance.keys.openAiApiKey}',
     'Content-Type': 'application/json'
   };
   final request = Request(
     'POST',
-    Uri.parse('https://api.openai.com/v1/engines/$model/completions'),
+    Uri.parse('https://api.openai.com/v1/chat/completions'),
   );
   request.body = json.encode(data);
   request.headers.addAll(headers);
