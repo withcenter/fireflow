@@ -41,3 +41,44 @@ Future<String> queryGpt({
     return '';
   }
 }
+
+Future<String> queryChatGpt({
+  required String prompt,
+  String? model,
+  double? temperature,
+  int? length,
+}) async {
+  // Add your function code here!
+  final data = {
+    'model': 'gpt-3.5-turbo',
+    'messages': [
+      {
+        'role': 'user',
+        'content': prompt,
+      },
+    ],
+  };
+
+  model ??= "text-davinci-003";
+
+  final headers = {
+    'Authorization': 'Bearer ${AppService.instance.keys.openAiApiKey}',
+    'Content-Type': 'application/json'
+  };
+  final request = Request(
+    'POST',
+    Uri.parse('https://api.openai.com/v1/engines/$model/completions'),
+  );
+  request.body = json.encode(data);
+  request.headers.addAll(headers);
+
+  final httpResponse = await request.send();
+
+  if (httpResponse.statusCode == 200) {
+    final jsonResponse = json.decode(await httpResponse.stream.bytesToString());
+    return jsonResponse['choices'][0]['message']['content'];
+  } else {
+    debugPrint(httpResponse.reasonPhrase);
+    return '';
+  }
+}

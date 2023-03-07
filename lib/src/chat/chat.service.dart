@@ -24,7 +24,8 @@ class ChatService {
   /// Returns a chat room document reference of the given id.
   DocumentReference room(String id) => rooms.doc(id);
 
-  Query get myRooms => rooms.where('userDocumentReferences', arrayContains: UserService.instance.ref);
+  Query get myRooms => rooms.where('userDocumentReferences',
+      arrayContains: UserService.instance.ref);
 
   /// Returns a chat room message document reference of the given id.
   DocumentReference message(String id) => messages.doc(id);
@@ -37,7 +38,9 @@ class ChatService {
     List<DocumentReference>? users;
     late bool isGroupChat;
     if (userDocumentReferences != null) {
-      users = userDocumentReferences.map((e) => db.collection('users').doc(e)).toList();
+      users = userDocumentReferences
+          .map((e) => db.collection('users').doc(e))
+          .toList();
     }
 
     if (id.contains('-')) {
@@ -83,8 +86,12 @@ class ChatService {
     String? protocol,
     DocumentReference? protocolTargetUserDocumentReference,
   }) async {
-    assert(otherUserDocumentReference != null || chatRoomDocumentReference != null, "User document reference or chat room document reference must be set.");
-    if ((text == null || text.isEmpty) && (uploadUrl == null || uploadUrl.isEmpty) && (protocol == null || protocol.isEmpty)) {
+    assert(
+        otherUserDocumentReference != null || chatRoomDocumentReference != null,
+        "User document reference or chat room document reference must be set.");
+    if ((text == null || text.isEmpty) &&
+        (uploadUrl == null || uploadUrl.isEmpty) &&
+        (protocol == null || protocol.isEmpty)) {
       return;
     }
 
@@ -99,7 +106,9 @@ class ChatService {
     if (isGroupChat) {
       chatRoomRef = chatRoomDocumentReference!;
     } else {
-      chatRoomRef = db.collection('chat_rooms').doc(([myUid, otherUserDocumentReference.id]..sort()).join('-'));
+      chatRoomRef = db
+          .collection('chat_rooms')
+          .doc(([myUid, otherUserDocumentReference.id]..sort()).join('-'));
     }
 
     /// Send chat message asynchronously.
@@ -112,7 +121,9 @@ class ChatService {
       if (uploadUrl != null) 'uploadUrl': uploadUrl,
       if (uploadUrl != null) 'uploadUrlType': uploadUrlType(uploadUrl),
       if (protocol != null) 'protocol': protocol,
-      if (protocolTargetUserDocumentReference != null) 'protocolTargetUserDocumentReference': protocolTargetUserDocumentReference,
+      if (protocolTargetUserDocumentReference != null)
+        'protocolTargetUserDocumentReference':
+            protocolTargetUserDocumentReference,
     };
     db.collection('chat_room_messages').add(data).then((ref) async {
       /// Update url preview
@@ -123,7 +134,8 @@ class ChatService {
         final data = {
           'previewUrl': model.firstLink!,
           if (model.title != null) 'previewTitle': model.title,
-          if (model.description != null) 'previewDescription': model.description,
+          if (model.description != null)
+            'previewDescription': model.description,
           if (model.image != null) 'previewImageUrl': model.image,
         };
         await ref.set(data, SetOptions(merge: true));
@@ -154,7 +166,8 @@ class ChatService {
     ///
     /// Title and text for the notification
     late final String title;
-    if ((text == null || text.isEmpty) && (uploadUrl != null && uploadUrl.isNotEmpty)) {
+    if ((text == null || text.isEmpty) &&
+        (uploadUrl != null && uploadUrl.isNotEmpty)) {
       text = 'Tap to see the photo.';
       title = '${AppService.instance.my.displayName} sent a photo';
     } else {
@@ -167,7 +180,8 @@ class ChatService {
     ///
     final userRefs = room.userDocumentReferences;
     if (room.unsubscribedUserDocumentReferences.isNotEmpty) {
-      userRefs.removeWhere((ref) => room.unsubscribedUserDocumentReferences.contains(ref));
+      userRefs.removeWhere(
+          (ref) => room.unsubscribedUserDocumentReferences.contains(ref));
     }
 
     MessagingService.instance.send(
@@ -178,7 +192,10 @@ class ChatService {
       userRefs: userRefs,
       initialPageName: 'ChatRoom',
       parameterData: {
-        if (isGroupChat) 'chatRoomDocumentReference': chatRoomRef else 'otherUserDocumentReference': UserService.instance.publicRef,
+        if (isGroupChat)
+          'chatRoomDocumentReference': chatRoomRef
+        else
+          'otherUserDocumentReference': UserService.instance.publicRef,
 
         /// Send the chat room id. This is being used to detect if the user
         /// is already in the chat room.
@@ -284,7 +301,8 @@ class ChatService {
     );
 
     return chatRoomDocumentReference.update({
-      'userDocumentReferences': FieldValue.arrayRemove([UserService.instance.ref]),
+      'userDocumentReferences':
+          FieldValue.arrayRemove([UserService.instance.ref]),
     });
   }
 
@@ -292,11 +310,15 @@ class ChatService {
   Future chatRoomAfterCreate({
     required DocumentReference chatRoomDocumentReference,
   }) async {
-    final room = ChatRoomModel.fromSnapshot(await chatRoomDocumentReference.get());
+    final room =
+        ChatRoomModel.fromSnapshot(await chatRoomDocumentReference.get());
 
     if (room.parentChatRoomDocumentReference != null) {
-      final snapshot =
-          await rooms.where('isOpenChat', isEqualTo: true).where('parentChatRoomDocumentReference', isEqualTo: room.parentChatRoomDocumentReference).get();
+      final snapshot = await rooms
+          .where('isOpenChat', isEqualTo: true)
+          .where('parentChatRoomDocumentReference',
+              isEqualTo: room.parentChatRoomDocumentReference)
+          .get();
       final count = snapshot.docs.length;
       await room.parentChatRoomDocumentReference!.update({
         'subChatRoomCount': count,

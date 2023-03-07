@@ -4,6 +4,29 @@ Some API Keys like Open AI will be invalid once it is open to the public. So, it
 
 In Fireflow, those keys should be in /system_settings/keys { keyName: … }
 
+## System Keys
+
+### Open AI API Key
+
+* Open AI API Key should be saved as below.
+
+```txt
+/system_settings/keys {
+  openAiApiKey: ...
+}
+```
+
+
+* It is loaded automatically by the fireflow and you can use it in your code like below.
+
+```dart
+'Authorization': 'Bearer ${AppService.instance.keys.openAiApiKey}',
+```
+
+* Or simply do Firestore backend query to get the api key and do query.
+
+
+
 
 
 ## Admin
