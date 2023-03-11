@@ -1,6 +1,6 @@
 ## 0.0.150
 
-* Add. chat room method.
+* Add. add `getOtherUserDocumentReferenceFromChatRoomReference` in chat service.
 
 ## 0.0.149
 
