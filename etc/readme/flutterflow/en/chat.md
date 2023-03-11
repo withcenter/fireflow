@@ -36,6 +36,7 @@ Schema **chat_rooms**
 | parentChatRoomDocumentReference | Doc Reference (chat_rooms) |
 | subChatRoomCount | Integer |
 | subChatRoom | Boolean |
+| noOfMessages| Integer |
 
 
 
@@ -58,6 +59,7 @@ Schema **chat_rooms**
 - `parentChatRoomDocumentReference` - This is the parent chat room document reference if the sub chat group functionality is enabled.
 - `subChatRoom` - This is `true` when the chat room is a sub chat room of a parent chat room. (updated by `ChatService.instance.chatRoomAfterCreate`)
 - `subChatRoomCount` - This has no the number of the sub chat room if the chat room is a parent chat room. (updated by `ChatService.instance.chatRoomAfterCreate`)
+- `noOfMessages` - This has the total number of messages that were sent by the users in the room. You may use this to display as favorites chat rooms. For instance, you want to display 10 1:1 chat rooms ordered by the no of messages.
 
 
 

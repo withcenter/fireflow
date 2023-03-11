@@ -193,7 +193,7 @@
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "0F92FE71-3ACA-4C76-BA6A-A2861890D461"
+      "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     },
     {
       "name": "Simulator J. iMac - example - debug",
@@ -202,7 +202,16 @@
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "0F92FE71-3ACA-4C76-BA6A-A2861890D461"
+      "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
+    },
+    {
+      "name": "Simulator - Hype Talk",
+      "cwd": "apps/hypetalk",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     }
   ]
 }
