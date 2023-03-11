@@ -1,3 +1,13 @@
+## 0.0.150
+
+* Add. chat room method.
+
+## 0.0.149
+
+* Add. a method for creating a sing chat room.
+* Update. change parameter name.
+
+
 ## 0.0.148
 
 * Fix. Chat GPT API.

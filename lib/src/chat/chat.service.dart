@@ -357,4 +357,14 @@ class ChatService {
       });
     }
   }
+
+  /// Get the other document reference from the one and one chat document reference
+  ///
+  DocumentReference getOtherUidFromReference(
+      DocumentReference chatRoomDocumentReference) {
+    final id = chatRoomDocumentReference.id;
+    final myUid = UserService.instance.uid;
+    final otherUid = id.split('-').first == myUid ? myUid : id.split('-').last;
+    return UserService.instance.doc(otherUid);
+  }
 }
