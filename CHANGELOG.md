@@ -1,3 +1,7 @@
+## 0.0.151
+
+* Fix. `getOtherUserDocumentReferenceFromChatRoomReference` in chat service.
+
 ## 0.0.150
 
 * Add. add `getOtherUserDocumentReferenceFromChatRoomReference` in chat service.
