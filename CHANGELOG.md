@@ -1,3 +1,8 @@
+## 0.0.154
+
+* Add. replyDisplayName, replyText on model
+
+
 ## 0.0.153
 
 * Add. replyDisplayName, replyText for reply in chat.

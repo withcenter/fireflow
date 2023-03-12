@@ -16,7 +16,9 @@ class ChatRoomMessageModel {
       required this.previewUrl,
       required this.previewTitle,
       required this.previewDescription,
-      required this.previewImageUrl});
+      required this.previewImageUrl,
+      required this.replyDisplayName,
+      required this.replyText});
 
   final DocumentReference userDocumentReference;
   final DocumentReference chatRoomDocumentReference;
@@ -31,6 +33,9 @@ class ChatRoomMessageModel {
   final String previewTitle;
   final String previewDescription;
   final String previewImageUrl;
+
+  final String replyDisplayName;
+  final String replyText;
 
   final DocumentReference ref;
 
@@ -59,6 +64,8 @@ class ChatRoomMessageModel {
       previewTitle: json['previewTitle'] ?? "",
       previewDescription: json['previewDescription'] ?? "",
       previewImageUrl: json['previewImageUrl'] ?? "",
+      replyDisplayName: json['replyDisplayName'] ?? "",
+      replyText: json['replyText'] ?? "",
     );
   }
 
@@ -78,6 +85,8 @@ class ChatRoomMessageModel {
       'previewTitle': previewTitle,
       'previewDescription': previewDescription,
       'previewImageUrl': previewImageUrl,
+      'replyDisplayName': replyDisplayName,
+      'replyText': replyText,
     };
   }
 }
