@@ -106,6 +106,8 @@ class ChatService {
     String? uploadUrl,
     String? protocol,
     DocumentReference? protocolTargetUserDocumentReference,
+    String? replyDisplayName,
+    String? replyText,
   }) async {
     assert(
         otherUserDocumentReference != null || chatRoomDocumentReference != null,
@@ -145,6 +147,8 @@ class ChatService {
       if (protocolTargetUserDocumentReference != null)
         'protocolTargetUserDocumentReference':
             protocolTargetUserDocumentReference,
+      if (replyDisplayName != null) 'replyDisplayName': replyDisplayName,
+      if (replyText != null) 'replyText': replyText,
     };
     db.collection('chat_room_messages').add(data).then((ref) async {
       /// Update url preview

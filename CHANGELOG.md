@@ -1,6 +1,11 @@
+## 0.0.153
+
+* Add. replyDisplayName, replyText for reply in chat.
+
 ## 0.0.152
 
 * Change. `getPublicData` can return null.
+
 
 ## 0.0.151
 
