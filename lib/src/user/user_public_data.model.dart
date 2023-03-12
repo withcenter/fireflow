@@ -49,8 +49,12 @@ class UserPublicDataModel {
 
   /// Create a UserPublicDataModel object from a snapshot of a document.
   factory UserPublicDataModel.fromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data();
+    if (data == null) {
+      throw 'snapshot.data() is null or not exist at UserPublicDataModel.fromSnapshot()';
+    }
     return UserPublicDataModel.fromJson(
-      snapshot.data() as Map<String, dynamic>,
+      data as Map<String, dynamic>,
       id: snapshot.id,
     );
   }

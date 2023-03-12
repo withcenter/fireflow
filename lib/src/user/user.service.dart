@@ -81,17 +81,27 @@ class UserService {
   }
 
   /// Returns the user's public data model.
-  Future<UserPublicDataModel> getPublicData() async {
+  ///
+  /// [id] is the other user uid. If it is set, it returns other user pubic data model.
+  Future<UserPublicDataModel?> getPublicData([String? id]) async {
     // get the user's public data from the database
-    final snapshot = await myUserPublicDataRef.get();
+    DocumentSnapshot snapshot;
+    if (id == null) {
+      snapshot = await myUserPublicDataRef.get();
+    } else {
+      snapshot = await publicDataCol.doc(id).get();
+    }
+    if (snapshot.exists == false) {
+      return null;
+    }
     return UserPublicDataModel.fromSnapshot(snapshot);
   }
 
   /// Get user document by uid.
   ///
-  /// Note, it's not getting the user's public data.
-  Future<UserPublicDataModel> get([String? id]) async {
-    return UserPublicDataModel.fromSnapshot(await doc(id ?? uid).get());
+  /// Note, it returns user data model. Not the user's public data.
+  Future<UserModel> get([String? id]) async {
+    return UserModel.fromSnapshot(await doc(id ?? uid).get());
   }
 
   /// Creates /users_public_data/{uid} on registration or if it does not exist by any chance.
@@ -229,7 +239,7 @@ class UserService {
 
     final userPublicData = await getPublicData();
 
-    String? fieldNameValue = userPublicData.data[fieldName];
+    String? fieldNameValue = userPublicData!.data[fieldName];
 
     /// the user has exising profile photo?
     if (fieldNameValue != null && fieldNameValue != "") {
@@ -419,7 +429,7 @@ class UserService {
   Future<bool> acceptInvitation(DocumentReference invitor) async {
     try {
       final me = await getPublicData();
-      if (me.referral != null) {
+      if (me!.referral != null) {
         return false;
       }
     } catch (e) {

@@ -1,3 +1,7 @@
+## 0.0.152
+
+* Change. `getPublicData` can return null.
+
 ## 0.0.151
 
 * Fix. `getOtherUserDocumentReferenceFromChatRoomReference` in chat service.
