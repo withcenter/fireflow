@@ -17,8 +17,7 @@ service cloud.firestore {
     }
 
     match /chat_rooms/{document} {
-      allow get: if isMyChatRoom() || isOpenChat() || isModerator();
-      allow list: if isMyChatRoom() || isOpenChat() || isModerator();
+      allow read: if isMyChatRoom() || isOpenChat() || isModerator();
       allow create: if true;
       allow update: if
         // moderator can update anything
@@ -66,6 +65,11 @@ service cloud.firestore {
       allow read: if get(resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAny([myReference()]) || isAdmin();
       allow create: if get(request.resource.data.chatRoomDocumentReference).data.userDocumentReferences.hasAny([myReference()]) && willBeMyDoc();
       allow update, delete: if isMyDoc();
+    }
+
+    // Note that, this allow users to add chat friends (chat room references) into chat_friends collection.
+    match /chat_friends/{document} {
+      allow read, write: if isMyDoc();
     }
 
     match /users/{document} {
