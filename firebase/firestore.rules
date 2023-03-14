@@ -23,6 +23,9 @@ service cloud.firestore {
         // moderator can update anything
         isModerator()
         ||
+        // If is a single chat and it is my chat room. Then I can update it.
+        ( (isMyChatRoom() || wilBeMyChatRoom()) && request.resource.data.isGroupChat == false )
+        ||
         // chat member update last message fields.
         (
           isMyChatRoom()
@@ -69,7 +72,7 @@ service cloud.firestore {
 
     // Note that, this allow users to add chat friends (chat room references) into chat_friends collection.
     match /chat_friends/{document} {
-      allow read, write: if isMyDoc();
+      allow read, write: if isMyDoc() || willBeMyDoc();
     }
 
     match /users/{document} {
@@ -192,6 +195,11 @@ service cloud.firestore {
     function isMyChatRoom() {
       return resource.data.userDocumentReferences.hasAny([myReference()]);
     }
+    
+    function wilBeMyChatRoom() {
+      return request.resource.data.userDocumentReferences.hasAny([myReference()]);
+    }
+
 
     function isModerator() {
       return

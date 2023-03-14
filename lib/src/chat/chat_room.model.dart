@@ -20,6 +20,7 @@ class ChatRoomModel {
   bool urlClick;
   bool urlPreview;
   DocumentReference? parentChatRoomDocumentReference;
+  String id;
 
   bool isSubChatRoom;
 
@@ -41,6 +42,7 @@ class ChatRoomModel {
     required this.urlPreview,
     required this.parentChatRoomDocumentReference,
     required this.isSubChatRoom,
+    required this.id,
   });
 
   factory ChatRoomModel.fromSnapshot(DocumentSnapshot snapshot) {
@@ -77,12 +79,13 @@ class ChatRoomModel {
       urlPreview: json['urlPreview'] ?? false,
       parentChatRoomDocumentReference: json['parentChatRoomDocumentReference'],
       isSubChatRoom: json['isSubChatRoom'] ?? false,
+      id: id ?? '',
     );
   }
 
   // create "toString()" method that returns a string of the object of this class
   @override
   String toString() {
-    return 'ChatRoomModel{ userDocumentReferences: $userDocumentReferences, lastMessage: $lastMessage, lastMessageSentAt: $lastMessageSentAt, lastMessageSeenBy: $lastMessageSeenBy, lastMessageSentBy: $lastMessageSentBy, title: $title, moderatorUserDocumentReferences: $moderatorUserDocumentReferences, unsubscribedUserDocumentReferences: $unsubscribedUserDocumentReferences, isGroupChat: $isGroupChat, isOpenChat: $isOpenChat, reminder: $reminder, lastMessageUploadUrl: $lastMessageUploadUrl, backgroundColor: $backgroundColor, urlClick: $urlClick, urlPreview: $urlPreview, parentChatRoomDocumentReference: $parentChatRoomDocumentReference, isSubChatRoom: $isSubChatRoom }';
+    return 'ChatRoomModel{ id: $id, userDocumentReferences: $userDocumentReferences, lastMessage: $lastMessage, lastMessageSentAt: $lastMessageSentAt, lastMessageSeenBy: $lastMessageSeenBy, lastMessageSentBy: $lastMessageSentBy, title: $title, moderatorUserDocumentReferences: $moderatorUserDocumentReferences, unsubscribedUserDocumentReferences: $unsubscribedUserDocumentReferences, isGroupChat: $isGroupChat, isOpenChat: $isOpenChat, reminder: $reminder, lastMessageUploadUrl: $lastMessageUploadUrl, backgroundColor: $backgroundColor, urlClick: $urlClick, urlPreview: $urlPreview, parentChatRoomDocumentReference: $parentChatRoomDocumentReference, isSubChatRoom: $isSubChatRoom }';
   }
 }

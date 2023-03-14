@@ -1,3 +1,8 @@
+## 0.0.156
+
+* Add. `id` in chat_rooms doc.
+
+
 ## 0.0.155
 
 * Change. `subChatRoom` -> `isSubChatRoom`. 

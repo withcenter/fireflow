@@ -96,6 +96,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
           'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
           'isGroupChat': false,
           'isSubChatRoom': false,
+          'id': chatRoomRef.id,
         },
         SetOptions(merge: true),
       );
@@ -127,6 +128,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
         'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
         'isGroupChat': true,
         'isSubChatRoom': room.parentChatRoomDocumentReference != null,
+        'id': chatRoomRef.id,
       });
     }
 
