@@ -17,6 +17,7 @@ Schema **chat_rooms**
 
 |Field Name | Data Type |
 |--------|-------:|
+| id | String |
 | userDocumentReferences | List < Doc Reference (users) > |
 | lastMessage | String |
 | lastMessageUploadUrl | String |
@@ -60,7 +61,7 @@ Schema **chat_rooms**
 - `isSubChatRoom` - This is `true` when the chat room is a sub chat room of a parent chat room. (updated by `ChatService.instance.chatRoomAfterCreate`)
 - `subChatRoomCount` - This has no the number of the sub chat room if the chat room is a parent chat room. (updated by `ChatService.instance.chatRoomAfterCreate`). `isSubChatRoom` field is set in `catRoomAfterCreate`. But it is also set in `ChatMessageList` widget.
 - `noOfMessages` - This has the total number of messages that were sent by the users in the room. You may use this to display as favorites chat rooms. For instance, you want to display 10 1:1 chat rooms ordered by the no of messages.
-
+- `id` is the id of the chat_rooms document itself.
 
 
 ### Chat message collection
