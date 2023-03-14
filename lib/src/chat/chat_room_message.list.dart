@@ -19,8 +19,7 @@ class ChatRoomMessageList extends StatefulWidget {
     required this.onOtherMessage,
     required this.onEmpty,
     this.onProtocolMessage,
-  })  : assert(chatRoomDocumentReference != null,
-            "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
+  })  : assert(chatRoomDocumentReference != null, "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
         super(key: key);
 
   final double? width;
@@ -63,8 +62,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
     if (isGroupChat) {
       return widget.chatRoomDocumentReference!;
     } else {
-      return ChatService.instance.room(
-          ([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
+      return ChatService.instance.room(([my.uid, widget.otherUserPublicDataDocument!.id]..sort()).join('-'));
     }
   }
 
@@ -90,16 +88,24 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       //  - create a chat room if it does not exist.
       //  - just make the last message seen by you.
       /// Note that, this may produce a permission error on update. It's again the rule.
-      await chatRoomRef.set({
-        'userDocumentReferences': youAndMeRef,
-        'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
-        'isGroupChat': false,
-      }, SetOptions(merge: true));
+      await chatRoomRef.set(
+        {
+          'userDocumentReferences': youAndMeRef,
+          'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
+          'isGroupChat': false,
+          'isSubChatRoom': false,
+        },
+        SetOptions(merge: true),
+      );
     } else {
       // For the open group chat, any user can join the chat room.
+
+      // get the room
       room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
-      if (room.userDocumentReferences.contains(myReference) == false &&
-          room.isOpenChat == true) {
+
+      // If the user is not in the room, and the room is open chat, then add the user's ref to the room.
+      // And send a message for 'enter'.
+      if (room.userDocumentReferences.contains(myReference) == false && room.isOpenChat == true) {
         await chatRoomRef.update({
           'userDocumentReferences': FieldValue.arrayUnion([myReference]),
         });
@@ -113,9 +119,11 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       // For group chat,
       //  - users can only invited by other user.
       //  - just make the last message seen by you.
+      //  - set if the room is sub-group-chat or not.
       await chatRoomRef.update({
         'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
         'isGroupChat': true,
+        'isSubChatRoom': room.parentChatRoomDocumentReference != null,
       });
     }
 
@@ -153,8 +161,7 @@ class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
       reverse: true,
       // item builder type is compulsory.
       itemBuilder: (context, documentSnapshots, index) {
-        final message =
-            ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
+        final message = ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
 
         if (message.isProtocol) {
           if (widget.onProtocolMessage != null) {

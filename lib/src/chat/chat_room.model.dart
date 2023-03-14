@@ -21,6 +21,8 @@ class ChatRoomModel {
   bool urlPreview;
   DocumentReference? parentChatRoomDocumentReference;
 
+  bool isSubChatRoom;
+
   ChatRoomModel({
     required this.userDocumentReferences,
     required this.lastMessage,
@@ -38,6 +40,7 @@ class ChatRoomModel {
     required this.urlClick,
     required this.urlPreview,
     required this.parentChatRoomDocumentReference,
+    required this.isSubChatRoom,
   });
 
   factory ChatRoomModel.fromSnapshot(DocumentSnapshot snapshot) {
@@ -52,8 +55,7 @@ class ChatRoomModel {
     String? id,
   }) {
     return ChatRoomModel(
-      userDocumentReferences:
-          List<DocumentReference>.from(json['userDocumentReferences'] ?? []),
+      userDocumentReferences: List<DocumentReference>.from(json['userDocumentReferences'] ?? []),
       lastMessage: json['lastMessage'] ?? '',
       lastMessageSentAt: json['lastMessageSentAt'] ?? Timestamp.now(),
       lastMessageSeenBy: List<DocumentReference>.from(
@@ -61,10 +63,8 @@ class ChatRoomModel {
       ),
       lastMessageSentBy: json['lastMessageSentBy'],
       title: json['title'],
-      moderatorUserDocumentReferences: List<DocumentReference>.from(
-          json['moderatorUserDocumentReferences'] ?? []),
-      unsubscribedUserDocumentReferences: List<DocumentReference>.from(
-          json['unsubscribedUserDocumentReferences'] ?? []),
+      moderatorUserDocumentReferences: List<DocumentReference>.from(json['moderatorUserDocumentReferences'] ?? []),
+      unsubscribedUserDocumentReferences: List<DocumentReference>.from(json['unsubscribedUserDocumentReferences'] ?? []),
       isGroupChat: json['isGroupChat'] ?? false,
       isOpenChat: json['isOpenChat'] ?? false,
       reminder: json['reminder'] ?? '',
@@ -73,12 +73,13 @@ class ChatRoomModel {
       urlClick: json['urlClick'] ?? false,
       urlPreview: json['urlPreview'] ?? false,
       parentChatRoomDocumentReference: json['parentChatRoomDocumentReference'],
+      isSubChatRoom: json['isSubChatRoom'] ?? false,
     );
   }
 
   // create "toString()" method that returns a string of the object of this class
   @override
   String toString() {
-    return 'ChatRoomModel{ userDocumentReferences: $userDocumentReferences, lastMessage: $lastMessage, lastMessageSentAt: $lastMessageSentAt, lastMessageSeenBy: $lastMessageSeenBy, lastMessageSentBy: $lastMessageSentBy, title: $title, moderatorUserDocumentReferences: $moderatorUserDocumentReferences, unsubscribedUserDocumentReferences: $unsubscribedUserDocumentReferences, isGroupChat: $isGroupChat, isOpenChat: $isOpenChat, reminder: $reminder, lastMessageUploadUrl: $lastMessageUploadUrl, backgroundColor: $backgroundColor, urlClick: $urlClick, urlPreview: $urlPreview, parentChatRoomDocumentReference: $parentChatRoomDocumentReference }';
+    return 'ChatRoomModel{ userDocumentReferences: $userDocumentReferences, lastMessage: $lastMessage, lastMessageSentAt: $lastMessageSentAt, lastMessageSeenBy: $lastMessageSeenBy, lastMessageSentBy: $lastMessageSentBy, title: $title, moderatorUserDocumentReferences: $moderatorUserDocumentReferences, unsubscribedUserDocumentReferences: $unsubscribedUserDocumentReferences, isGroupChat: $isGroupChat, isOpenChat: $isOpenChat, reminder: $reminder, lastMessageUploadUrl: $lastMessageUploadUrl, backgroundColor: $backgroundColor, urlClick: $urlClick, urlPreview: $urlPreview, parentChatRoomDocumentReference: $parentChatRoomDocumentReference, isSubChatRoom: $isSubChatRoom }';
   }
 }

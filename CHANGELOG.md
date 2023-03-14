@@ -1,3 +1,7 @@
+## 0.0.155
+
+* Change. `subChatRoom` -> `isSubChatRoom`. 
+
 ## 0.0.154
 
 * Add. replyDisplayName, replyText on model

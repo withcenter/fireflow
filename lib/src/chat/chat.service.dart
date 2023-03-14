@@ -318,6 +318,11 @@ class ChatService {
   }
 
   /// Do things after chat room created
+  ///
+  /// This method must be called only after a sub-group-chat room is created.
+  /// No need to call this method for single-chat or group-chat room.
+  ///
+  /// See readme.
   Future chatRoomAfterCreate({
     required DocumentReference chatRoomDocumentReference,
   }) async {
