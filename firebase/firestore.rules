@@ -27,7 +27,7 @@ service cloud.firestore {
         (
           isMyChatRoom()
           &&
-          onlyUpdating(["subChatRoomCount", "isSubChatRoom", "userDocumentReferences", "lastMessage", "lastMessageUploadUrl", "lastMessageSentAt", "lastMessageSeenBy", "lastMessageSentBy"])
+          onlyUpdating(["noOfMessages", "subChatRoomCount", "isSubChatRoom", "userDocumentReferences", "lastMessage", "lastMessageUploadUrl", "lastMessageSentAt", "lastMessageSeenBy", "lastMessageSentBy"])
         )
         // chat member can remove himself or add other users.
         ||
