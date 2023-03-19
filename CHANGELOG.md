@@ -1,3 +1,8 @@
+## 0.0.158
+
+* Add. `ChatService.instance.getRoom`.
+
+
 ## 0.0.157
 
 * Refactor. `UserService.instance.my` -> `UserService.instance.pub`.
