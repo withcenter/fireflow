@@ -1,3 +1,8 @@
+## 0.0.157
+
+* Refactor. `UserService.instance.my` -> `UserService.instance.pub`.
+* Listen user collection change.
+
 ## 0.0.156
 
 * Add. `id` in chat_rooms doc.
