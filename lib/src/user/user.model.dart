@@ -9,6 +9,13 @@ class UserModel {
   String phoneNumber;
   String displayName;
   String photoUrl;
+  bool admin;
+  List<DocumentReference> blockedUsers;
+  List<DocumentReference> favoriteChatRooms;
+  bool isProfileComplete;
+
+  // [name] can be used to store the user's real name.
+  String name;
 
   DocumentReference ref;
 
@@ -20,6 +27,11 @@ class UserModel {
     required this.displayName,
     required this.photoUrl,
     required this.ref,
+    required this.admin,
+    required this.blockedUsers,
+    required this.favoriteChatRooms,
+    required this.isProfileComplete,
+    required this.name,
   });
 
   /// Create a UserModel object from a snapshot of a document.
@@ -42,12 +54,17 @@ class UserModel {
       displayName: json['displayName'] ?? '',
       photoUrl: json['photoUrl'] ?? '',
       ref: UserService.instance.doc(id),
+      admin: json['admin'] ?? false,
+      blockedUsers: List<DocumentReference>.from(json['blockedUsers'] ?? []),
+      favoriteChatRooms: List<DocumentReference>.from(json['favoriteChatRooms'] ?? []),
+      isProfileComplete: json['isProfileComplete'] ?? false,
+      name: json['name'] ?? '',
     );
   }
 
   // create "toString()" method that returns a string of the object of this class
   @override
   String toString() {
-    return 'UserModel{uid: $uid, email: $email, phoneNumber: $phoneNumber, displayName: $displayName, photoUrl: $photoUrl}';
+    return 'UserModel{uid: $uid, email: $email, phoneNumber: $phoneNumber, displayName: $displayName, photoUrl: $photoUrl, ref: $ref, admin: $admin, blockedUsers: $blockedUsers, favoriteChatRooms: $favoriteChatRooms, isProfileComplete: $isProfileComplete, name: $name}';
   }
 }

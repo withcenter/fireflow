@@ -30,16 +30,14 @@ class UserService {
   String get uid => auth.currentUser!.uid;
 
   /// The login user's document reference
-  DocumentReference get ref =>
-      FirebaseFirestore.instance.collection('users').doc(uid);
+  DocumentReference get ref => FirebaseFirestore.instance.collection('users').doc(uid);
 
   DocumentReference get myRef => ref;
 
   CollectionReference get publicDataCol => db.collection('users_public_data');
 
   /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
+  DocumentReference get myUserPublicDataRef => FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
   get publicRef => myUserPublicDataRef;
 
@@ -53,18 +51,29 @@ class UserService {
   /// The login user's public data document stream.
   StreamSubscription? publicDataSubscription;
 
+  /// The login user's public data document stream.
+  StreamSubscription? mySubscription;
+
+  /// The login user's data model.
+  ///
+  /// It is updated (synced) on /users/<uid> document changes.
+  UserModel? _my;
+  UserModel get my => _my!;
+  set my(UserModel? v) => _my = v;
+
   /// The login user's public data model.
   ///
   /// It listens the changes of the user's public data document and update [my] variable.
   /// Note that, this is always upto date. So, you don't have to get the login user's
   /// public data document from the firestore.
+  UserPublicDataModel? _pub;
+  UserPublicDataModel get pub => _pub!;
+  set pub(UserPublicDataModel? value) => _pub = value;
 
-  UserPublicDataModel? _my;
-  UserPublicDataModel get my => _my!;
-  set my(UserPublicDataModel? value) => _my = value;
+  ///
 
-  final BehaviorSubject<UserPublicDataModel?> onChange =
-      BehaviorSubject<UserPublicDataModel?>.seeded(null);
+  final BehaviorSubject<UserModel?> onMyChange = BehaviorSubject<UserModel?>.seeded(null);
+  final BehaviorSubject<UserPublicDataModel?> onPubChange = BehaviorSubject<UserPublicDataModel?>.seeded(null);
 
   /// check if user's public data document exists
   userPublicDataDocumentExists() async {
@@ -165,6 +174,18 @@ class UserService {
     dog("UserService.generateUserPublicData() - user public data generated at ${myUserPublicDataRef.path}");
   }
 
+  /// Listen and sync the user model.
+  listenUser() {
+    /// Observe the user data.
+    mySubscription?.cancel();
+    mySubscription = ref.snapshots().listen((snapshot) {
+      if (snapshot.exists) {
+        my = UserModel.fromSnapshot(snapshot);
+        onMyChange.add(my);
+      }
+    });
+  }
+
   /// Listen the changes of users_public_data/{uid}.
   ///
   /// It listens the update of the login user's public data document and
@@ -173,30 +194,27 @@ class UserService {
   listenUserPublicData() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
+    publicDataSubscription = UserService.instance.myUserPublicDataRef.snapshots().listen((snapshot) async {
       if (snapshot.exists) {
-        my = UserPublicDataModel.fromSnapshot(snapshot);
+        pub = UserPublicDataModel.fromSnapshot(snapshot);
 
         /// Update user profile completion status
         ///
         /// TODO: Let's developer add more fields to check the profile completion. For instance, "displayName,photoUrl,gender,birthday"
-        await my.userDocumentReference.set({
-          'isProfileComplete':
-              my.displayName.isNotEmpty && my.photoUrl.isNotEmpty,
+        await pub.userDocumentReference.set({
+          'isProfileComplete': pub.displayName.isNotEmpty && pub.photoUrl.isNotEmpty,
         }, SetOptions(merge: true));
 
-        onChange.add(my);
+        onPubChange.add(pub);
         if (SupabaseService.instance.storeUsersPubicData) {
           /// Upsert the user public data to Supabase.
           final data = {
-            'uid': my.uid,
-            'display_name': my.displayName,
-            'photo_url': my.photoUrl,
-            'gender': my.gender,
-            'birthday': my.birthday.toDate().toIso8601String(),
-            'registered_at': my.registeredAt.toDate().toIso8601String(),
+            'uid': pub.uid,
+            'display_name': pub.displayName,
+            'photo_url': pub.photoUrl,
+            'gender': pub.gender,
+            'birthday': pub.birthday.toDate().toIso8601String(),
+            'registered_at': pub.registeredAt.toDate().toIso8601String(),
           };
 
           dog('Supabase upsert: $data');
@@ -290,10 +308,9 @@ class UserService {
   /// If the number of recentPosts is greater than Config.instance.noOfRecentPosts,
   /// it will remove the oldest post.
   recentPosts(PostModel post) {
-    List recentPosts = my.recentPosts ?? [];
+    List recentPosts = pub.recentPosts ?? [];
     if (recentPosts.length >= Config.instance.noOfRecentPosts) {
-      recentPosts.removeRange(
-          Config.instance.noOfRecentPosts - 1, recentPosts.length);
+      recentPosts.removeRange(Config.instance.noOfRecentPosts - 1, recentPosts.length);
     }
     recentPosts.insert(0, feed(post));
     return recentPosts;
@@ -376,10 +393,7 @@ class UserService {
   }) async {
     /// Get the users that I follow, ordered by last post created at.
     ///
-    Query q = db
-        .collection('users_public_data')
-        .where('userDocumentReference', whereIn: my.followings)
-        .orderBy('lastPostCreatedAt', descending: true);
+    Query q = db.collection('users_public_data').where('userDocumentReference', whereIn: pub.followings).orderBy('lastPostCreatedAt', descending: true);
 
     /// Limit the number of (following) users to get if the app needs to display only a few posts.
     if (noOfFollowers > 0) {
@@ -453,8 +467,7 @@ class UserService {
   DateTime? lastChatTime;
   countChatMessage() {
     lastChatTime ??= DateTime.now();
-    if (DateTime.now().difference(lastChatTime!).inSeconds <
-        Config.chatCountInterval) {
+    if (DateTime.now().difference(lastChatTime!).inSeconds < Config.chatCountInterval) {
       return;
     }
 

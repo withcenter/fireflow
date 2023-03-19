@@ -8,16 +8,14 @@ Future loadUsers() async {
   TestConfig.b = await UserService.instance.getByEmail(TestConfig.emailB);
   TestConfig.c = await UserService.instance.getByEmail(TestConfig.emailC);
   TestConfig.d = await UserService.instance.getByEmail(TestConfig.emailD);
-  TestConfig.admin =
-      await UserService.instance.getByEmail(TestConfig.adminEmail);
+  TestConfig.admin = await UserService.instance.getByEmail(TestConfig.adminEmail);
 }
 
 Future clear() async {
   dog('Clear all posts of test users');
   await loginAsAdmin();
   wait(500);
-  final snapshot =
-      await PostService.instance.col.where('userDocumentReference', whereIn: [
+  final snapshot = await PostService.instance.col.where('userDocumentReference', whereIn: [
     TestConfig.a.ref,
     TestConfig.b.ref,
     TestConfig.c.ref,
@@ -44,8 +42,7 @@ Future loginAsAdmin() async {
 
 Future loginAs(String email, [String? password]) async {
   dog('Login as $email');
-  await UserService.instance
-      .loginOrRegister(email, password ?? TestConfig.password);
+  await UserService.instance.loginOrRegister(email, password ?? TestConfig.password);
   await UserService.instance.publicRef.update({'email': email});
   dog('uid: ${UserService.instance.uid}');
 }
@@ -60,10 +57,8 @@ Future createPost({String? title}) async {
   final ref = await PostService.instance.col.add({
     'category': 'qna',
     'userDocumentReference': UserService.instance.ref,
-    'title': title ??
-        'Created by ${UserService.instance.my.data['email']} at ${DateTime.now()}',
-    'content':
-        'Content. Created by ${UserService.instance.my.data['email']} at ${DateTime.now()}',
+    'title': title ?? 'Created by ${UserService.instance.pub.data['email']} at ${DateTime.now()}',
+    'content': 'Content. Created by ${UserService.instance.pub.data['email']} at ${DateTime.now()}',
   });
   await PostService.instance.afterCreate(postDocumentReference: ref);
 }
@@ -71,9 +66,7 @@ Future createPost({String? title}) async {
 /// Deletes all the posts of the login user.
 Future deletePosts() async {
   dog('Delete all posts');
-  final snapshot = await PostService.instance.col
-      .where('userDocumentReference', isEqualTo: UserService.instance.ref)
-      .get();
+  final snapshot = await PostService.instance.col.where('userDocumentReference', isEqualTo: UserService.instance.ref).get();
   for (final doc in snapshot.docs) {
     await doc.reference.delete();
   }
@@ -81,7 +74,7 @@ Future deletePosts() async {
 
 /// Clear feeds of the login user.
 Future clearFeeds() async {
-  dog('Clear all feeds of ${UserService.instance.my.data['email']}}');
+  dog('Clear all feeds of ${UserService.instance.pub.data['email']}}');
   await UserService.instance.publicRef.update({
     'lastPost': FieldValue.delete(),
     'recentPosts': FieldValue.delete(),

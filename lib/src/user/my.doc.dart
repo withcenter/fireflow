@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 ///
 /// It is a wrapper around StreamBuilder that listens to changes in the user.
 /// Use this widget to display user information.
+///
+/// TODO this should be changed into `MyPubDoc` and create a `MyDoc` with user model.
 class MyDoc extends StatelessWidget {
   const MyDoc({Key? key, required this.builder}) : super(key: key);
 
@@ -13,7 +15,7 @@ class MyDoc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: UserService.instance.onChange,
+        stream: UserService.instance.onPubChange,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox.shrink();

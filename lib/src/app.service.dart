@@ -30,7 +30,7 @@ class AppService {
   late final KeyModel keys;
 
   /// Keep the login user's public data up to date.
-  UserPublicDataModel get my => UserService.instance.my;
+  UserPublicDataModel get pub => UserService.instance.pub;
 
   /// Current chat room reference.
   ///
@@ -135,12 +135,13 @@ class AppService {
       if (user != null) {
         dog('AppService._initUser() - user is logged in');
 
+        UserService.instance.listenUser();
         await UserService.instance.generateUserPublicDataDocument();
         UserService.instance.listenUserPublicData();
         await UserSettingService.instance.generate();
       } else {
         dog('AppService._initUser() - user is not logged in');
-        UserService.instance.my = null;
+        UserService.instance.pub = null;
       }
     });
   }
@@ -160,16 +161,12 @@ class AppService {
       // }
 
       FlutterError.presentError(details);
-      snackBarWarning(
-          context: context,
-          title: 'Error',
-          message: details.exceptionAsString());
+      snackBarWarning(context: context, title: 'Error', message: details.exceptionAsString());
     };
     PlatformDispatcher.instance.onError = (error, stack) {
       print(error);
       print(stack);
-      snackBarWarning(
-          context: context, title: 'Error', message: error.toString());
+      snackBarWarning(context: context, title: 'Error', message: error.toString());
       return true;
     };
   }

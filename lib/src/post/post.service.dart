@@ -10,7 +10,7 @@ class PostService {
   CollectionReference get col => db.collection('posts');
   DocumentReference doc(String category) => col.doc(category);
 
-  UserPublicDataModel get my => UserService.instance.my;
+  UserPublicDataModel get pub => UserService.instance.pub;
 
   /// Get the post
   Future<PostModel> get(String id) async {
@@ -28,9 +28,7 @@ class PostService {
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     /// send push notifications to the subscribers of the category
-    final snapshot = await UserSettingService.instance.col
-        .where('postSubscriptions', arrayContains: category.ref)
-        .get();
+    final snapshot = await UserSettingService.instance.col.where('postSubscriptions', arrayContains: category.ref).get();
 
     List<Future> futures = [];
 
@@ -70,7 +68,7 @@ class PostService {
         'likes': [],
         'noOfLikes': 0,
         'hasLike': false,
-        'wasPremiumUser': UserService.instance.my.isPremiumUser,
+        'wasPremiumUser': UserService.instance.pub.isPremiumUser,
         'emphasizePremiumUserPost': category.emphasizePremiumUserPost
       }),
     );
@@ -85,10 +83,7 @@ class PostService {
       UserService.instance.publicRef.update(
         {
           'lastPost': UserService.instance.feed(post).toJson(),
-          'recentPosts': UserService.instance
-              .recentPosts(post)
-              .map((e) => e.toJson())
-              .toList(),
+          'recentPosts': UserService.instance.recentPosts(post).map((e) => e.toJson()).toList(),
           'noOfPosts': FieldValue.increment(1),
           'lastPostCreatedAt': FieldValue.serverTimestamp(),
         },
@@ -107,7 +102,7 @@ class PostService {
           {
             'post_id': postDocumentReference.id,
             'category': post.category,
-            'uid': my.uid,
+            'uid': pub.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
             'content': post.content,
@@ -124,7 +119,7 @@ class PostService {
             'id': postDocumentReference.id,
             'post_id': postDocumentReference.id,
             'category': post.category,
-            'uid': my.uid,
+            'uid': pub.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
             'content': post.content,
@@ -158,7 +153,7 @@ class PostService {
           {
             'post_id': postDocumentReference.id,
             'category': post.category,
-            'uid': my.uid,
+            'uid': pub.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
             'content': post.content,
@@ -175,7 +170,7 @@ class PostService {
             'id': postDocumentReference.id,
             'post_id': postDocumentReference.id,
             'category': post.category,
-            'uid': my.uid,
+            'uid': pub.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
             'content': post.content,
