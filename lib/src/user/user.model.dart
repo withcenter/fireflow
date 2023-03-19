@@ -56,7 +56,8 @@ class UserModel {
       ref: UserService.instance.doc(id),
       admin: json['admin'] ?? false,
       blockedUsers: List<DocumentReference>.from(json['blockedUsers'] ?? []),
-      favoriteChatRooms: List<DocumentReference>.from(json['favoriteChatRooms'] ?? []),
+      favoriteChatRooms:
+          List<DocumentReference>.from(json['favoriteChatRooms'] ?? []),
       isProfileComplete: json['isProfileComplete'] ?? false,
       name: json['name'] ?? '',
     );
