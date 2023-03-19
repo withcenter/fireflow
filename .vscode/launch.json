@@ -5,6 +5,33 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Hype Talk - Simulator",
+      "cwd": "apps/hypetalk",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
+    },
+    {
+      "name": "Hype Talk - debug - iPhone11MaxPro",
+      "cwd": "apps/hypetalk",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone11MaxPro"
+    },
+    {
+      "name": "Hype Talk - release - iPhone11MaxPro",
+      "cwd": "apps/hypetalk",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "deviceId": "iPhone11MaxPro"
+    },
+    {
       "name": "example - debug TEST - Simulator J. Macbook",
       "cwd": "example",
       "request": "launch",
