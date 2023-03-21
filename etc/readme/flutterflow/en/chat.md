@@ -34,16 +34,20 @@ Schema **chat_rooms**
 | backgroundColor | String |
 | urlClick | Boolean |
 | urlPreview | Boolean |
+| isSubChatRoom| Boolean |
 | parentChatRoomDocumentReference | Doc Reference (chat_rooms) |
 | subChatRoomCount | Integer |
 | isSubChatRoom | Boolean |
 | noOfMessages| Integer |
+| readOnly | Boolean |
 
 
 
 
 
 
+
+- `id` is the id of the chat_rooms document itself.
 - `userDocumentReferences` is the participants document reference of the chat room.
 - `lastMessage` is the last chat message if the user sent a text.
 - `lastMessageUploadUrl` is the url of the upload if the user uploaded a file(photo).
@@ -57,11 +61,13 @@ Schema **chat_rooms**
 - `isOpenChat` is set to `true` if the chat room is open to anyone. When it is set to true, users can join the chat room.
 - `urlClick` is set to `true` if the moderator lets users click the url.
 - `urlPreview` - Set it to `true` to show the preview of the url link.
+- `isSubChatRoom` - If the chat room is a sub chat room, then it is set to true.
 - `parentChatRoomDocumentReference` - This is the parent chat room document reference if the sub chat group functionality is enabled.
 - `isSubChatRoom` - This is `true` when the chat room is a sub chat room of a parent chat room. (updated by `ChatService.instance.chatRoomAfterCreate`)
 - `subChatRoomCount` - This has no the number of the sub chat room if the chat room is a parent chat room. (updated by `ChatService.instance.chatRoomAfterCreate`). `isSubChatRoom` field is set in `catRoomAfterCreate`. But it is also set in `ChatMessageList` widget.
 - `noOfMessages` - This has the total number of messages that were sent by the users in the room. You may use this to display as favorites chat rooms. For instance, you want to display 10 1:1 chat rooms ordered by the no of messages.
-- `id` is the id of the chat_rooms document itself.
+- `readOnly` is set to true when the moderator of the chat room set it to read only. Then, the users in the room can only read. Moderators can write.
+- `createdAt` is the time that the chat room is created.
 
 
 ### Chat message collection
@@ -82,6 +88,9 @@ Schema **chat_room_messages**
 | previewTitle | String |
 | previewDescription | String |
 | previewImageUrl | Image Path |
+| replyDisplayName | String |
+| replyText | String |
+
 
 - `userDocumentReference` is the document reference of the user who sent this message.
 - `chatRoomDocumentReference` is the reference of the chat room document.
@@ -103,6 +112,11 @@ Schema **chat_room_messages**
 
 - When there is a url in the text, the fireflow will save the url preview information at `previewUrl`, `previewTitle`, `previewDescription`, `previewImageUrl`. If there is no url in the text or it cannot save preview informatin, the fields become empty string.
   - The `previewDescriptoin` has the full description from the site. If you need to cut it short, you may use a custom fuction (or a code expression).
+
+- `replyDisplayName` is the name of the message in reply. A user can reply on another message. And it is the name of the other message.
+- `replyText` is the message of the reply.
+
+
 
 ## Logic of chat
 
