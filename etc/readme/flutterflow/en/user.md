@@ -18,6 +18,8 @@ Schema **users**
 | admin | Boolean |
 | blockedUsers | List < Doc Reference (users) > |
 | isProfileComplete | Boolean |
+| favoriteChatRoomDocumentReferences | List < Doc Reference (chat_rooms) > |
+
 
 
 
@@ -30,6 +32,9 @@ Schema **users**
   - This field is updated when user updates his profile.
   - As of now, the user must filled his display name and photo url.
   - Note that, this field should be in `users` collection for easy access.
+
+
+- `favoriteChatRoomDocumentReferences` is the list of the favorite chat room of the user.
 
 
 
