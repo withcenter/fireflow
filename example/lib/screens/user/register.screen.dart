@@ -12,10 +12,9 @@ class RegisterScreen extends StatelessWidget {
     final password = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: const Text('Register'),
       ),
-      body: Container(
-          child: Column(
+      body: Column(
         children: [
           TextField(
             controller: email,
@@ -38,7 +37,7 @@ class RegisterScreen extends StatelessWidget {
             child: const Text('Submit'),
           ),
         ],
-      )),
+      ),
     );
   }
 }

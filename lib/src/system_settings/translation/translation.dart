@@ -297,7 +297,6 @@ class _SearchKeywordState extends State<SearchKeyword> {
   final search = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    print('build search: ${search.text}');
     return TextField(
       controller: search,
       decoration: const InputDecoration(

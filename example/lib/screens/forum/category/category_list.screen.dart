@@ -9,7 +9,7 @@ class CategoryListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Categories'),
+        title: const Text('Categories'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -28,10 +28,12 @@ class CategoryListScreen extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            if (snapshot.hasData == false)
+            if (snapshot.hasData == false) {
               return const Text('No categories found');
-            if (snapshot.data!.size == 0)
+            }
+            if (snapshot.data!.size == 0) {
               return const Text('No categories found');
+            }
 
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,

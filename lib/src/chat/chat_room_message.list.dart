@@ -34,10 +34,10 @@ class ChatRoomMessageList extends StatefulWidget {
   final Widget onEmpty;
 
   @override
-  _ChatRoomMessageListState createState() => _ChatRoomMessageListState();
+  ChatRoomMessageListState createState() => ChatRoomMessageListState();
 }
 
-class _ChatRoomMessageListState extends State<ChatRoomMessageList> {
+class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   DocumentReference get myReference => UserService.instance.ref;
 
   /// The chat room model.

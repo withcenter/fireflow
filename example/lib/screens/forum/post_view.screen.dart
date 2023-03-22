@@ -18,7 +18,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PostView'),
+        title: const Text('PostView'),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
@@ -58,14 +58,14 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     padding: const EdgeInsets.all(24.0),
                     child: Text(post.content),
                   ),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: Wrap(
                       runAlignment: WrapAlignment.start,
                       alignment: WrapAlignment.start,
                       crossAxisAlignment: WrapCrossAlignment.start,
                       children: post.files.map((url) {
-                        return Container(
+                        return SizedBox(
                           width: 100,
                           height: 100,
                           child: Image.network(url),
@@ -88,7 +88,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                               .afterDelete(postDocumentReference: post.ref);
                           context.pop();
                         },
-                        child: Text('Delete'),
+                        child: const Text('Delete'),
                       ),
                     ],
                   ),
@@ -113,7 +113,6 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     stream: CommentService.instance.children(post.id),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        print(snapshot.error);
                         return Center(
                           child: Text('Error, ${snapshot.error}}'),
                         );
@@ -180,46 +179,44 @@ class CommentWidget extends StatelessWidget {
                   showModalBottomSheet(
                     context: context,
                     builder: (context) {
-                      return Container(
-                        child: Column(
-                          children: [
-                            TextField(
-                              controller: replyComment,
-                              decoration: const InputDecoration(
-                                hintText: 'Comment',
-                              ),
+                      return Column(
+                        children: [
+                          TextField(
+                            controller: replyComment,
+                            decoration: const InputDecoration(
+                              hintText: 'Comment',
                             ),
-                            TextButton(
-                              onPressed: () async {
-                                final data = {
-                                  'postDocumentReference':
-                                      comment.postDocumentReference,
-                                  'parentCommentDocumentReference':
-                                      CommentService.instance.doc(comment.id),
-                                  'userDocumentReference':
-                                      UserService.instance.ref,
-                                  'content': replyComment.text,
-                                  'createdAt': FieldValue.serverTimestamp(),
-                                  'order': commentOrder(comment.order,
-                                      comment.depth, post.noOfComments),
-                                  'depth': comment.depth + 1,
-                                };
-                                final ref =
-                                    await CommentService.instance.col.add(data);
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              final data = {
+                                'postDocumentReference':
+                                    comment.postDocumentReference,
+                                'parentCommentDocumentReference':
+                                    CommentService.instance.doc(comment.id),
+                                'userDocumentReference':
+                                    UserService.instance.ref,
+                                'content': replyComment.text,
+                                'createdAt': FieldValue.serverTimestamp(),
+                                'order': commentOrder(comment.order,
+                                    comment.depth, post.noOfComments),
+                                'depth': comment.depth + 1,
+                              };
+                              final ref =
+                                  await CommentService.instance.col.add(data);
 
-                                CommentService.instance
-                                    .afterCreate(commentDocumentReference: ref);
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Reply'),
-                            ),
-                          ],
-                        ),
+                              CommentService.instance
+                                  .afterCreate(commentDocumentReference: ref);
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Reply'),
+                          ),
+                        ],
                       );
                     },
                   );
                 },
-                child: Text('Reply'),
+                child: const Text('Reply'),
               ),
               TextButton(
                 onPressed: () {
@@ -228,33 +225,31 @@ class CommentWidget extends StatelessWidget {
                   showModalBottomSheet(
                     context: context,
                     builder: (context) {
-                      return Container(
-                        child: Column(
-                          children: [
-                            TextField(
-                              controller: editComment,
-                              decoration: const InputDecoration(
-                                hintText: 'Comment',
-                              ),
+                      return Column(
+                        children: [
+                          TextField(
+                            controller: editComment,
+                            decoration: const InputDecoration(
+                              hintText: 'Comment',
                             ),
-                            TextButton(
-                              onPressed: () async {
-                                await comment.ref.update({
-                                  'content': editComment.text,
-                                });
-                                CommentService.instance.afterUpdate(
-                                    commentDocumentReference: comment.ref);
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Edit'),
-                            ),
-                          ],
-                        ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              await comment.ref.update({
+                                'content': editComment.text,
+                              });
+                              CommentService.instance.afterUpdate(
+                                  commentDocumentReference: comment.ref);
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Edit'),
+                          ),
+                        ],
                       );
                     },
                   );
                 },
-                child: Text('Edit'),
+                child: const Text('Edit'),
               ),
               TextButton(
                 onPressed: () async {
@@ -262,7 +257,7 @@ class CommentWidget extends StatelessWidget {
                   CommentService.instance
                       .afterDelete(commentDocumentReference: comment.ref);
                 },
-                child: Text('Delete'),
+                child: const Text('Delete'),
               ),
             ],
           ),

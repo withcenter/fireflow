@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -45,94 +43,93 @@ class _PostEditScreenState extends State<PostEditScreen> {
       appBar: AppBar(
         title: const Text('Post Edit'),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            TextField(
-              controller: title,
-              decoration: const InputDecoration(
-                hintText: 'Title',
-              ),
+      body: Column(
+        children: [
+          TextField(
+            controller: title,
+            decoration: const InputDecoration(
+              hintText: 'Title',
             ),
-            TextField(
-              controller: content,
-              decoration: const InputDecoration(
-                hintText: 'Content',
-              ),
+          ),
+          TextField(
+            controller: content,
+            decoration: const InputDecoration(
+              hintText: 'Content',
             ),
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () async {
-                      final uploadedUrls =
-                          await StorageService.instance.uploadMedia(
-                        context: context,
-                        allowPhoto: true,
-                        allowAnyfile: true,
-                        allowVideo: true,
-                        multiImage: false,
-                        maxHeight: 1024,
-                        maxWidth: 1024,
-                        imageQuality: 80,
-                      );
-                      setState(() {
-                        files.addAll(uploadedUrls);
-                      });
-                    },
-                    icon: Icon(Icons.camera_alt)),
-                Spacer(),
-                ElevatedButton(
+          ),
+          Row(
+            children: [
+              IconButton(
                   onPressed: () async {
-                    if (isCreate)
-                      await create();
-                    else
-                      await update();
-
-                    context.pop();
+                    final uploadedUrls =
+                        await StorageService.instance.uploadMedia(
+                      context: context,
+                      allowPhoto: true,
+                      allowAnyfile: true,
+                      allowVideo: true,
+                      multiImage: false,
+                      maxHeight: 1024,
+                      maxWidth: 1024,
+                      imageQuality: 80,
+                    );
+                    setState(() {
+                      files.addAll(uploadedUrls);
+                    });
                   },
-                  child: const Text('Submit'),
-                ),
-              ],
-            ),
-            Container(
-              width: double.infinity,
-              child: Wrap(
-                runAlignment: WrapAlignment.start,
-                alignment: WrapAlignment.start,
-                crossAxisAlignment: WrapCrossAlignment.start,
-                children: files.map((url) {
-                  return Stack(
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: Image.network(url),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          await StorageService.instance.delete(url);
-                          files.remove(url);
-                          if (isCreate == false) {
-                            await PostService.instance
-                                .doc(widget.postId!)
-                                .update({
-                              'files': FieldValue.arrayRemove([url]),
-                            });
-                          }
-                          setState(() {});
-                        },
-                        icon: Icon(
-                          Icons.delete,
-                          color: Colors.red.shade700,
-                        ),
-                      ),
-                    ],
-                  );
-                }).toList(),
+                  icon: const Icon(Icons.camera_alt)),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () async {
+                  if (isCreate) {
+                    create();
+                  } else {
+                    update();
+                  }
+
+                  context.pop();
+                },
+                child: const Text('Submit'),
               ),
+            ],
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Wrap(
+              runAlignment: WrapAlignment.start,
+              alignment: WrapAlignment.start,
+              crossAxisAlignment: WrapCrossAlignment.start,
+              children: files.map((url) {
+                return Stack(
+                  children: [
+                    SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: Image.network(url),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        await StorageService.instance.delete(url);
+                        files.remove(url);
+                        if (isCreate == false) {
+                          await PostService.instance
+                              .doc(widget.postId!)
+                              .update({
+                            'files': FieldValue.arrayRemove([url]),
+                          });
+                        }
+                        setState(() {});
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.red.shade700,
+                      ),
+                    ),
+                  ],
+                );
+              }).toList(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

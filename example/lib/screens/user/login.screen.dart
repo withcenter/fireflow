@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -13,10 +11,9 @@ class LoginScreen extends StatelessWidget {
     final password = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
-      body: Container(
-          child: Column(
+      body: Column(
         children: [
           TextField(
             controller: email,
@@ -39,7 +36,7 @@ class LoginScreen extends StatelessWidget {
             child: const Text('Submit'),
           ),
         ],
-      )),
+      ),
     );
   }
 }

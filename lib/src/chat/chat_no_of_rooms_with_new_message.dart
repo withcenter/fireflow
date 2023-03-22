@@ -20,11 +20,11 @@ class ChatNoOfRoomsWithNewMessage extends StatefulWidget {
   final Color? textColor;
 
   @override
-  _ChatNoOfRoomsWithNewMessageState createState() =>
-      _ChatNoOfRoomsWithNewMessageState();
+  ChatNoOfRoomsWithNewMessageState createState() =>
+      ChatNoOfRoomsWithNewMessageState();
 }
 
-class _ChatNoOfRoomsWithNewMessageState
+class ChatNoOfRoomsWithNewMessageState
     extends State<ChatNoOfRoomsWithNewMessage> {
   StreamSubscription? subscription;
   // List<ChatRoomModel>? chatRooms;

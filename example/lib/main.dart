@@ -1,5 +1,5 @@
 import 'package:example/firebase_options.dart';
-import 'package:example/key.dart';
+import 'key.dart';
 import 'package:example/router.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fireflow/fireflow.dart';
