@@ -83,10 +83,12 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     children: [
                       TextButton(
                         onPressed: () async {
+                          final navigator = Navigator.of(context);
                           await post.ref.update({'deleted': true});
                           PostService.instance
                               .afterDelete(postDocumentReference: post.ref);
-                          context.pop();
+
+                          navigator.pop();
                         },
                         child: const Text('Delete'),
                       ),
@@ -189,6 +191,7 @@ class CommentWidget extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () async {
+                              final nav = Navigator.of(context);
                               final data = {
                                 'postDocumentReference':
                                     comment.postDocumentReference,
@@ -207,7 +210,8 @@ class CommentWidget extends StatelessWidget {
 
                               CommentService.instance
                                   .afterCreate(commentDocumentReference: ref);
-                              Navigator.pop(context);
+                              // Navigator.pop(context);
+                              nav.pop();
                             },
                             child: const Text('Reply'),
                           ),
@@ -235,12 +239,14 @@ class CommentWidget extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () async {
+                              final nav = Navigator.of(context);
                               await comment.ref.update({
                                 'content': editComment.text,
                               });
                               CommentService.instance.afterUpdate(
                                   commentDocumentReference: comment.ref);
-                              Navigator.pop(context);
+                              // Navigator.pop(context);
+                              nav.pop();
                             },
                             child: const Text('Edit'),
                           ),

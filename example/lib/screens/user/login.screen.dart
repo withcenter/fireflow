@@ -29,9 +29,11 @@ class LoginScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
+              final named = context.goNamed;
               await FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: email.text, password: password.text);
-              context.goNamed('Home');
+              // context.goNamed('Home');
+              named('Home');
             },
             child: const Text('Submit'),
           ),
