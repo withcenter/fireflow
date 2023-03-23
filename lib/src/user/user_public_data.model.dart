@@ -102,6 +102,7 @@ class UserPublicDataModel {
   }
 }
 
+@Deprecated('Use BuiltValue instead.')
 class UserPublicDataRecentPostModel {
   final DocumentReference postDocumentReference;
   final String title;

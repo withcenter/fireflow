@@ -9,7 +9,7 @@ class PostService {
   CollectionReference get col => db.collection('posts');
   DocumentReference doc(String category) => col.doc(category);
 
-  UserPublicDataModel get pub => UserService.instance.pub;
+  UsersPublicDataRecord get pub => UserService.instance.pub;
 
   /// Get the post
   Future<PostModel> get(String id) async {

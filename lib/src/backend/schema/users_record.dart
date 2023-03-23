@@ -43,9 +43,7 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
   static void _initializeBuilder(UsersRecordBuilder builder) => builder
     ..email = ''
     ..displayName = ''
-    ..photoUrl = ''
     ..uid = ''
-    ..phoneNumber = ''
     ..admin = false
     ..blockedUsers = ListBuilder()
     ..isProfileComplete = false

@@ -1,13 +1,11 @@
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
-/// MyDoc is a stream builder that build with the latest /users document.
+/// MyDoc 은 사용자가 로그인을 했을 때에만 사용 가능하다.
+/// 로그인 하지 않았으면 빈 위젯이 표시된다. 즉, 화면에 아무것도 나타나지 않는다.
 ///
-/// It is a wrapper around StreamBuilder that listens to changes to the user document.
-/// Use this widget to display user information.
+/// 로그인 했을 때와 로그아웃 했을 때, 다르게 보여주고 싶다면, UserStream 위젯을 사용한다.
 ///
-///
-/// 최신 사용자 데이터는 AppService.instance.my 에 저장되어 있다.
 class MyDoc extends StatelessWidget {
   const MyDoc({Key? key, required this.builder}) : super(key: key);
 

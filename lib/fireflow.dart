@@ -29,9 +29,10 @@ export 'src/system_settings/translation/translation.service.dart';
 
 /// Widgets that depends on Fireflow
 export 'src/system_settings/translation/translation.dart';
-export 'src/user/my_doc.dart';
-export 'src/user/pub_doc.dart';
-export 'src/user/my_stream.dart';
+export 'src/user/widgets/my_doc.dart';
+export 'src/user/widgets/pub_doc.dart';
+export 'src/user/widgets/my_stream.dart';
+export 'src/user/widgets/pub_stream.dart';
 
 export 'src/chat/widgets/chat_no_of_rooms_with_new_message.dart';
 export 'src/chat/widgets/chat_room_message.list.dart';

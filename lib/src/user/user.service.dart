@@ -44,7 +44,7 @@ class UserService {
   DocumentReference get myUserPublicDataRef =>
       FirebaseFirestore.instance.collection('users_public_data').doc(uid);
 
-  get publicRef => myUserPublicDataRef;
+  DocumentReference get publicRef => myUserPublicDataRef;
 
   /// The login user's Firebase User object.
   fa.User get currentUser => auth.currentUser!;
@@ -71,16 +71,16 @@ class UserService {
   /// It listens the changes of the user's public data document and update [my] variable.
   /// Note that, this is always upto date. So, you don't have to get the login user's
   /// public data document from the firestore.
-  UserPublicDataModel? _pub;
-  UserPublicDataModel get pub => _pub!;
-  set pub(UserPublicDataModel? value) => _pub = value;
+  UsersPublicDataRecord? _pub;
+  UsersPublicDataRecord get pub => _pub!;
+  set pub(UsersPublicDataRecord? value) => _pub = value;
 
   ///
 
   final BehaviorSubject<UsersRecord?> onMyChange =
       BehaviorSubject<UsersRecord?>.seeded(null);
-  final BehaviorSubject<UserPublicDataModel?> onPubChange =
-      BehaviorSubject<UserPublicDataModel?>.seeded(null);
+  final BehaviorSubject<UsersPublicDataRecord?> onPubChange =
+      BehaviorSubject<UsersPublicDataRecord?>.seeded(null);
 
   reset() {
     my = null;
@@ -219,14 +219,16 @@ class UserService {
         .snapshots()
         .listen((snapshot) async {
       if (snapshot.exists) {
-        pub = UserPublicDataModel.fromSnapshot(snapshot);
+        // pub = UserPublicDataModel.fromSnapshot(snapshot);
+        pub = UsersPublicDataRecord.getDocumentFromData(
+            snapshot.data() as Map<String, dynamic>, snapshot.reference);
 
         /// Update user profile completion status
         ///
         /// TODO: Let's developer add more fields to check the profile completion. For instance, "displayName,photoUrl,gender,birthday"
-        await pub.userDocumentReference.set({
+        await publicRef.set({
           'isProfileComplete':
-              pub.displayName.isNotEmpty && pub.photoUrl.isNotEmpty,
+              pub.displayName!.isNotEmpty && pub.photoUrl!.isNotEmpty,
         }, SetOptions(merge: true));
 
         onPubChange.add(pub);
@@ -237,8 +239,8 @@ class UserService {
             'display_name': pub.displayName,
             'photo_url': pub.photoUrl,
             'gender': pub.gender,
-            'birthday': pub.birthday.toDate().toIso8601String(),
-            'registered_at': pub.registeredAt.toDate().toIso8601String(),
+            'birthday': pub.birthday?.toIso8601String(),
+            'registered_at': pub.registeredAt?.toIso8601String(),
           };
 
           dog('Supabase upsert: $data');
@@ -332,7 +334,7 @@ class UserService {
   /// If the number of recentPosts is greater than Config.instance.noOfRecentPosts,
   /// it will remove the oldest post.
   recentPosts(PostModel post) {
-    List recentPosts = pub.recentPosts ?? [];
+    List recentPosts = pub.recentPosts as List<dynamic>;
     if (recentPosts.length >= Config.instance.noOfRecentPosts) {
       recentPosts.removeRange(
           Config.instance.noOfRecentPosts - 1, recentPosts.length);
@@ -413,14 +415,18 @@ class UserService {
   /// [noOfFollowers] is the number of followers to get. If it is 0, it will get all the followers.
   ///
   /// If it has no feeds, it will return an empty array.
-  Future<List<UserPublicDataRecentPostModel>> feeds({
+  Future<List<RecentPostsStruct>> feeds({
     int noOfFollowers = 0,
   }) async {
+    if (pub.followings!.isEmpty) {
+      return [];
+    }
+
     /// Get the users that I follow, ordered by last post created at.
     ///
     Query q = db
         .collection('users_public_data')
-        .where('userDocumentReference', whereIn: pub.followings)
+        .where('userDocumentReference', whereIn: pub.followings!.toList())
         .orderBy('lastPostCreatedAt', descending: true);
 
     /// Limit the number of (following) users to get if the app needs to display only a few posts.
@@ -436,18 +442,22 @@ class UserService {
 
     // Merge the objects inside the array of usersQuerySnapshot.docs into a single array
     // order by the feild timestamp in that object in descending order.
-    final List<UserPublicDataRecentPostModel> allRecentPosts = [];
+    final List<RecentPostsStruct> allRecentPosts = [];
     for (final doc in usersQuerySnapshot.docs) {
       // final data = doc.data() as Map<String, dynamic>;
-      final user = UserPublicDataModel.fromSnapshot(doc);
-      if (user.recentPosts != null) allRecentPosts.addAll(user.recentPosts!);
+      // final user = UserPublicDataModel.fromSnapshot(doc);
+      final user = UsersPublicDataRecord.getDocumentFromData(
+          doc.data() as Map<String, dynamic>, doc.reference);
+      if (user.recentPosts != null) {
+        allRecentPosts.addAll(user.recentPosts!.toList());
+      }
     }
     if (allRecentPosts.isEmpty) {
       return [];
     }
 
     /// sort allRecentPosts by timestamp
-    allRecentPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    allRecentPosts.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
 
     return allRecentPosts;
   }
@@ -458,11 +468,19 @@ class UserService {
   Future<List<Map<String, dynamic>>> jsonFeeds({
     int noOfFollowers = 0,
   }) async {
-    final List<UserPublicDataRecentPostModel> feeds = await this.feeds(
+    final List<RecentPostsStruct> feeds = await this.feeds(
       noOfFollowers: noOfFollowers,
     );
 
-    return feeds.map((e) => e.toJson()).toList();
+    return feeds
+        .map((e) => {
+              'postDocumentReference': e.postDocumentReference,
+              'createdAt': e.createdAt,
+              'title': e.title,
+              'content': e.content,
+              'photoUrl': e.photoUrl,
+            })
+        .toList();
   }
 
   /// Accept referral invitation
@@ -489,7 +507,11 @@ class UserService {
     return true;
   }
 
-  /// Count user's chat message sending on every minutes.
+  /// 1분에 한번씩 사용자 채팅 메시지 수를 증가한다.
+  ///
+  /// 채팅을 입력 할 때 마다 카운트하면, 너무 빠르게 사용자 문서가 증가해서, 1분에 1씩 증가한다.
+  ///
+  /// 즉, 1분이 지나서, 채팅을 입력하면 카운트가 1 증가한다.
   ///
   /// If the user sends more than one message in a minute, it will count only 1.
   DateTime? lastChatTime;
@@ -506,5 +528,15 @@ class UserService {
     publicRef.update({
       'chatMessageCount': FieldValue.increment(1),
     });
+  }
+
+  /// 사용자 정보 업데이트
+
+  Future<void> updatePhotoUrl(String url) {
+    return publicRef.update(
+      {
+        'photoUrl': url,
+      },
+    );
   }
 }

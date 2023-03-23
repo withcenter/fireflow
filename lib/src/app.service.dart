@@ -39,7 +39,7 @@ class AppService {
   late final KeyModel keys;
 
   /// Keep the login user's public data up to date.
-  UserPublicDataModel get pub => UserService.instance.pub;
+  UsersPublicDataRecord get pub => UserService.instance.pub;
 
   /// Current chat room reference.
   ///

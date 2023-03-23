@@ -60,9 +60,9 @@ Future createPost({String? title}) async {
     'category': 'qna',
     'userDocumentReference': UserService.instance.ref,
     'title': title ??
-        'Created by ${UserService.instance.pub.data['email']} at ${DateTime.now()}',
+        'Created by ${UserService.instance.pub.displayName} at ${DateTime.now()}',
     'content':
-        'Content. Created by ${UserService.instance.pub.data['email']} at ${DateTime.now()}',
+        'Content. Created by ${UserService.instance.pub.displayName} at ${DateTime.now()}',
   });
   await PostService.instance.afterCreate(postDocumentReference: ref);
 }
@@ -80,7 +80,7 @@ Future deletePosts() async {
 
 /// Clear feeds of the login user.
 Future clearFeeds() async {
-  dog('Clear all feeds of ${UserService.instance.pub.data['email']}}');
+  dog('Clear all feeds of ${UserService.instance.pub.displayName}}');
   await UserService.instance.publicRef.update({
     'lastPost': FieldValue.delete(),
     'recentPosts': FieldValue.delete(),
