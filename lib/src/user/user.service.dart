@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:fireflow/fireflow.dart';
+import 'package:fireflow/src/backend/backend.dart';
 import 'package:path/path.dart' as p;
 import 'package:rxdart/subjects.dart';
 
@@ -12,7 +12,10 @@ import 'package:rxdart/subjects.dart';
 ///
 class UserService {
   // create a singleton method of UserService
-  static UserService get instance => _instance ?? (_instance = UserService());
+  UserService._() {
+    dog("UserService._() called. It should be called only once.");
+  }
+  static UserService get instance => _instance ?? (_instance = UserService._());
   static UserService? _instance;
 
   fa.FirebaseAuth get auth => fa.FirebaseAuth.instance;
@@ -117,10 +120,20 @@ class UserService {
     return UserModel.fromSnapshot(await doc(id ?? uid).get());
   }
 
+  /// /users 컬렉션 생성
+  ///
+  /// FF 에서는 회원 가입 후, 바로 이런 코드를 호출하여 /users 컬렉션을 생성하지만,
+  /// FF 를 쓰지 않는 경우, 또는 그 외의 예외적인 경우에서, /users 문서가 생성되지 않았을 경 대비, 성성한다.
+  ///
+  /// AppService 에서 호출됨.
+  Future maybeGenerateUserDocument() async {
+    await maybeCreateUser(FirebaseAuth.instance.currentUser!);
+  }
+
   /// Creates /users_public_data/{uid} on registration or if it does not exist by any chance.
   ///
   /// This will crate /users_public_data/{uid} only if the user is logged in for the first time.
-  generateUserPublicDataDocument() async {
+  Future maybeGenerateUserPublicDataDocument() async {
     ///
     if (await userPublicDataDocumentExists() == false) {
       /// Generate the user's public data document

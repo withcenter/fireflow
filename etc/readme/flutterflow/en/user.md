@@ -87,6 +87,7 @@ Schema **users_public_data**
 - `referralAcceptedAt` is the time that he user accepted(registered) the invitation.
 - `chatMessageCount` is the no of chat that were sent by the user. See No of chat message in chat.md
 
+
 ## Register and sign-in
 
 - As long as the user signs in with Firebase Auth `sign-in logic` applies the same.

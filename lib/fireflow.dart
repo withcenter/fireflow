@@ -1,3 +1,5 @@
+export 'package:firebase_auth/firebase_auth.dart';
+
 /// Config
 export 'config.dart';
 
@@ -44,6 +46,18 @@ export 'src/actions/flushbar/flushbar.dart';
 export 'src/functions/country_code.dart';
 export 'src/functions/comment_order.dart';
 export 'src/functions/array_functions.dart';
+
+export 'src/auth/auth_util.dart';
+export 'src/auth/firebase_user_provider.dart';
+
+export 'src/backend/lat_lng.dart';
+export 'src/backend/schema/index.dart';
+export 'src/backend/schema/structs/recent_posts_struct.dart';
+export 'src/backend/schema/serializers.dart';
+export 'src/backend/schema/users_public_data_record.dart';
+export 'src/backend/schema/users_record.dart';
+
+export 'src/backend/flutter_flow_utils.dart';
 
 /// TEST
 export 'src/test/test.service.dart';

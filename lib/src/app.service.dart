@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/foundation.dart';
@@ -12,14 +11,25 @@ import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 class AppService {
   // create a singleton method of AppService
 
-  static AppService get instance => _instance ?? (_instance = AppService());
+  AppService._() {
+    dog("AppService._() called. It should be called only once.");
+  }
+
+  static AppService get instance => _instance ?? (_instance = AppService._());
   static AppService? _instance;
 
   bool initialized = false;
+
+  ///
+
+  late Stream<FirebaseUserProvider> userStream;
+
+  ///
   BuildContext? _context;
   BuildContext get context => _context!;
   set context(BuildContext context) => _context = context;
 
+  ///
   FirebaseFirestore get db => FirebaseFirestore.instance;
   FirebaseAuth get auth => FirebaseAuth.instance;
   CollectionReference get usersCol => db.collection('users');
@@ -37,14 +47,6 @@ class AppService {
   /// This is the current chat room that the user is in.
   /// This is used to determine whether to show the push notification from chat message or not.
   DocumentReference? currentChatRoomDocumentReference;
-
-  /// AppService constructor
-  ///
-  /// AppService is a singleton. So, this constructor will be called only one time.
-  /// The service initialization should be kept here.
-  AppService() {
-    dog("AppService.constructor() called.");
-  }
 
   /// Initialize the AppService.
   ///
@@ -116,6 +118,9 @@ class AppService {
 
       ///
       initialized = true;
+
+      userStream = firebaseUserProviderStream()..listen((_) {});
+
       _initErrorHandler();
       _initSystemKeys();
       _initUser();
@@ -135,10 +140,17 @@ class AppService {
       if (user != null) {
         dog('AppService._initUser() - user is logged in');
 
-        UserService.instance.listenUser();
-        await UserService.instance.generateUserPublicDataDocument();
-        UserService.instance.listenUserPublicData();
-        await UserSettingService.instance.generate();
+        UserService.instance.maybeGenerateUserDocument().then((value) {
+          /// TODO UsersRecord 사용자 정보 보관
+          UserService.instance.listenUser();
+        });
+
+        UserService.instance
+            .maybeGenerateUserPublicDataDocument()
+            .then((value) {
+          UserService.instance.listenUserPublicData();
+        });
+        await UserSettingService.instance.maybeGenerate();
       } else {
         dog('AppService._initUser() - user is not logged in');
         UserService.instance.pub = null;

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 
@@ -41,7 +40,7 @@ class UserSettingService {
 
   /// Creates /users_public_data/{uid} if it does not exist.
   /// This will crate /users_public_data/{uid} only if the user is logged in for the first time.
-  generate() async {
+  maybeGenerate() async {
     if (await exists()) {
       return;
     }
