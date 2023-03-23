@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-
 /// ChatService
 ///
 /// ChatService is a singleton class that provides the chat service.

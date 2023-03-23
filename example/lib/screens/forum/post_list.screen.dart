@@ -1,8 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 
 class PostListScreen extends StatelessWidget {
@@ -13,14 +11,13 @@ class PostListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$category'),
+        title: Text(category),
         actions: [
           StreamBuilder(
             stream: UserSettingService.instance.ref.snapshots(),
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasError) {
-                print(snapshot.error);
-                return Icon(Icons.error_outline);
+                return const Icon(Icons.error_outline);
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -43,16 +40,15 @@ class PostListScreen extends StatelessWidget {
                   },
                   icon: setting.postSubscriptions
                           .contains(categoryDocumentReference)
-                      ? Icon(Icons.notifications_active_outlined)
-                      : Icon(Icons.notifications_off_outlined));
+                      ? const Icon(Icons.notifications_active_outlined)
+                      : const Icon(Icons.notifications_off_outlined));
             },
           ),
           StreamBuilder(
             stream: UserSettingService.instance.ref.snapshots(),
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasError) {
-                print(snapshot.error);
-                return Icon(Icons.error_outline);
+                return const Icon(Icons.error_outline);
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -75,8 +71,8 @@ class PostListScreen extends StatelessWidget {
                   },
                   icon: setting.commentSubscriptions
                           .contains(categoryDocumentReference)
-                      ? Icon(Icons.comment)
-                      : Icon(Icons.comments_disabled_outlined));
+                      ? const Icon(Icons.comment)
+                      : const Icon(Icons.comments_disabled_outlined));
             },
           ),
           IconButton(
@@ -103,7 +99,7 @@ class PostListScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-          if (snapshot.data?.docs.length == 0) {
+          if (snapshot.data != null && snapshot.data!.docs.isEmpty) {
             return const Center(
               child: Text('No data'),
             );

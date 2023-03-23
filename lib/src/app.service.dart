@@ -167,8 +167,6 @@ class AppService {
           message: details.exceptionAsString());
     };
     PlatformDispatcher.instance.onError = (error, stack) {
-      print(error);
-      print(stack);
       snackBarWarning(
           context: context, title: 'Error', message: error.toString());
       return true;

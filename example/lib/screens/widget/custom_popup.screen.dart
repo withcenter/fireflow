@@ -1,6 +1,5 @@
 // ignore_for_file: sized_box_for_whitespace
 
-import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
 class CustomPopupScreen extends StatelessWidget {
@@ -10,7 +9,7 @@ class CustomPopupScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Custom Popup"),
-        actions: [
+        actions: const [
           // CustomPopup(
           //   dx: 0,
           //   dy: 32,
@@ -54,9 +53,9 @@ class CustomPopupScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const Text('Custom Popup'),
-              const SizedBox(height: 100),
+            children: const <Widget>[
+              Text('Custom Popup'),
+              SizedBox(height: 100),
               // Align(
               //   alignment: Alignment.topLeft,
               //   child: CustomPopup(
@@ -148,10 +147,10 @@ class CustomPopupScreen extends StatelessWidget {
               //     child: const Text('Tap to show custom popup'),
               //   ),
               // ),
-              const SizedBox(height: 10),
-              const SizedBox(height: 500),
-              const Text('I dont wan t'),
-              const SizedBox(height: 210),
+              SizedBox(height: 10),
+              SizedBox(height: 500),
+              Text('I dont wan t'),
+              SizedBox(height: 210),
             ],
           ),
         ),

@@ -37,8 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text("home: ${TranslationService.instance.get('home')}"),
                 ],
               ),
-              Text(
+              const Text(
                   'TODO: User registration and profile update.\nTODO: file upload on forum '),
+
               ElevatedButton(
                   onPressed: () =>
 

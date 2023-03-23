@@ -53,7 +53,7 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                await CategoryService.instance.col.doc(id.text).set({
+                CategoryService.instance.col.doc(id.text).set({
                   'title': title.text,
                   'category': id.text,
                 }, SetOptions(merge: true));

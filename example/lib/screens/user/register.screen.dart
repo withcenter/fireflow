@@ -12,10 +12,9 @@ class RegisterScreen extends StatelessWidget {
     final password = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: const Text('Register'),
       ),
-      body: Container(
-          child: Column(
+      body: Column(
         children: [
           TextField(
             controller: email,
@@ -31,14 +30,16 @@ class RegisterScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
+              final named = context.goNamed;
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
                   email: email.text, password: password.text);
-              context.goNamed('Home');
+              // context.goNamed('Home');
+              named('Home');
             },
             child: const Text('Submit'),
           ),
         ],
-      )),
+      ),
     );
   }
 }
