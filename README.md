@@ -1,4 +1,3 @@
-
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/res/fireflow-logo.jpg?raw=true "This is image title")
 
 FlutterFlow Documents: [English](https://github.com/withcenter/fireflow/blob/main/README.md) | [한국어](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/ko/README.md)\
@@ -6,7 +5,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 
 # Fireflow
 
-* `Fireflow` is an open source, easy and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
+* `Fireflow` is an open source, easy to use and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
 
 * `Fireflow` is developped for `FlutterFlow`. But it can be used for `Flutter` also.
   * For the example code of Flutter, see [the example project](https://github.com/withcenter/fireflow/tree/main/example).

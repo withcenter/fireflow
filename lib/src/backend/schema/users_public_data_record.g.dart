@@ -166,156 +166,10 @@ class _$UsersPublicDataRecordSerializer
         ..add(serializers.serialize(value,
             specifiedType: const FullType(DateTime)));
     }
-    value = object.chatMessageCount;
+    value = object.stateMessage;
     if (value != null) {
       result
-        ..add('chatMessageCount')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
-    }
-    value = object.message;
-    if (value != null) {
-      result
-        ..add('message')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateSalary;
-    if (value != null) {
-      result
-        ..add('certificateSalary')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateJob;
-    if (value != null) {
-      result
-        ..add('certificateJob')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateSchool;
-    if (value != null) {
-      result
-        ..add('certificateSchool')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateCar1;
-    if (value != null) {
-      result
-        ..add('certificateCar1')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateCar2;
-    if (value != null) {
-      result
-        ..add('certificateCar2')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateCar1Year;
-    if (value != null) {
-      result
-        ..add('certificateCar1Year')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateCar2Year;
-    if (value != null) {
-      result
-        ..add('certificateCar2Year')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateCeleb;
-    if (value != null) {
-      result
-        ..add('certificateCeleb')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.instagram;
-    if (value != null) {
-      result
-        ..add('instagram')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.mbti;
-    if (value != null) {
-      result
-        ..add('mbti')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.job;
-    if (value != null) {
-      result
-        ..add('job')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.openAge;
-    if (value != null) {
-      result
-        ..add('openAge')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(bool)));
-    }
-    value = object.certificateSalaryImageUrl;
-    if (value != null) {
-      result
-        ..add('certificateSalaryImageUrl')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateJobImageUrl;
-    if (value != null) {
-      result
-        ..add('certificateJobImageUrl')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateSchoolImageUrl;
-    if (value != null) {
-      result
-        ..add('certificateSchoolImageUrl')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateCarImageUrl;
-    if (value != null) {
-      result
-        ..add('certificateCarImageUrl')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateCelebImageUrl;
-    if (value != null) {
-      result
-        ..add('certificateCelebImageUrl')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.certificateCar2ImageUrl;
-    if (value != null) {
-      result
-        ..add('certificateCar2ImageUrl')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.area;
-    if (value != null) {
-      result
-        ..add('area')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.phoneNumber2;
-    if (value != null) {
-      result
-        ..add('phoneNumber2')
+        ..add('stateMessage')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
@@ -432,92 +286,8 @@ class _$UsersPublicDataRecordSerializer
           result.referralAcceptedAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime?;
           break;
-        case 'chatMessageCount':
-          result.chatMessageCount = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int?;
-          break;
-        case 'message':
-          result.message = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateSalary':
-          result.certificateSalary = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateJob':
-          result.certificateJob = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateSchool':
-          result.certificateSchool = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateCar1':
-          result.certificateCar1 = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateCar2':
-          result.certificateCar2 = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateCar1Year':
-          result.certificateCar1Year = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateCar2Year':
-          result.certificateCar2Year = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateCeleb':
-          result.certificateCeleb = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'instagram':
-          result.instagram = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'mbti':
-          result.mbti = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'job':
-          result.job = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'openAge':
-          result.openAge = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool?;
-          break;
-        case 'certificateSalaryImageUrl':
-          result.certificateSalaryImageUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateJobImageUrl':
-          result.certificateJobImageUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateSchoolImageUrl':
-          result.certificateSchoolImageUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateCarImageUrl':
-          result.certificateCarImageUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateCelebImageUrl':
-          result.certificateCelebImageUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'certificateCar2ImageUrl':
-          result.certificateCar2ImageUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'area':
-          result.area = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'phoneNumber2':
-          result.phoneNumber2 = serializers.deserialize(value,
+        case 'stateMessage':
+          result.stateMessage = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
         case 'Document__Reference__Field':
@@ -575,49 +345,7 @@ class _$UsersPublicDataRecord extends UsersPublicDataRecord {
   @override
   final DateTime? referralAcceptedAt;
   @override
-  final int? chatMessageCount;
-  @override
-  final String? message;
-  @override
-  final String? certificateSalary;
-  @override
-  final String? certificateJob;
-  @override
-  final String? certificateSchool;
-  @override
-  final String? certificateCar1;
-  @override
-  final String? certificateCar2;
-  @override
-  final String? certificateCar1Year;
-  @override
-  final String? certificateCar2Year;
-  @override
-  final String? certificateCeleb;
-  @override
-  final String? instagram;
-  @override
-  final String? mbti;
-  @override
-  final String? job;
-  @override
-  final bool? openAge;
-  @override
-  final String? certificateSalaryImageUrl;
-  @override
-  final String? certificateJobImageUrl;
-  @override
-  final String? certificateSchoolImageUrl;
-  @override
-  final String? certificateCarImageUrl;
-  @override
-  final String? certificateCelebImageUrl;
-  @override
-  final String? certificateCar2ImageUrl;
-  @override
-  final String? area;
-  @override
-  final String? phoneNumber2;
+  final String? stateMessage;
   @override
   final DocumentReference<Object?>? ffRef;
 
@@ -646,28 +374,7 @@ class _$UsersPublicDataRecord extends UsersPublicDataRecord {
       this.followings,
       this.referral,
       this.referralAcceptedAt,
-      this.chatMessageCount,
-      this.message,
-      this.certificateSalary,
-      this.certificateJob,
-      this.certificateSchool,
-      this.certificateCar1,
-      this.certificateCar2,
-      this.certificateCar1Year,
-      this.certificateCar2Year,
-      this.certificateCeleb,
-      this.instagram,
-      this.mbti,
-      this.job,
-      this.openAge,
-      this.certificateSalaryImageUrl,
-      this.certificateJobImageUrl,
-      this.certificateSchoolImageUrl,
-      this.certificateCarImageUrl,
-      this.certificateCelebImageUrl,
-      this.certificateCar2ImageUrl,
-      this.area,
-      this.phoneNumber2,
+      this.stateMessage,
       this.ffRef})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
@@ -707,28 +414,7 @@ class _$UsersPublicDataRecord extends UsersPublicDataRecord {
         followings == other.followings &&
         referral == other.referral &&
         referralAcceptedAt == other.referralAcceptedAt &&
-        chatMessageCount == other.chatMessageCount &&
-        message == other.message &&
-        certificateSalary == other.certificateSalary &&
-        certificateJob == other.certificateJob &&
-        certificateSchool == other.certificateSchool &&
-        certificateCar1 == other.certificateCar1 &&
-        certificateCar2 == other.certificateCar2 &&
-        certificateCar1Year == other.certificateCar1Year &&
-        certificateCar2Year == other.certificateCar2Year &&
-        certificateCeleb == other.certificateCeleb &&
-        instagram == other.instagram &&
-        mbti == other.mbti &&
-        job == other.job &&
-        openAge == other.openAge &&
-        certificateSalaryImageUrl == other.certificateSalaryImageUrl &&
-        certificateJobImageUrl == other.certificateJobImageUrl &&
-        certificateSchoolImageUrl == other.certificateSchoolImageUrl &&
-        certificateCarImageUrl == other.certificateCarImageUrl &&
-        certificateCelebImageUrl == other.certificateCelebImageUrl &&
-        certificateCar2ImageUrl == other.certificateCar2ImageUrl &&
-        area == other.area &&
-        phoneNumber2 == other.phoneNumber2 &&
+        stateMessage == other.stateMessage &&
         ffRef == other.ffRef;
   }
 
@@ -752,25 +438,25 @@ class _$UsersPublicDataRecord extends UsersPublicDataRecord {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, uid.hashCode), userDocumentReference.hashCode), registeredAt.hashCode), updatedAt.hashCode), displayName.hashCode), photoUrl.hashCode), coverPhotoUrl.hashCode), gender.hashCode), birthday.hashCode), hasPhoto.hashCode), isProfileComplete.hashCode), lastPostCreatedAt.hashCode), lastPost.hashCode), recentPosts.hashCode), isPremiumUser.hashCode), noOfPosts.hashCode), noOfComments.hashCode), followings.hashCode), referral.hashCode), referralAcceptedAt.hashCode), chatMessageCount.hashCode), message.hashCode), certificateSalary.hashCode), certificateJob.hashCode),
-                                                                                certificateSchool.hashCode),
-                                                                            certificateCar1.hashCode),
-                                                                        certificateCar2.hashCode),
-                                                                    certificateCar1Year.hashCode),
-                                                                certificateCar2Year.hashCode),
-                                                            certificateCeleb.hashCode),
-                                                        instagram.hashCode),
-                                                    mbti.hashCode),
-                                                job.hashCode),
-                                            openAge.hashCode),
-                                        certificateSalaryImageUrl.hashCode),
-                                    certificateJobImageUrl.hashCode),
-                                certificateSchoolImageUrl.hashCode),
-                            certificateCarImageUrl.hashCode),
-                        certificateCelebImageUrl.hashCode),
-                    certificateCar2ImageUrl.hashCode),
-                area.hashCode),
-            phoneNumber2.hashCode),
+                                                                            $jc($jc($jc($jc(0, uid.hashCode), userDocumentReference.hashCode), registeredAt.hashCode),
+                                                                                updatedAt.hashCode),
+                                                                            displayName.hashCode),
+                                                                        photoUrl.hashCode),
+                                                                    coverPhotoUrl.hashCode),
+                                                                gender.hashCode),
+                                                            birthday.hashCode),
+                                                        hasPhoto.hashCode),
+                                                    isProfileComplete.hashCode),
+                                                lastPostCreatedAt.hashCode),
+                                            lastPost.hashCode),
+                                        recentPosts.hashCode),
+                                    isPremiumUser.hashCode),
+                                noOfPosts.hashCode),
+                            noOfComments.hashCode),
+                        followings.hashCode),
+                    referral.hashCode),
+                referralAcceptedAt.hashCode),
+            stateMessage.hashCode),
         ffRef.hashCode));
   }
 
@@ -797,28 +483,7 @@ class _$UsersPublicDataRecord extends UsersPublicDataRecord {
           ..add('followings', followings)
           ..add('referral', referral)
           ..add('referralAcceptedAt', referralAcceptedAt)
-          ..add('chatMessageCount', chatMessageCount)
-          ..add('message', message)
-          ..add('certificateSalary', certificateSalary)
-          ..add('certificateJob', certificateJob)
-          ..add('certificateSchool', certificateSchool)
-          ..add('certificateCar1', certificateCar1)
-          ..add('certificateCar2', certificateCar2)
-          ..add('certificateCar1Year', certificateCar1Year)
-          ..add('certificateCar2Year', certificateCar2Year)
-          ..add('certificateCeleb', certificateCeleb)
-          ..add('instagram', instagram)
-          ..add('mbti', mbti)
-          ..add('job', job)
-          ..add('openAge', openAge)
-          ..add('certificateSalaryImageUrl', certificateSalaryImageUrl)
-          ..add('certificateJobImageUrl', certificateJobImageUrl)
-          ..add('certificateSchoolImageUrl', certificateSchoolImageUrl)
-          ..add('certificateCarImageUrl', certificateCarImageUrl)
-          ..add('certificateCelebImageUrl', certificateCelebImageUrl)
-          ..add('certificateCar2ImageUrl', certificateCar2ImageUrl)
-          ..add('area', area)
-          ..add('phoneNumber2', phoneNumber2)
+          ..add('stateMessage', stateMessage)
           ..add('ffRef', ffRef))
         .toString();
   }
@@ -924,108 +589,9 @@ class UsersPublicDataRecordBuilder
   set referralAcceptedAt(DateTime? referralAcceptedAt) =>
       _$this._referralAcceptedAt = referralAcceptedAt;
 
-  int? _chatMessageCount;
-  int? get chatMessageCount => _$this._chatMessageCount;
-  set chatMessageCount(int? chatMessageCount) =>
-      _$this._chatMessageCount = chatMessageCount;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  String? _certificateSalary;
-  String? get certificateSalary => _$this._certificateSalary;
-  set certificateSalary(String? certificateSalary) =>
-      _$this._certificateSalary = certificateSalary;
-
-  String? _certificateJob;
-  String? get certificateJob => _$this._certificateJob;
-  set certificateJob(String? certificateJob) =>
-      _$this._certificateJob = certificateJob;
-
-  String? _certificateSchool;
-  String? get certificateSchool => _$this._certificateSchool;
-  set certificateSchool(String? certificateSchool) =>
-      _$this._certificateSchool = certificateSchool;
-
-  String? _certificateCar1;
-  String? get certificateCar1 => _$this._certificateCar1;
-  set certificateCar1(String? certificateCar1) =>
-      _$this._certificateCar1 = certificateCar1;
-
-  String? _certificateCar2;
-  String? get certificateCar2 => _$this._certificateCar2;
-  set certificateCar2(String? certificateCar2) =>
-      _$this._certificateCar2 = certificateCar2;
-
-  String? _certificateCar1Year;
-  String? get certificateCar1Year => _$this._certificateCar1Year;
-  set certificateCar1Year(String? certificateCar1Year) =>
-      _$this._certificateCar1Year = certificateCar1Year;
-
-  String? _certificateCar2Year;
-  String? get certificateCar2Year => _$this._certificateCar2Year;
-  set certificateCar2Year(String? certificateCar2Year) =>
-      _$this._certificateCar2Year = certificateCar2Year;
-
-  String? _certificateCeleb;
-  String? get certificateCeleb => _$this._certificateCeleb;
-  set certificateCeleb(String? certificateCeleb) =>
-      _$this._certificateCeleb = certificateCeleb;
-
-  String? _instagram;
-  String? get instagram => _$this._instagram;
-  set instagram(String? instagram) => _$this._instagram = instagram;
-
-  String? _mbti;
-  String? get mbti => _$this._mbti;
-  set mbti(String? mbti) => _$this._mbti = mbti;
-
-  String? _job;
-  String? get job => _$this._job;
-  set job(String? job) => _$this._job = job;
-
-  bool? _openAge;
-  bool? get openAge => _$this._openAge;
-  set openAge(bool? openAge) => _$this._openAge = openAge;
-
-  String? _certificateSalaryImageUrl;
-  String? get certificateSalaryImageUrl => _$this._certificateSalaryImageUrl;
-  set certificateSalaryImageUrl(String? certificateSalaryImageUrl) =>
-      _$this._certificateSalaryImageUrl = certificateSalaryImageUrl;
-
-  String? _certificateJobImageUrl;
-  String? get certificateJobImageUrl => _$this._certificateJobImageUrl;
-  set certificateJobImageUrl(String? certificateJobImageUrl) =>
-      _$this._certificateJobImageUrl = certificateJobImageUrl;
-
-  String? _certificateSchoolImageUrl;
-  String? get certificateSchoolImageUrl => _$this._certificateSchoolImageUrl;
-  set certificateSchoolImageUrl(String? certificateSchoolImageUrl) =>
-      _$this._certificateSchoolImageUrl = certificateSchoolImageUrl;
-
-  String? _certificateCarImageUrl;
-  String? get certificateCarImageUrl => _$this._certificateCarImageUrl;
-  set certificateCarImageUrl(String? certificateCarImageUrl) =>
-      _$this._certificateCarImageUrl = certificateCarImageUrl;
-
-  String? _certificateCelebImageUrl;
-  String? get certificateCelebImageUrl => _$this._certificateCelebImageUrl;
-  set certificateCelebImageUrl(String? certificateCelebImageUrl) =>
-      _$this._certificateCelebImageUrl = certificateCelebImageUrl;
-
-  String? _certificateCar2ImageUrl;
-  String? get certificateCar2ImageUrl => _$this._certificateCar2ImageUrl;
-  set certificateCar2ImageUrl(String? certificateCar2ImageUrl) =>
-      _$this._certificateCar2ImageUrl = certificateCar2ImageUrl;
-
-  String? _area;
-  String? get area => _$this._area;
-  set area(String? area) => _$this._area = area;
-
-  String? _phoneNumber2;
-  String? get phoneNumber2 => _$this._phoneNumber2;
-  set phoneNumber2(String? phoneNumber2) => _$this._phoneNumber2 = phoneNumber2;
+  String? _stateMessage;
+  String? get stateMessage => _$this._stateMessage;
+  set stateMessage(String? stateMessage) => _$this._stateMessage = stateMessage;
 
   DocumentReference<Object?>? _ffRef;
   DocumentReference<Object?>? get ffRef => _$this._ffRef;
@@ -1058,28 +624,7 @@ class UsersPublicDataRecordBuilder
       _followings = $v.followings?.toBuilder();
       _referral = $v.referral;
       _referralAcceptedAt = $v.referralAcceptedAt;
-      _chatMessageCount = $v.chatMessageCount;
-      _message = $v.message;
-      _certificateSalary = $v.certificateSalary;
-      _certificateJob = $v.certificateJob;
-      _certificateSchool = $v.certificateSchool;
-      _certificateCar1 = $v.certificateCar1;
-      _certificateCar2 = $v.certificateCar2;
-      _certificateCar1Year = $v.certificateCar1Year;
-      _certificateCar2Year = $v.certificateCar2Year;
-      _certificateCeleb = $v.certificateCeleb;
-      _instagram = $v.instagram;
-      _mbti = $v.mbti;
-      _job = $v.job;
-      _openAge = $v.openAge;
-      _certificateSalaryImageUrl = $v.certificateSalaryImageUrl;
-      _certificateJobImageUrl = $v.certificateJobImageUrl;
-      _certificateSchoolImageUrl = $v.certificateSchoolImageUrl;
-      _certificateCarImageUrl = $v.certificateCarImageUrl;
-      _certificateCelebImageUrl = $v.certificateCelebImageUrl;
-      _certificateCar2ImageUrl = $v.certificateCar2ImageUrl;
-      _area = $v.area;
-      _phoneNumber2 = $v.phoneNumber2;
+      _stateMessage = $v.stateMessage;
       _ffRef = $v.ffRef;
       _$v = null;
     }
@@ -1125,28 +670,7 @@ class UsersPublicDataRecordBuilder
               followings: _followings?.build(),
               referral: referral,
               referralAcceptedAt: referralAcceptedAt,
-              chatMessageCount: chatMessageCount,
-              message: message,
-              certificateSalary: certificateSalary,
-              certificateJob: certificateJob,
-              certificateSchool: certificateSchool,
-              certificateCar1: certificateCar1,
-              certificateCar2: certificateCar2,
-              certificateCar1Year: certificateCar1Year,
-              certificateCar2Year: certificateCar2Year,
-              certificateCeleb: certificateCeleb,
-              instagram: instagram,
-              mbti: mbti,
-              job: job,
-              openAge: openAge,
-              certificateSalaryImageUrl: certificateSalaryImageUrl,
-              certificateJobImageUrl: certificateJobImageUrl,
-              certificateSchoolImageUrl: certificateSchoolImageUrl,
-              certificateCarImageUrl: certificateCarImageUrl,
-              certificateCelebImageUrl: certificateCelebImageUrl,
-              certificateCar2ImageUrl: certificateCar2ImageUrl,
-              area: area,
-              phoneNumber2: phoneNumber2,
+              stateMessage: stateMessage,
               ffRef: ffRef);
     } catch (_) {
       late String _$failedField;

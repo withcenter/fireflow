@@ -16,21 +16,21 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
   @BuiltValueField(wireName: 'photo_url')
   String? get photoUrl;
 
-  String? get uid;
+  String get uid;
 
   @BuiltValueField(wireName: 'created_time')
-  DateTime? get createdTime;
+  DateTime get createdTime;
 
   @BuiltValueField(wireName: 'phone_number')
   String? get phoneNumber;
 
-  bool? get admin;
+  bool get admin;
 
   BuiltList<DocumentReference>? get blockedUsers;
 
   DocumentReference? get userPublicDataDocumentReference;
 
-  bool? get isProfileComplete;
+  bool get isProfileComplete;
 
   String? get name;
 

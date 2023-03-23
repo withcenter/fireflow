@@ -31,7 +31,9 @@ export 'src/system_settings/translation/translation.service.dart';
 
 /// Widgets that depends on Fireflow
 export 'src/system_settings/translation/translation.dart';
-export 'src/user/my.doc.dart';
+export 'src/user/my_doc.dart';
+export 'src/user/pub_doc.dart';
+export 'src/user/my_stream.dart';
 
 /// Utils, Functions, Actions
 export 'src/app.service.dart';

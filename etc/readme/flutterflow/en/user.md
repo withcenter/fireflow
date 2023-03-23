@@ -45,6 +45,8 @@ Schema **users**
 
 - Create the [`recentPosts` data type](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/forum.md) first, then `users_public_data` schema in Flutterflow like below.
 
+- Note that, you can add more fields if you want.
+
 Schema **users_public_data**
 
 | Field Name | Data Type |
@@ -71,6 +73,7 @@ Schema **users_public_data**
 | referralAcceptedAt | Timestamp |
 | chatMessageCount | Integer |
 | stateMessage | String |
+
 
 
 

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/scheduler.dart';

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -135,25 +134,25 @@ class AppService {
   _initUser() {
     dog('AppService._initUser()');
 
+    /// 사용자 로그인/로그아웃시 초기화
     auth.authStateChanges().listen((user) async {
       // User singed in
-      if (user != null) {
+      if (user == null) {
+        dog('AppService._initUser() - user is not logged in');
+        UserService.instance.reset();
+      } else {
         dog('AppService._initUser() - user is logged in');
 
         UserService.instance.maybeGenerateUserDocument().then((value) {
-          /// TODO UsersRecord 사용자 정보 보관
-          UserService.instance.listenUser();
+          UserService.instance.listenUserDocument();
         });
 
         UserService.instance
             .maybeGenerateUserPublicDataDocument()
             .then((value) {
-          UserService.instance.listenUserPublicData();
+          UserService.instance.listenUserPublicDataDocument();
         });
         await UserSettingService.instance.maybeGenerate();
-      } else {
-        dog('AppService._initUser() - user is not logged in');
-        UserService.instance.pub = null;
       }
     });
   }

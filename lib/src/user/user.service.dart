@@ -62,9 +62,9 @@ class UserService {
   /// The login user's data model.
   ///
   /// It is updated (synced) on /users/<uid> document changes.
-  UserModel? _my;
-  UserModel get my => _my!;
-  set my(UserModel? v) => _my = v;
+  UsersRecord? _my;
+  UsersRecord get my => _my!;
+  set my(UsersRecord? v) => _my = v;
 
   /// The login user's public data model.
   ///
@@ -77,12 +77,21 @@ class UserService {
 
   ///
 
-  final BehaviorSubject<UserModel?> onMyChange =
-      BehaviorSubject<UserModel?>.seeded(null);
+  final BehaviorSubject<UsersRecord?> onMyChange =
+      BehaviorSubject<UsersRecord?>.seeded(null);
   final BehaviorSubject<UserPublicDataModel?> onPubChange =
       BehaviorSubject<UserPublicDataModel?>.seeded(null);
 
-  /// check if user's public data document exists
+  reset() {
+    my = null;
+    pub = null;
+    onMyChange.add(_my);
+    onPubChange.add(_pub);
+  }
+
+  /// Check if pub doc exists
+  ///
+  /// return true if user's public data document exists
   userPublicDataDocumentExists() async {
     final doc = await myUserPublicDataRef.get();
     return doc.exists;
@@ -116,51 +125,44 @@ class UserService {
   /// Get user document by uid.
   ///
   /// Note, it returns user data model. Not the user's public data.
-  Future<UserModel> get([String? id]) async {
-    return UserModel.fromSnapshot(await doc(id ?? uid).get());
+  Future<UsersRecord> get([String? id]) {
+    return UsersRecord.getDocumentOnce(doc(id ?? uid));
   }
+
+  // Future<UserModel> get([String? id]) async {
+  //   return UserModel.fromSnapshot(await doc(id ?? uid).get());
+  // }
 
   /// /users 컬렉션 생성
   ///
   /// FF 에서는 회원 가입 후, 바로 이런 코드를 호출하여 /users 컬렉션을 생성하지만,
   /// FF 를 쓰지 않는 경우, 또는 그 외의 예외적인 경우에서, /users 문서가 생성되지 않았을 경 대비, 성성한다.
   ///
-  /// AppService 에서 호출됨.
+  /// AppService 에서 한번만 호출됨.
   Future maybeGenerateUserDocument() async {
     await maybeCreateUser(FirebaseAuth.instance.currentUser!);
   }
 
+  /// /users_public_data 컬렉션 생성 및 관리
+  ///
   /// Creates /users_public_data/{uid} on registration or if it does not exist by any chance.
   ///
   /// This will crate /users_public_data/{uid} only if the user is logged in for the first time.
+  ///
+  /// AppService 에서 한번만 호출됨.
   Future maybeGenerateUserPublicDataDocument() async {
     ///
     if (await userPublicDataDocumentExists() == false) {
       /// Generate the user's public data document
-      await myUserPublicDataRef.set({
-        'displayName': currentUser.displayName ?? '',
-        'photoUrl': currentUser.photoURL ?? '',
-        'uid': uid,
-        'userDocumentReference': ref,
-        'registeredAt': FieldValue.serverTimestamp(),
-        'notifyNewComments': true,
-      }, SetOptions(merge: true));
-
-      /// Create user's document under `/users` collection.
-      /// Mostly, user document will be created automatically by flutterflow
-      /// when the user is signed in. But there are some cases where the
-      /// app is not developed by fireflow.
-      /// In that case, it will create the user document when user's public
-      /// data document is being created. So, it will check the exitence only
-      /// once and it will save money.
-      final snapshot = await myRef.get();
-      if (snapshot.exists == false) {
-        await myRef.set({
-          'uid': uid,
-          if ((currentUser.email ?? '').isNotEmpty) 'email': currentUser.email,
-          'created_time': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
-      }
+      ///
+      final data = createUsersPublicDataRecordData(
+        displayName: currentUser.displayName ?? '',
+        photoUrl: currentUser.photoURL ?? '',
+        uid: uid,
+        userDocumentReference: ref,
+      );
+      data['registeredAt'] = FieldValue.serverTimestamp();
+      await myUserPublicDataRef.set(data);
     }
 
     /// Update the default uid and reference information
@@ -184,6 +186,7 @@ class UserService {
       ),
     );
 
+    /// 사용자 문서에 /users_public_data 문서 참조 저장.
     await myRef.set({
       'userPublicDataDocumentReference': myUserPublicDataRef,
     }, SetOptions(merge: true));
@@ -192,12 +195,13 @@ class UserService {
   }
 
   /// Listen and sync the user model.
-  listenUser() {
+  listenUserDocument() {
     /// Observe the user data.
     mySubscription?.cancel();
     mySubscription = ref.snapshots().listen((snapshot) {
       if (snapshot.exists) {
-        my = UserModel.fromSnapshot(snapshot);
+        my = UsersRecord.getDocumentFromData(
+            snapshot.data() as Map<String, dynamic>, snapshot.reference);
         onMyChange.add(my);
       }
     });
@@ -208,7 +212,7 @@ class UserService {
   /// It listens the update of the login user's public data document and
   /// - keep the user's public data in memory.
   /// - update the user's public data into Supabase if neccessary.
-  listenUserPublicData() {
+  listenUserPublicDataDocument() {
     /// Observe the user public data.
     publicDataSubscription?.cancel();
     publicDataSubscription = UserService.instance.myUserPublicDataRef

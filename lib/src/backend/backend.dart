@@ -15,8 +15,9 @@ Future maybeCreateUser(User user) async {
     photoUrl: user.photoURL,
     uid: user.uid,
     phoneNumber: user.phoneNumber,
-    createdTime: getCurrentTimestamp,
   );
+
+  userData['created_time'] = FieldValue.serverTimestamp();
 
   await userRecord.set(userData);
   currentUserDocument =

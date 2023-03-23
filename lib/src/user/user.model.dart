@@ -2,6 +2,7 @@ import 'package:fireflow/fireflow.dart';
 
 /// UserModel is a class that represents a user.
 ///
+@Deprecated('User BuiltValue instead.')
 class UserModel {
   String uid;
   String email;

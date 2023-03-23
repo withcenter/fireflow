@@ -2,6 +2,7 @@ import 'package:fireflow/fireflow.dart';
 
 /// UserModel is a class that represents a document of /users_public_data.
 ///
+@Deprecated('User BuiltValue instead.')
 class UserPublicDataModel {
   String uid;
   DocumentReference userDocumentReference;

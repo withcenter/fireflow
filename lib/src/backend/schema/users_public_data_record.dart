@@ -50,31 +50,7 @@ abstract class UsersPublicDataRecord
 
   DateTime? get referralAcceptedAt;
 
-  int? get chatMessageCount;
-
-  String? get statusMessage;
-
-  String? get instagram;
-
-  String? get job;
-
-  bool? get openAge;
-
-  String? get certificateSalaryImageUrl;
-
-  String? get certificateJobImageUrl;
-
-  String? get certificateSchoolImageUrl;
-
-  String? get certificateCarImageUrl;
-
-  String? get certificateCelebImageUrl;
-
-  String? get certificateCar2ImageUrl;
-
-  String? get area;
-
-  String? get phoneNumber2;
+  String? get stateMessage;
 
   @BuiltValueField(wireName: kDocumentReferenceField)
   DocumentReference? get ffRef;
@@ -95,28 +71,9 @@ abstract class UsersPublicDataRecord
         ..noOfPosts = 0
         ..noOfComments = 0
         ..followings = ListBuilder()
-        ..chatMessageCount = 0
-        ..message = ''
-        ..certificateSalary = ''
-        ..certificateJob = ''
-        ..certificateSchool = ''
-        ..certificateCar1 = ''
-        ..certificateCar2 = ''
-        ..certificateCar1Year = ''
-        ..certificateCar2Year = ''
-        ..certificateCeleb = ''
-        ..instagram = ''
-        ..mbti = ''
-        ..job = ''
-        ..openAge = false
-        ..certificateSalaryImageUrl = ''
-        ..certificateJobImageUrl = ''
-        ..certificateSchoolImageUrl = ''
-        ..certificateCarImageUrl = ''
-        ..certificateCelebImageUrl = ''
-        ..certificateCar2ImageUrl = ''
-        ..area = ''
-        ..phoneNumber2 = '';
+        ..stateMessage = ''
+        ..registeredAt = DateTime(1970, 1, 1)
+        ..updatedAt = DateTime(1970, 1, 1);
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('users_public_data');
@@ -159,28 +116,7 @@ Map<String, dynamic> createUsersPublicDataRecordData({
   int? noOfComments,
   DocumentReference? referral,
   DateTime? referralAcceptedAt,
-  int? chatMessageCount,
-  String? message,
-  String? certificateSalary,
-  String? certificateJob,
-  String? certificateSchool,
-  String? certificateCar1,
-  String? certificateCar2,
-  String? certificateCar1Year,
-  String? certificateCar2Year,
-  String? certificateCeleb,
-  String? instagram,
-  String? mbti,
-  String? job,
-  bool? openAge,
-  String? certificateSalaryImageUrl,
-  String? certificateJobImageUrl,
-  String? certificateSchoolImageUrl,
-  String? certificateCarImageUrl,
-  String? certificateCelebImageUrl,
-  String? certificateCar2ImageUrl,
-  String? area,
-  String? phoneNumber2,
+  String? stateMessage,
 }) {
   final firestoreData = serializers.toFirestore(
     UsersPublicDataRecord.serializer,
@@ -206,28 +142,7 @@ Map<String, dynamic> createUsersPublicDataRecordData({
         ..followings = null
         ..referral = referral
         ..referralAcceptedAt = referralAcceptedAt
-        ..chatMessageCount = chatMessageCount
-        ..message = message
-        ..certificateSalary = certificateSalary
-        ..certificateJob = certificateJob
-        ..certificateSchool = certificateSchool
-        ..certificateCar1 = certificateCar1
-        ..certificateCar2 = certificateCar2
-        ..certificateCar1Year = certificateCar1Year
-        ..certificateCar2Year = certificateCar2Year
-        ..certificateCeleb = certificateCeleb
-        ..instagram = instagram
-        ..mbti = mbti
-        ..job = job
-        ..openAge = openAge
-        ..certificateSalaryImageUrl = certificateSalaryImageUrl
-        ..certificateJobImageUrl = certificateJobImageUrl
-        ..certificateSchoolImageUrl = certificateSchoolImageUrl
-        ..certificateCarImageUrl = certificateCarImageUrl
-        ..certificateCelebImageUrl = certificateCelebImageUrl
-        ..certificateCar2ImageUrl = certificateCar2ImageUrl
-        ..area = area
-        ..phoneNumber2 = phoneNumber2,
+        ..stateMessage = stateMessage,
     ),
   );
 
