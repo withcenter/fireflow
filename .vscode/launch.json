@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Free Expression - debug - iPhone11MaxPro",
+      "cwd": "apps/freeex",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "iPhone11MaxPro"
+    },
+    {
       "name": "Hype Talk - Simulator",
       "cwd": "apps/hypetalk",
       "request": "launch",

@@ -340,6 +340,8 @@ class ChatService {
   /// No need to call this method for single-chat or group-chat room.
   ///
   /// See readme.
+  ///
+  /// TODO merge it into chatRoomCreate. And let flutterflow call the chatRoomCrate directly.
   Future chatRoomAfterCreate({
     required DocumentReference chatRoomDocumentReference,
   }) async {
@@ -360,10 +362,12 @@ class ChatService {
 
       await chatRoomDocumentReference.update({
         'isSubChatRoom': true,
+        'createdAt': FieldValue.serverTimestamp(),
       });
     } else {
       await chatRoomDocumentReference.update({
         'isSubChatRoom': false,
+        'createdAt': FieldValue.serverTimestamp(),
       });
     }
   }

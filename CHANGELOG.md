@@ -1,3 +1,8 @@
+## 0.0.159
+
+* Add. `createdAt` in the chat room document.
+
+
 ## 0.0.158
 
 * Add. `ChatService.instance.getRoom`.

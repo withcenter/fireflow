@@ -18,6 +18,8 @@ Schema **users**
 | admin | Boolean |
 | blockedUsers | List < Doc Reference (users) > |
 | isProfileComplete | Boolean |
+| favoriteChatRoomDocumentReferences | List < Doc Reference (chat_rooms) > |
+
 
 
 
@@ -30,6 +32,9 @@ Schema **users**
   - This field is updated when user updates his profile.
   - As of now, the user must filled his display name and photo url.
   - Note that, this field should be in `users` collection for easy access.
+
+
+- `favoriteChatRoomDocumentReferences` is the list of the favorite chat room of the user.
 
 
 
@@ -65,6 +70,8 @@ Schema **users_public_data**
 | referral | Doc Reference (users) |
 | referralAcceptedAt | Timestamp |
 | chatMessageCount | Integer |
+| stateMessage | String |
+
 
 
 - `uid` is the the uid of the user.
@@ -86,6 +93,9 @@ Schema **users_public_data**
 - `referral` is the user document reference who invited me.
 - `referralAcceptedAt` is the time that he user accepted(registered) the invitation.
 - `chatMessageCount` is the no of chat that were sent by the user. See No of chat message in chat.md
+- `stateMessage` is the user's state message. It can be used to display the user's mood or motto. It's a shout-out.
+
+
 
 
 ## Register and sign-in
