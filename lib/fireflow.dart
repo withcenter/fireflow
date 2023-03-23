@@ -12,8 +12,6 @@ export 'src/user_setting/user_setting.model.dart';
 export 'src/chat/chat_room.model.dart';
 export 'src/chat/chat_room_message.model.dart';
 export 'src/chat/chat.service.dart';
-export 'src/chat/widgets/chat_no_of_rooms_with_new_message.dart';
-export 'src/chat/widgets/chat_room_message.list.dart';
 export 'src/storage/storage.service.dart';
 export 'src/push_notifications/messaging.service.dart';
 export 'src/push_notifications/messaging.options.dart';
@@ -34,6 +32,13 @@ export 'src/system_settings/translation/translation.dart';
 export 'src/user/my_doc.dart';
 export 'src/user/pub_doc.dart';
 export 'src/user/my_stream.dart';
+
+export 'src/chat/widgets/chat_no_of_rooms_with_new_message.dart';
+export 'src/chat/widgets/chat_room_message.list.dart';
+export 'src/chat/widgets/chat_room_message.send.dart';
+export 'src/chat/widgets/chat_room_message.mine.dart';
+export 'src/chat/widgets/chat_room_message.others.dart';
+export 'src/chat/widgets/chat_room_message.protocol.dart';
 
 /// Utils, Functions, Actions
 export 'src/app.service.dart';
@@ -61,6 +66,7 @@ export 'src/backend/schema/serializers.dart';
 export 'src/backend/schema/users_public_data_record.dart';
 export 'src/backend/schema/users_record.dart';
 export 'src/backend/schema/chat_rooms_record.dart';
+export 'src/backend/schema/chat_room_messages_record.dart';
 
 export 'src/backend/flutter_flow_utils.dart';
 

@@ -83,3 +83,34 @@ userStream = firebaseUserProviderStream()..listen((_) {});
 
 
 
+
+
+
+# 채팅
+
+- `/chat_rooms` 에 채팅방 정보 목록, `/chat_room_messages` 에 각 채팅 메시지가 들어 있다.
+- 채팅방 정보 목록은 FF 에서 Collection query 를 통해서 직접 하면 된다.
+- 채팅방 페이지 안에서 채팅 목록은 `ChatRoomMessageList` 위젯을 사용하면 된다.
+
+
+## 채팅방 입장
+
+- 채팅방을 입장 할 때에는 해당 채팅방의 reference 를 전달하면 된다.
+- 채팅방은 1:1 채팅방, 그룹 채팅방이 있는데 가능한 두개를 분리하여 페이지를 만든다.
+  - 물론 하나의 페이지에 만들어도 되지만, 그 만큼 복잡도가 증가한다.
+  - 두개의 페이지로 따로 만들어 위젯/컴포넌트를 재 활용해서 쓰면 된다.
+
+
+## 채팅방 메시지 목록
+
+- 채팅방 메시지 목록을 FF 에서 할 수 없다. 그래서 fireflow 에서 제공하는 `ChatRoomMessageList` 위젯을 쓰면 된다.
+  - `ChatRoomMessageList` 위젯에는
+    - `myMessageBuilder` - 나의 채팅 메시지. Build 함수이다.
+    - `otherMessageBuilder` - 다른 회원의 메시지 Build 함수이다.
+    - `onEmpty` - 메시지가 없을 때, 표시할 위젯. Build 함수가 아니다.
+    - `protocolMessageBuilder` - 프로토콜 메시지 build 함수.
+
+- `ChatRoomMessageList` 에서 사용할 수 있는 기본(샘플) 위젯들이 제공된다. 물론 직접 FF 로 작성해서 사용해도 된다.
+  - `ChatRoomMessageMine` - 나의 채팅 메시지 표시 위젯
+  - `ChatRoomMessageOthers` - 다른 사용자의 채팅 메시지 표시 위젯
+  - `protocolMessageBuilder` - 프로토콜 메시지 표시 위젯

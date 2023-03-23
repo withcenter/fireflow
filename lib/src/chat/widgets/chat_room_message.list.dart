@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/backend/schema/chat_room_messages_record.dart';
 import 'package:flutter/material.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
@@ -159,8 +158,6 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
         final message = ChatRoomMessagesRecord.getDocumentFromData(
             snapshot.data() as Map<String, dynamic>, snapshot.reference);
-
-        // final message =
 
         if (message.protocol!.isNotEmpty) {
           if (widget.protocolMessageBuilder != null) {
