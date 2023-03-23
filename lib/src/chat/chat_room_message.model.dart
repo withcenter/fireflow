@@ -1,6 +1,7 @@
 import 'package:fireflow/fireflow.dart';
 
 /// Chat message model
+@Deprecated('User BuiltValue')
 class ChatRoomMessageModel {
   ChatRoomMessageModel(
       {required this.userDocumentReference,

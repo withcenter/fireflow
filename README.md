@@ -3,6 +3,11 @@
 FlutterFlow Documents: [English](https://github.com/withcenter/fireflow/blob/main/README.md) | [한국어](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/ko/README.md)\
 Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutter/en/README.md)
 
+
+**Breaking Changes**
+
+* There are big breaking changes With the version of 0.1.x published in March. If you are using the version of 0.0.x, then keep using it that version. You may try the new version with new app.
+
 # Fireflow
 
 * `Fireflow` is an open source, easy to use and rapid development tool to build apps like social network service, forum based community service, online shopping service, and much more.
@@ -11,6 +16,7 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
   * For the example code of Flutter, see [the example project](https://github.com/withcenter/fireflow/tree/main/example).
 
 * If you encounter an error, please create an issue in [fireflow git issue](https://github.com/withcenter/fireflow/issues).
+
 
 
 

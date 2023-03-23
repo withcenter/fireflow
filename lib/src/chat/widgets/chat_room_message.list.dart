@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fireflow/fireflow.dart';
+import 'package:fireflow/src/backend/schema/chat_room_messages_record.dart';
 import 'package:flutter/material.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
@@ -12,24 +13,20 @@ class ChatRoomMessageList extends StatefulWidget {
     Key? key,
     this.width,
     this.height,
-    this.otherUserPublicDataDocument,
-    this.chatRoomDocumentReference,
-    required this.onMyMessage,
-    required this.onOtherMessage,
+    required this.chatRoomDocumentReference,
+    required this.myMessageBuilder,
+    required this.otherMessageBuilder,
     required this.onEmpty,
-    this.onProtocolMessage,
-  })  : assert(chatRoomDocumentReference != null,
-            "You must set only one of otherUserPublicDataDocument or chatRoomDocumentReference."),
-        super(key: key);
+    this.protocolMessageBuilder,
+  }) : super(key: key);
 
   final double? width;
   final double? height;
-  final DocumentReference? otherUserPublicDataDocument;
-  final DocumentReference? chatRoomDocumentReference;
+  final DocumentReference chatRoomDocumentReference;
 
-  final Widget Function(ChatRoomMessageModel) onMyMessage;
-  final Widget Function(ChatRoomMessageModel) onOtherMessage;
-  final Widget Function(ChatRoomMessageModel)? onProtocolMessage;
+  final Widget Function(DocumentSnapshot) myMessageBuilder;
+  final Widget Function(DocumentSnapshot) otherMessageBuilder;
+  final Widget Function(DocumentSnapshot)? protocolMessageBuilder;
   final Widget onEmpty;
 
   @override
@@ -49,29 +46,19 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   /// Ensure the chat room exists.
   bool ensureChatRoomExists = false;
 
-  UserPublicDataModel get pub => UserService.instance.pub;
-
   /// The chat room document references of the 1:1 chat room between you and the other user.
-  List<DocumentReference> get youAndMeRef => [
-        UserService.instance.doc(widget.otherUserPublicDataDocument!.id),
-        myReference,
-      ];
+  List<DocumentReference> get youAndMeRef => widget.chatRoomDocumentReference.id
+      .split('-')
+      .map((id) => UserService.instance.doc(id))
+      .toList();
 
   /// The chat room document reference.
-  DocumentReference get chatRoomRef {
-    if (isGroupChat) {
-      return widget.chatRoomDocumentReference!;
-    } else {
-      return ChatService.instance.room(([
-        pub.uid,
-        widget.otherUserPublicDataDocument!.id
-      ]..sort())
-          .join('-'));
-    }
-  }
+  DocumentReference get chatRoomRef => widget.chatRoomDocumentReference;
 
-  bool get isSingleChat => widget.otherUserPublicDataDocument != null;
+  /// 채팅방 ID 에 하이픈(-)이 들어가 있으면 1:1 채팅방. 아니면, 그룹 채팅방이다.
+  bool get isSingleChat => widget.chatRoomDocumentReference.id.contains('-');
 
+  ///
   bool get isGroupChat => !isSingleChat;
 
   @override
@@ -166,21 +153,25 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
     if (ensureChatRoomExists == false) return const SizedBox.shrink();
     return PaginateFirestore(
       reverse: true,
-      // item builder type is compulsory.
-      itemBuilder: (context, documentSnapshots, index) {
-        final message =
-            ChatRoomMessageModel.fromSnapshot(documentSnapshots[index]);
 
-        if (message.isProtocol) {
-          if (widget.onProtocolMessage != null) {
-            return widget.onProtocolMessage!(message);
+      itemBuilder: (context, documentSnapshots, index) {
+        final snapshot = documentSnapshots[index];
+
+        final message = ChatRoomMessagesRecord.getDocumentFromData(
+            snapshot.data() as Map<String, dynamic>, snapshot.reference);
+
+        // final message =
+
+        if (message.protocol!.isNotEmpty) {
+          if (widget.protocolMessageBuilder != null) {
+            return widget.protocolMessageBuilder!(snapshot);
           } else {
             return const SizedBox.shrink();
           }
-        } else if (message.isMine) {
-          return widget.onMyMessage(message);
+        } else if (message.userDocumentReference == myReference) {
+          return widget.myMessageBuilder(snapshot);
         } else {
-          return widget.onOtherMessage(message);
+          return widget.otherMessageBuilder(snapshot);
         }
       },
 
@@ -189,9 +180,9 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
           .collection('chat_room_messages')
           .where('chatRoomDocumentReference', isEqualTo: chatRoomRef)
           .orderBy('sentAt', descending: true),
-      //Change types accordingly
+      // Change types accordingly
       itemBuilderType: PaginateBuilderType.listView,
-      // to fetch real-time data
+      // To fetch real-time data
       isLive: true,
       onEmpty: widget.onEmpty,
       initialLoader: const SizedBox.shrink(),

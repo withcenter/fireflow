@@ -19,7 +19,7 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
   String get uid;
 
   @BuiltValueField(wireName: 'created_time')
-  DateTime get createdTime;
+  DateTime? get createdTime;
 
   @BuiltValueField(wireName: 'phone_number')
   String? get phoneNumber;
@@ -50,7 +50,8 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
     ..blockedUsers = ListBuilder()
     ..isProfileComplete = false
     ..name = ''
-    ..favoriteChatRooms = ListBuilder();
+    ..favoriteChatRooms = ListBuilder()
+    ..createdTime = DateTime(1970, 1, 1);
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('users');
@@ -80,9 +81,9 @@ Map<String, dynamic> createUsersRecordData({
   String? uid,
   DateTime? createdTime,
   String? phoneNumber,
-  bool? admin,
+  bool admin = false,
   DocumentReference? userPublicDataDocumentReference,
-  bool? isProfileComplete,
+  bool isProfileComplete = false,
   String? name,
 }) {
   final firestoreData = serializers.toFirestore(

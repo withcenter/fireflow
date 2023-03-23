@@ -18,38 +18,60 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
   Iterable<Object?> serialize(Serializers serializers, UsersRecord object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
-      'email',
-      serializers.serialize(object.email,
-          specifiedType: const FullType(String)),
-      'display_name',
-      serializers.serialize(object.displayName,
-          specifiedType: const FullType(String)),
-      'photo_url',
-      serializers.serialize(object.photoUrl,
-          specifiedType: const FullType(String)),
       'uid',
       serializers.serialize(object.uid, specifiedType: const FullType(String)),
-      'created_time',
-      serializers.serialize(object.createdTime,
-          specifiedType: const FullType(DateTime)),
-      'phone_number',
-      serializers.serialize(object.phoneNumber,
-          specifiedType: const FullType(String)),
       'admin',
       serializers.serialize(object.admin, specifiedType: const FullType(bool)),
-      'blockedUsers',
-      serializers.serialize(object.blockedUsers,
-          specifiedType: const FullType(BuiltList, const [
-            const FullType(
-                DocumentReference, const [const FullType.nullable(Object)])
-          ])),
       'isProfileComplete',
       serializers.serialize(object.isProfileComplete,
           specifiedType: const FullType(bool)),
-      'name',
-      serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
     Object? value;
+    value = object.email;
+    if (value != null) {
+      result
+        ..add('email')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.displayName;
+    if (value != null) {
+      result
+        ..add('display_name')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.photoUrl;
+    if (value != null) {
+      result
+        ..add('photo_url')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.createdTime;
+    if (value != null) {
+      result
+        ..add('created_time')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(DateTime)));
+    }
+    value = object.phoneNumber;
+    if (value != null) {
+      result
+        ..add('phone_number')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    value = object.blockedUsers;
+    if (value != null) {
+      result
+        ..add('blockedUsers')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(BuiltList, const [
+              const FullType(
+                  DocumentReference, const [const FullType.nullable(Object)])
+            ])));
+    }
     value = object.userPublicDataDocumentReference;
     if (value != null) {
       result
@@ -57,6 +79,13 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(
                 DocumentReference, const [const FullType.nullable(Object)])));
+    }
+    value = object.name;
+    if (value != null) {
+      result
+        ..add('name')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
     }
     value = object.favoriteChatRooms;
     if (value != null) {
@@ -92,15 +121,15 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
       switch (key) {
         case 'email':
           result.email = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'display_name':
           result.displayName = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'photo_url':
           result.photoUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'uid':
           result.uid = serializers.deserialize(value,
@@ -108,11 +137,11 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
           break;
         case 'created_time':
           result.createdTime = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime))! as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'phone_number':
           result.phoneNumber = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'admin':
           result.admin = serializers.deserialize(value,
@@ -138,7 +167,7 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'favoriteChatRooms':
           result.favoriteChatRooms.replace(serializers.deserialize(value,
@@ -162,27 +191,27 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
 
 class _$UsersRecord extends UsersRecord {
   @override
-  final String email;
+  final String? email;
   @override
-  final String displayName;
+  final String? displayName;
   @override
-  final String photoUrl;
+  final String? photoUrl;
   @override
   final String uid;
   @override
-  final DateTime createdTime;
+  final DateTime? createdTime;
   @override
-  final String phoneNumber;
+  final String? phoneNumber;
   @override
   final bool admin;
   @override
-  final BuiltList<DocumentReference<Object?>> blockedUsers;
+  final BuiltList<DocumentReference<Object?>>? blockedUsers;
   @override
   final DocumentReference<Object?>? userPublicDataDocumentReference;
   @override
   final bool isProfileComplete;
   @override
-  final String name;
+  final String? name;
   @override
   final BuiltList<DocumentReference<Object?>>? favoriteChatRooms;
   @override
@@ -192,35 +221,24 @@ class _$UsersRecord extends UsersRecord {
       (new UsersRecordBuilder()..update(updates))._build();
 
   _$UsersRecord._(
-      {required this.email,
-      required this.displayName,
-      required this.photoUrl,
+      {this.email,
+      this.displayName,
+      this.photoUrl,
       required this.uid,
-      required this.createdTime,
-      required this.phoneNumber,
+      this.createdTime,
+      this.phoneNumber,
       required this.admin,
-      required this.blockedUsers,
+      this.blockedUsers,
       this.userPublicDataDocumentReference,
       required this.isProfileComplete,
-      required this.name,
+      this.name,
       this.favoriteChatRooms,
       this.ffRef})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(email, r'UsersRecord', 'email');
-    BuiltValueNullFieldError.checkNotNull(
-        displayName, r'UsersRecord', 'displayName');
-    BuiltValueNullFieldError.checkNotNull(photoUrl, r'UsersRecord', 'photoUrl');
     BuiltValueNullFieldError.checkNotNull(uid, r'UsersRecord', 'uid');
-    BuiltValueNullFieldError.checkNotNull(
-        createdTime, r'UsersRecord', 'createdTime');
-    BuiltValueNullFieldError.checkNotNull(
-        phoneNumber, r'UsersRecord', 'phoneNumber');
     BuiltValueNullFieldError.checkNotNull(admin, r'UsersRecord', 'admin');
     BuiltValueNullFieldError.checkNotNull(
-        blockedUsers, r'UsersRecord', 'blockedUsers');
-    BuiltValueNullFieldError.checkNotNull(
         isProfileComplete, r'UsersRecord', 'isProfileComplete');
-    BuiltValueNullFieldError.checkNotNull(name, r'UsersRecord', 'name');
   }
 
   @override
@@ -378,7 +396,7 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
       _createdTime = $v.createdTime;
       _phoneNumber = $v.phoneNumber;
       _admin = $v.admin;
-      _blockedUsers = $v.blockedUsers.toBuilder();
+      _blockedUsers = $v.blockedUsers?.toBuilder();
       _userPublicDataDocumentReference = $v.userPublicDataDocumentReference;
       _isProfileComplete = $v.isProfileComplete;
       _name = $v.name;
@@ -408,33 +426,27 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
     try {
       _$result = _$v ??
           new _$UsersRecord._(
-              email: BuiltValueNullFieldError.checkNotNull(
-                  email, r'UsersRecord', 'email'),
-              displayName: BuiltValueNullFieldError.checkNotNull(
-                  displayName, r'UsersRecord', 'displayName'),
-              photoUrl: BuiltValueNullFieldError.checkNotNull(
-                  photoUrl, r'UsersRecord', 'photoUrl'),
+              email: email,
+              displayName: displayName,
+              photoUrl: photoUrl,
               uid: BuiltValueNullFieldError.checkNotNull(
                   uid, r'UsersRecord', 'uid'),
-              createdTime: BuiltValueNullFieldError.checkNotNull(
-                  createdTime, r'UsersRecord', 'createdTime'),
-              phoneNumber: BuiltValueNullFieldError.checkNotNull(
-                  phoneNumber, r'UsersRecord', 'phoneNumber'),
+              createdTime: createdTime,
+              phoneNumber: phoneNumber,
               admin: BuiltValueNullFieldError.checkNotNull(
                   admin, r'UsersRecord', 'admin'),
-              blockedUsers: blockedUsers.build(),
+              blockedUsers: _blockedUsers?.build(),
               userPublicDataDocumentReference: userPublicDataDocumentReference,
               isProfileComplete: BuiltValueNullFieldError.checkNotNull(
                   isProfileComplete, r'UsersRecord', 'isProfileComplete'),
-              name: BuiltValueNullFieldError.checkNotNull(
-                  name, r'UsersRecord', 'name'),
+              name: name,
               favoriteChatRooms: _favoriteChatRooms?.build(),
               ffRef: ffRef);
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'blockedUsers';
-        blockedUsers.build();
+        _blockedUsers?.build();
 
         _$failedField = 'favoriteChatRooms';
         _favoriteChatRooms?.build();

@@ -1,9 +1,7 @@
 import 'package:built_value/standard_json_plugin.dart';
+import 'package:fireflow/fireflow.dart';
+import 'package:fireflow/src/backend/schema/chat_room_messages_record.dart';
 import 'package:from_css_color/from_css_color.dart';
-
-import 'users_record.dart';
-
-import 'index.dart';
 
 export 'index.dart';
 
@@ -13,6 +11,9 @@ const kDocumentReferenceField = 'Document__Reference__Field';
 
 @SerializersFor([
   UsersRecord,
+  UsersPublicDataRecord,
+  ChatRoomsRecord,
+  ChatRoomMessagesRecord,
 ])
 final Serializers serializers = (_$serializers.toBuilder()
       ..add(DocumentReferenceSerializer())

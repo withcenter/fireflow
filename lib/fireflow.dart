@@ -9,15 +9,15 @@ export 'src/user/user.model.dart';
 export 'src/user/user_public_data.model.dart';
 export 'src/user_setting/user_setting.service.dart';
 export 'src/user_setting/user_setting.model.dart';
-export 'src/chat/chat_room_message.list.dart';
 export 'src/chat/chat_room.model.dart';
 export 'src/chat/chat_room_message.model.dart';
 export 'src/chat/chat.service.dart';
+export 'src/chat/widgets/chat_no_of_rooms_with_new_message.dart';
+export 'src/chat/widgets/chat_room_message.list.dart';
 export 'src/storage/storage.service.dart';
 export 'src/push_notifications/messaging.service.dart';
 export 'src/push_notifications/messaging.options.dart';
 export 'src/push_notifications/message.model.dart';
-export 'src/chat/chat_no_of_rooms_with_new_message.dart';
 export 'src/category/category.service.dart';
 export 'src/category/category.model.dart';
 export 'src/post/post.service.dart';
@@ -52,12 +52,15 @@ export 'src/functions/array_functions.dart';
 export 'src/auth/auth_util.dart';
 export 'src/auth/firebase_user_provider.dart';
 
+/// Backend
+///
 export 'src/backend/lat_lng.dart';
 export 'src/backend/schema/index.dart';
 export 'src/backend/schema/structs/recent_posts_struct.dart';
 export 'src/backend/schema/serializers.dart';
 export 'src/backend/schema/users_public_data_record.dart';
 export 'src/backend/schema/users_record.dart';
+export 'src/backend/schema/chat_rooms_record.dart';
 
 export 'src/backend/flutter_flow_utils.dart';
 

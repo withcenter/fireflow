@@ -17,7 +17,9 @@ Future maybeCreateUser(User user) async {
     phoneNumber: user.phoneNumber,
   );
 
-  userData['created_time'] = FieldValue.serverTimestamp();
+  /// 여기에 Server timestamp 가 들어가야 하는데, 아직, BuiltValue 에서 처리 방법을 모르겠음.
+  userData['created_time'] = DateTime.now();
+  // FieldValue.serverTimestamp();
 
   await userRecord.set(userData);
   currentUserDocument =

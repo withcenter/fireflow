@@ -27,6 +27,9 @@ class ChatService {
   /// Returns a chat room message document reference of the given id.
   DocumentReference message(String id) => messages.doc(id);
 
+  /// 1:1 채팅방 reference 를 리턴
+  ///
+  /// [otherUserUid]는 상대방의 uid 이다.
   DocumentReference getOneAndOneChatRoomDocumentReference(
     String otherUserUid,
   ) {
@@ -38,34 +41,62 @@ class ChatService {
         .join('-'));
   }
 
-  /// Creates a chat room.
+  /// 1:1 채팅방 reference 를 리턴
   ///
-  /// [id] is the chat room id.
+  /// 입력값이 다른 사용자의 reference 이다.
+  ///
+  /// getOneAndOneChatRoomDocumentReference() 와 동일한 결과 리턴
+  ///
+  DocumentReference getSingChatRoomReference(
+    DocumentReference otherUserDocumentReference,
+  ) {
+    return getOneAndOneChatRoomDocumentReference(otherUserDocumentReference.id);
+  }
+
+  /// 채팅 방생성
+  ///
+  /// 반드시 채팅방은 이 함수 호출을 통해서만 생성해야 한다. FF 에서 직접 레코드를 생성하면 안된다.
+  ///
+  /// isGroupChat, leaveProtocolMessage, urlClick, urlPreview 는 자동 설정된다. 만약, 다른
+  /// 값을 원하다면, createChatRoom() 호출 할 때, data 로 지정하면 된다.
+  ///
+  ///
   createChatRoom({
-    required String id,
+    DocumentReference? otherUserDocumentReference,
     List<String>? otherUids,
+    Map<String, dynamic>? data,
   }) async {
-    List<DocumentReference>? users;
+    DocumentReference roomReference;
+    List<DocumentReference>? userDocumentReferences;
     late bool isGroupChat;
+
+    ///
     if (otherUids != null) {
-      users = otherUids.map((e) => db.collection('users').doc(e)).toList();
+      userDocumentReferences =
+          otherUids.map((e) => db.collection('users').doc(e)).toList();
     }
 
-    if (id.contains('-')) {
+    if (otherUserDocumentReference != null) {
+      roomReference = getSingChatRoomReference(
+        otherUserDocumentReference,
+      );
       isGroupChat = false;
     } else {
+      roomReference = rooms.doc();
       isGroupChat = true;
     }
 
-    await rooms.doc(id).set({
+    await roomReference.set({
       'isGroupChat': isGroupChat,
       'lastMessageSeenBy': FieldValue.arrayUnion([
         UserService.instance.ref,
       ]),
-      'userDocumentReferences': users ?? [UserService.instance.ref],
+      'userDocumentReferences':
+          userDocumentReferences ?? [UserService.instance.ref],
       'leaveProtocolMessage': true,
       'urlClick': true,
       'urlPreview': true,
+      if (data != null) ...data,
     });
   }
 
@@ -74,11 +105,10 @@ class ChatService {
   }
 
   createOneAndOneChatRoom({
-    required String otherUserUid,
+    required DocumentReference otherUserDocumentReference,
   }) async {
-    final otherUserDocumentReference = db.collection('users').doc(otherUserUid);
     await createChatRoom(
-      id: getOneAndOneChatRoomDocumentReference(otherUserUid).id,
+      otherUserDocumentReference: otherUserDocumentReference,
       otherUids: [otherUserDocumentReference.id],
     );
   }

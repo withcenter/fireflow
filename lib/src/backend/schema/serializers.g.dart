@@ -7,6 +7,10 @@ part of 'serializers.dart';
 // **************************************************************************
 
 Serializers _$serializers = (new Serializers().toBuilder()
+      ..add(ChatRoomMessagesRecord.serializer)
+      ..add(ChatRoomsRecord.serializer)
+      ..add(RecentPostsStruct.serializer)
+      ..add(UsersPublicDataRecord.serializer)
       ..add(UsersRecord.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList, const [
@@ -14,6 +18,45 @@ Serializers _$serializers = (new Serializers().toBuilder()
                 DocumentReference, const [const FullType.nullable(Object)])
           ]),
           () => new ListBuilder<DocumentReference<Object?>>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(
+                DocumentReference, const [const FullType.nullable(Object)])
+          ]),
+          () => new ListBuilder<DocumentReference<Object?>>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(
+                DocumentReference, const [const FullType.nullable(Object)])
+          ]),
+          () => new ListBuilder<DocumentReference<Object?>>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(
+                DocumentReference, const [const FullType.nullable(Object)])
+          ]),
+          () => new ListBuilder<DocumentReference<Object?>>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(
+                DocumentReference, const [const FullType.nullable(Object)])
+          ]),
+          () => new ListBuilder<DocumentReference<Object?>>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(
+                DocumentReference, const [const FullType.nullable(Object)])
+          ]),
+          () => new ListBuilder<DocumentReference<Object?>>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(
+                DocumentReference, const [const FullType.nullable(Object)])
+          ]),
+          () => new ListBuilder<DocumentReference<Object?>>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(RecentPostsStruct)]),
+          () => new ListBuilder<RecentPostsStruct>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [
             const FullType(

@@ -18,6 +18,10 @@
 # 사용자
 
 
+## 사용자 계정 생성, 수정, 삭제
+
+- 사용자 정보는 모두 FF 를 통해서 작업을 하면 된다.
+
 ## UserService.instance.my
 
 - 사용자 문서가 업데이트 될 때마다 최신 정보를 유지한다.
@@ -26,6 +30,21 @@
 ## UserService.instance.pub
 
 - 사용자 공개 문서가 업데이트 될 때 마다 최신 정보를 유지한다.
+
+## 사용자 정보 업데이트 할 때 위젯 빌드
+
+`MyStream` 은, 사용자 문서가 변할 때 마다 위젯을 빌드한다.
+로그인/로그아웃을 감지해서 사용자 문서를 `my` 에 업데이트하고, `UserService.instance.onMyChange` 가 호출되므로, 로그인/로그아웃 할 때 마다 위젯을 빌드하는 효과가 있다. 그래서, `login`, `logout` 속성이 있다.
+
+특히, 이 위젯이 유용한 이유는 authStateChanges() 를 listen 하면, 사용자 문서가 아직, 준비되지 않았을 수 있는데, 이 위젯은 사용자 문서가 준비된 후, 빌드를 하기 때문에 안전하게 사용자 문서를 사용 할 수 있다.
+
+- 예
+```dart
+MyStream();
+MyStream(login: ...);
+MyStream(logout: ...);
+MyStream(login: ..., logout ...);
+```
 
 
 ## 사용자가 로그인을 할 때 위젯 rebuild 및 사용자 정보 업데이트
