@@ -30,7 +30,6 @@ dependencies:
   firebase_core: 2.4.0
   firebase_core_platform_interface: 4.5.2
   firebase_core_web: 2.0.2
-  firebase_database: 10.0.7
   firebase_messaging: 14.1.4
   firebase_messaging_platform_interface: 4.2.8
   firebase_messaging_web: 3.2.9

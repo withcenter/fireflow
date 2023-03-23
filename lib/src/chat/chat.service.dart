@@ -168,8 +168,8 @@ class ChatService {
     /// Send chat message asynchronously.
     ///
     final data = {
-      'chatRoomDocumentId': chatRoomRef.id,
-      'userDocumentId': UserService.instance.ref.id,
+      'chatRoomDocumentReference': chatRoomRef,
+      'userDocumentReference': UserService.instance.ref,
       'sentAt': FieldValue.serverTimestamp(),
       if (text != null) 'text': text,
       if (uploadUrl != null) 'uploadUrl': uploadUrl,
