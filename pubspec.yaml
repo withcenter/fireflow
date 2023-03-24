@@ -1,6 +1,6 @@
 name: fireflow
 description: This package is designed for FlutterFlow app to provide enhanced features.
-version: 0.0.159
+version: 0.0.160
 homepage: https://github.com/withcenter/fireflow
 
 environment:
@@ -15,7 +15,7 @@ dependencies:
     sdk: flutter
 
   built_collection: 5.1.1
-  built_value: 8.4.0
+  built_value: 8.4.3
   cached_network_image: 3.2.1
   cloud_firestore: 4.2.0
   cloud_firestore_platform_interface: 5.9.1

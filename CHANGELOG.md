@@ -1,3 +1,7 @@
+## 0.0.160
+
+* Update. The version of built_value dependency for the change on FlutterFlow.
+
 ## 0.0.159
 
 * Add. `createdAt` in the chat room document.
