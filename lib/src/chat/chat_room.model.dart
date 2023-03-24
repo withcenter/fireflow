@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// ChatRoomModel is a class that represents a document of /chat_rooms.
 ///
+@Deprecated('ChatRoomModel is deprecated. Use BuiltValue instead.')
 class ChatRoomModel {
   List<DocumentReference> userDocumentReferences;
   String lastMessage;

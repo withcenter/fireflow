@@ -412,4 +412,14 @@ class ChatService {
     final otherUid = uids.first == myUid ? uids.last : uids.first;
     return UserService.instance.doc(otherUid);
   }
+
+  /// 그룹 챗이면 true 리턴
+  bool isGroupChat(String chatRoomId) {
+    return !isSingleChat(chatRoomId);
+  }
+
+  /// Single Chat (1:1 챗) 이면 true 리턴
+  bool isSingleChat(String chatRoomId) {
+    return chatRoomId.contains('-');
+  }
 }

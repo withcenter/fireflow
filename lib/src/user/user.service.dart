@@ -539,4 +539,14 @@ class UserService {
       },
     );
   }
+
+  /// 사용자 문서 ref 를 받아서, 사용자 공개 문서 ref 를 리턴한다.
+  ///
+  /// 예)
+  /// UsersPublicDataRecord.getDocument(UserService.instance
+  ///   .userPublicDataDocumentReference(userDocumentReference))
+  DocumentReference userPublicDataDocumentReference(
+      DocumentReference userDocumentReference) {
+    return publicDataCol.doc(userDocumentReference.id);
+  }
 }

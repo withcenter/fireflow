@@ -4,6 +4,7 @@ import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
+import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
 /// ChatRoomMessageList is a widget that displays a list of messages in a chat room.
 ///
@@ -38,9 +39,9 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   /// The chat room model.
   ///
   /// This is updated when the chat room is updated.
-  late ChatRoomModel room;
+  late ChatRoomsRecord room;
 
-  late final StreamSubscription subscriptionNewMessage;
+  StreamSubscription? subscriptionNewMessage;
 
   /// Ensure the chat room exists.
   bool ensureChatRoomExists = false;
@@ -91,12 +92,21 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
     } else {
       // For the open group chat, any user can join the chat room.
 
-      // get the room
-      room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
+      // 채팅방 정보 읽기 & 에러 핸들링.
+      try {
+        room = await ChatRoomsRecord.getDocumentOnce(chatRoomRef);
+      } catch (e) {
+        snackBarError(
+            context: context,
+            title: 'Failed to get chat room',
+            message:
+                'The chat room does not exists. Or it may be a wrong chat room reference. Or you do not have permission to access the chat room.');
+        rethrow;
+      }
 
       // If the user is not in the room, and the room is open chat, then add the user's ref to the room.
       // And send a message for 'enter'.
-      if (room.userDocumentReferences.contains(myReference) == false &&
+      if (room.userDocumentReferences!.contains(myReference) == false &&
           room.isOpenChat == true) {
         await chatRoomRef.update({
           'userDocumentReferences': FieldValue.arrayUnion([myReference]),
@@ -129,10 +139,13 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
     // Listen for new message, and make it read by you.
     subscriptionNewMessage = chatRoomRef.snapshots().listen((snapshot) {
-      room = ChatRoomModel.fromSnapshot(snapshot);
+      room = ChatRoomsRecord.getDocumentFromData(
+          snapshot.data() as Map<String, dynamic>, snapshot.reference);
+
+      // room = ChatRoomModel.fromSnapshot(snapshot);
 
       /// If the signed-in user have not seen the message, then make it seen.
-      if (room.lastMessageSeenBy.contains(myReference) == false) {
+      if (room.lastMessageSeenBy!.contains(myReference) == false) {
         chatRoomRef.update({
           'lastMessageSeenBy': FieldValue.arrayUnion([myReference])
         });
@@ -143,7 +156,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   @override
   void dispose() {
     AppService.instance.currentChatRoomDocumentReference = null;
-    subscriptionNewMessage.cancel();
+    subscriptionNewMessage?.cancel();
     super.dispose();
   }
 

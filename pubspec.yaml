@@ -37,6 +37,8 @@ dependencies:
   firebase_storage_platform_interface: 4.1.25
   firebase_storage_web: 3.3.17
 
+  firebase_ui_firestore: 1.1.1
+
   # for file upload
   image_picker: 0.8.5+3
   image_picker_android: 0.8.5+3
