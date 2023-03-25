@@ -11,7 +11,7 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
   String? get email;
 
   @BuiltValueField(wireName: 'display_name')
-  String? get displayName;
+  String get displayName;
 
   @BuiltValueField(wireName: 'photo_url')
   String? get photoUrl;
@@ -19,37 +19,69 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
   String get uid;
 
   @BuiltValueField(wireName: 'created_time')
-  DateTime? get createdTime;
+  DateTime get createdTime;
+
+  DateTime get updatedAt;
 
   @BuiltValueField(wireName: 'phone_number')
   String? get phoneNumber;
 
   bool get admin;
 
-  BuiltList<DocumentReference>? get blockedUsers;
-
-  DocumentReference? get userPublicDataDocumentReference;
+  BuiltList<DocumentReference> get blockedUsers;
 
   bool get isProfileComplete;
 
   String? get name;
 
-  BuiltList<DocumentReference>? get favoriteChatRooms;
+  String? get coverPhotoUrl;
+
+  String? get gender;
+
+  DateTime? get birthday;
+
+  bool get hasPhoto;
+
+  DateTime? get lastPostCreatedAt;
+
+  RecentPostsStruct get lastPost;
+
+  BuiltList<RecentPostsStruct>? get recentPosts;
+
+  bool? get isPremiumUser;
+
+  int get noOfPosts;
+
+  int get noOfComments;
+
+  BuiltList<DocumentReference> get followings;
+
+  DocumentReference? get referral;
+
+  DateTime? get referralAcceptedAt;
+
+  String? get stateMessage;
+
+  BuiltList<DocumentReference> get favoriteChatRooms;
 
   @BuiltValueField(wireName: kDocumentReferenceField)
   DocumentReference? get ffRef;
   DocumentReference get reference => ffRef!;
 
   static void _initializeBuilder(UsersRecordBuilder builder) => builder
-    ..email = ''
     ..displayName = ''
     ..uid = ''
+    ..createdTime = DateTime(1970, 1, 1)
+    ..updatedAt = DateTime(1970, 1, 1)
     ..admin = false
     ..blockedUsers = ListBuilder()
     ..isProfileComplete = false
-    ..name = ''
-    ..favoriteChatRooms = ListBuilder()
-    ..createdTime = DateTime(1970, 1, 1);
+    ..hasPhoto = false
+    ..lastPost = RecentPostsStructBuilder()
+    ..noOfPosts = 0
+    ..noOfComments = 0
+    ..followings = ListBuilder()
+    ..favoriteChatRooms = ListBuilder();
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('users');
@@ -78,9 +110,9 @@ Map<String, dynamic> createUsersRecordData({
   String? photoUrl,
   String? uid,
   DateTime? createdTime,
+  DateTime? updatedAt,
   String? phoneNumber,
   bool admin = false,
-  DocumentReference? userPublicDataDocumentReference,
   bool isProfileComplete = false,
   String? name,
 }) {
@@ -93,10 +125,10 @@ Map<String, dynamic> createUsersRecordData({
         ..photoUrl = photoUrl
         ..uid = uid
         ..createdTime = createdTime
+        ..updatedAt = updatedAt
         ..phoneNumber = phoneNumber
         ..admin = admin
         ..blockedUsers = null
-        ..userPublicDataDocumentReference = userPublicDataDocumentReference
         ..isProfileComplete = isProfileComplete
         ..name = name
         ..favoriteChatRooms = null,

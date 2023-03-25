@@ -7,6 +7,8 @@ import 'package:fireflow/src/backend/backend.dart';
 import 'package:path/path.dart' as p;
 import 'package:rxdart/subjects.dart';
 
+UsersRecord get my => UserService.instance.my;
+
 /// UserService is a singleton class that provides necessary service for user
 /// related features.
 ///
@@ -38,7 +40,7 @@ class UserService {
 
   DocumentReference get myRef => ref;
 
-  CollectionReference get publicDataCol => db.collection('users_public_data');
+  // CollectionReference get publicDataCol => db.collection('users_public_data');
 
   /// The login user's public data document reference
   DocumentReference get myUserPublicDataRef =>
@@ -194,17 +196,44 @@ class UserService {
     dog("UserService.generateUserPublicData() - user public data generated at ${myUserPublicDataRef.path}");
   }
 
-  /// Listen and sync the user model.
+  /// 사용자 문서 업데이트 Listen & 최신 문서 업데이트
+  ///
   listenUserDocument() {
-    /// Observe the user data.
     mySubscription?.cancel();
     mySubscription = ref.snapshots().listen((snapshot) {
       if (snapshot.exists) {
+        // 사용자 문서가 변경되었다.
         my = UsersRecord.getDocumentFromData(
             snapshot.data() as Map<String, dynamic>, snapshot.reference);
         onMyChange.add(my);
+
+        print(
+            'User document had been chagned: ${my.displayName}, ${my.updatedAt}');
+
+        /// 사용자 필드 옮기기
+        _moveUserData();
       }
     });
+  }
+
+  /// 개발자가 사용자의 email 이나 phone_number 를 다른 컬렉션에 저장하고 싶을 때,
+  /// README 참고
+  _moveUserData() async {
+    if (Config.instance.moveUserData == null) return;
+
+    if (my.email!.isNotEmpty || my.phoneNumber!.isNotEmpty) {
+      await update(
+        email: FieldValue.delete(),
+        phoneNumber: FieldValue.delete(),
+      );
+      await FirebaseFirestore.instance
+          .collection(Config.instance.moveUserData!['collection'])
+          .doc(uid)
+          .update({
+        if (my.email!.isNotEmpty) 'email': my.email,
+        if (my.phoneNumber!.isNotEmpty) 'phone_number': my.phoneNumber,
+      });
+    }
   }
 
   /// Listen the changes of users_public_data/{uid}.
@@ -386,12 +415,14 @@ class UserService {
   /// User's email is a private information and should be accessed by the user.
   /// Use this for test purpose. Save the user's email in the user's public data.
   /// And serach it.
-  Future<UserModel> getByEmail(String email) async {
-    final snapshot = await publicDataCol.where('email', isEqualTo: email).get();
+  Future<UsersRecord> getByEmail(String email) async {
+    final snapshot = await col.where('email', isEqualTo: email).get();
     if (snapshot.docs.isEmpty) {
       throw Exception("User not found.");
     }
-    return UserModel.fromSnapshot(snapshot.docs.first);
+    return UsersRecord.getDocumentFromData(
+        snapshot.docs[0].data() as Map<String, dynamic>,
+        snapshot.docs[0].reference);
   }
 
   /// Follow a user
@@ -531,13 +562,20 @@ class UserService {
   }
 
   /// 사용자 정보 업데이트
-
-  Future<void> updatePhotoUrl(String url) {
-    return publicRef.update(
-      {
-        'photoUrl': url,
-      },
-    );
+  Future<void> update({
+    dynamic email,
+    dynamic phoneNumber,
+    String? displayName,
+    String? photoUrl,
+    Map<String, dynamic>? extra,
+  }) {
+    return ref.update({
+      if (email != null) 'email': email,
+      if (phoneNumber != null) 'phone_number': phoneNumber,
+      if (displayName != null) 'display_name': displayName,
+      if (photoUrl != null) 'photo_url': photoUrl,
+      if (extra != null) ...extra,
+    });
   }
 
   /// 사용자 문서 ref 를 받아서, 사용자 공개 문서 ref 를 리턴한다.

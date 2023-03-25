@@ -5,6 +5,7 @@ import 'package:built_value/built_value.dart';
 
 part 'users_public_data_record.g.dart';
 
+@Deprecated('Use UsersRecord instead')
 abstract class UsersPublicDataRecord
     implements Built<UsersPublicDataRecord, UsersPublicDataRecordBuilder> {
   static Serializer<UsersPublicDataRecord> get serializer =>

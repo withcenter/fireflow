@@ -97,6 +97,7 @@ class AppService {
   ///
   void init({
     required BuildContext? context,
+    Map<String, dynamic>? moveUserData,
     bool debug = false,
     bool displayError = false,
     int noOfRecentPosts = 20,
@@ -110,6 +111,7 @@ class AppService {
     Config.instance.supabase = supabase;
     Config.instance.messaging = messaging;
     Config.instance.displayError = displayError;
+    Config.instance.moveUserData = moveUserData;
 
     ///
     if (initialized == false) {

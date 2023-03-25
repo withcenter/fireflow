@@ -14,54 +14,17 @@ Schema **users**
 | uid | String |
 | created_time | Timestamp |
 | phone_number | String |
-| userPublicDocumentReference | Doc Reference (users_public_data) |
+| name | String |
 | admin | Boolean |
 | blockedUsers | List < Doc Reference (users) > |
 | isProfileComplete | Boolean |
 | favoriteChatRoomDocumentReferences | List < Doc Reference (chat_rooms) > |
-
-
-
-
-- Add `userPublicDataDocumentReference` to `users` schema. This is the connection to `users_public_data` schema.
-
-- Add `admin` boolean. If this is set to true, the user will see admin menu. To give the user admin permission, you need to add the uid of the user into the system_settings collection.
-
-
-- `isProfileComplete` is set to `true` if the user filled in the necessary fields in his profile. Or false.
-  - This field is updated when user updates his profile.
-  - As of now, the user must filled his display name and photo url.
-  - Note that, this field should be in `users` collection for easy access.
-
-
-- `favoriteChatRoomDocumentReferences` is the list of the favorite chat room of the user.
-
-
-
-## users_public_data schema
-
-- Since `users` collection has private information like email and phone number, fireflow saves public information into `users_public_data` collection.
-  - Even if the app adopts `App Check`, it needs more to secure the data. Since firestore always delivers the whole document to the client, it is vulnerable if you don't keep the private information in seperate document. The abusers can look at the data in the app or browser transfered over the network.
-
-- Create the [`recentPosts` data type](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/forum.md) first, then `users_public_data` schema in Flutterflow like below.
-
-- Note that, you can add more fields if you want.
-
-Schema **users_public_data**
-
-| Field Name | Data Type |
-|------------|----------:|
-| uid | String |
 | userDocumentReference | Doc Reference (users) |
-| registeredAt | Timestamp |
 | updatedAt | Timestamp |
-| displayName | String |
-| photoUrl | Image Path |
 | coverPhotoUrl | ImagePath |
 | gender | String |
 | birthday | Timestamp |
 | hasPhoto | Boolean |
-| isProfileComplete | Boolean |
 | lastPostCreatedAt | Timestamp |
 | lastPost | Data (recentPosts) |
 | recentPosts | List < Data ( recentPosts) > |
@@ -74,6 +37,28 @@ Schema **users_public_data**
 | chatMessageCount | Integer |
 | stateMessage | String |
 
+
+
+
+
+- Add `userPublicDataDocumentReference` to `users` schema. This is the connection to `users_public_data` schema.
+
+- Add `admin` boolean. If this is set to true, the user will see admin menu. To give the user admin permission, you need to add the uid of the user into the system_settings collection.
+
+- `name` is for user's full name. You may use it for other purpose.
+
+- `isProfileComplete` is set to `true` if the user filled in the necessary fields in his profile. Or false.
+  - This field is updated when user updates his profile.
+  - As of now, the user must filled his display name and photo url.
+  - Note that, this field should be in `users` collection for easy access.
+
+
+- `favoriteChatRoomDocumentReferences` is the list of the favorite chat room of the user.
+
+
+- Create the [`recentPosts` data type](https://github.com/withcenter/fireflow/blob/main/etc/readme/flutterflow/en/forum.md) first, then `users_public_data` schema in Flutterflow like below.
+
+- Note that, you can add more fields if you want.
 
 
 

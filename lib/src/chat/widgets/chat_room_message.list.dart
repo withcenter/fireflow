@@ -14,20 +14,23 @@ class ChatRoomMessageList extends StatefulWidget {
     this.width,
     this.height,
     required this.chatRoomDocumentReference,
-    required this.myMessageBuilder,
-    required this.otherMessageBuilder,
-    required this.onEmpty,
+    this.myMessageBuilder,
+    this.otherMessageBuilder,
+    this.onEmpty,
     this.protocolMessageBuilder,
+    this.builder,
   }) : super(key: key);
 
   final double? width;
   final double? height;
   final DocumentReference chatRoomDocumentReference;
 
-  final Widget Function(DocumentSnapshot) myMessageBuilder;
-  final Widget Function(DocumentSnapshot) otherMessageBuilder;
+  final Widget Function(DocumentSnapshot)? myMessageBuilder;
+  final Widget Function(DocumentSnapshot)? otherMessageBuilder;
   final Widget Function(DocumentSnapshot)? protocolMessageBuilder;
-  final Widget onEmpty;
+  final Widget? onEmpty;
+
+  final Widget Function(String type, DocumentSnapshot?)? builder;
 
   @override
   ChatRoomMessageListState createState() => ChatRoomMessageListState();
@@ -173,15 +176,11 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
             snapshot.data() as Map<String, dynamic>, snapshot.reference);
 
         if (message.protocol!.isNotEmpty) {
-          if (widget.protocolMessageBuilder != null) {
-            return widget.protocolMessageBuilder!(snapshot);
-          } else {
-            return const SizedBox.shrink();
-          }
+          return protocolMessageBuilder(snapshot);
         } else if (message.userDocumentReference == myReference) {
-          return widget.myMessageBuilder(snapshot);
+          return myMessageBuilder(snapshot);
         } else {
-          return widget.otherMessageBuilder(snapshot);
+          return otherMessageBuilder(snapshot);
         }
       },
 
@@ -194,9 +193,67 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       itemBuilderType: PaginateBuilderType.listView,
       // To fetch real-time data
       isLive: true,
-      onEmpty: widget.onEmpty,
+      onEmpty: emptyWidget(),
       initialLoader: const SizedBox.shrink(),
       bottomLoader: const SizedBox.shrink(),
     );
+  }
+
+  /// 내 메시지를 내가 보는 경우, widget builder
+  Widget myMessageBuilder(DocumentSnapshot snapshot) {
+    if (widget.builder != null) {
+      return widget.builder!('my', snapshot);
+    }
+    if (widget.myMessageBuilder != null) {
+      return widget.myMessageBuilder!(snapshot);
+    } else {
+      return ChatRoomMessageMine(
+        message: ChatRoomMessagesRecord.getDocumentFromData(
+          snapshot.data()! as Map<String, dynamic>,
+          snapshot.reference,
+        ),
+      );
+    }
+  }
+
+  /// 다른 사람의 메시지를 보는 경우,
+  Widget otherMessageBuilder(DocumentSnapshot snapshot) {
+    if (widget.builder != null) {
+      return widget.builder!('other', snapshot);
+    }
+    if (widget.otherMessageBuilder != null) {
+      return widget.otherMessageBuilder!(snapshot);
+    } else {
+      return ChatRoomMessageOthers(
+        message: ChatRoomMessagesRecord.getDocumentFromData(
+          snapshot.data()! as Map<String, dynamic>,
+          snapshot.reference,
+        ),
+      );
+    }
+  }
+
+  Widget protocolMessageBuilder(DocumentSnapshot snapshot) {
+    if (widget.builder != null) {
+      return widget.builder!('protocol', snapshot);
+    }
+    if (widget.protocolMessageBuilder != null) {
+      return widget.protocolMessageBuilder!(snapshot);
+    } else {
+      return ChatRoomMessageProtocol(
+        message: ChatRoomMessagesRecord.getDocumentFromData(
+          snapshot.data()! as Map<String, dynamic>,
+          snapshot.reference,
+        ),
+      );
+    }
+  }
+
+  /// 채팅방에 채팅 메시지가 없을 때, 보여줄 위젯.
+  Widget emptyWidget() {
+    if (widget.builder != null) {
+      return widget.builder!('empty', null);
+    }
+    return widget.onEmpty ?? const ChatRoomMessageEmpty();
   }
 }

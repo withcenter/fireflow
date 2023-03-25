@@ -8,14 +8,37 @@
 
 - 각 컬렉션/스키마 구조는 영문 문서를 참고한다.
 - Fireflow 는 FlutterFlow(이하, FF) 를 지원하기 위해서 만들어진 것이다. 그래서, FlutterFlow 와 가능한 많이 호환되도록, 가능한 많이 FlutterFlow 의 컨셉을 따라 하도록 노력했다. 다만, Flutter 를 사용 할 때에는 Fireflow 를 사용하면 된다.
+- 혹시, 버전 0.0.x 대의 소스 코드를 원하시는 분이 있으면, 
 
 
 - [FireFlow](#fireflow)
+- [사용자](#사용자)- [FireFlow](#fireflow)
 - [사용자](#사용자)
-  - [사용자가 로그인을 할 때 위젯 rebuild 및 데이터 업데이트](#사용자가-로그인을-할-때-위젯-rebuild-및-데이터-업데이트)
+  - [사용자 계정 생성, 수정, 삭제](#사용자-계정-생성-수정-삭제)
+  - [UserService.instance.my](#userserviceinstancemy)
+  - [UserService.instance.pub](#userserviceinstancepub)
+  - [사용자 정보 업데이트 할 때 위젯 빌드](#사용자-정보-업데이트-할-때-위젯-빌드)
+    - [MyDoc 과 PubDoc](#mydoc-과-pubdoc)
+    - [MyStream](#mystream)
+  - [사용자가 로그인을 할 때 위젯 rebuild 및 사용자 정보 업데이트](#사용자가-로그인을-할-때-위젯-rebuild-및-사용자-정보-업데이트)
+    - [loggedIn, currentUser 와 firebaseUserProviderStream](#loggedin-currentuser-와-firebaseuserproviderstream)
+- [채팅](#채팅)
+  - [DocumentSnapshot 을 Schema Document 로 변경](#documentsnapshot-을-schema-document-로-변경)
+  - [채팅방 입장](#채팅방-입장)
+  - [채팅방 메시지 목록](#채팅방-메시지-목록)
+    - [기본 디자인 사용](#기본-디자인-사용)
+    - [각각의 요소를 개별 디자인](#각각의-요소를-개별-디자인)
+    - [전체 디자인을 하나의 커스텀 컴포넌트로 연결](#전체-디자인을-하나의-커스텀-컴포넌트로-연결)
+- [파일 업로드, 사진 업로드](#파일-업로드-사진-업로드)
+
 
 
 # 사용자
+
+- Fireflow 버전 0.1.x 에서 `/users_public_data` 를 지우고 `/users` 컬렉션으로 통일하여, 일관성 있는 작업을 하도록 했다.
+  - 다만, 사용자의 메일 주소와 전화번호는 유출되면 안되는 민감한 데이터이므로 보안상의 이유로 다른 컬렉션으로 보관할 수 있는 옵션을 제공한다.
+  (참고로, Firebase 에서는 접속 키가 공개되어 별도의 보안 작업을 하지 않으면 쉽게 노출 된다.)
+    - `AppService.instance.init(moveUserData: {'collection': 'users_private', fields: ['email', 'phone_number']})` 를 하면, `/users` 컬렉션에서 email 과 phone number 를 삭제하고, 지정한 컬렉션으로 이동시켜 준다.
 
 
 ## 사용자 계정 생성, 수정, 삭제
@@ -134,7 +157,7 @@ MyStream = firebaseUserProviderStream()..listen((_) {});
     - 각 목록에 들어가는 개별 UI 디자인.
   - 채팅방
     - 헤더, 바디(메시지 목록) 스크롤, 입력 위젯(카메라 아이콘, 텍스트필드, 전송 버튼 분리) 및 나의 메세지, 상대방의 메시지, URL preview, 이미지/파일 preview, 프로토콜 메시지 등 모든 UI 를 커스텀 할 수 있다.
-    - 특히, 바디를 커스텀 디자인을 할 때에는 하나의 위젯/컴포넌트를 연결하여, 그 안에 모든 필요한 디자인을 다 할 수 있고 또는 개별 UI 를 따로 컴포넌트로 분리해서 표시 할 수 있다.
+    - 바디를 커스텀 디자인을 할 때에는 개별 요소를 각 각 디자인 할 수도 있고, 전체 요소를 하나의 위젯(컴포넌트)으로 연결하, 그 안에 모든 필요한 디자인을 한번에 할 수 있도록 옵션을 준다.
 - 채팅 메세지에는 사용자 UID, 이름, 프로필 사진 URL 이 기본적으로 추가되며, 이 정보는 채팅방에 입장 할 때, 위젯으로 전달 해 줄 수 있다.
 
 
@@ -142,6 +165,12 @@ MyStream = firebaseUserProviderStream()..listen((_) {});
 - 채팅방 정보 목록은 FF 에서 Collection query 를 통해서 직접 하면 된다.
 - 채팅방 페이지 안에서 채팅 목록은 `ChatRoomMessageList` 위젯을 사용하면 된다.
 
+## DocumentSnapshot 을 Schema Document 로 변경
+
+- Fireflow 에서 제공하는 채팅방이나 채팅메시지 데이터는 Firestore 의 DocumentSnapshot 이다. 이 값을 FlutterFlow 에서 인식할 수 있도록
+  - `ChatRoomsRecord.getDocumentFromData()` 또는
+  - `ChatRoomMessagesRecord.getDocumentFromData()` 와 같이 변환을 해 주어야 한다.
+  - 
 
 ## 채팅방 입장
 
@@ -153,22 +182,87 @@ MyStream = firebaseUserProviderStream()..listen((_) {});
 
 ## 채팅방 메시지 목록
 
-- 채팅방 메시지 목록을 FF 에서 할 수 없다. 그래서 fireflow 에서 제공하는 `ChatRoomMessageList` 위젯을 쓰면 된다.
-  - `ChatRoomMessageList` 위젯에는
+- 채팅방 메시지 목록을 FF 에서 할 수 없다. FF 에서는 Collection Query 를 할 때, 새로 생성/삭제된 문서를 보여주기 위해서는 모든 문서를 한번에 다 가져와야 해서 안된다. Infinite scroll 을 하면 새 문서를 가져 올 수 없다. 그래서 Fireflow 에서 채팅 메시지 목록을 위해서 만든 `ChatRoomMessageList` 위젯을 쓰면 된다.
+  - `ChatRoomMessageList` 위젯에는 아래와 같은 widget builder 함수가 있다.
     - `myMessageBuilder` - 나의 채팅 메시지. Build 함수이다.
     - `otherMessageBuilder` - 다른 회원의 메시지 Build 함수이다.
     - `onEmpty` - 메시지가 없을 때, 표시할 위젯. Build 함수가 아니다.
     - `protocolMessageBuilder` - 프로토콜 메시지 build 함수.
 
-- `ChatRoomMessageList` 에서 사용할 수 있는 기본(샘플) 위젯들이 제공된다. 물론 직접 FF 로 작성해서 사용해도 된다.
+- 참고로, `ChatRoomMessageList` 의 widget builder 에서 사용할 수 있는 기본(샘플) 위젯들이 제공된다. 물론 직접 FF 에서 커스텀 위젯으로 만들거나 커스텀 컴포넌트로 연결해서 사용해도 된다.
   - `ChatRoomMessageMine` - 나의 채팅 메시지 표시 위젯
   - `ChatRoomMessageOthers` - 다른 사용자의 채팅 메시지 표시 위젯
-  - `protocolMessageBuilder` - 프로토콜 메시지 표시 위젯
+  - `ChatRoomMessageProtocol` - 프로토콜 메시지 표시 위젯
+  - `ChatRoomMessageEmpty` - 채팅 메시지가 없을 때 보여주는 위젯
 
+
+### 기본 디자인 사용
+
+- 아래와 같이 간단하게 채팅방 reference 만 전달하면 기본 디자인을 사용한다.
+
+```dart
+ChatRoomMessageList(
+  chatRoomDocumentReference: widget.chatRoomDocumentReference,
+),
+```
+
+### 각각의 요소를 개별 디자인
+
+```dart
+ChatRoomMessageList(
+    chatRoomDocumentReference: widget.chatRoomDocumentReference,
+    myMessageBuilder: (DocumentSnapshot snapshot) =>
+        ChatRoomMessageMine(
+      message: ChatRoomMessagesRecord.getDocumentFromData(
+        snapshot.data()! as Map<String, dynamic>,
+        snapshot.reference,
+      ),
+    ),
+    otherMessageBuilder: (DocumentSnapshot snapshot) =>
+        ChatRoomMessageOthers(
+      message: ChatRoomMessagesRecord.getDocumentFromData(
+        snapshot.data()! as Map<String, dynamic>,
+        snapshot.reference,
+      ),
+    ),
+    protocolMessageBuilder: (DocumentSnapshot snapshot) =>
+        ChatRoomMessageProtocol(
+      message: ChatRoomMessagesRecord.getDocumentFromData(
+        snapshot.data()! as Map<String, dynamic>,
+        snapshot.reference,
+      ),
+    ),
+    onEmpty: const Text('No messages yet'),
+  ),
+```
+
+
+- 원하지 않는 요소의 경우 그냥 빈 디자인(커스텀 컴포넌트)를 표시하면 된다.
+  - 예를 들어, 채팅 메시지가 없을 때, 화면에 아무것도 보여주지 않고 싶다면, `onEmpty` 에 `SizedBox.shrink()` 또는 그냥 빈 커스텀 컴포넌트를 연결하면 된다. 이것은 `protocolMessageBuilder` 또는 다른 속성에도 마찬가지 이다.
+
+
+
+### 전체 디자인을 하나의 커스텀 컴포넌트로 연결
+
+- 아래와 같이 ChatRoomMessageList 의 builder 에 하나의 위젯(또는 커스텀 컴포넌트 하나)만 연결한 후, 그 안에서 모든 디자인을 다 할 수 있다.
+
+```dart
+ChatRoomMessageList(
+  chatRoomDocumentReference: widget.chatRoomDocumentReference,
+  builder: (String type, DocumentSnapshot? snapshot) =>
+      ChatRoomMessage(
+    type: type,
+    snapshot: snapshot,
+  ),
+)
+```
+
+
+- `type` 은 `my`, `other`, `protocol`, `empty` 와 같이 있다. if 문장이나 Conditional Visibility 를 써서 적절히 UI 를 보여주면 된다.
+  - `type` 이 `empty` 인 경우, snapshot 은 null 이다.
+  - 참고, snapshot 을 schema 문서로 변경
 
 
 # 파일 업로드, 사진 업로드
 
-
-- Fireflow 에서 파일 또는 사진 업로드 기능을 제공하지 않는다.
-
+- Fireflow 에서 파일 또는 사진 업로드 기본 기능을 제공하는데, 그 파일 구조는 FF 와 동일하다.

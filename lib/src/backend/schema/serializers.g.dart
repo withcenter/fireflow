@@ -49,6 +49,15 @@ Serializers _$serializers = (new Serializers().toBuilder()
           ]),
           () => new ListBuilder<DocumentReference<Object?>>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(RecentPostsStruct)]),
+          () => new ListBuilder<RecentPostsStruct>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(
+                DocumentReference, const [const FullType.nullable(Object)])
+          ]),
+          () => new ListBuilder<DocumentReference<Object?>>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [
             const FullType(
                 DocumentReference, const [const FullType.nullable(Object)])
