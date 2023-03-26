@@ -5,7 +5,7 @@ export 'config.dart';
 
 /// Service
 export 'src/user/user.service.dart';
-export 'src/user/user.model.dart';
+export 'src/user/model/user.model.dart';
 export 'src/user/user_public_data.model.dart';
 export 'src/user_setting/user_setting.service.dart';
 export 'src/user_setting/user_setting.model.dart';

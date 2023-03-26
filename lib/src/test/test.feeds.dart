@@ -1,5 +1,4 @@
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/test/test.config.dart';
 import 'package:fireflow/src/test/test.utils.dart';
 
 Future testFeeds() async {
@@ -10,7 +9,7 @@ Future testFeeds() async {
   await loginB();
 
   await UserService.instance.clearFollowings();
-  await UserService.instance.follow(TestConfig.a.ref);
+  // await UserService.instance.follow(TestConfig.a.ref);
 
   final feeds = await UserService.instance.feeds();
   assert(feeds.length == 1, 'Feeds must have 1 item');
@@ -23,7 +22,7 @@ Future testFeeds() async {
   await wait();
   await loginB();
   await wait();
-  await UserService.instance.follow(TestConfig.c.ref);
+  // await UserService.instance.follow(TestConfig.c.ref);
 
   final feeds2 = await UserService.instance.feeds();
   assert(feeds2.length == 3, 'Feeds must have 3 items');

@@ -501,44 +501,35 @@ class _$ChatRoomsRecord extends ChatRoomsRecord {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc(
-                                                            $jc(
-                                                                $jc(
-                                                                    $jc(
-                                                                        $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc(0, userDocumentReferences.hashCode), lastMessage.hashCode), lastMessageSentAt.hashCode), lastMessageSeenBy.hashCode), lastMessageSentBy.hashCode), title.hashCode), unsubscribedUserDocumentReferences.hashCode),
-                                                                                moderatorUserDocumentReferences.hashCode),
-                                                                            isGroupChat.hashCode),
-                                                                        isOpenChat.hashCode),
-                                                                    reminder.hashCode),
-                                                                lastMessageUploadUrl.hashCode),
-                                                            backgroundColor.hashCode),
-                                                        urlClick.hashCode),
-                                                    urlPreview.hashCode),
-                                                leaveProtocolMessage.hashCode),
-                                            parentChatRoomDocumentReference.hashCode),
-                                        subChatRoomCount.hashCode),
-                                    noOfMessages.hashCode),
-                                isSubChatRoom.hashCode),
-                            readOnly.hashCode),
-                        createdAt.hashCode),
-                    introImagePath.hashCode),
-                introText.hashCode),
-            introSeenBy.hashCode),
-        ffRef.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, userDocumentReferences.hashCode);
+    _$hash = $jc(_$hash, lastMessage.hashCode);
+    _$hash = $jc(_$hash, lastMessageSentAt.hashCode);
+    _$hash = $jc(_$hash, lastMessageSeenBy.hashCode);
+    _$hash = $jc(_$hash, lastMessageSentBy.hashCode);
+    _$hash = $jc(_$hash, title.hashCode);
+    _$hash = $jc(_$hash, unsubscribedUserDocumentReferences.hashCode);
+    _$hash = $jc(_$hash, moderatorUserDocumentReferences.hashCode);
+    _$hash = $jc(_$hash, isGroupChat.hashCode);
+    _$hash = $jc(_$hash, isOpenChat.hashCode);
+    _$hash = $jc(_$hash, reminder.hashCode);
+    _$hash = $jc(_$hash, lastMessageUploadUrl.hashCode);
+    _$hash = $jc(_$hash, backgroundColor.hashCode);
+    _$hash = $jc(_$hash, urlClick.hashCode);
+    _$hash = $jc(_$hash, urlPreview.hashCode);
+    _$hash = $jc(_$hash, leaveProtocolMessage.hashCode);
+    _$hash = $jc(_$hash, parentChatRoomDocumentReference.hashCode);
+    _$hash = $jc(_$hash, subChatRoomCount.hashCode);
+    _$hash = $jc(_$hash, noOfMessages.hashCode);
+    _$hash = $jc(_$hash, isSubChatRoom.hashCode);
+    _$hash = $jc(_$hash, readOnly.hashCode);
+    _$hash = $jc(_$hash, createdAt.hashCode);
+    _$hash = $jc(_$hash, introImagePath.hashCode);
+    _$hash = $jc(_$hash, introText.hashCode);
+    _$hash = $jc(_$hash, introSeenBy.hashCode);
+    _$hash = $jc(_$hash, ffRef.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
@@ -833,4 +824,4 @@ class ChatRoomsRecordBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,no_leading_underscores_for_local_identifiers,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new,unnecessary_lambdas
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

@@ -35,6 +35,7 @@
 
 # 해야 할 것
 
+- BuiltValue 를 없애고 대신 JSON Serialization 을 쓴다.
 - moveUserData 기능
 - `/backend/schema` 폴더에 있는 schema 를 없애고 대신 나만의 BuiltValue 코딩을 한다. 굳이, `getDocumentFromData()` 이런 것 없어도 된다. 직접 할 수 있는 것 까지만 하면 된다. Service 를 활용하면된다.
   - 왜냐하면, FF 에서 코드를 자동 생성되다 보니 좀 BuiltValue 가 깨끝하지 못하고, 필요 없는 코드가 복잡하게 얽혀져 있다.

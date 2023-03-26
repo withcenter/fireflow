@@ -17,18 +17,18 @@ Future clear() async {
   wait(500);
   final snapshot =
       await PostService.instance.col.where('userDocumentReference', whereIn: [
-    TestConfig.a.ref,
-    TestConfig.b.ref,
-    TestConfig.c.ref,
-    TestConfig.d.ref,
-    TestConfig.admin.ref,
+    // TestConfig.a.ref,
+    // TestConfig.b.ref,
+    // TestConfig.c.ref,
+    // TestConfig.d.ref,
+    // TestConfig.admin.ref,
   ]).get();
 
   dog('Got ${snapshot.size} posts to delete');
 
   for (final doc in snapshot.docs) {
-    final post = PostModel.fromSnapshot(doc);
-    dog('Deleting, title: ${post.title}');
+    // final post = PostModel.fromSnapshot(doc);
+    // dog('Deleting, title: ${post.title}');
     await doc.reference.delete();
   }
 }

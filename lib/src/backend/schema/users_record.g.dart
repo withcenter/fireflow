@@ -464,44 +464,36 @@ class _$UsersRecord extends UsersRecord {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc(
-                                                            $jc(
-                                                                $jc(
-                                                                    $jc(
-                                                                        $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc(0, email.hashCode), displayName.hashCode), photoUrl.hashCode), uid.hashCode), createdTime.hashCode), updatedAt.hashCode), phoneNumber.hashCode), admin.hashCode),
-                                                                                blockedUsers.hashCode),
-                                                                            isProfileComplete.hashCode),
-                                                                        name.hashCode),
-                                                                    coverPhotoUrl.hashCode),
-                                                                gender.hashCode),
-                                                            birthday.hashCode),
-                                                        hasPhoto.hashCode),
-                                                    lastPostCreatedAt.hashCode),
-                                                lastPost.hashCode),
-                                            recentPosts.hashCode),
-                                        isPremiumUser.hashCode),
-                                    noOfPosts.hashCode),
-                                noOfComments.hashCode),
-                            followings.hashCode),
-                        referral.hashCode),
-                    referralAcceptedAt.hashCode),
-                stateMessage.hashCode),
-            favoriteChatRooms.hashCode),
-        ffRef.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, email.hashCode);
+    _$hash = $jc(_$hash, displayName.hashCode);
+    _$hash = $jc(_$hash, photoUrl.hashCode);
+    _$hash = $jc(_$hash, uid.hashCode);
+    _$hash = $jc(_$hash, createdTime.hashCode);
+    _$hash = $jc(_$hash, updatedAt.hashCode);
+    _$hash = $jc(_$hash, phoneNumber.hashCode);
+    _$hash = $jc(_$hash, admin.hashCode);
+    _$hash = $jc(_$hash, blockedUsers.hashCode);
+    _$hash = $jc(_$hash, isProfileComplete.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, coverPhotoUrl.hashCode);
+    _$hash = $jc(_$hash, gender.hashCode);
+    _$hash = $jc(_$hash, birthday.hashCode);
+    _$hash = $jc(_$hash, hasPhoto.hashCode);
+    _$hash = $jc(_$hash, lastPostCreatedAt.hashCode);
+    _$hash = $jc(_$hash, lastPost.hashCode);
+    _$hash = $jc(_$hash, recentPosts.hashCode);
+    _$hash = $jc(_$hash, isPremiumUser.hashCode);
+    _$hash = $jc(_$hash, noOfPosts.hashCode);
+    _$hash = $jc(_$hash, noOfComments.hashCode);
+    _$hash = $jc(_$hash, followings.hashCode);
+    _$hash = $jc(_$hash, referral.hashCode);
+    _$hash = $jc(_$hash, referralAcceptedAt.hashCode);
+    _$hash = $jc(_$hash, stateMessage.hashCode);
+    _$hash = $jc(_$hash, favoriteChatRooms.hashCode);
+    _$hash = $jc(_$hash, ffRef.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
@@ -788,4 +780,4 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,no_leading_underscores_for_local_identifiers,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new,unnecessary_lambdas
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint
