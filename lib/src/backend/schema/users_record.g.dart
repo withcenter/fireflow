@@ -46,6 +46,10 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
       'lastPost',
       serializers.serialize(object.lastPost,
           specifiedType: const FullType(RecentPostsStruct)),
+      'recentPosts',
+      serializers.serialize(object.recentPosts,
+          specifiedType: const FullType(
+              BuiltList, const [const FullType(RecentPostsStruct)])),
       'noOfPosts',
       serializers.serialize(object.noOfPosts,
           specifiedType: const FullType(int)),
@@ -121,14 +125,6 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
         ..add('lastPostCreatedAt')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(DateTime)));
-    }
-    value = object.recentPosts;
-    if (value != null) {
-      result
-        ..add('recentPosts')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(
-                BuiltList, const [const FullType(RecentPostsStruct)])));
     }
     value = object.isPremiumUser;
     if (value != null) {
@@ -348,7 +344,7 @@ class _$UsersRecord extends UsersRecord {
   @override
   final RecentPostsStruct lastPost;
   @override
-  final BuiltList<RecentPostsStruct>? recentPosts;
+  final BuiltList<RecentPostsStruct> recentPosts;
   @override
   final bool? isPremiumUser;
   @override
@@ -389,7 +385,7 @@ class _$UsersRecord extends UsersRecord {
       required this.hasPhoto,
       this.lastPostCreatedAt,
       required this.lastPost,
-      this.recentPosts,
+      required this.recentPosts,
       this.isPremiumUser,
       required this.noOfPosts,
       required this.noOfComments,
@@ -414,6 +410,8 @@ class _$UsersRecord extends UsersRecord {
         isProfileComplete, r'UsersRecord', 'isProfileComplete');
     BuiltValueNullFieldError.checkNotNull(hasPhoto, r'UsersRecord', 'hasPhoto');
     BuiltValueNullFieldError.checkNotNull(lastPost, r'UsersRecord', 'lastPost');
+    BuiltValueNullFieldError.checkNotNull(
+        recentPosts, r'UsersRecord', 'recentPosts');
     BuiltValueNullFieldError.checkNotNull(
         noOfPosts, r'UsersRecord', 'noOfPosts');
     BuiltValueNullFieldError.checkNotNull(
@@ -693,7 +691,7 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
       _hasPhoto = $v.hasPhoto;
       _lastPostCreatedAt = $v.lastPostCreatedAt;
       _lastPost = $v.lastPost.toBuilder();
-      _recentPosts = $v.recentPosts?.toBuilder();
+      _recentPosts = $v.recentPosts.toBuilder();
       _isPremiumUser = $v.isPremiumUser;
       _noOfPosts = $v.noOfPosts;
       _noOfComments = $v.noOfComments;
@@ -751,7 +749,7 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
                   hasPhoto, r'UsersRecord', 'hasPhoto'),
               lastPostCreatedAt: lastPostCreatedAt,
               lastPost: lastPost.build(),
-              recentPosts: _recentPosts?.build(),
+              recentPosts: recentPosts.build(),
               isPremiumUser: isPremiumUser,
               noOfPosts: BuiltValueNullFieldError.checkNotNull(
                   noOfPosts, r'UsersRecord', 'noOfPosts'),
@@ -772,7 +770,7 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
         _$failedField = 'lastPost';
         lastPost.build();
         _$failedField = 'recentPosts';
-        _recentPosts?.build();
+        recentPosts.build();
 
         _$failedField = 'followings';
         followings.build();

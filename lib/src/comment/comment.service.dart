@@ -88,7 +88,7 @@ class CommentService {
     // send push notification
     futures.add(
       MessagingService.instance.send(
-        notificationTitle: '${UserService.instance.pub.displayName} says ...',
+        notificationTitle: '${my.displayName} says ...',
         notificationText: comment.safeContent,
         notificationSound: 'default',
         notificationImageUrl:
@@ -112,10 +112,8 @@ class CommentService {
 
     // update the user's post count
     futures.add(
-      UserService.instance.publicRef.update(
-        {
-          'noOfComments': FieldValue.increment(1),
-        },
+      UserService.instance.update(
+        noOfComments: FieldValue.increment(1),
       ),
     );
 

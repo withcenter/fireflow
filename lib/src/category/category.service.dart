@@ -11,15 +11,34 @@ class CategoryService {
   /// For testing purpose.
   FirebaseFirestore? firestore;
 
+  /// [categoryId] is the category ID like 'qna', 'news', 'etc'. It's not
+  /// the doucment ID.
   Future<DocumentReference> create({
-    required String category,
+    required String categoryId,
     String? title,
   }) async {
-    await doc(category).set({
-      'category': category,
+    if (await exists(categoryId)) {
+      throw Exception('Category with the [$categoryId] already exists');
+    }
+    await doc(categoryId).set({
+      'categoryId': categoryId,
       if (title != null) 'title': title,
     });
 
-    return doc(category);
+    return doc(categoryId);
+  }
+
+  Future<bool> exists(
+    String categoryId,
+  ) async {
+    return (await doc(categoryId).get()).exists;
+  }
+
+  Future<CategoriesRecord> get({
+    required DocumentReference categoryDocumentReference,
+  }) async {
+    return CategoriesRecord.getDocumentOnce(
+      categoryDocumentReference,
+    );
   }
 }

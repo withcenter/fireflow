@@ -227,9 +227,9 @@ class ChatService {
     if ((text == null || text.isEmpty) &&
         (uploadUrl != null && uploadUrl.isNotEmpty)) {
       text = 'Tap to see the photo.';
-      title = '${AppService.instance.pub.displayName} sent a photo';
+      title = '${my.displayName} sent a photo';
     } else {
-      title = '${AppService.instance.pub.displayName} say ...';
+      title = '${my.displayName} say ...';
     }
 
     final room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
@@ -253,7 +253,7 @@ class ChatService {
         if (isGroupChat)
           'chatRoomDocumentReference': chatRoomRef
         else
-          'otherUserDocumentReference': UserService.instance.publicRef,
+          'otherUserDocumentReference': UserService.instance.ref,
 
         /// Send the chat room id. This is being used to detect if the user
         /// is already in the chat room.

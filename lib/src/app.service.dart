@@ -38,9 +38,6 @@ class AppService {
 
   late final KeyModel keys;
 
-  /// Keep the login user's public data up to date.
-  UsersPublicDataRecord get pub => UserService.instance.pub;
-
   /// Current chat room reference.
   ///
   /// This is the current chat room that the user is in.
@@ -149,11 +146,6 @@ class AppService {
           UserService.instance.listenUserDocument();
         });
 
-        UserService.instance
-            .maybeGenerateUserPublicDataDocument()
-            .then((value) {
-          UserService.instance.listenUserPublicDataDocument();
-        });
         await UserSettingService.instance.maybeGenerate();
       }
     });

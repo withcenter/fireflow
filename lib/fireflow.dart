@@ -18,8 +18,6 @@ export 'src/push_notifications/messaging.options.dart';
 export 'src/push_notifications/message.model.dart';
 export 'src/category/category.service.dart';
 export 'src/category/category.model.dart';
-export 'src/post/post.service.dart';
-export 'src/post/post.model.dart';
 export 'src/comment/comment.service.dart';
 export 'src/comment/comment.model.dart';
 
@@ -35,6 +33,16 @@ export 'src/user/widgets/my_stream.dart';
 /// User
 ///
 export 'src/user/widgets/user_sticker.dart';
+
+/// Forum
+export 'src/backend/schema/structs/recent_posts_struct.dart';
+export 'src/backend/schema/categories_record.dart';
+
+export 'src/forum/post.service.dart';
+export 'src/forum/post.model.dart';
+export 'src/forum/widgets/category.list.dart';
+export 'src/forum/widgets/category.create.dart';
+export 'src/forum/widgets/category.edit.dart';
 
 /// Chat
 
@@ -73,7 +81,6 @@ export 'src/backend/lat_lng.dart';
 export 'src/backend/schema/index.dart';
 export 'src/backend/schema/structs/recent_posts_struct.dart';
 export 'src/backend/schema/serializers.dart';
-export 'src/backend/schema/users_public_data_record.dart';
 export 'src/backend/schema/users_record.dart';
 export 'src/backend/schema/chat_rooms_record.dart';
 export 'src/backend/schema/chat_room_messages_record.dart';

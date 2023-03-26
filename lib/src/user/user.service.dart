@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/backend/backend.dart';
+import 'package:fireflow/src/backend/schema/posts_record.dart';
 import 'package:path/path.dart' as p;
 import 'package:rxdart/subjects.dart';
 
@@ -42,12 +43,6 @@ class UserService {
 
   // CollectionReference get publicDataCol => db.collection('users_public_data');
 
-  /// The login user's public data document reference
-  DocumentReference get myUserPublicDataRef =>
-      FirebaseFirestore.instance.collection('users_public_data').doc(uid);
-
-  DocumentReference get publicRef => myUserPublicDataRef;
-
   /// The login user's Firebase User object.
   fa.User get currentUser => auth.currentUser!;
 
@@ -68,60 +63,12 @@ class UserService {
   UsersRecord get my => _my!;
   set my(UsersRecord? v) => _my = v;
 
-  /// The login user's public data model.
-  ///
-  /// It listens the changes of the user's public data document and update [my] variable.
-  /// Note that, this is always upto date. So, you don't have to get the login user's
-  /// public data document from the firestore.
-  UsersPublicDataRecord? _pub;
-  UsersPublicDataRecord get pub => _pub!;
-  set pub(UsersPublicDataRecord? value) => _pub = value;
-
-  ///
-
   final BehaviorSubject<UsersRecord?> onMyChange =
       BehaviorSubject<UsersRecord?>.seeded(null);
-  final BehaviorSubject<UsersPublicDataRecord?> onPubChange =
-      BehaviorSubject<UsersPublicDataRecord?>.seeded(null);
 
   reset() {
     my = null;
-    pub = null;
     onMyChange.add(_my);
-    onPubChange.add(_pub);
-  }
-
-  /// Check if pub doc exists
-  ///
-  /// return true if user's public data document exists
-  userPublicDataDocumentExists() async {
-    final doc = await myUserPublicDataRef.get();
-    return doc.exists;
-  }
-
-  /// Warning, this method may throw an exception if it is being called immediately after the user is signed in for the first time.
-  /// The `/users/{uid}` document may be created after the user is signed in.
-  Future<UserModel> getUser() async {
-    // get the user's data from the database
-    final snapshot = await ref.get();
-    return UserModel.fromSnapshot(snapshot);
-  }
-
-  /// Returns the user's public data model.
-  ///
-  /// [id] is the other user uid. If it is set, it returns other user pubic data model.
-  Future<UserPublicDataModel?> getPublicData([String? id]) async {
-    // get the user's public data from the database
-    DocumentSnapshot snapshot;
-    if (id == null) {
-      snapshot = await myUserPublicDataRef.get();
-    } else {
-      snapshot = await publicDataCol.doc(id).get();
-    }
-    if (snapshot.exists == false) {
-      return null;
-    }
-    return UserPublicDataModel.fromSnapshot(snapshot);
   }
 
   /// Get user document by uid.
@@ -145,57 +92,6 @@ class UserService {
     await maybeCreateUser(FirebaseAuth.instance.currentUser!);
   }
 
-  /// /users_public_data 컬렉션 생성 및 관리
-  ///
-  /// Creates /users_public_data/{uid} on registration or if it does not exist by any chance.
-  ///
-  /// This will crate /users_public_data/{uid} only if the user is logged in for the first time.
-  ///
-  /// AppService 에서 한번만 호출됨.
-  Future maybeGenerateUserPublicDataDocument() async {
-    ///
-    if (await userPublicDataDocumentExists() == false) {
-      /// Generate the user's public data document
-      ///
-      final data = createUsersPublicDataRecordData(
-        displayName: currentUser.displayName ?? '',
-        photoUrl: currentUser.photoURL ?? '',
-        uid: uid,
-        userDocumentReference: ref,
-      );
-      data['registeredAt'] = FieldValue.serverTimestamp();
-      await myUserPublicDataRef.set(data);
-    }
-
-    /// Update the default uid and reference information
-    ///
-    /// To make sure that the user's public data document reference always
-    /// exists in /users/{uid}, it updates on every boot.
-    ///
-    /// Somehow, in some case (probably in test environment), it really
-    /// happened that the uid and references are not properly set and
-    /// produced an error.
-    ///
-    /// If the user's public data document has no uid and reference, it
-    /// will cause
-    await myUserPublicDataRef.set(
-      {
-        'uid': uid,
-        'userDocumentReference': ref,
-      },
-      SetOptions(
-        merge: true,
-      ),
-    );
-
-    /// 사용자 문서에 /users_public_data 문서 참조 저장.
-    await myRef.set({
-      'userPublicDataDocumentReference': myUserPublicDataRef,
-    }, SetOptions(merge: true));
-
-    dog("UserService.generateUserPublicData() - user public data generated at ${myUserPublicDataRef.path}");
-  }
-
   /// 사용자 문서 업데이트 Listen & 최신 문서 업데이트
   ///
   listenUserDocument() {
@@ -207,8 +103,7 @@ class UserService {
             snapshot.data() as Map<String, dynamic>, snapshot.reference);
         onMyChange.add(my);
 
-        print(
-            'User document had been chagned: ${my.displayName}, ${my.updatedAt}');
+        dog('listenUserDocument(): ${my.displayName}, ${my.updatedAt}');
 
         /// 사용자 필드 옮기기
         _moveUserData();
@@ -236,52 +131,6 @@ class UserService {
     }
   }
 
-  /// Listen the changes of users_public_data/{uid}.
-  ///
-  /// It listens the update of the login user's public data document and
-  /// - keep the user's public data in memory.
-  /// - update the user's public data into Supabase if neccessary.
-  listenUserPublicDataDocument() {
-    /// Observe the user public data.
-    publicDataSubscription?.cancel();
-    publicDataSubscription = UserService.instance.myUserPublicDataRef
-        .snapshots()
-        .listen((snapshot) async {
-      if (snapshot.exists) {
-        // pub = UserPublicDataModel.fromSnapshot(snapshot);
-        pub = UsersPublicDataRecord.getDocumentFromData(
-            snapshot.data() as Map<String, dynamic>, snapshot.reference);
-
-        /// Update user profile completion status
-        ///
-        /// TODO: Let's developer add more fields to check the profile completion. For instance, "displayName,photoUrl,gender,birthday"
-        await publicRef.set({
-          'isProfileComplete':
-              pub.displayName!.isNotEmpty && pub.photoUrl!.isNotEmpty,
-        }, SetOptions(merge: true));
-
-        onPubChange.add(pub);
-        if (SupabaseService.instance.storeUsersPubicData) {
-          /// Upsert the user public data to Supabase.
-          final data = {
-            'uid': pub.uid,
-            'display_name': pub.displayName,
-            'photo_url': pub.photoUrl,
-            'gender': pub.gender,
-            'birthday': pub.birthday?.toIso8601String(),
-            'registered_at': pub.registeredAt?.toIso8601String(),
-          };
-
-          dog('Supabase upsert: $data');
-          await supabase.usersPublicData.upsert(
-            data,
-            onConflict: 'uid',
-          );
-        }
-      }
-    });
-  }
-
   /// Updates the user's public data with the given imagePath
   afterProfilePhotoUpload(String? imagePath) async {
     return await afterUserPhotoUpload(
@@ -302,6 +151,8 @@ class UserService {
   ///
   /// Deletes existing photo and updates the user's public data with the given imagePath
   /// Updates 'hasPhoto' field in the user's pub data document.
+  ///
+  /// 기존 파일을 삭제하는데 실패해도, 이 함수는 exception 을 던지지 않는다. 즉, FF 에서, 파일 삭제 실패해도 계속 다음 액션을 진행 할 수 있다.
   Future<void> afterUserPhotoUpload(String fieldName, String? imagePath) async {
     dog("UserService.afterUserPhotoUpload() called with fieldName: $fieldName");
 
@@ -310,28 +161,34 @@ class UserService {
       return;
     }
 
-    final userPublicData = await getPublicData();
+    String? fieldValue;
+    if (fieldName == 'photoUrl') {
+      fieldValue = my.photoUrl;
+    } else if (fieldName == 'coverPhotoUrl') {
+      fieldValue = my.coverPhotoUrl;
+    } else {
+      return;
+    }
 
-    String? fieldNameValue = userPublicData!.data[fieldName];
-
-    /// the user has exising profile photo?
-    if (fieldNameValue != null && fieldNameValue != "") {
-      /// same as the new profile photo?
-      if (p.basename(fieldNameValue) == p.basename(imagePath)) {
+    /// 사용자 사진이 존재하는가?
+    if (fieldValue != null && fieldValue != "") {
+      // 새로 업로드 하려는 파일(이름)이, 기존의 파일과 같으면 리턴
+      if (p.basename(fieldValue) == p.basename(imagePath)) {
         dog("Upload photo is same as the existing profile photo.");
         return;
       }
       dog("Deleting existing profile photo.");
-      // Delete the existing profile photo. Ignore if there is any error.
+      // 새로운 파일 업로드하는데, 기존 파일이 존재하면 삭제. 에러가 있으면 무시. 즉, 다음 async/awiat 작업을 계속한다.
       try {
-        await StorageService.instance.delete(fieldNameValue);
+        await StorageService.instance.delete(fieldValue);
       } catch (e) {
+        // 에러 던지지 않음
         dog("Error ignored on deleting existing profile photo; $e");
       }
     }
 
     dog("Updating user public data.");
-    await myUserPublicDataRef.update({
+    await update(extra: {
       fieldName: imagePath,
       if (fieldName == 'photoUrl') 'hasPhoto': true,
     });
@@ -358,12 +215,12 @@ class UserService {
     return subscribers;
   }
 
-  /// Add the new post and remove the oldest.
+  /// 새로운 글 1개를 입력하여, my.recentPosts 에 추가해서 리턴한다.
   ///
   /// If the number of recentPosts is greater than Config.instance.noOfRecentPosts,
   /// it will remove the oldest post.
-  recentPosts(PostModel post) {
-    List recentPosts = pub.recentPosts as List<dynamic>;
+  recentPosts(PostsRecord post) {
+    List recentPosts = my.recentPosts.toList();
     if (recentPosts.length >= Config.instance.noOfRecentPosts) {
       recentPosts.removeRange(
           Config.instance.noOfRecentPosts - 1, recentPosts.length);
@@ -372,15 +229,15 @@ class UserService {
     return recentPosts;
   }
 
-  /// Get feed data from the post.
-  UserPublicDataRecentPostModel feed(PostModel post) {
-    return UserPublicDataRecentPostModel(
-      postDocumentReference: post.ref,
-      createdAt: post.createdAt,
-      title: post.safeTitle,
-      content: post.safeContent,
-      photoUrl: post.files.isNotEmpty ? post.files.first : null,
-    );
+  /// 글 모델을 입력 받아, 피드로 저장 할 수 있도록 JSON 으로 리턴한다.
+  Map<String, dynamic> feed(PostsRecord post) {
+    return {
+      'postDocumentReference': post.reference,
+      'createdAt': post.createdAt,
+      'title': safeString(post.title),
+      'content': safeString(post.content),
+      'photoUrl': post.files.isNotEmpty ? post.files.first : null,
+    };
   }
 
   /// Login or register.
@@ -428,20 +285,20 @@ class UserService {
   /// Follow a user
   ///
   Future follow(DocumentReference userDocumentReference) async {
-    await publicRef.update({
-      'followings': FieldValue.arrayUnion([userDocumentReference]),
-    });
+    await update(
+      followings: FieldValue.arrayUnion([userDocumentReference]),
+    );
   }
 
   /// Reset the followings
   ///
   Future clearFollowings() async {
-    await publicRef.update({
-      'followings': [],
-    });
+    await update(
+      followings: FieldValue.delete(),
+    );
   }
 
-  /// Get feeds of the login user
+  /// 로그인 한 사용자의 피드를 가져온다.
   ///
   /// [noOfFollowers] is the number of followers to get. If it is 0, it will get all the followers.
   ///
@@ -449,7 +306,7 @@ class UserService {
   Future<List<RecentPostsStruct>> feeds({
     int noOfFollowers = 0,
   }) async {
-    if (pub.followings!.isEmpty) {
+    if (my.followings.isEmpty) {
       return [];
     }
 
@@ -457,7 +314,7 @@ class UserService {
     ///
     Query q = db
         .collection('users_public_data')
-        .where('userDocumentReference', whereIn: pub.followings!.toList())
+        .where('userDocumentReference', whereIn: my.followings.toList())
         .orderBy('lastPostCreatedAt', descending: true);
 
     /// Limit the number of (following) users to get if the app needs to display only a few posts.
@@ -477,11 +334,9 @@ class UserService {
     for (final doc in usersQuerySnapshot.docs) {
       // final data = doc.data() as Map<String, dynamic>;
       // final user = UserPublicDataModel.fromSnapshot(doc);
-      final user = UsersPublicDataRecord.getDocumentFromData(
+      final user = UsersRecord.getDocumentFromData(
           doc.data() as Map<String, dynamic>, doc.reference);
-      if (user.recentPosts != null) {
-        allRecentPosts.addAll(user.recentPosts!.toList());
-      }
+      allRecentPosts.addAll(user.recentPosts.toList());
     }
     if (allRecentPosts.isEmpty) {
       return [];
@@ -517,22 +372,20 @@ class UserService {
   /// Accept referral invitation
   ///
   /// return [true] on sucess and [false] if the user already has a referral.
+  ///
   Future<bool> acceptInvitation(DocumentReference invitor) async {
     try {
-      final me = await getPublicData();
-      if (me!.referral != null) {
+      // final me = await getPublicData();
+      if (my.referral != null) {
         return false;
       }
     } catch (e) {
       /// If the user is not found, it will create the public data document for the user.
     }
 
-    await publicRef.set(
-      {
-        'referral': invitor,
-        'referralAcceptedAt': FieldValue.serverTimestamp(),
-      },
-      SetOptions(merge: true),
+    await update(
+      referral: invitor,
+      referralAcceptedAt: FieldValue.serverTimestamp(),
     );
 
     return true;
@@ -556,9 +409,9 @@ class UserService {
     /// 지정된 시간 [Config.chatCountInterval] 이 지났음. 초기화.
     lastChatTime = DateTime.now();
 
-    publicRef.update({
-      'chatMessageCount': FieldValue.increment(1),
-    });
+    update(
+      chatMessageCount: FieldValue.increment(1),
+    );
   }
 
   /// 사용자 정보 업데이트
@@ -567,6 +420,15 @@ class UserService {
     dynamic phoneNumber,
     String? displayName,
     String? photoUrl,
+    FieldValue? chatMessageCount,
+    FieldValue? followings,
+    DocumentReference? referral,
+    FieldValue? referralAcceptedAt,
+    FieldValue? noOfPosts,
+    FieldValue? noOfComments,
+    FieldValue? lastPostCreatedAt,
+    Map<String, dynamic>? lastPost,
+    List<Map<String, dynamic>>? recentPosts,
     Map<String, dynamic>? extra,
   }) {
     return ref.update({
@@ -574,17 +436,16 @@ class UserService {
       if (phoneNumber != null) 'phone_number': phoneNumber,
       if (displayName != null) 'display_name': displayName,
       if (photoUrl != null) 'photo_url': photoUrl,
+      if (chatMessageCount != null) 'chat_message_count': chatMessageCount,
+      if (followings != null) 'followings': followings,
+      if (referral != null) 'referral': referral,
+      if (referralAcceptedAt != null) 'referralAcceptedAt': referralAcceptedAt,
+      if (noOfPosts != null) 'noOfPosts': noOfPosts,
+      if (noOfComments != null) 'noOfComments': noOfComments,
+      if (lastPostCreatedAt != null) 'lastPostCreatedAt': lastPostCreatedAt,
+      if (lastPost != null) 'lastPost': lastPost,
+      if (recentPosts != null) 'recentPosts': recentPosts,
       if (extra != null) ...extra,
     });
-  }
-
-  /// 사용자 문서 ref 를 받아서, 사용자 공개 문서 ref 를 리턴한다.
-  ///
-  /// 예)
-  /// UsersPublicDataRecord.getDocument(UserService.instance
-  ///   .userPublicDataDocumentReference(userDocumentReference))
-  DocumentReference userPublicDataDocumentReference(
-      DocumentReference userDocumentReference) {
-    return publicDataCol.doc(userDocumentReference.id);
   }
 }

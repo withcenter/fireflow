@@ -48,10 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
               if (UserService.instance.isLoggedIn)
                 Wrap(
                   children: [
-                    MyDoc(builder: (my) => Text(my.displayName!)),
+                    MyDoc(builder: (my) => Text(my.displayName)),
                     Text(UserService.instance.uid),
                   ],
                 ),
+
               const SizedBox(
                 height: 24,
               ),

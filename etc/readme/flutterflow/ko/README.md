@@ -6,9 +6,10 @@
 
 # FireFlow
 
-- 각 컬렉션/스키마 구조는 영문 문서를 참고한다.
+- 버전 0.0 과 버전 0.1. 에는 큰 차이가 있다. 특히, 핵심 코드 및 컬렉션 구조가 바뀌어서, 0.0 버전과는 호환이 되지 않는다.
 - Fireflow 는 FlutterFlow(이하, FF) 를 지원하기 위해서 만들어진 것이다. 그래서, FlutterFlow 와 가능한 많이 호환되도록, 가능한 많이 FlutterFlow 의 컨셉을 따라 하도록 노력했다. 다만, Flutter 를 사용 할 때에는 Fireflow 를 사용하면 된다.
-- 혹시, 버전 0.0.x 대의 소스 코드를 원하시는 분이 있으면, 
+- 버전 0.1 에서는 기본 위젯을 모두 제공한다. 그래서, 빠르게 앱을 빌드하기 위해서는 기본 제공 위젯을 Custom Widget 으로 연결하면 된다. 그 후 천천히 UI 를 커스터마이징하면 된다.
+- 혹시, 버전 0.0.x 대의 소스 코드를 원하시는 분이 있으면, [0.0.x branch](https://github.com/withcenter/fireflow/tree/0.0.x) 를 참고하면 된다.
 
 
 - [FireFlow](#fireflow)
@@ -32,6 +33,17 @@
 - [파일 업로드, 사진 업로드](#파일-업로드-사진-업로드)
 
 
+# 해야 할 것
+
+- moveUserData 기능
+- `/backend/schema` 폴더에 있는 schema 를 없애고 대신 나만의 BuiltValue 코딩을 한다. 굳이, `getDocumentFromData()` 이런 것 없어도 된다. 직접 할 수 있는 것 까지만 하면 된다. Service 를 활용하면된다.
+  - 왜냐하면, FF 에서 코드를 자동 생성되다 보니 좀 BuiltValue 가 깨끝하지 못하고, 필요 없는 코드가 복잡하게 얽혀져 있다.
+
+- 채팅창에 명령어
+  - /ai 너는 누구냐?
+  - /image give me apples and bananas
+  - /api https://philgo.com/etc/api.php
+  와 같이 특별 명령을 하면, `onCommand( message ) => Container(...UI Design...)` 가 실행되고, 직접 원하는 커스텀 코드를 수행하고, 결과를 UI 로 보여주게 한다.
 
 # 사용자
 

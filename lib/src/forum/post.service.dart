@@ -1,4 +1,5 @@
 import 'package:fireflow/fireflow.dart';
+import 'package:fireflow/src/backend/schema/posts_record.dart';
 // import 'package:collection/collection.dart';
 
 class PostService {
@@ -8,8 +9,6 @@ class PostService {
   FirebaseFirestore get db => FirebaseFirestore.instance;
   CollectionReference get col => db.collection('posts');
   DocumentReference doc(String category) => col.doc(category);
-
-  UsersPublicDataRecord get pub => UserService.instance.pub;
 
   /// Get the post
   Future<PostModel> get(String id) async {
@@ -22,7 +21,10 @@ class PostService {
     required DocumentReference postDocumentReference,
   }) async {
     // get the post's data from the database
-    final post = PostModel.fromSnapshot(await postDocumentReference.get());
+    // final post = PostModel.fromSnapshot(await postDocumentReference.get());
+
+    //
+    final post = await PostsRecord.getDocumentOnce(postDocumentReference);
     final categoryDoc = CategoryService.instance.doc(post.category);
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
@@ -43,19 +45,20 @@ class PostService {
 
       futures.add(
         MessagingService.instance.send(
-          notificationTitle: post.safeTitle,
-          notificationText: post.safeContent,
+          notificationTitle: safeString(post.title),
+          notificationText: safeString(post.content),
           notificationSound: 'default',
           notificationImageUrl: post.files.isNotEmpty ? post.files.first : null,
           userRefs: userRefs,
           initialPageName: 'PostView',
-          parameterData: {'postDocumentReference': post.ref},
+          parameterData: {'postDocumentReference': postDocumentReference},
         ),
       );
     }
 
     // update the post
     futures.add(
+      // TODO: named paramter를 사용할 것.
       postDocumentReference.update({
         'postId': postDocumentReference.id,
         'userDocumentReference': UserService.instance.ref,
@@ -69,7 +72,7 @@ class PostService {
         'likes': [],
         'noOfLikes': 0,
         'hasLike': false,
-        'wasPremiumUser': UserService.instance.pub.isPremiumUser,
+        'wasPremiumUser': my.isPremiumUser,
         'emphasizePremiumUserPost': category.emphasizePremiumUserPost
       }),
     );
@@ -80,17 +83,17 @@ class PostService {
     /// Feed
     ///
     /// Update the user's post count together with feed.
+    ///
     futures.add(
-      UserService.instance.publicRef.update(
-        {
-          'lastPost': UserService.instance.feed(post).toJson(),
-          'recentPosts': UserService.instance
-              .recentPosts(post)
-              .map((e) => e.toJson())
-              .toList(),
-          'noOfPosts': FieldValue.increment(1),
-          'lastPostCreatedAt': FieldValue.serverTimestamp(),
-        },
+      // TODO: 피드를 저장하기
+      UserService.instance.update(
+        lastPost: UserService.instance.feed(post),
+        recentPosts: UserService.instance
+            .recentPosts(post)
+            .map((e) => e.toJson())
+            .toList(),
+        noOfPosts: FieldValue.increment(1),
+        lastPostCreatedAt: FieldValue.serverTimestamp(),
       ),
     );
 
@@ -106,8 +109,8 @@ class PostService {
           {
             'post_id': postDocumentReference.id,
             'category': post.category,
-            'uid': pub.uid,
-            'created_at': post.createdAt.toDate().toIso8601String(),
+            'uid': my.uid,
+            'created_at': post.createdAt.toIso8601String(),
             'title': post.title,
             'content': post.content,
           },
@@ -123,8 +126,8 @@ class PostService {
             'id': postDocumentReference.id,
             'post_id': postDocumentReference.id,
             'category': post.category,
-            'uid': pub.uid,
-            'created_at': post.createdAt.toDate().toIso8601String(),
+            'uid': my.uid,
+            'created_at': post.createdAt.toIso8601String(),
             'title': post.title,
             'content': post.content,
           },
@@ -157,7 +160,7 @@ class PostService {
           {
             'post_id': postDocumentReference.id,
             'category': post.category,
-            'uid': pub.uid,
+            'uid': my.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
             'content': post.content,
@@ -174,7 +177,7 @@ class PostService {
             'id': postDocumentReference.id,
             'post_id': postDocumentReference.id,
             'category': post.category,
-            'uid': pub.uid,
+            'uid': my.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
             'content': post.content,
@@ -200,10 +203,8 @@ class PostService {
 
     // update the user's post count
     futures.add(
-      UserService.instance.publicRef.update(
-        {
-          'noOfPosts': FieldValue.increment(-1),
-        },
+      UserService.instance.update(
+        noOfPosts: FieldValue.increment(-1),
       ),
     );
 

@@ -46,7 +46,7 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
 
   RecentPostsStruct get lastPost;
 
-  BuiltList<RecentPostsStruct>? get recentPosts;
+  BuiltList<RecentPostsStruct> get recentPosts;
 
   bool? get isPremiumUser;
 
@@ -78,6 +78,7 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
     ..isProfileComplete = false
     ..hasPhoto = false
     ..lastPost = RecentPostsStructBuilder()
+    ..recentPosts = ListBuilder()
     ..noOfPosts = 0
     ..noOfComments = 0
     ..followings = ListBuilder()

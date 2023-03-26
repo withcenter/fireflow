@@ -20,7 +20,7 @@ class UserSticker extends StatelessWidget {
   /// 사용자의 DocumentReference
   final DocumentReference otherUserDocumentReference;
 
-  final void Function(UsersPublicDataRecord doc) onTap;
+  final void Function(UsersRecord doc) onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +39,7 @@ class UserSticker extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                  pub.displayName == '' ? 'No display name' : pub.displayName!),
+              Text(pub.displayName == '' ? 'No display name' : pub.displayName),
               Text('UID: ${pub.uid}'),
             ],
           ),

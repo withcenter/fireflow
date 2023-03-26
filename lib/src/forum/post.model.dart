@@ -2,6 +2,7 @@ import 'package:fireflow/fireflow.dart';
 
 /// PostModel is a class that represents a document of /posts.
 ///
+@Deprecated('User BuiltValue instead.')
 class PostModel {
   final String id;
   final String category;

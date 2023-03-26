@@ -3,12 +3,12 @@ import 'package:fireflow/src/test/test.config.dart';
 
 Future loadUsers() async {
   dog('Load test users');
-  TestConfig.a = await UserService.instance.getByEmail(TestConfig.emailA);
-  TestConfig.b = await UserService.instance.getByEmail(TestConfig.emailB);
-  TestConfig.c = await UserService.instance.getByEmail(TestConfig.emailC);
-  TestConfig.d = await UserService.instance.getByEmail(TestConfig.emailD);
-  TestConfig.admin =
-      await UserService.instance.getByEmail(TestConfig.adminEmail);
+  // TestConfig.a = await UserService.instance.getByEmail(TestConfig.emailA);
+  // TestConfig.b = await UserService.instance.getByEmail(TestConfig.emailB);
+  // TestConfig.c = await UserService.instance.getByEmail(TestConfig.emailC);
+  // TestConfig.d = await UserService.instance.getByEmail(TestConfig.emailD);
+  // TestConfig.admin =
+  //     await UserService.instance.getByEmail(TestConfig.adminEmail);
 }
 
 Future clear() async {
@@ -45,7 +45,7 @@ Future loginAs(String email, [String? password]) async {
   dog('Login as $email');
   await UserService.instance
       .loginOrRegister(email, password ?? TestConfig.password);
-  await UserService.instance.publicRef.update({'email': email});
+  await UserService.instance.update(email: email);
   dog('uid: ${UserService.instance.uid}');
 }
 
@@ -59,10 +59,8 @@ Future createPost({String? title}) async {
   final ref = await PostService.instance.col.add({
     'category': 'qna',
     'userDocumentReference': UserService.instance.ref,
-    'title': title ??
-        'Created by ${UserService.instance.pub.displayName} at ${DateTime.now()}',
-    'content':
-        'Content. Created by ${UserService.instance.pub.displayName} at ${DateTime.now()}',
+    'title': title ?? 'Created by ${my.displayName} at ${DateTime.now()}',
+    'content': 'Content. Created by ${my.displayName} at ${DateTime.now()}',
   });
   await PostService.instance.afterCreate(postDocumentReference: ref);
 }
@@ -80,8 +78,8 @@ Future deletePosts() async {
 
 /// Clear feeds of the login user.
 Future clearFeeds() async {
-  dog('Clear all feeds of ${UserService.instance.pub.displayName}}');
-  await UserService.instance.publicRef.update({
+  dog('Clear all feeds of ${my.displayName}}');
+  await UserService.instance.update(extra: {
     'lastPost': FieldValue.delete(),
     'recentPosts': FieldValue.delete(),
   });
