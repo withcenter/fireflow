@@ -46,6 +46,19 @@
   - /api https://philgo.com/etc/api.php
   와 같이 특별 명령을 하면, `onCommand( message ) => Container(...UI Design...)` 가 실행되고, 직접 원하는 커스텀 코드를 수행하고, 결과를 UI 로 보여주게 한다.
 
+
+# 모델링
+
+- 백엔드 또는 3rd party 와 데이터 송/수신을 할 때, JSON 을 모델로 변환하는데, 이 때, 초기 값을 가질 수 없는 경우를 제외한 모든 모델 변수는 nullable 이 아니다.
+즉, 빈 문자열, false, 0, 빈 배열 등의 값으로 초기화가 된다.
+
+  - 날짜 값은 초기값(빈 값)을 지정 할 수 없으니, nullable 이다. 하지만, 필요한 경우, 처음 날짜 값인 1973, 1, 1 을 사용 할 수 있다.
+  - 이미지 경로의 경우도, nullable 이 된다. 이름이나 다른 값은 빈 문자열로 초기화를 하면 되지만, 이미지 경로의 경우는 빈 문자열이 초기 값이 될 수 없다.
+  - DocumentReference 의 경우도 초기 값이 없으므로 nullable 이다. 단, `List<DocumentReference>` 는 빈 배열로 초기화를 하면 된다.
+
+
+
+
 # 사용자
 
 - Fireflow 버전 0.1.x 에서 `/users_public_data` 를 지우고 `/users` 컬렉션으로 통일하여, 일관성 있는 작업을 하도록 했다.

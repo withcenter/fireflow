@@ -7,7 +7,7 @@ class ChatRoomMessageOthers extends StatelessWidget {
     required this.message,
   });
 
-  final ChatRoomMessagesRecord message;
+  final ChatRoomMessageModel message;
 
   @override
   Widget build(BuildContext context) {

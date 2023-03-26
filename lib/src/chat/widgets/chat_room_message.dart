@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
@@ -15,24 +16,15 @@ class ChatRoomMessage extends StatelessWidget {
     switch (type) {
       case 'my':
         return ChatRoomMessageMine(
-          message: ChatRoomMessagesRecord.getDocumentFromData(
-            snapshot!.data()! as Map<String, dynamic>,
-            snapshot!.reference,
-          ),
+          message: ChatRoomMessageModel.fromSnapshot(snapshot!),
         );
       case 'other':
         return ChatRoomMessageOthers(
-          message: ChatRoomMessagesRecord.getDocumentFromData(
-            snapshot!.data()! as Map<String, dynamic>,
-            snapshot!.reference,
-          ),
+          message: ChatRoomMessageModel.fromSnapshot(snapshot!),
         );
       case 'protocol':
         return ChatRoomMessageProtocol(
-          message: ChatRoomMessagesRecord.getDocumentFromData(
-            snapshot!.data()! as Map<String, dynamic>,
-            snapshot!.reference,
-          ),
+          message: ChatRoomMessageModel.fromSnapshot(snapshot!),
         );
       case 'empty':
         return const ChatRoomMessageEmpty();

@@ -12,7 +12,7 @@ import 'package:flutter/widgets.dart';
 class MyStream extends StatelessWidget {
   const MyStream({Key? key, this.login, this.logout}) : super(key: key);
 
-  final Widget Function(UsersRecord my)? login;
+  final Widget Function(UserModel my)? login;
   final Widget Function()? logout;
 
   @override
@@ -42,7 +42,7 @@ class MyStream extends StatelessWidget {
             return const SizedBox.shrink();
           }
 
-          return login!(snapshot.data as UsersRecord);
+          return login!(snapshot.data as UserModel);
         });
   }
 }

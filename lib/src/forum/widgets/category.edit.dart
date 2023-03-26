@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,20 @@ class CategoryEdit extends StatefulWidget {
 class _CategoryEditState extends State<CategoryEdit> {
   final categoryIdController = TextEditingController();
   final titleController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    CategoryService.instance
+        .get(categoryDocumentReference: widget.categoryDocumentReference)
+        .then((category) {
+      setState(() {
+        categoryIdController.text = category.categoryId;
+        titleController.text = category.title;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(

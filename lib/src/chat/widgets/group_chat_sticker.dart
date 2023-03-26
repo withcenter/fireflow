@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
@@ -36,9 +37,7 @@ class GroupChatSticker extends StatelessWidget {
             return const SizedBox.shrink();
           }
 
-          final chatRoom = ChatRoomsRecord.getDocumentFromData(
-              snapshot.data!.data() as Map<String, dynamic>,
-              snapshot.data!.reference);
+          final chatRoom = ChatRoomModel.fromSnapshot(snapshot.data!);
 
           return GestureDetector(
             onTap: () => onTap(snapshot.data!),

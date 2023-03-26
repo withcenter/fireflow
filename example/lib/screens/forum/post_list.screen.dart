@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:go_router/go_router.dart';
@@ -113,7 +114,7 @@ class PostListScreen extends StatelessWidget {
                 onTap: () => context.pushNamed(
                   'postView',
                   queryParams: {
-                    'postDocumentReference': post.ref.path,
+                    'postDocumentReference': post.reference.path,
                   },
                 ),
               );

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/user/widgets/other_doc.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 /// 왼쪽에 사용자 프로필 사진, 오른쪽에 사용자 이름, 가입 날짜, 성별, 나일 등을 옵션으로 표시한다.
 /// 사용자 목록/검색, 채팅 목록에 1:1 친구 목록 등에서 사용 될 수 있다.
 ///
-/// 주의, [onTap] 으로 전달(리턴)되는 것은 사용자의 UsersRecord 이다.
+/// 주의, [onTap] 으로 전달(리턴)되는 것은 사용자의 UserModel 이다.
 ///
 class SingleChatSticker extends StatelessWidget {
   const SingleChatSticker({
@@ -19,7 +20,7 @@ class SingleChatSticker extends StatelessWidget {
   /// 사용자의 DocumentReference
   final DocumentReference userDocumentReference;
 
-  final void Function(UsersRecord doc) onTap;
+  final void Function(UserModel doc) onTap;
 
   @override
   Widget build(BuildContext context) {

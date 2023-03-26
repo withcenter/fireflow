@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class MyDoc extends StatelessWidget {
   const MyDoc({Key? key, required this.builder}) : super(key: key);
 
-  final Widget Function(UsersRecord my) builder;
+  final Widget Function(UserModel my) builder;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class MyDoc extends StatelessWidget {
             return const SizedBox.shrink();
           }
 
-          return builder(snapshot.data as UsersRecord);
+          return builder(snapshot.data as UserModel);
         });
   }
 }

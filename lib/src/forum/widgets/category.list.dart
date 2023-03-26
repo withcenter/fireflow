@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class CategoryList extends StatelessWidget {
           );
         }
 
-        if (!snapshot.hasData || snapshot.data?.size == 0) {
+        if (!snapshot.hasData || snapshot.data!.size == 0) {
           return const Center(
             child: Text('No categories, yet'),
           );
@@ -35,10 +36,6 @@ class CategoryList extends StatelessWidget {
         return ListView.builder(
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
-            final category = CategoriesRecord.getDocumentFromData(
-              doc.data()! as Map<String, dynamic>,
-              doc.reference,
-            );
             return ListTile(
               title: Text('Category $index'),
               onTap: () => onTap(doc.reference),

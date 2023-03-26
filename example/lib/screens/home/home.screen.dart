@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/scheduler.dart';
@@ -116,11 +117,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             snapshot.data!.docs[index]);
                         return ListTile(
                           title: Text(category.title),
-                          subtitle: Text('category: ${category.category}'),
+                          subtitle: Text('category: ${category.categoryId}'),
                           onTap: () => context.pushNamed(
                             'PostList',
                             queryParams: {
-                              'category': category.category,
+                              'categoryId': category.categoryId,
                             },
                           ),
                         );

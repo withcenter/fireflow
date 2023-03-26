@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
@@ -12,14 +13,13 @@ class OtherDoc extends StatelessWidget {
       : super(key: key);
 
   final DocumentReference otherUserDocumentReference;
-  final Widget Function(UsersRecord other) builder;
+  final Widget Function(UserModel other) builder;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: otherUserDocumentReference.snapshots().map(
-              (doc) => UsersRecord.getDocumentFromData(
-                  doc as Map<String, dynamic>, doc.reference),
+              (doc) => UserModel.fromSnapshot(doc),
             ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -32,7 +32,7 @@ class OtherDoc extends StatelessWidget {
             return const SizedBox.shrink();
           }
 
-          return builder(snapshot.data as UsersRecord);
+          return builder(snapshot.data as UserModel);
         });
   }
 }

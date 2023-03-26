@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 
 class CategoryService {
@@ -34,11 +35,9 @@ class CategoryService {
     return (await doc(categoryId).get()).exists;
   }
 
-  Future<CategoriesRecord> get({
+  Future<CategoryModel> get({
     required DocumentReference categoryDocumentReference,
   }) async {
-    return CategoriesRecord.getDocumentOnce(
-      categoryDocumentReference,
-    );
+    return CategoryModel.fromSnapshot(await categoryDocumentReference.get());
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/user/widgets/other_doc.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class UserSticker extends StatelessWidget {
   /// 사용자의 DocumentReference
   final DocumentReference otherUserDocumentReference;
 
-  final void Function(UsersRecord doc) onTap;
+  final void Function(UserModel doc) onTap;
 
   @override
   Widget build(BuildContext context) {

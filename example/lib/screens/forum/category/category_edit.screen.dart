@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
       CategoryService.instance.col.doc(widget.category).get().then((value) {
         category = CategoryModel.fromSnapshot(value);
         title.text = category!.title;
-        id.text = category!.category;
+        id.text = category!.categoryId;
         setState(() {});
       });
     }

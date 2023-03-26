@@ -44,7 +44,7 @@ class CategoryListScreen extends StatelessWidget {
                   title: Text(category.title),
                   onTap: () {
                     context.pushNamed('CategoryEdit',
-                        queryParams: {'category': category.category});
+                        queryParams: {'categoryId': category.categoryId});
                   },
                 );
               },

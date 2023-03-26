@@ -7,7 +7,7 @@ class ChatRoomMessageProtocol extends StatelessWidget {
     required this.message,
   });
 
-  final ChatRoomMessagesRecord message;
+  final ChatRoomMessageModel message;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class ChatRoomMessageProtocol extends StatelessWidget {
             ),
           ),
           child: Text(
-            message.text ?? '',
+            message.text,
             textAlign: TextAlign.right,
           ),
         ),

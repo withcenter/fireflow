@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fa;
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/backend/backend.dart';
-import 'package:fireflow/src/backend/schema/posts_record.dart';
+// import 'package:fireflow/src/backend/schema/posts_record.dart';
 import 'package:path/path.dart' as p;
 import 'package:rxdart/subjects.dart';
 
-UsersRecord get my => UserService.instance.my;
+UserModel get my => UserService.instance.my;
 
 /// UserService is a singleton class that provides necessary service for user
 /// related features.
@@ -59,12 +59,12 @@ class UserService {
   /// The login user's data model.
   ///
   /// It is updated (synced) on /users/<uid> document changes.
-  UsersRecord? _my;
-  UsersRecord get my => _my!;
-  set my(UsersRecord? v) => _my = v;
+  UserModel? _my;
+  UserModel get my => _my!;
+  set my(UserModel? v) => _my = v;
 
-  final BehaviorSubject<UsersRecord?> onMyChange =
-      BehaviorSubject<UsersRecord?>.seeded(null);
+  final BehaviorSubject<UserModel?> onMyChange =
+      BehaviorSubject<UserModel?>.seeded(null);
 
   reset() {
     my = null;
@@ -74,8 +74,9 @@ class UserService {
   /// Get user document by uid.
   ///
   /// Note, it returns user data model. Not the user's public data.
-  Future<UsersRecord> get([String? id]) {
-    return UsersRecord.getDocumentOnce(doc(id ?? uid));
+  Future<UserModel> get([String? id]) async {
+    final snapshot = await doc(id ?? uid).get();
+    return UserModel.fromSnapshot(snapshot);
   }
 
   // Future<UserModel> get([String? id]) async {
@@ -89,7 +90,7 @@ class UserService {
   ///
   /// AppService 에서 한번만 호출됨.
   Future maybeGenerateUserDocument() async {
-    await maybeCreateUser(FirebaseAuth.instance.currentUser!);
+    await maybeCreateUser(fa.FirebaseAuth.instance.currentUser!);
   }
 
   /// 사용자 문서 업데이트 Listen & 최신 문서 업데이트
@@ -99,8 +100,7 @@ class UserService {
     mySubscription = ref.snapshots().listen((snapshot) {
       if (snapshot.exists) {
         // 사용자 문서가 변경되었다.
-        my = UsersRecord.getDocumentFromData(
-            snapshot.data() as Map<String, dynamic>, snapshot.reference);
+        my = UserModel.fromSnapshot(snapshot);
         onMyChange.add(my);
 
         dog('listenUserDocument(): ${my.displayName}, ${my.updatedAt}');
@@ -116,7 +116,7 @@ class UserService {
   _moveUserData() async {
     if (Config.instance.moveUserData == null) return;
 
-    if (my.email!.isNotEmpty || my.phoneNumber!.isNotEmpty) {
+    if (my.email.isNotEmpty || my.phoneNumber.isNotEmpty) {
       await update(
         email: FieldValue.delete(),
         phoneNumber: FieldValue.delete(),
@@ -125,8 +125,8 @@ class UserService {
           .collection(Config.instance.moveUserData!['collection'])
           .doc(uid)
           .update({
-        if (my.email!.isNotEmpty) 'email': my.email,
-        if (my.phoneNumber!.isNotEmpty) 'phone_number': my.phoneNumber,
+        if (my.email.isNotEmpty) 'email': my.email,
+        if (my.phoneNumber.isNotEmpty) 'phone_number': my.phoneNumber,
       });
     }
   }
@@ -219,7 +219,7 @@ class UserService {
   ///
   /// If the number of recentPosts is greater than Config.instance.noOfRecentPosts,
   /// it will remove the oldest post.
-  recentPosts(PostsRecord post) {
+  recentPosts(PostModel post) {
     List recentPosts = my.recentPosts.toList();
     if (recentPosts.length >= Config.instance.noOfRecentPosts) {
       recentPosts.removeRange(
@@ -230,7 +230,7 @@ class UserService {
   }
 
   /// 글 모델을 입력 받아, 피드로 저장 할 수 있도록 JSON 으로 리턴한다.
-  Map<String, dynamic> feed(PostsRecord post) {
+  Map<String, dynamic> feed(PostModel post) {
     return {
       'postDocumentReference': post.reference,
       'createdAt': post.createdAt,
@@ -272,14 +272,12 @@ class UserService {
   /// User's email is a private information and should be accessed by the user.
   /// Use this for test purpose. Save the user's email in the user's public data.
   /// And serach it.
-  Future<UsersRecord> getByEmail(String email) async {
+  Future<UserModel> getByEmail(String email) async {
     final snapshot = await col.where('email', isEqualTo: email).get();
     if (snapshot.docs.isEmpty) {
       throw Exception("User not found.");
     }
-    return UsersRecord.getDocumentFromData(
-        snapshot.docs[0].data() as Map<String, dynamic>,
-        snapshot.docs[0].reference);
+    return UserModel.fromSnapshot(snapshot.docs[0]);
   }
 
   /// Follow a user
@@ -303,7 +301,7 @@ class UserService {
   /// [noOfFollowers] is the number of followers to get. If it is 0, it will get all the followers.
   ///
   /// If it has no feeds, it will return an empty array.
-  Future<List<RecentPostsStruct>> feeds({
+  Future<List<Map<String, dynamic>>> feeds({
     int noOfFollowers = 0,
   }) async {
     if (my.followings.isEmpty) {
@@ -330,12 +328,9 @@ class UserService {
 
     // Merge the objects inside the array of usersQuerySnapshot.docs into a single array
     // order by the feild timestamp in that object in descending order.
-    final List<RecentPostsStruct> allRecentPosts = [];
+    final List<Map<String, dynamic>> allRecentPosts = [];
     for (final doc in usersQuerySnapshot.docs) {
-      // final data = doc.data() as Map<String, dynamic>;
-      // final user = UserPublicDataModel.fromSnapshot(doc);
-      final user = UsersRecord.getDocumentFromData(
-          doc.data() as Map<String, dynamic>, doc.reference);
+      final user = UserModel.fromSnapshot(doc);
       allRecentPosts.addAll(user.recentPosts.toList());
     }
     if (allRecentPosts.isEmpty) {
@@ -343,7 +338,7 @@ class UserService {
     }
 
     /// sort allRecentPosts by timestamp
-    allRecentPosts.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+    allRecentPosts.sort((a, b) => b['createdAt']!.compareTo(a['createdAt']!));
 
     return allRecentPosts;
   }
@@ -354,17 +349,17 @@ class UserService {
   Future<List<Map<String, dynamic>>> jsonFeeds({
     int noOfFollowers = 0,
   }) async {
-    final List<RecentPostsStruct> feeds = await this.feeds(
+    final List<Map<String, dynamic>> feeds = await this.feeds(
       noOfFollowers: noOfFollowers,
     );
 
     return feeds
         .map((e) => {
-              'postDocumentReference': e.postDocumentReference,
-              'createdAt': e.createdAt,
-              'title': e.title,
-              'content': e.content,
-              'photoUrl': e.photoUrl,
+              'postDocumentReference': e['postDocumentReference'],
+              'createdAt': e['createdAt'],
+              'title': e['title'],
+              'content': e['content'],
+              'photoUrl': e['photoUrl'],
             })
         .toList();
   }
@@ -376,9 +371,7 @@ class UserService {
   Future<bool> acceptInvitation(DocumentReference invitor) async {
     try {
       // final me = await getPublicData();
-      if (my.referral != null) {
-        return false;
-      }
+      return false;
     } catch (e) {
       /// If the user is not found, it will create the public data document for the user.
     }
@@ -447,5 +440,28 @@ class UserService {
       if (recentPosts != null) 'recentPosts': recentPosts,
       if (extra != null) ...extra,
     });
+  }
+
+  // 사용자가 처음 회원 가입할 때 FF 가 /users 컬렉션을 생성하기 위한 코드.
+  // 사용자 문서가 이미 생성되었으면, 실행하지 않는다.
+  // Fireflow 에서도, 앱이 실행 될 때 마다 이 코드를 한번 실행한다. 그래서 혹시, /users/<uid> 문서가 존재하지 않으면 생성한다.
+  Future maybeCreateUser(fa.User user) async {
+    final userRecord = doc(user.uid);
+    final userExists = await userRecord.get().then((u) => u.exists);
+    if (userExists) {
+      return;
+    }
+
+    final Map<String, dynamic> userData = {
+      'email': user.email,
+      'display_name': user.displayName,
+      'photo_url': user.photoURL,
+      'uid': user.uid,
+      'phone_number': user.phoneNumber,
+    };
+    userData['created_time'] = FieldValue.serverTimestamp();
+    // FieldValue.serverTimestamp();
+
+    await userRecord.set(userData);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -83,9 +84,9 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       TextButton(
                         onPressed: () async {
                           final navigator = Navigator.of(context);
-                          await post.ref.update({'deleted': true});
-                          PostService.instance
-                              .afterDelete(postDocumentReference: post.ref);
+                          await post.reference.update({'deleted': true});
+                          PostService.instance.afterDelete(
+                              postDocumentReference: post.reference);
 
                           navigator.pop();
                         },

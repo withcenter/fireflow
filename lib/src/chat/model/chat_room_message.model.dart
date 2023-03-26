@@ -3,22 +3,23 @@ import 'package:fireflow/fireflow.dart';
 
 /// Chat message model
 class ChatRoomMessageModel {
-  ChatRoomMessageModel(
-      {required this.userDocumentReference,
-      required this.chatRoomDocumentReference,
-      required this.text,
-      required this.sentAt,
-      required this.ref,
-      required this.uploadUrl,
-      required this.uploadUrlType,
-      required this.protocol,
-      required this.protocolTargetUserDocumentReference,
-      required this.previewUrl,
-      required this.previewTitle,
-      required this.previewDescription,
-      required this.previewImageUrl,
-      required this.replyDisplayName,
-      required this.replyText});
+  ChatRoomMessageModel({
+    required this.userDocumentReference,
+    required this.chatRoomDocumentReference,
+    required this.text,
+    required this.sentAt,
+    required this.ref,
+    required this.uploadUrl,
+    required this.uploadUrlType,
+    required this.protocol,
+    required this.protocolTargetUserDocumentReference,
+    required this.previewUrl,
+    required this.previewTitle,
+    required this.previewDescription,
+    required this.previewImageUrl,
+    required this.replyDisplayName,
+    required this.replyText,
+  });
 
   final DocumentReference userDocumentReference;
   final DocumentReference chatRoomDocumentReference;

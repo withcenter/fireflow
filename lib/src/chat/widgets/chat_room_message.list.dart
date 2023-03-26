@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -42,7 +43,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   /// The chat room model.
   ///
   /// This is updated when the chat room is updated.
-  late ChatRoomsRecord room;
+  late ChatRoomModel room;
 
   StreamSubscription? subscriptionNewMessage;
 
@@ -52,7 +53,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   /// The chat room document references of the 1:1 chat room between you and the other user.
   List<DocumentReference> get youAndMeRef => widget.chatRoomDocumentReference.id
       .split('-')
-      .map((id) => UserService.instance.doc(id))
+      .map<DocumentReference>((id) => UserService.instance.doc(id))
       .toList();
 
   /// The chat room document reference.
@@ -97,7 +98,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
       // 채팅방 정보 읽기 & 에러 핸들링.
       try {
-        room = await ChatRoomsRecord.getDocumentOnce(chatRoomRef);
+        room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
       } catch (e) {
         snackBarError(
             context: context,
@@ -109,7 +110,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
       // If the user is not in the room, and the room is open chat, then add the user's ref to the room.
       // And send a message for 'enter'.
-      if (room.userDocumentReferences!.contains(myReference) == false &&
+      if (room.userDocumentReferences.contains(myReference) == false &&
           room.isOpenChat == true) {
         await chatRoomRef.update({
           'userDocumentReferences': FieldValue.arrayUnion([myReference]),
@@ -142,13 +143,12 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
     // Listen for new message, and make it read by you.
     subscriptionNewMessage = chatRoomRef.snapshots().listen((snapshot) {
-      room = ChatRoomsRecord.getDocumentFromData(
-          snapshot.data() as Map<String, dynamic>, snapshot.reference);
+      room = ChatRoomModel.fromSnapshot(snapshot);
 
       // room = ChatRoomModel.fromSnapshot(snapshot);
 
       /// If the signed-in user have not seen the message, then make it seen.
-      if (room.lastMessageSeenBy!.contains(myReference) == false) {
+      if (room.lastMessageSeenBy.contains(myReference) == false) {
         chatRoomRef.update({
           'lastMessageSeenBy': FieldValue.arrayUnion([myReference])
         });
@@ -172,10 +172,9 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       itemBuilder: (context, documentSnapshots, index) {
         final snapshot = documentSnapshots[index];
 
-        final message = ChatRoomMessagesRecord.getDocumentFromData(
-            snapshot.data() as Map<String, dynamic>, snapshot.reference);
+        final message = ChatRoomMessageModel.fromSnapshot(snapshot);
 
-        if (message.protocol!.isNotEmpty) {
+        if (message.protocol.isNotEmpty) {
           return protocolMessageBuilder(snapshot);
         } else if (message.userDocumentReference == myReference) {
           return myMessageBuilder(snapshot);
@@ -208,10 +207,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       return widget.myMessageBuilder!(snapshot);
     } else {
       return ChatRoomMessageMine(
-        message: ChatRoomMessagesRecord.getDocumentFromData(
-          snapshot.data()! as Map<String, dynamic>,
-          snapshot.reference,
-        ),
+        message: ChatRoomMessageModel.fromSnapshot(snapshot),
       );
     }
   }
@@ -225,10 +221,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       return widget.otherMessageBuilder!(snapshot);
     } else {
       return ChatRoomMessageOthers(
-        message: ChatRoomMessagesRecord.getDocumentFromData(
-          snapshot.data()! as Map<String, dynamic>,
-          snapshot.reference,
-        ),
+        message: ChatRoomMessageModel.fromSnapshot(snapshot),
       );
     }
   }
@@ -241,10 +234,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       return widget.protocolMessageBuilder!(snapshot);
     } else {
       return ChatRoomMessageProtocol(
-        message: ChatRoomMessagesRecord.getDocumentFromData(
-          snapshot.data()! as Map<String, dynamic>,
-          snapshot.reference,
-        ),
+        message: ChatRoomMessageModel.fromSnapshot(snapshot),
       );
     }
   }

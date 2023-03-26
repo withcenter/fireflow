@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 
+/// Category Model
+///
 /// CategoryModel is a class that represents a document of /categories.
 ///
 class CategoryModel {
-  final String categoryId;
+  final String category;
   final String title;
   final int noOfPosts;
   final int noOfComments;
@@ -15,7 +17,7 @@ class CategoryModel {
   final DocumentReference ref;
 
   CategoryModel({
-    required this.categoryId,
+    required this.category,
     required this.title,
     required this.noOfPosts,
     required this.noOfComments,
@@ -40,7 +42,7 @@ class CategoryModel {
     String? id,
   }) {
     return CategoryModel(
-      categoryId: json['categoryId'] ?? id,
+      category: json['category'] ?? id,
       title: json['title'] ?? '',
       noOfPosts: json['noOfPosts'] ?? 0,
       noOfComments: json['noOfComments'] ?? 0,
@@ -50,14 +52,14 @@ class CategoryModel {
       waitMinutesForNextPost: json['waitMinutesForNextPost'] ?? 0,
       waitMinutesForPremiumUserNextPost:
           json['waitMinutesForPremiumUserNextPost'] ?? 0,
-      ref: CategoryService.instance.doc(json['categoryId'] ?? id),
+      ref: CategoryService.instance.doc(json['category'] ?? id),
     );
   }
 
   // create "toString()" method that returns a string of the object of this class
   @override
   String toString() {
-    return 'CategoryModel{ categoryId: $categoryId, title: $title, noOfPosts: $noOfPosts, noOfComments: $noOfComments, enablePushNotificationSubscription: $enablePushNotificationSubscription, emphasizePremiumUserPost: $emphasizePremiumUserPost, waitMinutesForNextPost: $waitMinutesForNextPost, waitMinutesForPremiumUserNextPost: $waitMinutesForPremiumUserNextPost}';
+    return 'CategoryModel{ category: $category, title: $title, noOfPosts: $noOfPosts, noOfComments: $noOfComments, enablePushNotificationSubscription: $enablePushNotificationSubscription, emphasizePremiumUserPost: $emphasizePremiumUserPost, waitMinutesForNextPost: $waitMinutesForNextPost, waitMinutesForPremiumUserNextPost: $waitMinutesForPremiumUserNextPost}';
   }
 
   /// increase noOfPosts by 1.

@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 
 /// PostModel is a class that represents a document of /posts.
 ///
-@Deprecated('User BuiltValue instead.')
 class PostModel {
   final String id;
   final String category;
@@ -23,7 +23,7 @@ class PostModel {
   final bool wasPremiumUser;
   final bool emphasizePremiumUserPost;
 
-  final DocumentReference ref;
+  final DocumentReference reference;
 
   PostModel({
     required this.id,
@@ -44,7 +44,7 @@ class PostModel {
     required this.files,
     required this.wasPremiumUser,
     required this.emphasizePremiumUserPost,
-    required this.ref,
+    required this.reference,
   });
 
   /// Create a PostModel object from a snapshot of a document.
@@ -80,7 +80,7 @@ class PostModel {
       files: List<String>.from(json['files'] ?? []),
       wasPremiumUser: json['wasPremiumUser'] ?? false,
       emphasizePremiumUserPost: json['emphasizePremiumUserPost'] ?? false,
-      ref: PostService.instance.doc(id),
+      reference: PostService.instance.doc(id),
     );
   }
 
@@ -94,5 +94,5 @@ class PostModel {
   ///
   /// This method is used when a new comment is created.
   Future increaseNoOfComment() =>
-      ref.update({'noOfComments': FieldValue.increment(1)});
+      reference.update({'noOfComments': FieldValue.increment(1)});
 }

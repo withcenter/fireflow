@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/backend/schema/posts_record.dart';
+// import 'package:fireflow/src/backend/schema/posts_record.dart';
 // import 'package:collection/collection.dart';
 
 class PostService {
@@ -24,7 +25,7 @@ class PostService {
     // final post = PostModel.fromSnapshot(await postDocumentReference.get());
 
     //
-    final post = await PostsRecord.getDocumentOnce(postDocumentReference);
+    final post = await get(postDocumentReference.id);
     final categoryDoc = CategoryService.instance.doc(post.category);
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
@@ -110,7 +111,7 @@ class PostService {
             'post_id': postDocumentReference.id,
             'category': post.category,
             'uid': my.uid,
-            'created_at': post.createdAt.toIso8601String(),
+            'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
             'content': post.content,
           },
@@ -127,7 +128,7 @@ class PostService {
             'post_id': postDocumentReference.id,
             'category': post.category,
             'uid': my.uid,
-            'created_at': post.createdAt.toIso8601String(),
+            'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
             'content': post.content,
           },

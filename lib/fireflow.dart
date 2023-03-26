@@ -1,11 +1,8 @@
-export 'package:firebase_auth/firebase_auth.dart';
-
 /// Config
 export 'config.dart';
 
 /// Service
 export 'src/user/user.service.dart';
-export 'src/user/model/user.model.dart';
 export 'src/user/user_public_data.model.dart';
 export 'src/user_setting/user_setting.service.dart';
 export 'src/user_setting/user_setting.model.dart';
@@ -33,13 +30,14 @@ export 'src/user/widgets/my_stream.dart';
 /// User
 ///
 export 'src/user/widgets/user_sticker.dart';
+export 'src/user/model/user.model.dart';
 
 /// Forum
-export 'src/backend/schema/structs/recent_posts_struct.dart';
-export 'src/backend/schema/categories_record.dart';
 
 export 'src/forum/post.service.dart';
-export 'src/forum/post.model.dart';
+export 'src/forum/model/category.model.dart';
+export 'src/forum/model/post.model.dart';
+
 export 'src/forum/widgets/category.list.dart';
 export 'src/forum/widgets/category.create.dart';
 export 'src/forum/widgets/category.edit.dart';
@@ -72,20 +70,7 @@ export 'src/functions/country_code.dart';
 export 'src/functions/comment_order.dart';
 export 'src/functions/array_functions.dart';
 
-export 'src/auth/auth_util.dart';
 export 'src/auth/firebase_user_provider.dart';
-
-/// Backend
-///
-export 'src/backend/lat_lng.dart';
-export 'src/backend/schema/index.dart';
-export 'src/backend/schema/structs/recent_posts_struct.dart';
-export 'src/backend/schema/serializers.dart';
-export 'src/backend/schema/users_record.dart';
-export 'src/backend/schema/chat_rooms_record.dart';
-export 'src/backend/schema/chat_room_messages_record.dart';
-
-export 'src/backend/flutter_flow_utils.dart';
 
 /// TEST
 export 'src/test/test.service.dart';
