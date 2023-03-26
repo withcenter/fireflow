@@ -13,8 +13,7 @@ export 'src/storage/storage.service.dart';
 export 'src/push_notifications/messaging.service.dart';
 export 'src/push_notifications/messaging.options.dart';
 export 'src/push_notifications/message.model.dart';
-export 'src/category/category.service.dart';
-export 'src/category/category.model.dart';
+
 export 'src/comment/comment.service.dart';
 export 'src/comment/comment.model.dart';
 
@@ -35,8 +34,12 @@ export 'src/user/model/user.model.dart';
 /// Forum
 
 export 'src/forum/post.service.dart';
+
+export 'src/forum/category.service.dart';
+
 export 'src/forum/model/category.model.dart';
 export 'src/forum/model/post.model.dart';
+export 'src/forum/model/feed.model.dart';
 
 export 'src/forum/widgets/category.list.dart';
 export 'src/forum/widgets/category.create.dart';

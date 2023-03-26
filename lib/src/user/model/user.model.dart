@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fireflow/fireflow.dart';
 
 /// UserModel is a class that represents a user.
 ///
@@ -35,8 +37,8 @@ class UserModel {
   bool hasPhoto;
 
   Timestamp? lastPostCreatedAt;
-  Map<String, dynamic> lastPost;
-  List<Map<String, dynamic>> recentPosts;
+  FeedModel? lastPost;
+  List<FeedModel> recentPosts;
 
   bool isPremiumUser;
   int noOfPosts;
@@ -111,8 +113,12 @@ class UserModel {
       birthday: json['birthday'],
       hasPhoto: json['hasPhoto'] ?? false,
       lastPostCreatedAt: json['lastPostCreatedAt'],
-      lastPost: json['lastPost'] ?? {},
-      recentPosts: List<Map<String, dynamic>>.from(json['recentPosts'] ?? []),
+      lastPost: json['lastPost'] == null
+          ? null
+          : FeedModel.fromJson(json['lastPost']),
+      recentPosts: (json['recentPosts'] ?? [])
+          .map<FeedModel>((e) => FeedModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       isPremiumUser: json['isPremiumUser'] ?? false,
       noOfPosts: json['noOfPosts'] ?? 0,
       noOfComments: json['noOfComments'] ?? 0,
@@ -120,6 +126,38 @@ class UserModel {
       referral: json['referral'],
       referralAcceptedAt: json['referralAcceptedAt'],
       stateMessage: json['stateMessage'] ?? '',
+    );
+  }
+
+  factory UserModel.fromFirebaseUser(User user) {
+    return UserModel(
+      uid: user.uid,
+      email: user.email ?? '',
+      phoneNumber: user.phoneNumber ?? '',
+      name: '',
+      displayName: '',
+      createdTime: Timestamp.fromDate(DateTime(1973)),
+      updatedAt: Timestamp.fromDate(DateTime(1973)),
+      admin: false,
+      blockedUsers: [],
+      favoriteChatRooms: [],
+      isProfileComplete: false,
+      photoUrl: null,
+      coverPhotoUrl: null,
+      gender: '',
+      birthday: null,
+      hasPhoto: false,
+      lastPostCreatedAt: null,
+      lastPost: null,
+      recentPosts: [],
+      isPremiumUser: false,
+      noOfPosts: 0,
+      noOfComments: 0,
+      followings: [],
+      referral: null,
+      referralAcceptedAt: null,
+      stateMessage: '',
+      reference: UserService.instance.doc(user.uid),
     );
   }
 

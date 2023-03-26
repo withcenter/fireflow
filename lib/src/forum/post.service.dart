@@ -18,25 +18,32 @@ class PostService {
   }
 
   /// post create method
-  Future afterCreate({
-    required DocumentReference postDocumentReference,
+  Future<PostModel> create({
+    required String categoryId,
+    String title = '',
+    String content = '',
   }) async {
-    // get the post's data from the database
-    // final post = PostModel.fromSnapshot(await postDocumentReference.get());
+    final postDocumentReference = await col.add(PostModel.toCreate(
+      categoryId: categoryId,
+      title: title,
+      content: content,
+      wasPremiumUser: my.isPremiumUser,
+    ));
 
-    //
     final post = await get(postDocumentReference.id);
-    final categoryDoc = CategoryService.instance.doc(post.category);
+    final categoryDoc = CategoryService.instance.doc(post.categoryId);
     final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
-    /// send push notifications to the subscribers of the category
+    /// 게시판 별 구독한 사용자에게 푸시 알림 보냄
+    ///
+    /// 구독한 사용자 설정 목록을 가져 옴. (사용자 문서를 읽는 것은 아니지만, 읽기 이벤트가 많이 발생 할 수 있다.)
     final snapshot = await UserSettingService.instance.col
-        .where('postSubscriptions', arrayContains: category.ref)
+        .where('postSubscriptions', arrayContains: category.reference)
         .get();
 
+    /// FF 방식의 게시판 별 구독한 사용자에게 푸시 알림을 위한 문서를 Firestore 에 생성.
+    /// 즉, FF 의 푸시 알림 방식을 사용하므로, FF 의 Push Notification 설정이 되어져 있어야 한다.
     List<Future> futures = [];
-
-    /// Send push notifications to the subscribers of the category
     if (snapshot.size > 0) {
       final List<DocumentReference> userRefs = [];
       for (final doc in snapshot.docs) {
@@ -57,42 +64,27 @@ class PostService {
       );
     }
 
-    // update the post
+    /// 글의 각종 기본 정보 업데이트.
+    ///
+    /// 특히, 글 id 는 글을 먼저 생성한 다음에 해야하는 것이고, 기타 글 생성 후 해야하는 것들이 있다.
     futures.add(
-      // TODO: named paramter를 사용할 것.
-      postDocumentReference.update({
-        'postId': postDocumentReference.id,
-        'userDocumentReference': UserService.instance.ref,
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-        if (post.files.isEmpty) 'files': [],
-        'hasPhoto': post.files.isNotEmpty,
-        'noOfComments': 0,
-        'hasComment': false,
-        'deleted': false,
-        'likes': [],
-        'noOfLikes': 0,
-        'hasLike': false,
-        'wasPremiumUser': my.isPremiumUser,
-        'emphasizePremiumUserPost': category.emphasizePremiumUserPost
-      }),
+      postDocumentReference.update(PostModel.toUpdate(
+        postDocumentReference: postDocumentReference,
+        emphasizePremiumUserPost: category.emphasizePremiumUserPost,
+      )),
     );
 
-    // update the category's post count
+    // 카테고리에 글 1 증가
     futures.add(category.increaseNoOfPosts());
 
-    /// Feed
+    /// 피드
     ///
-    /// Update the user's post count together with feed.
+    /// 사용자 컬렉션에 피드를 업데이트 한다.
     ///
     futures.add(
-      // TODO: 피드를 저장하기
       UserService.instance.update(
         lastPost: UserService.instance.feed(post),
-        recentPosts: UserService.instance
-            .recentPosts(post)
-            .map((e) => e.toJson())
-            .toList(),
+        recentPosts: UserService.instance.recentPosts(post),
         noOfPosts: FieldValue.increment(1),
         lastPostCreatedAt: FieldValue.serverTimestamp(),
       ),
@@ -103,13 +95,13 @@ class PostService {
     /// Note that, user cannot update system settings.
     /// futures.add(SystemSettingService.instance.increaseNoOfPosts());
 
-    // backup the post to supabase
+    // 수파베이스에 글 저장 (검색 등에 활용)
     if (SupabaseService.instance.storePosts) {
       futures.add(
         supabase.posts.insert(
           {
             'post_id': postDocumentReference.id,
-            'category': post.category,
+            'category_id': post.categoryId,
             'uid': my.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
@@ -119,14 +111,14 @@ class PostService {
       );
     }
 
-    // backup the post to supabase
+    // 수파베이스에 글/코멘트 테이블에 저장 (검색 등에 활용)
     if (SupabaseService.instance.storePostsAndComments) {
       futures.add(
         supabase.postsAndComments.insert(
           {
             'id': postDocumentReference.id,
             'post_id': postDocumentReference.id,
-            'category': post.category,
+            'category_id': post.categoryId,
             'uid': my.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
@@ -137,6 +129,8 @@ class PostService {
     }
 
     await Future.wait(futures);
+
+    return get(post.id);
   }
 
   Future afterUpdate({
@@ -160,7 +154,7 @@ class PostService {
         supabase.posts.upsert(
           {
             'post_id': postDocumentReference.id,
-            'category': post.category,
+            'category_id': post.categoryId,
             'uid': my.uid,
             'created_at': post.createdAt.toDate().toIso8601String(),
             'title': post.title,
@@ -171,22 +165,22 @@ class PostService {
       );
     }
 
-    if (SupabaseService.instance.storePosts) {
-      futures.add(
-        supabase.postsAndComments.upsert(
-          {
-            'id': postDocumentReference.id,
-            'post_id': postDocumentReference.id,
-            'category': post.category,
-            'uid': my.uid,
-            'created_at': post.createdAt.toDate().toIso8601String(),
-            'title': post.title,
-            'content': post.content,
-          },
-          onConflict: 'id',
-        ),
-      );
-    }
+    // if (SupabaseService.instance.storePosts) {
+    //   futures.add(
+    //     supabase.postsAndComments.upsert(
+    //       {
+    //         'id': postDocumentReference.id,
+    //         'post_id': postDocumentReference.id,
+    //         'category_id': post.categoryId,
+    //         'uid': my.uid,
+    //         'created_at': post.createdAt.toDate().toIso8601String(),
+    //         'title': post.title,
+    //         'content': post.content,
+    //       },
+    //       onConflict: 'id',
+    //     ),
+    //   );
+    // }
 
     await Future.wait(futures);
   }
@@ -197,7 +191,7 @@ class PostService {
   }) async {
     // get the post's data from the database
     final post = PostModel.fromSnapshot(await postDocumentReference.get());
-    final categoryDoc = CategoryService.instance.doc(post.category);
+    final categoryDoc = CategoryService.instance.doc(post.categoryId);
     // final category = CategoryModel.fromSnapshot(await categoryDoc.get());
 
     List<Future> futures = [];

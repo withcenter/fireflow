@@ -35,10 +35,11 @@ class CategoryList extends StatelessWidget {
 
         return ListView.builder(
           itemBuilder: (context, index) {
-            final doc = snapshot.data!.docs[index];
+            final category =
+                CategoryModel.fromSnapshot(snapshot.data!.docs[index]);
             return ListTile(
-              title: Text('Category $index'),
-              onTap: () => onTap(doc.reference),
+              title: Text('Category ${category.categoryId} ${category.title}'),
+              onTap: () => onTap(category.reference),
             );
           },
           itemCount: snapshot.data!.size,

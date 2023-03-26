@@ -1,28 +1,33 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/test/test.config.dart';
 
-Future loadUsers() async {
-  dog('Load test users');
-  // TestConfig.a = await UserService.instance.getByEmail(TestConfig.emailA);
-  // TestConfig.b = await UserService.instance.getByEmail(TestConfig.emailB);
-  // TestConfig.c = await UserService.instance.getByEmail(TestConfig.emailC);
-  // TestConfig.d = await UserService.instance.getByEmail(TestConfig.emailD);
-  // TestConfig.admin =
-  //     await UserService.instance.getByEmail(TestConfig.adminEmail);
+/// 테스트를 위해 사용자의 UID 를 미리 보관해 놓는다.
+Future prepareUsers() async {
+  dog('Prepare test users -> Save UserModels to TestConfig');
+
+  TestConfig.a = await UserService.instance
+      .loginOrRegister(TestConfig.emailA, TestConfig.password);
+  TestConfig.b = await UserService.instance
+      .loginOrRegister(TestConfig.emailB, TestConfig.password);
+  TestConfig.c = await UserService.instance
+      .loginOrRegister(TestConfig.emailC, TestConfig.password);
+  TestConfig.d = await UserService.instance
+      .loginOrRegister(TestConfig.emailD, TestConfig.password);
+  TestConfig.admin = await UserService.instance
+      .loginOrRegister(TestConfig.adminEmail, TestConfig.password);
 }
 
 Future clear() async {
-  dog('Clear all posts of test users');
+  dog('Delete all posts of test users');
   await loginAsAdmin();
   wait(500);
   final snapshot =
       await PostService.instance.col.where('userDocumentReference', whereIn: [
-    // TestConfig.a.ref,
-    // TestConfig.b.ref,
-    // TestConfig.c.ref,
-    // TestConfig.d.ref,
-    // TestConfig.admin.ref,
+    TestConfig.a.reference,
+    TestConfig.b.reference,
+    TestConfig.c.reference,
+    TestConfig.d.reference,
+    TestConfig.admin.reference,
   ]).get();
 
   dog('Got ${snapshot.size} posts to delete');
@@ -39,7 +44,7 @@ Future wait([int? ms]) async {
 }
 
 Future loginAsAdmin() async {
-  return loginAs(TestConfig.adminEmail, TestConfig.adminPassword);
+  return loginAs(TestConfig.adminEmail, TestConfig.password);
 }
 
 Future loginAs(String email, [String? password]) async {
@@ -57,13 +62,12 @@ Future loginD() => loginAs(TestConfig.emailD);
 
 Future createPost({String? title}) async {
   dog('Create a post');
-  final ref = await PostService.instance.col.add({
-    'category': 'qna',
-    'userDocumentReference': UserService.instance.ref,
-    'title': title ?? 'Created by ${my.displayName} at ${DateTime.now()}',
-    'content': 'Content. Created by ${my.displayName} at ${DateTime.now()}',
-  });
-  await PostService.instance.afterCreate(postDocumentReference: ref);
+  final ref = await PostService.instance.create(
+    categoryId: 'qna',
+    title: title ?? 'Created by ${my.displayName} at ${DateTime.now()}',
+    content: 'Content. Created by ${my.displayName} at ${DateTime.now()}',
+  );
+  // await PostService.instance.afterCreate(postDocumentReference: ref);
 }
 
 /// Deletes all the posts of the login user.
@@ -75,13 +79,4 @@ Future deletePosts() async {
   for (final doc in snapshot.docs) {
     await doc.reference.delete();
   }
-}
-
-/// Clear feeds of the login user.
-Future clearFeeds() async {
-  dog('Clear all feeds of ${my.displayName}}');
-  await UserService.instance.update(extra: {
-    'lastPost': FieldValue.delete(),
-    'recentPosts': FieldValue.delete(),
-  });
 }

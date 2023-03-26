@@ -139,10 +139,10 @@ class AppService {
     auth.authStateChanges().listen((user) async {
       // User singed in
       if (user == null) {
-        dog('AppService._initUser() - user is not logged in');
+        dog('AppService._initUser() - user is NOT logged in');
         UserService.instance.reset();
       } else {
-        dog('AppService._initUser() - user is logged in');
+        dog('AppService._initUser() - user is logged in - ${user.email}, ${user.uid}');
 
         UserService.instance.maybeGenerateUserDocument().then((value) {
           UserService.instance.listenUserDocument();

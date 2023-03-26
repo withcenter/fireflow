@@ -55,13 +55,13 @@ class CommentService {
         PostModel.fromSnapshot(await comment.postDocumentReference.get());
 
     // Get the reference of the category of the post.
-    final categoryDoc = CategoryService.instance.doc(post.category);
+    final categoryDoc = CategoryService.instance.doc(post.categoryId);
 
     // update comment meta
     //
     // add category of the post, update `order` field.
     await commentDocumentReference.update({
-      'category': post.category,
+      'categoryId': post.categoryId,
       'commentId': commentDocumentReference.id,
     });
 
@@ -123,7 +123,7 @@ class CommentService {
         supabase.comments.insert(
           {
             'comment_id': commentDocumentReference.id,
-            'category': post.category,
+            'category_id': post.categoryId,
             'post_id': post.id,
             'uid': comment.userDocumentReference.id,
             'created_at': comment.createdAt.toDate().toIso8601String(),
@@ -139,7 +139,7 @@ class CommentService {
             'id': commentDocumentReference.id,
             'post_id': post.id,
             'comment_id': commentDocumentReference.id,
-            'category': post.category,
+            'category_id': post.categoryId,
             'uid': comment.userDocumentReference.id,
             'created_at': comment.createdAt.toDate().toIso8601String(),
             'content': comment.content,

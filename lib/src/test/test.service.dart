@@ -10,7 +10,8 @@ class TestService {
   TestService();
 
   Future run() async {
-    await loadUsers();
+    gDebug = true;
+    await prepareUsers();
     await clear();
 
     await follow();
@@ -18,13 +19,13 @@ class TestService {
   }
 
   Future follow() async {
-    await loadUsers();
+    // await prepareUsers();
     await clear();
     await testFollow();
   }
 
   Future feeds() async {
-    await loadUsers();
+    // await prepareUsers();
     await clear();
     await testFeeds();
   }

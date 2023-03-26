@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fa;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fireflow/fireflow.dart';
 // import 'package:fireflow/src/backend/schema/posts_record.dart';
 import 'package:path/path.dart' as p;
@@ -21,7 +21,7 @@ class UserService {
   static UserService get instance => _instance ?? (_instance = UserService._());
   static UserService? _instance;
 
-  fa.FirebaseAuth get auth => fa.FirebaseAuth.instance;
+  FirebaseAuth get auth => FirebaseAuth.instance;
 
   /// The Firebase Firestore instance
   FirebaseFirestore db = FirebaseFirestore.instance;
@@ -41,10 +41,8 @@ class UserService {
 
   DocumentReference get myRef => ref;
 
-  // CollectionReference get publicDataCol => db.collection('users_public_data');
-
   /// The login user's Firebase User object.
-  fa.User get currentUser => auth.currentUser!;
+  User get currentUser => auth.currentUser!;
 
   /// Returns true if the user is logged in.
   bool get isLoggedIn => auth.currentUser != null;
@@ -90,10 +88,11 @@ class UserService {
   ///
   /// AppService 에서 한번만 호출됨.
   Future maybeGenerateUserDocument() async {
-    await maybeCreateUser(fa.FirebaseAuth.instance.currentUser!);
+    await maybeCreateUser(FirebaseAuth.instance.currentUser!);
   }
 
   /// 사용자 문서 업데이트 Listen & 최신 문서 업데이트
+  ///
   ///
   listenUserDocument() {
     mySubscription?.cancel();
@@ -219,8 +218,8 @@ class UserService {
   ///
   /// If the number of recentPosts is greater than Config.instance.noOfRecentPosts,
   /// it will remove the oldest post.
-  recentPosts(PostModel post) {
-    List recentPosts = my.recentPosts.toList();
+  List<FeedModel> recentPosts(PostModel post) {
+    List<FeedModel> recentPosts = my.recentPosts;
     if (recentPosts.length >= Config.instance.noOfRecentPosts) {
       recentPosts.removeRange(
           Config.instance.noOfRecentPosts - 1, recentPosts.length);
@@ -230,30 +229,34 @@ class UserService {
   }
 
   /// 글 모델을 입력 받아, 피드로 저장 할 수 있도록 JSON 으로 리턴한다.
-  Map<String, dynamic> feed(PostModel post) {
-    return {
+  FeedModel feed(PostModel post) {
+    return FeedModel.fromJson({
       'postDocumentReference': post.reference,
       'createdAt': post.createdAt,
       'title': safeString(post.title),
       'content': safeString(post.content),
       'photoUrl': post.files.isNotEmpty ? post.files.first : null,
-    };
+    });
   }
 
-  /// Login or register.
+  /// 이메일 로그인 또는 가입
   ///
-  /// If the user is not found, it will create a new user.
+  /// 테스트 용 또는 기타 용도로 쓸 수 있다.
   ///
-  /// Use this for anonymous login, or for test.
-  Future loginOrRegister(String email, String password) async {
+  /// UserModel 을 리턴한다.
+  ///
+  Future<UserModel> loginOrRegister(String email, String password) async {
     try {
-      await auth.signInWithEmailAndPassword(email: email, password: password);
-    } on fa.FirebaseAuthException catch (e) {
+      UserCredential credential = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      return UserModel.fromFirebaseUser(credential.user!);
+    } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        await auth.createUserWithEmailAndPassword(
+        UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
+        return UserModel.fromFirebaseUser(credential.user!);
       } else if (e.code == 'wrong-password') {
         log('Wrong password provided for that user.');
         rethrow;
@@ -298,10 +301,12 @@ class UserService {
 
   /// 로그인 한 사용자의 피드를 가져온다.
   ///
+  /// 여기서 피드는, 내가 following 하는 사용자들의 최신 글 목록이다. 즉, 나의 최신 글 목록이 아니다.
+  ///
   /// [noOfFollowers] is the number of followers to get. If it is 0, it will get all the followers.
   ///
   /// If it has no feeds, it will return an empty array.
-  Future<List<Map<String, dynamic>>> feeds({
+  Future<List<FeedModel>> feeds({
     int noOfFollowers = 0,
   }) async {
     if (my.followings.isEmpty) {
@@ -310,9 +315,8 @@ class UserService {
 
     /// Get the users that I follow, ordered by last post created at.
     ///
-    Query q = db
-        .collection('users_public_data')
-        .where('userDocumentReference', whereIn: my.followings.toList())
+    Query q = col
+        .where('uid', whereIn: my.followings.map((e) => e.id).toList())
         .orderBy('lastPostCreatedAt', descending: true);
 
     /// Limit the number of (following) users to get if the app needs to display only a few posts.
@@ -328,40 +332,19 @@ class UserService {
 
     // Merge the objects inside the array of usersQuerySnapshot.docs into a single array
     // order by the feild timestamp in that object in descending order.
-    final List<Map<String, dynamic>> allRecentPosts = [];
+    final List<FeedModel> allRecentPosts = [];
     for (final doc in usersQuerySnapshot.docs) {
       final user = UserModel.fromSnapshot(doc);
-      allRecentPosts.addAll(user.recentPosts.toList());
+      allRecentPosts.addAll(user.recentPosts);
     }
     if (allRecentPosts.isEmpty) {
       return [];
     }
 
     /// sort allRecentPosts by timestamp
-    allRecentPosts.sort((a, b) => b['createdAt']!.compareTo(a['createdAt']!));
+    allRecentPosts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
     return allRecentPosts;
-  }
-
-  /// Get feeds of the login user
-  ///
-  /// If it has no feeds, it will return an empty array.
-  Future<List<Map<String, dynamic>>> jsonFeeds({
-    int noOfFollowers = 0,
-  }) async {
-    final List<Map<String, dynamic>> feeds = await this.feeds(
-      noOfFollowers: noOfFollowers,
-    );
-
-    return feeds
-        .map((e) => {
-              'postDocumentReference': e['postDocumentReference'],
-              'createdAt': e['createdAt'],
-              'title': e['title'],
-              'content': e['content'],
-              'photoUrl': e['photoUrl'],
-            })
-        .toList();
   }
 
   /// Accept referral invitation
@@ -420,8 +403,8 @@ class UserService {
     FieldValue? noOfPosts,
     FieldValue? noOfComments,
     FieldValue? lastPostCreatedAt,
-    Map<String, dynamic>? lastPost,
-    List<Map<String, dynamic>>? recentPosts,
+    FeedModel? lastPost,
+    List<FeedModel>? recentPosts,
     Map<String, dynamic>? extra,
   }) {
     return ref.update({
@@ -436,8 +419,9 @@ class UserService {
       if (noOfPosts != null) 'noOfPosts': noOfPosts,
       if (noOfComments != null) 'noOfComments': noOfComments,
       if (lastPostCreatedAt != null) 'lastPostCreatedAt': lastPostCreatedAt,
-      if (lastPost != null) 'lastPost': lastPost,
-      if (recentPosts != null) 'recentPosts': recentPosts,
+      if (lastPost != null) 'lastPost': lastPost.toJson(),
+      if (recentPosts != null)
+        'recentPosts': recentPosts.map((e) => e.toJson()).toList(),
       if (extra != null) ...extra,
     });
   }
@@ -445,7 +429,7 @@ class UserService {
   // 사용자가 처음 회원 가입할 때 FF 가 /users 컬렉션을 생성하기 위한 코드.
   // 사용자 문서가 이미 생성되었으면, 실행하지 않는다.
   // Fireflow 에서도, 앱이 실행 될 때 마다 이 코드를 한번 실행한다. 그래서 혹시, /users/<uid> 문서가 존재하지 않으면 생성한다.
-  Future maybeCreateUser(fa.User user) async {
+  Future maybeCreateUser(User user) async {
     final userRecord = doc(user.uid);
     final userExists = await userRecord.get().then((u) => u.exists);
     if (userExists) {
@@ -460,8 +444,18 @@ class UserService {
       'phone_number': user.phoneNumber,
     };
     userData['created_time'] = FieldValue.serverTimestamp();
-    // FieldValue.serverTimestamp();
 
     await userRecord.set(userData);
+  }
+
+  /// 로그인한 사용자의 feed 삭제.
+  ///
+  /// feed 는 나의 최근 글 목록이다.
+  Future clearFeeds() async {
+    dog('Clear all feeds of ${my.displayName}}');
+    await UserService.instance.update(extra: {
+      'lastPost': FieldValue.delete(),
+      'recentPosts': FieldValue.delete(),
+    });
   }
 }

@@ -27,7 +27,7 @@ class ChatRoomMessageOthers extends StatelessWidget {
             ),
           ),
           child: Text(
-            message.text ?? '',
+            message.text,
             textAlign: TextAlign.right,
           ),
         ),
