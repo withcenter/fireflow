@@ -9,6 +9,10 @@ class CategoryService {
   CollectionReference get col => db.collection('categories');
   DocumentReference doc(String category) => col.doc(category);
 
+  Query get displayCategoryInForm => col
+      .where('displayCategoryInForm', isEqualTo: true)
+      .orderBy('title', descending: true);
+
   /// For testing purpose.
   FirebaseFirestore? firestore;
 
@@ -38,13 +42,19 @@ class CategoryService {
     int? waitMinutesForNextPost,
     int? waitMinutesForPremiumUserNextPost,
     bool? emphasizePremiumUserPost,
+    bool? displayCategoryInForm,
+    bool? readOnly,
   }) async {
-    return categoryDocumentReference.update(CategoryModel.toUpdate(
-      title: title,
-      waitMinutesForNextPost: waitMinutesForNextPost,
-      waitMinutesForPremiumUserNextPost: waitMinutesForPremiumUserNextPost,
-      emphasizePremiumUserPost: emphasizePremiumUserPost,
-    ));
+    return categoryDocumentReference.update(
+      CategoryModel.toUpdate(
+        title: title,
+        waitMinutesForNextPost: waitMinutesForNextPost,
+        waitMinutesForPremiumUserNextPost: waitMinutesForPremiumUserNextPost,
+        emphasizePremiumUserPost: emphasizePremiumUserPost,
+        displayCategoryInForm: displayCategoryInForm,
+        readOnly: readOnly,
+      ),
+    );
   }
 
   /// 카테고리 삭제

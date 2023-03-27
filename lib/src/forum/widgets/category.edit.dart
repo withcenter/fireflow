@@ -33,6 +33,8 @@ class _CategoryEditState extends State<CategoryEdit> {
   final waitMinutesForPremiumUserNextPostController = TextEditingController();
 
   bool emphasizePremiumUserPost = false;
+  bool displayCategoryInForm = false;
+  bool readOnly = false;
 
   @override
   void initState() {
@@ -49,6 +51,7 @@ class _CategoryEditState extends State<CategoryEdit> {
         waitMinutesForPremiumUserNextPostController.text =
             category.waitMinutesForPremiumUserNextPost.toString();
         emphasizePremiumUserPost = category.emphasizePremiumUserPost;
+        readOnly = category.readOnly;
       });
     });
 
@@ -108,13 +111,35 @@ class _CategoryEditState extends State<CategoryEdit> {
         const Text('Emphasize posts for permium users'),
         const SizedBox(height: 10),
 
-// get swich list tile for emphasizePremiumUserPost
+        // 프리미엄 유저 글 강조 표시
         SwitchListTile(
           title: const Text('Emphasize posts for permium users'),
           value: emphasizePremiumUserPost,
           onChanged: (value) {
             setState(() {
               emphasizePremiumUserPost = value;
+            });
+          },
+        ),
+
+        // 글 쓰기/수정 페이지에 카테고리 선택 위젯에 표시
+        SwitchListTile(
+          title: const Text('Display category on post form'),
+          value: displayCategoryInForm,
+          onChanged: (value) {
+            setState(() {
+              displayCategoryInForm = value;
+            });
+          },
+        ),
+
+        // 관리자 전용 글 쓰기
+        SwitchListTile(
+          title: const Text('Admin only post create'),
+          value: readOnly,
+          onChanged: (value) {
+            setState(() {
+              readOnly = value;
             });
           },
         ),
@@ -151,6 +176,8 @@ class _CategoryEditState extends State<CategoryEdit> {
                           waitMinutesForPremiumUserNextPostController.text) ??
                       0,
                   emphasizePremiumUserPost: emphasizePremiumUserPost,
+                  displayCategoryInForm: displayCategoryInForm,
+                  readOnly: readOnly,
                 );
                 widget.onEdit(widget.categoryDocumentReference);
               },

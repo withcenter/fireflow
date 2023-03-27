@@ -4,6 +4,7 @@ import 'package:fireflow/fireflow.dart';
 /// CommentModel is a class that represents a document of /comments.
 ///
 class CommentModel {
+  final DocumentReference reference;
   final String id;
   final DocumentReference postDocumentReference;
   final DocumentReference? parentCommentDocumentReference;
@@ -19,9 +20,8 @@ class CommentModel {
   final Timestamp createdAt;
   final Timestamp updatedAt;
 
-  final DocumentReference ref;
-
   CommentModel({
+    required this.reference,
     required this.id,
     required this.postDocumentReference,
     required this.parentCommentDocumentReference,
@@ -35,24 +35,24 @@ class CommentModel {
     required this.updatedAt,
     required this.deleted,
     required this.files,
-    required this.ref,
   });
 
   /// Create a CommentModel object from a snapshot of a document.
   factory CommentModel.fromSnapshot(DocumentSnapshot snapshot) {
     return CommentModel.fromJson(
       snapshot.data() as Map<String, dynamic>,
-      id: snapshot.id,
+      reference: snapshot.reference,
     );
   }
 
   /// Create a CommentModel object from a json object.
   factory CommentModel.fromJson(
     Map<String, dynamic> json, {
-    required String id,
+    required DocumentReference reference,
   }) {
     return CommentModel(
-      id: id,
+      reference: reference,
+      id: reference.id,
       postDocumentReference: json['postDocumentReference'],
       parentCommentDocumentReference: json['parentCommentDocumentReference'],
       userDocumentReference: json['userDocumentReference'],
@@ -65,7 +65,6 @@ class CommentModel {
       files: List<String>.from(json['files'] ?? []),
       createdAt: json['createdAt'] ?? Timestamp.now(),
       updatedAt: json['updatedAt'] ?? Timestamp.now(),
-      ref: CommentService.instance.doc(id),
     );
   }
 
@@ -73,5 +72,30 @@ class CommentModel {
   @override
   String toString() {
     return 'CommentModel{ postDocumentReference: $postDocumentReference, parentCommentDocumentReference: $parentCommentDocumentReference, userDocumentReference: $userDocumentReference, category: $category, content: $content, order: $order, depth: $depth, createdAt: $createdAt, updatedAt: $updatedAt}';
+  }
+
+  /// 코멘트 생성을 위한 reference
+  ///
+  /// [reference] 는 자기 자신을 가르키는 reference 이다.
+  static Map<String, dynamic> toCreate({
+    required DocumentReference postDocumentReference,
+    // DocumentReference? parentCommentDocumentReference,
+    required DocumentReference userDocumentReference,
+    required DocumentReference reference,
+    String? content,
+    String? parentOrder,
+    int? parentDepth,
+    int? postNoOfComment,
+  }) {
+    return {
+      'reference': reference,
+      'postDocumentReference': postDocumentReference,
+      // 'parentCommentDocumentReference': parentCommentDocumentReference,
+      'userDocumentReference': userDocumentReference,
+      'content': content ?? '',
+      'createdAt': FieldValue.serverTimestamp(),
+      'order': commentOrder(parentOrder, parentDepth, postNoOfComment),
+      'depth': (parentDepth ?? 0) + 1,
+    };
   }
 }

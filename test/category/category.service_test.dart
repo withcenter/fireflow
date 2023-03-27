@@ -17,6 +17,8 @@ void main() async {
       emphasizePremiumUserPost: false,
       waitMinutesForNextPost: 0,
       waitMinutesForPremiumUserNextPost: 0,
+      displayCategoryInForm: false,
+      readOnly: false,
     );
     expect(category.categoryId, 'id');
   });

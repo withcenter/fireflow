@@ -24,6 +24,12 @@ class CategoryModel {
   /// 유료 회원, 다음 글 작성 대기 시간 (분)
   final int waitMinutesForPremiumUserNextPost;
 
+  /// 글 작성/수정 페이지에, 카테고리 선택 항목에 표시 여부
+  final bool displayCategoryInForm;
+
+  /// 관리자만 글 작성 가능 여부
+  final bool readOnly;
+
   CategoryModel({
     required this.reference,
     required this.id,
@@ -35,6 +41,8 @@ class CategoryModel {
     required this.emphasizePremiumUserPost,
     required this.waitMinutesForNextPost,
     required this.waitMinutesForPremiumUserNextPost,
+    required this.displayCategoryInForm,
+    required this.readOnly,
   });
 
   /// Create a CategoryModel object from a snapshot of a document.
@@ -63,6 +71,8 @@ class CategoryModel {
       waitMinutesForNextPost: json['waitMinutesForNextPost'] ?? 0,
       waitMinutesForPremiumUserNextPost:
           json['waitMinutesForPremiumUserNextPost'] ?? 0,
+      displayCategoryInForm: json['displayCategoryInForm'] ?? false,
+      readOnly: json['readOnly'] ?? false,
     );
   }
 
@@ -89,6 +99,8 @@ class CategoryModel {
     int? waitMinutesForNextPost,
     int? waitMinutesForPremiumUserNextPost,
     bool? emphasizePremiumUserPost,
+    bool? displayCategoryInForm,
+    bool? readOnly,
   }) {
     return {
       if (title != null) 'title': title,
@@ -98,6 +110,9 @@ class CategoryModel {
         'waitMinutesForPremiumUserNextPost': waitMinutesForPremiumUserNextPost,
       if (emphasizePremiumUserPost != null)
         'emphasizePremiumUserPost': emphasizePremiumUserPost,
+      if (displayCategoryInForm != null)
+        'displayCategoryInForm': displayCategoryInForm,
+      if (readOnly != null) 'readOnly': readOnly,
     };
   }
 }

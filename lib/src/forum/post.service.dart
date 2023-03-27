@@ -22,6 +22,7 @@ class PostService {
     required String categoryId,
     String title = '',
     String content = '',
+    List<String> files = const [],
   }) async {
     late final DocumentReference postDocumentReference;
 
@@ -31,6 +32,7 @@ class PostService {
         categoryId: categoryId,
         title: title,
         content: content,
+        files: files,
         wasPremiumUser: my.isPremiumUser,
       );
 

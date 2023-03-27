@@ -51,19 +51,19 @@ class PostModel {
   factory PostModel.fromSnapshot(DocumentSnapshot snapshot) {
     return PostModel.fromJson(
       snapshot.data() as Map<String, dynamic>,
-      id: snapshot.id,
+      reference: snapshot.reference,
     );
   }
 
   /// Create a PostModel object from a json object.
   factory PostModel.fromJson(
     Map<String, dynamic> json, {
-    required String id,
+    required DocumentReference reference,
   }) {
     /// Note that, on Firestore cache, the Timestamp on local cache would be null.
     return PostModel(
-      reference: PostService.instance.doc(id),
-      id: id,
+      reference: reference,
+      id: reference.id,
       categoryId: json['categoryId'],
       title: json['title'] ?? '',
       safeTitle: safeString(json['title']),
@@ -96,9 +96,10 @@ class PostModel {
   Future increaseNoOfComment() =>
       reference.update({'noOfComments': FieldValue.increment(1)});
 
-  /// 글 생성을 위한 기본 Map<String, dynamic> 객체를 생성한다.
+  /// 글 생성을 위한 기본 Map<String, dynamic> 객체를 생성
   ///
   /// 직접 Map 을 작성하면 오타가 발생 할 수 있기 때문에 안전하게 생성한다.
+  /// 글 생성을 할 때, 또는 기타 용도로 쓰면 된다.
   static Map<String, dynamic> toCreate({
     required String categoryId,
     required String title,
@@ -135,6 +136,7 @@ class PostModel {
   /// 글 수정을 위한 Map<String, dynamic> 객체를 생성한다.
   ///
   /// 직접 Map 을 작성하면 오타가 발생 할 수 있기 때문에 안전하게 생성한다.
+  /// 글 수정 할 때 Map 이 필요한 데 이 메소드를 사용하면 된다.
   static Map<String, dynamic> toUpdate({
     required DocumentReference postDocumentReference,
     String? title,

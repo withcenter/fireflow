@@ -27,6 +27,14 @@ class CommentService {
     return CommentModel.fromSnapshot(snapshot);
   }
 
+  /// 코멘트 생성
+  ///
+  /// [parentOrder] 는 부모 코멘트의 order. 부모 코멘트가 없으면 null.
+  /// [parentDepth] 는 부모 코멘트의 depth. 부모 코멘트가 없으면 null.
+  /// [postNoOfComment] 는 글의 noOfComment 값.
+  /// [categoryId] 는 필수 값이며, 코멘트의 카테고리가 부모의 카테고리를 따라 간다.
+  ///
+  ///
   /// Finishes the comment creation.
   ///
   /// To create a comment, add a document under the comment collection in Firestore. Then call `afterCreate`.
@@ -48,24 +56,38 @@ class CommentService {
   /// ),
   /// ```
   ///
-  afterCreate({required DocumentReference commentDocumentReference}) async {
+  create({
+    required DocumentReference postDocumentReference,
+    DocumentReference? parentCommentDocumentReference,
+    required DocumentReference userDocumentReference,
+    required String categoryId,
+    String? content,
+    String? parentOrder,
+    int? parentDepth,
+    int? postNoOfComment,
+  }) async {
+    final newCommentReference = col.doc();
+
+    final createData = CommentModel.toCreate(
+      reference: newCommentReference,
+      postDocumentReference: postDocumentReference,
+      // parentCommentDocumentReference: parentCommentDocumentReference,
+      userDocumentReference: userDocumentReference,
+      content: content,
+      parentOrder: parentOrder,
+      parentDepth: parentDepth,
+      postNoOfComment: postNoOfComment,
+    );
+
+    await newCommentReference.set(createData);
+
     final comment =
-        CommentModel.fromSnapshot(await commentDocumentReference.get());
-    final post =
-        PostModel.fromSnapshot(await comment.postDocumentReference.get());
+        CommentModel.fromJson(createData, reference: newCommentReference);
 
-    // Get the reference of the category of the post.
-    final categoryDoc = CategoryService.instance.doc(post.categoryId);
+    // 카테고리 reference
+    final categoryDocumentReference = CategoryService.instance.doc(categoryId);
 
-    // update comment meta
-    //
-    // add category of the post, update `order` field.
-    await commentDocumentReference.update({
-      'categoryId': post.categoryId,
-      'commentId': commentDocumentReference.id,
-    });
-
-    // send push notification
+    // 푸시 알림 전송
     // send message to the post's owner and comment's owners of the hierachical ancestors
     final ancestorReferences = await _getAncestorsUid(comment);
     final userRefs =
@@ -75,7 +97,7 @@ class CommentService {
     ///
     /// send message to the post's owner and comment's owners of the hierachical ancestors
     final snapshot = await UserSettingService.instance.col
-        .where('commentSubscriptions', arrayContains: categoryDoc)
+        .where('commentSubscriptions', arrayContains: categoryDocumentReference)
         .get();
     if (snapshot.size > 0) {
       for (final doc in snapshot.docs) {
@@ -103,8 +125,10 @@ class CommentService {
     // increase on of comments in category docuemnt, user doucment, post document
 
     // update the user's post count
-    futures.add(post.increaseNoOfComment());
-    futures.add(categoryDoc.update({'noOfComments': FieldValue.increment(1)}));
+    futures.add(comment.postDocumentReference
+        .update({'noOfComments': FieldValue.increment(1)}));
+    futures.add(categoryDocumentReference
+        .update({'noOfComments': FieldValue.increment(1)}));
 
     /// Update the no of comments on system settings
     ///
@@ -122,9 +146,9 @@ class CommentService {
       futures.add(
         supabase.comments.insert(
           {
-            'comment_id': commentDocumentReference.id,
-            'category_id': post.categoryId,
-            'post_id': post.id,
+            'comment_id': comment.id,
+            'category_id': categoryId,
+            'post_id': comment.postDocumentReference.id,
             'uid': comment.userDocumentReference.id,
             'created_at': comment.createdAt.toDate().toIso8601String(),
             'content': comment.content,
@@ -136,10 +160,10 @@ class CommentService {
       futures.add(
         supabase.postsAndComments.insert(
           {
-            'id': commentDocumentReference.id,
-            'post_id': post.id,
-            'comment_id': commentDocumentReference.id,
-            'category_id': post.categoryId,
+            'id': comment.id,
+            'post_id': comment.postDocumentReference.id,
+            'comment_id': comment.id,
+            'category_id': categoryId,
             'uid': comment.userDocumentReference.id,
             'created_at': comment.createdAt.toDate().toIso8601String(),
             'content': comment.content,
@@ -151,13 +175,20 @@ class CommentService {
     await Future.wait(futures);
   }
 
-  afterUpdate({required DocumentReference commentDocumentReference}) async {
-    // send push notification
-    // send message to the post's owner and comment's owners of the hierachical ancestors
+  update({
+    required DocumentReference commentDocumentReference,
+    String? content,
+  }) async {
+    // 업데이트
+    await commentDocumentReference.update({
+      if (content != null) 'content': content,
+    });
 
+    // 읽기
     final comment =
         CommentModel.fromSnapshot(await commentDocumentReference.get());
 
+    //
     List<Future> futures = [];
     // update the user's post count
     futures.add(
@@ -204,7 +235,9 @@ class CommentService {
     await Future.wait(futures);
   }
 
-  afterDelete({required DocumentReference commentDocumentReference}) async {
+  delete({required DocumentReference commentDocumentReference}) async {
+    await commentDocumentReference.update({'deleted': true});
+
     final comment =
         CommentModel.fromSnapshot(await commentDocumentReference.get());
     final categoryDoc = CategoryService.instance.doc(comment.category);

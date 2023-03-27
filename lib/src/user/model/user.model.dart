@@ -98,7 +98,7 @@ class UserModel {
       email: json['email'] ?? '',
       phoneNumber: json['phone_number'] ?? '',
       name: json['name'] ?? '',
-      displayName: json['displayName'] ?? '',
+      displayName: json['display_name'] ?? '',
       createdTime:
           json['created_time'] ?? Timestamp.fromDate(DateTime(1973, 1, 1)),
       updatedAt: json['updatedAt'] ?? Timestamp.fromDate(DateTime(1973, 1, 1)),

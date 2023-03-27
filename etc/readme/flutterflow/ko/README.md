@@ -52,6 +52,16 @@
 - 에러가 있는지 체크해서 핸들링하는 것이 아니라, 그냥 exception 을 throw 하는 것이 원칙이다.
   - 필요한 경우, global error handler `runZonedGuarded` 를 통해서 화면에 에러 표시를 한다.
 
+- 각종 콜백 함수 파라메타 또는 페이지 파라메타를 전달 할 때에는 문서 ID 또는 Fireflow 의 Model 을 전달한다.
+  - 문서 ID 를 전달하면, 웹에서 쉽게 값을 전달 할 수 있으며, FF 에서도 문서 ID 를 문서 reference 로 쉽게 바꿀 수 있다.
+    - DB 로 부터 문서를 가져 오지 않고, 메모리에 있는 것을 빠르게 보여줘야하는 경우가 아닌, 특히, 관리자 페이지와 같이 문서 값을 DB 에서 가져와도 되는 경우는 문서 ID 값만 전달한다.
+  - 문서를 화면에 빠르게 보여주기 위해서는 메모리에 있는 값을 재 활용 해야 한다. Fireflow 의 Model 타입의 데이터를 FF Schema Document 로 변환하기 위해서는, `Model.toJson()` 과 `Model.reference` 두 값으로 `XxxxxRecord.getDocumentFromData()` 를 사용해 쉽게 스키마로 변경 할 수 있다.
+
+
+- Fireflow 가 제공하는 위젯으로 문서를 넘길 때,
+  - BuiltValue 로 하면, FF 와 호환되어 좋기는 한데, 코드가 깔끔하지 못하다.
+  - 그래서, FF 에서는 직접 작성한 Model 을 사용하는데, FF 의 Document 값을 FF 의 Model 로 변환하기 위해서는 가장 쉬운 방법은 FF 의 backend/schema 에서 제공하는 createXxxx() 를 사용해서, FF 의 Document 값을 `Map<String, dynamic>` 으로 만들고, Fireflow 의 `Model.fromJson()` 을 사용하면 된다.
+
 # 모델링
 
 - 백엔드 또는 3rd party 와 데이터 송/수신을 할 때, JSON 을 모델로 변환하는데, 이 때, 초기 값을 가질 수 없는 경우를 제외한 모든 모델 변수는 nullable 이 아니다.

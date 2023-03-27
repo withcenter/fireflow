@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
@@ -104,10 +106,11 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         'order': commentOrder(null, null, post.noOfComments),
                         'depth': 1,
                       };
+                      log('data: $data');
 
-                      final ref = await CommentService.instance.col.add(data);
-                      CommentService.instance
-                          .afterCreate(commentDocumentReference: ref);
+                      // final ref = await CommentService.instance.col.add(data);
+                      // CommentService.instance
+                      //     .afterCreate(commentDocumentReference: ref);
                     },
                     child: const Text('Submit'),
                   ),
@@ -205,11 +208,12 @@ class CommentWidget extends StatelessWidget {
                                     comment.depth, post.noOfComments),
                                 'depth': comment.depth + 1,
                               };
-                              final ref =
-                                  await CommentService.instance.col.add(data);
+                              log(data.toString());
+                              // final ref =
+                              //     await CommentService.instance.col.add(data);
 
-                              CommentService.instance
-                                  .afterCreate(commentDocumentReference: ref);
+                              // CommentService.instance
+                              //     .create(commentDocumentReference: ref);
                               // Navigator.pop(context);
                               nav.pop();
                             },
@@ -239,14 +243,14 @@ class CommentWidget extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () async {
-                              final nav = Navigator.of(context);
-                              await comment.ref.update({
-                                'content': editComment.text,
-                              });
-                              CommentService.instance.afterUpdate(
-                                  commentDocumentReference: comment.ref);
-                              // Navigator.pop(context);
-                              nav.pop();
+                              // final nav = Navigator.of(context);
+                              // await comment.ref.update({
+                              //   'content': editComment.text,
+                              // });
+                              // CommentService.instance.afterUpdate(
+                              //     commentDocumentReference: comment.ref);
+                              // // Navigator.pop(context);
+                              // nav.pop();
                             },
                             child: const Text('Edit'),
                           ),
@@ -259,9 +263,9 @@ class CommentWidget extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () async {
-                  await comment.ref.update({'deleted': true});
-                  CommentService.instance
-                      .afterDelete(commentDocumentReference: comment.ref);
+                  // await comment.ref.update({'deleted': true});
+                  // CommentService.instance
+                  //     .afterDelete(commentDocumentReference: comment.ref);
                 },
                 child: const Text('Delete'),
               ),
