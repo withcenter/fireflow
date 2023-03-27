@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 
 /// 글 보기 위젯
 ///
-/// 참고, 입력 값을 Map 으로 받는데, FF 에서는 BuiltValue 를 통한 Schema 를 쓰는데,
+///
 ///
 class PostView extends StatefulWidget {
-  const PostView({super.key, this.post, this.json});
+  const PostView({
+    super.key,
+    required this.post,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
-  final PostModel? post;
-  final Map<String, dynamic>? json;
+  final PostModel post;
+  final void Function(PostModel) onEdit;
+  final void Function(PostModel) onDelete;
 
   @override
   State<PostView> createState() => _PostViewState();
@@ -24,12 +30,7 @@ class _PostViewState extends State<PostView> {
   void initState() {
     super.initState();
 
-    if (widget.post != null) {
-      post = widget.post!;
-    } else {
-      post = PostModel.fromJson(widget.json!,
-          reference: PostService.instance.doc(widget.json!['postId']));
-    }
+    post = widget.post;
   }
 
   @override
@@ -64,26 +65,55 @@ class _PostViewState extends State<PostView> {
                 }).toList(),
               ),
             ),
+            Wrap(
+              children: [
+                TextButton(
+                  onPressed: () async {
+                    await post.reference.update({'deleted': true});
+                    PostService.instance
+                        .afterDelete(postDocumentReference: post.reference);
+
+                    widget.onDelete(post);
+                  },
+                  child: const Text('Delete'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    widget.onEdit(post);
+                  },
+                  child: const Text('Edit'),
+                ),
+                TextButton(
+                  onPressed: () async {},
+                  child: const Text('Like'),
+                ),
+                TextButton(
+                  onPressed: () async {},
+                  child: const Text('Block'),
+                ),
+                TextButton(
+                  onPressed: () async {},
+                  child: const Text('Report'),
+                ),
+                TextButton(
+                  onPressed: () async {},
+                  child: const Text('Profile'),
+                ),
+                TextButton(
+                  onPressed: () async {},
+                  child: const Text('Favorite'),
+                ),
+                TextButton(
+                  onPressed: () async {},
+                  child: const Text('Follow'),
+                ),
+              ],
+            ),
             TextField(
               controller: commentController,
               decoration: const InputDecoration(
                 hintText: 'Comment',
               ),
-            ),
-            Wrap(
-              children: [
-                TextButton(
-                  onPressed: () async {
-                    final navigator = Navigator.of(context);
-                    await post.reference.update({'deleted': true});
-                    PostService.instance
-                        .afterDelete(postDocumentReference: post.reference);
-
-                    navigator.pop();
-                  },
-                  child: const Text('Delete'),
-                ),
-              ],
             ),
             ElevatedButton(
               onPressed: () async {
@@ -94,7 +124,7 @@ class _PostViewState extends State<PostView> {
                   content: commentController.text,
                 );
               },
-              child: const Text('Submit'),
+              child: const Text('Reply'),
             ),
             StreamBuilder(
               stream: CommentService.instance.children(post.id),
