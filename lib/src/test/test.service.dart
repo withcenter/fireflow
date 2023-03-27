@@ -19,13 +19,13 @@ class TestService {
   }
 
   Future follow() async {
-    // await prepareUsers();
+    await prepareUsers();
     await clear();
     await testFollow();
   }
 
   Future feeds() async {
-    // await prepareUsers();
+    await prepareUsers();
     await clear();
     await testFeeds();
   }

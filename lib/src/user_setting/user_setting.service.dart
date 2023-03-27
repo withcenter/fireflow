@@ -39,20 +39,6 @@ class UserSettingService {
     }
   }
 
-  /// Creates /users_public_data/{uid} if it does not exist.
-  /// This will crate /users_public_data/{uid} only if the user is logged in for the first time.
-  maybeGenerate() async {
-    if (await exists()) {
-      return;
-    }
-
-    await ref.set({
-      'userDocumentReference': myUserDocumentReference,
-    });
-
-    dog('UserService.generateUserPublicData() - /settings/{Doc Reference(users)} created.');
-  }
-
   notifyNewComments(bool? value) async {
     await ref.update({
       'notifyNewComments': value ?? false,

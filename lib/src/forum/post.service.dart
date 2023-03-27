@@ -23,12 +23,27 @@ class PostService {
     String title = '',
     String content = '',
   }) async {
-    final postDocumentReference = await col.add(PostModel.toCreate(
-      categoryId: categoryId,
-      title: title,
-      content: content,
-      wasPremiumUser: my.isPremiumUser,
-    ));
+    late final DocumentReference postDocumentReference;
+
+    // 글 생성
+    try {
+      final createData = PostModel.toCreate(
+        categoryId: categoryId,
+        title: title,
+        content: content,
+        wasPremiumUser: my.isPremiumUser,
+      );
+
+      postDocumentReference = await col.add(createData);
+    } catch (e) {
+      // 글 생성에 오류가 발생한 경우, 분명하게 오류 메시지를 전달한다. 그래야 해결이 쉽다.
+      final exists = await CategoryService.instance.exists(categoryId);
+      if (!exists) {
+        throw Exception('The category [$categoryId] does not exist.');
+      }
+
+      rethrow;
+    }
 
     final post = await get(postDocumentReference.id);
     final categoryDoc = CategoryService.instance.doc(post.categoryId);

@@ -143,8 +143,9 @@ class _PostEditScreenState extends State<PostEditScreen> {
       'createdAt': FieldValue.serverTimestamp(),
       'files': files,
     };
-    final ref = await PostService.instance.col.add(data);
-    PostService.instance.afterCreate(postDocumentReference: ref);
+    // final ref =
+    await PostService.instance.col.add(data);
+    // PostService.instance.afterCreate(postDocumentReference: ref);
   }
 
   update() async {

@@ -3,16 +3,20 @@ import 'package:fireflow/src/test/test.config.dart';
 
 /// 테스트를 위해 사용자의 UID 를 미리 보관해 놓는다.
 Future prepareUsers() async {
+  if (TestConfig.admin != null) return;
   dog('Prepare test users -> Save UserModels to TestConfig');
 
   TestConfig.a = await UserService.instance
       .loginOrRegister(TestConfig.emailA, TestConfig.password);
+
   TestConfig.b = await UserService.instance
       .loginOrRegister(TestConfig.emailB, TestConfig.password);
   TestConfig.c = await UserService.instance
       .loginOrRegister(TestConfig.emailC, TestConfig.password);
+
   TestConfig.d = await UserService.instance
       .loginOrRegister(TestConfig.emailD, TestConfig.password);
+
   TestConfig.admin = await UserService.instance
       .loginOrRegister(TestConfig.adminEmail, TestConfig.password);
 }
@@ -20,22 +24,25 @@ Future prepareUsers() async {
 Future clear() async {
   dog('Delete all posts of test users');
   await loginAsAdmin();
-  wait(500);
+  await wait(500);
   final snapshot =
       await PostService.instance.col.where('userDocumentReference', whereIn: [
     TestConfig.a.reference,
     TestConfig.b.reference,
     TestConfig.c.reference,
     TestConfig.d.reference,
-    TestConfig.admin.reference,
+    TestConfig.admin!.reference,
   ]).get();
 
-  dog('Got ${snapshot.size} posts to delete');
+  dog('clear() -> loginAsAdmin() -> Got ${snapshot.size} posts to delete');
 
-  for (final doc in snapshot.docs) {
-    // final post = PostModel.fromSnapshot(doc);
-    // dog('Deleting, title: ${post.title}');
-    await doc.reference.delete();
+  try {
+    for (final doc in snapshot.docs) {
+      await doc.reference.delete();
+    }
+  } catch (e) {
+    dog('---------------> Failed to delete posts by admin. See if the uid of the admin is added into /system_settings/admin/ {${TestConfig.admin!.reference.id}: true } and the [admin] field of the user ${TestConfig.adminEmail} is set to true and has permission. -> Error: $e');
+    rethrow;
   }
 }
 
@@ -48,6 +55,7 @@ Future loginAsAdmin() async {
 }
 
 Future loginAs(String email, [String? password]) async {
+  UserService.instance.logout();
   dog('Login as $email');
   await UserService.instance
       .loginOrRegister(email, password ?? TestConfig.password);
@@ -61,13 +69,12 @@ Future loginC() => loginAs(TestConfig.emailC);
 Future loginD() => loginAs(TestConfig.emailD);
 
 Future createPost({String? title}) async {
-  dog('Create a post');
-  final ref = await PostService.instance.create(
+  dog('test.utils.dart -> createPost()');
+  await PostService.instance.create(
     categoryId: 'qna',
     title: title ?? 'Created by ${my.displayName} at ${DateTime.now()}',
     content: 'Content. Created by ${my.displayName} at ${DateTime.now()}',
   );
-  // await PostService.instance.afterCreate(postDocumentReference: ref);
 }
 
 /// Deletes all the posts of the login user.

@@ -140,15 +140,13 @@ class AppService {
       // User singed in
       if (user == null) {
         dog('AppService._initUser() - user is NOT logged in');
-        UserService.instance.reset();
+        UserService.instance.logout();
       } else {
         dog('AppService._initUser() - user is logged in - ${user.email}, ${user.uid}');
 
         UserService.instance.maybeGenerateUserDocument().then((value) {
           UserService.instance.listenUserDocument();
         });
-
-        await UserSettingService.instance.maybeGenerate();
       }
     });
   }

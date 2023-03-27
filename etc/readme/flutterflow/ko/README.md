@@ -47,6 +47,11 @@
   와 같이 특별 명령을 하면, `onCommand( message ) => Container(...UI Design...)` 가 실행되고, 직접 원하는 커스텀 코드를 수행하고, 결과를 UI 로 보여주게 한다.
 
 
+# 설계
+
+- 에러가 있는지 체크해서 핸들링하는 것이 아니라, 그냥 exception 을 throw 하는 것이 원칙이다.
+  - 필요한 경우, global error handler `runZonedGuarded` 를 통해서 화면에 에러 표시를 한다.
+
 # 모델링
 
 - 백엔드 또는 3rd party 와 데이터 송/수신을 할 때, JSON 을 모델로 변환하는데, 이 때, 초기 값을 가질 수 없는 경우를 제외한 모든 모델 변수는 nullable 이 아니다.
@@ -160,6 +165,14 @@ MyStream = firebaseUserProviderStream()..listen((_) {});
 - 참고로 currentUser 와 firebaseUserProviderStream 은 FF 의 컨셉을 적용한 것일 뿐 큰 의미를 두지 않는다. 굳이 사용하지 않아도 된다.
 
 
+
+# 게시판
+
+
+## 카테고리
+
+- 카테고리의 문서 ID 는 카테고리 ID 와 동일 해야 한다. 즉, 카테고리 ID 가 qna 이면, 문서 ID 도 qna 이어야 한다는 것이다. FF 는 문서 ID 지정을 하지 않으므로 반드시 커스텀 코드를 통해서 생성해야 한다.
+  - 예: `/categories/qna { categoryId: qna }`
 
 
 

@@ -77,3 +77,4 @@ export 'src/auth/firebase_user_provider.dart';
 
 /// TEST
 export 'src/test/test.service.dart';
+export 'src/test/test.utils.dart';

@@ -49,9 +49,6 @@ class UserService {
   bool get notLoggedIn => !isLoggedIn;
 
   /// The login user's public data document stream.
-  StreamSubscription? publicDataSubscription;
-
-  /// The login user's public data document stream.
   StreamSubscription? mySubscription;
 
   /// The login user's data model.
@@ -64,9 +61,13 @@ class UserService {
   final BehaviorSubject<UserModel?> onMyChange =
       BehaviorSubject<UserModel?>.seeded(null);
 
-  reset() {
+  /// 로그아웃
+  ///
+  ///
+  logout() {
     my = null;
-    onMyChange.add(_my);
+    onMyChange.add(null);
+    mySubscription?.cancel();
   }
 
   /// Get user document by uid.
@@ -76,10 +77,6 @@ class UserService {
     final snapshot = await doc(id ?? uid).get();
     return UserModel.fromSnapshot(snapshot);
   }
-
-  // Future<UserModel> get([String? id]) async {
-  //   return UserModel.fromSnapshot(await doc(id ?? uid).get());
-  // }
 
   /// /users 컬렉션 생성
   ///
@@ -93,9 +90,13 @@ class UserService {
 
   /// 사용자 문서 업데이트 Listen & 최신 문서 업데이트
   ///
+  /// 참고, 사용자가 갑자기 로그아웃(또는 프로그램적으로 다른 사용자로 갑자기 로그인)을 하면, listen() 을 할 때,
+  /// 해당 사용자가 이미 로그아웃을 한 상태이므로 permission denied 가 발생한다.
+  /// 이것은 너무 흔한 permission denied 이며, 큰 문제는 아니지만, 제대로 처리하기 위해서는 logout() 한다.
   ///
   listenUserDocument() {
     mySubscription?.cancel();
+    print('ref; uid: $uid ${ref.path}');
     mySubscription = ref.snapshots().listen((snapshot) {
       if (snapshot.exists) {
         // 사용자 문서가 변경되었다.
@@ -245,7 +246,9 @@ class UserService {
   ///
   /// UserModel 을 리턴한다.
   ///
+  /// 주의, 이 함수는 로그아웃을 먼저 한다.
   Future<UserModel> loginOrRegister(String email, String password) async {
+    UserService.instance.logout();
     try {
       UserCredential credential = await auth.signInWithEmailAndPassword(
           email: email, password: password);

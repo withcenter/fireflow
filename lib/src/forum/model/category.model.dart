@@ -6,17 +6,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 ///
 class CategoryModel {
   final DocumentReference reference;
+  final String id;
   final String categoryId;
   final String title;
   final int noOfPosts;
   final int noOfComments;
+
+  /// 푸시 알림 구독 가능 여부. (현재는 필요 없음)
   final bool enablePushNotificationSubscription;
+
+  /// 유료 회원이 작성한 글이면, 강조 표시하기
   final bool emphasizePremiumUserPost;
+
+  /// 무료 회원, 다음 글 작성 대기 시간 (분)
   final int waitMinutesForNextPost;
+
+  /// 유료 회원, 다음 글 작성 대기 시간 (분)
   final int waitMinutesForPremiumUserNextPost;
 
   CategoryModel({
     required this.reference,
+    required this.id,
     required this.categoryId,
     required this.title,
     required this.noOfPosts,
@@ -42,7 +52,8 @@ class CategoryModel {
   }) {
     return CategoryModel(
       reference: reference,
-      categoryId: reference.id,
+      id: reference.id,
+      categoryId: json['categoryId'],
       title: json['title'] ?? '',
       noOfPosts: json['noOfPosts'] ?? 0,
       noOfComments: json['noOfComments'] ?? 0,
@@ -72,4 +83,21 @@ class CategoryModel {
   /// This method is used when a new comment is created.
   Future increaseNoOfComment() =>
       reference.update({'noOfComments': FieldValue.increment(1)});
+
+  static Map<String, dynamic> toUpdate({
+    String? title,
+    int? waitMinutesForNextPost,
+    int? waitMinutesForPremiumUserNextPost,
+    bool? emphasizePremiumUserPost,
+  }) {
+    return {
+      if (title != null) 'title': title,
+      if (waitMinutesForNextPost != null)
+        'waitMinutesForNextPost': waitMinutesForNextPost,
+      if (waitMinutesForPremiumUserNextPost != null)
+        'waitMinutesForPremiumUserNextPost': waitMinutesForPremiumUserNextPost,
+      if (emphasizePremiumUserPost != null)
+        'emphasizePremiumUserPost': emphasizePremiumUserPost,
+    };
+  }
 }

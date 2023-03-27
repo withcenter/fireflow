@@ -30,7 +30,7 @@ service cloud.firestore {
         (
           isMyChatRoom()
           &&
-          onlyUpdating(["noOfMessages", "subChatRoomCount", "isSubChatRoom", "userDocumentReferences", "lastMessage", "lastMessageUploadUrl", "lastMessageSentAt", "lastMessageSeenBy", "lastMessageSentBy"])
+          onlyUpdating(["noOfMessages", "unsubscribedUserDocumentReferences", "subChatRoomCount", "isSubChatRoom", "userDocumentReferences", "lastMessage", "lastMessageUploadUrl", "lastMessageSentAt", "lastMessageSeenBy", "lastMessageSentBy"])
         )
         // chat member can remove himself or add other users.
         ||
@@ -42,23 +42,14 @@ service cloud.firestore {
           request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.removeAll([myReference()]))
         )
         ||
-        // subscribe, unsubscribe
+        // 내 방이 아니더라도, (추천 링크에 의해) 오픈 챗이면, 참여를 할 수 있다.
         (
-          isMyChatRoom()
+          isOpenChat()
           &&
-          onlyUpdating(["unsubscribedUserDocumentReferences"])
-          // TODO : write securiy rules for only adding or removing the current user.
-          
-          // &&
-          // request.resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).hasOnly(resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()])) 
-          // &&
-          // request.resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).size() == resource.data.unsubscribedUserDocumentReferences.removeAll([myReference()]).size()
+          onlyUpdating(["userDocumentReferences"])
+          &&
+          request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.concat([myReference()]))
         )
-        ||
-        // if it's open group chat, he can enter without invitation.
-        isOpenChat()
-        && onlyUpdating(["userDocumentReferences"])
-        && request.resource.data.userDocumentReferences.hasAll(resource.data.userDocumentReferences.concat([myReference()]))
         ;
       allow delete: if isGroupChat() == false && isMyChatRoom();
     }

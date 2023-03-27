@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
+
 /// globa debug mode
 ///
 /// If this is true, debug message will be printed.
@@ -11,4 +13,24 @@ bool gDebug = false;
 /// [message] is the message to print
 dog(String message) {
   if (gDebug) log("DOG ---> $message");
+}
+
+warning(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text("WARNING: $message",
+          style: const TextStyle(color: Colors.white)),
+      backgroundColor: Colors.red.shade900,
+    ),
+  );
+}
+
+success(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text("SUCCESS: $message",
+          style: const TextStyle(color: Colors.white)),
+      backgroundColor: const Color.fromARGB(255, 27, 114, 220),
+    ),
+  );
 }

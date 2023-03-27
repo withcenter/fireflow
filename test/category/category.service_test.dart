@@ -7,6 +7,8 @@ void main() async {
   test('Category Model', () {
     CategoryService.instance.firestore = FakeFirebaseFirestore();
     final category = CategoryModel(
+      reference: CategoryService.instance.doc('id'),
+      id: 'id',
       categoryId: 'id',
       title: 'name',
       noOfPosts: 0,
@@ -15,7 +17,6 @@ void main() async {
       emphasizePremiumUserPost: false,
       waitMinutesForNextPost: 0,
       waitMinutesForPremiumUserNextPost: 0,
-      ref: CategoryService.instance.doc('id'),
     );
     expect(category.categoryId, 'id');
   });

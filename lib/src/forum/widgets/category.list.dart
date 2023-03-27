@@ -38,7 +38,9 @@ class CategoryList extends StatelessWidget {
             final category =
                 CategoryModel.fromSnapshot(snapshot.data!.docs[index]);
             return ListTile(
-              title: Text('Category ${category.categoryId} ${category.title}'),
+              title: Text(category.title),
+              subtitle: Text(category.categoryId),
+              trailing: const Icon(Icons.keyboard_arrow_right),
               onTap: () => onTap(category.reference),
             );
           },
