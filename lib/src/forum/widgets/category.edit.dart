@@ -2,15 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
+/// 카테고리 수정 위젯
+///
+/// 수정/삭제 및 취소 버튼을 누르면 필요한 코드를 실행하고, 부모 위젯의 콜백 함수를 호출한다.
+/// 콜백 함수에서 페이지 이동 등을 하면 된다.
 class CategoryEdit extends StatefulWidget {
   const CategoryEdit({
     super.key,
     required this.categoryDocumentReference,
+    required this.onCancel,
     required this.onDelete,
     required this.onEdit,
   });
 
   final DocumentReference categoryDocumentReference;
+  final void Function(DocumentReference) onCancel;
   final void Function(DocumentReference) onDelete;
   final void Function(DocumentReference) onEdit;
 
@@ -129,9 +135,8 @@ class _CategoryEditState extends State<CategoryEdit> {
             ),
             const Spacer(),
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () =>
+                  widget.onCancel(widget.categoryDocumentReference),
               child: const Text('CANCEL'),
             ),
             const SizedBox(width: 16),

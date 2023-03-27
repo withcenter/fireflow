@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
+/// 카테고리 생성 위젯
+///
+/// 생성 후, 부모 위젯의 콜백 함수를 호출한다. 부모 위젯에서 페이지 이동 등을 하면 된다.
 class CategoryCreate extends StatefulWidget {
   const CategoryCreate({
     super.key,
