@@ -21,14 +21,15 @@ export 'src/system_settings/translation/translation.service.dart';
 
 /// Widgets that depends on Fireflow
 export 'src/system_settings/translation/translation.dart';
-export 'src/user/widgets/my_doc.dart';
-export 'src/user/widgets/my_stream.dart';
 
 /// User
 ///
 export 'src/user/widgets/user_sticker.dart';
 export 'src/user/model/user.model.dart';
 export 'src/user/widgets/public_profile.dart';
+export 'src/user/widgets/my_doc.dart';
+export 'src/user/widgets/my_stream.dart';
+export 'src/user/widgets/user_sticker.stream.dart';
 
 /// Forum
 
@@ -64,6 +65,11 @@ export 'src/chat/widgets/single_chat_sticker.dart';
 export 'src/chat/widgets/chat_room_list.dart';
 export 'src/chat/widgets/chat_room_message.empty.dart';
 export 'src/chat/widgets/chat_room_message.dart';
+
+/// Report
+export 'src/report/report.service.dart';
+export 'src/report/model/report.model.dart';
+export 'src/report/widgets/report.form.dart';
 
 /// Utils, Functions, Actions
 export 'src/app.service.dart';

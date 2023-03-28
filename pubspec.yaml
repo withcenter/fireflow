@@ -87,7 +87,7 @@ dependencies:
   flutterflow_paginate_firestore: ^1.0.3+1
 
   # 직접 작성한 플러터플로 위젯 모음
-  flutterflow_widgets:
+  flutterflow_widgets: ^0.0.42
 
   # google map
   # google_maps: 6.2.0

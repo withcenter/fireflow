@@ -90,13 +90,18 @@ class UserService {
 
   /// 사용자 문서 업데이트 Listen & 최신 문서 업데이트
   ///
+  /// 예를 들어, 로그인한 사용자가 follow/unfollow 할 때, 사용자 문서가 업데이트되는데, 이러한 사용자 문서
+  /// 변경을 실시간으로 my 변수에 업데이트한다.
+  ///
+  /// 따라서, my 변수를 많은 곳에서 활용하면 된다.
+  ///
   /// 참고, 사용자가 갑자기 로그아웃(또는 프로그램적으로 다른 사용자로 갑자기 로그인)을 하면, listen() 을 할 때,
   /// 해당 사용자가 이미 로그아웃을 한 상태이므로 permission denied 가 발생한다.
   /// 이것은 너무 흔한 permission denied 이며, 큰 문제는 아니지만, 제대로 처리하기 위해서는 logout() 한다.
   ///
   listenUserDocument() {
     mySubscription?.cancel();
-    print('ref; uid: $uid ${ref.path}');
+    dog('listenUserDocument(); doc updated; uid: $uid ${ref.path}');
     mySubscription = ref.snapshots().listen((snapshot) {
       if (snapshot.exists) {
         // 사용자 문서가 변경되었다.
@@ -394,6 +399,8 @@ class UserService {
   }
 
   /// 사용자 정보 업데이트
+  ///
+  /// 참고, 현재 로그인한 사용자 정보만 업데이트한다.
   Future<void> update({
     dynamic email,
     dynamic phoneNumber,
@@ -401,6 +408,7 @@ class UserService {
     String? photoUrl,
     FieldValue? chatMessageCount,
     FieldValue? followings,
+    FieldValue? blockedUsers,
     DocumentReference? referral,
     FieldValue? referralAcceptedAt,
     FieldValue? noOfPosts,
@@ -417,6 +425,7 @@ class UserService {
       if (photoUrl != null) 'photo_url': photoUrl,
       if (chatMessageCount != null) 'chat_message_count': chatMessageCount,
       if (followings != null) 'followings': followings,
+      if (blockedUsers != null) 'blockedUsers': blockedUsers,
       if (referral != null) 'referral': referral,
       if (referralAcceptedAt != null) 'referralAcceptedAt': referralAcceptedAt,
       if (noOfPosts != null) 'noOfPosts': noOfPosts,

@@ -512,10 +512,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutterflow_widgets
-      sha256: c120d488f46ca40e3ea8450d73ecb7a5ff90987951eeec581f4a88e810078831
+      sha256: "09b6c62c8759118aa950f4a137337961bbbd49bb28f577bdebe3bb383fdacc7c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.38"
+    version: "0.0.42"
   from_css_color:
     dependency: transitive
     description:

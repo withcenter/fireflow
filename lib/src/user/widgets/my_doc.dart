@@ -14,19 +14,20 @@ class MyDoc extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: UserService.instance.onMyChange,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox.shrink();
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error.toString()));
-          }
-          if (!snapshot.hasData || snapshot.data == null) {
-            return const SizedBox.shrink();
-          }
+      stream: UserService.instance.onMyChange,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox.shrink();
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        }
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const SizedBox.shrink();
+        }
 
-          return builder(snapshot.data as UserModel);
-        });
+        return builder(snapshot.data as UserModel);
+      },
+    );
   }
 }

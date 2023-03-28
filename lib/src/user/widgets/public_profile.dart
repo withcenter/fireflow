@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fireflow/fireflow.dart';
+import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
 class PublicProfile extends StatelessWidget {
   const PublicProfile({
@@ -11,21 +13,26 @@ class PublicProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        CircleAvatar(
-          radius: 64,
-          backgroundImage: NetworkImage(
-            user.photoUrl ?? 'https://via.placeholder.com/150',
+    return Container(
+      margin: const EdgeInsets.all(24),
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          CircleAvatar(
+            radius: 64,
+            backgroundImage: CachedNetworkImageProvider(
+              user.photoUrl ?? 'https://via.placeholder.com/150',
+            ),
           ),
-        ),
-        const SizedBox(height: 24),
-        TextWithLabel(
-          label: 'Display Name',
-          text: user.displayName,
-        ),
-      ],
+          const SizedBox(height: 24),
+          TextWithLabel(
+            label: 'Display Name',
+            text: user.displayName,
+          ),
+        ],
+      ),
     );
   }
 }
