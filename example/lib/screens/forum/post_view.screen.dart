@@ -86,9 +86,11 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       TextButton(
                         onPressed: () async {
                           final navigator = Navigator.of(context);
-                          await post.reference.update({'deleted': true});
-                          PostService.instance.afterDelete(
-                              postDocumentReference: post.reference);
+                          await post.delete();
+
+                          // await post.reference.update({'deleted': true});
+                          // PostService.instance.afterDelete(
+                          //     postDocumentReference: post.reference);
 
                           navigator.pop();
                         },

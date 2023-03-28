@@ -16,7 +16,7 @@ class PostModel {
   final bool hasPhoto;
   final int noOfComments;
   final bool hasComment;
-  final bool deleted;
+  bool deleted;
   final List<DocumentReference> likes;
   final bool hasLike;
   final List<String> files;
@@ -130,6 +130,7 @@ class PostModel {
       if (wasPremiumUser != null) 'wasPremiumUser': wasPremiumUser,
       if (emphasizePremiumUserPost != null)
         'emphasizePremiumUserPost': emphasizePremiumUserPost,
+      'deleted': false,
     };
   }
 
@@ -137,8 +138,10 @@ class PostModel {
   ///
   /// 직접 Map 을 작성하면 오타가 발생 할 수 있기 때문에 안전하게 생성한다.
   /// 글 수정 할 때 Map 이 필요한 데 이 메소드를 사용하면 된다.
+  ///
+  /// FieldValue 타입을 지정하면 안된다.
   static Map<String, dynamic> toUpdate({
-    required DocumentReference postDocumentReference,
+    DocumentReference? postDocumentReference,
     String? title,
     String? content,
     List<String>? files,
@@ -152,7 +155,7 @@ class PostModel {
     bool? emphasizePremiumUserPost,
   }) {
     return {
-      'postId': postDocumentReference.id,
+      if (postDocumentReference != null) 'postId': postDocumentReference.id,
       if (title != null) 'title': title,
       if (content != null) 'content': content,
       'updatedAt': FieldValue.serverTimestamp(),
@@ -167,5 +170,13 @@ class PostModel {
       if (emphasizePremiumUserPost != null)
         'emphasizePremiumUserPost': emphasizePremiumUserPost,
     };
+  }
+
+  Future delete() {
+    return PostService.instance.delete(this);
+  }
+
+  Future update(Map<String, dynamic> data) {
+    return PostService.instance.update(reference, data);
   }
 }

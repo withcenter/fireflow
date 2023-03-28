@@ -61,7 +61,6 @@ dependencies:
   # video_player_web: 2.0.12
 
   path: 1.8.2
-  flutterflow_paginate_firestore: ^1.0.3+1
 
   http: ^0.13.5
 
@@ -84,7 +83,11 @@ dependencies:
   # Saving data locally. Used in chat service.
   # shared_preferences: 2.0.15
 
-  flutterflow_widgets: ^0.0.29
+  # 최신 Firebase SDK 를 지원하는 firestore pagination 위젯
+  flutterflow_paginate_firestore: ^1.0.3+1
+
+  # 직접 작성한 플러터플로 위젯 모음
+  flutterflow_widgets:
 
   # google map
   # google_maps: 6.2.0

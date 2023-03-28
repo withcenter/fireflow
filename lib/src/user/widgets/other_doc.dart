@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// 다른 사용자의 공개 문서를 listen 한다.
 ///
 ///
-class OtherDoc extends StatelessWidget {
+class OtherDoc extends StatefulWidget {
   const OtherDoc(
       {Key? key,
       required this.otherUserDocumentReference,
@@ -16,23 +16,25 @@ class OtherDoc extends StatelessWidget {
   final Widget Function(UserModel other) builder;
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: otherUserDocumentReference.snapshots().map(
-              (doc) => UserModel.fromSnapshot(doc),
-            ),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox.shrink();
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error.toString()));
-          }
-          if (!snapshot.hasData || snapshot.data == null) {
-            return const SizedBox.shrink();
-          }
+  State<OtherDoc> createState() => _OtherDocState();
+}
 
-          return builder(snapshot.data as UserModel);
+class _OtherDocState extends State<OtherDoc> {
+  UserModel? user;
+  @override
+  void initState() {
+    super.initState();
+    widget.otherUserDocumentReference.snapshots().listen((doc) {
+      if (mounted) {
+        setState(() {
+          user = UserModel.fromSnapshot(doc);
         });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return user == null ? const SizedBox.shrink() : widget.builder(user!);
   }
 }

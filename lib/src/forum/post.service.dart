@@ -150,94 +150,64 @@ class PostService {
     return get(post.id);
   }
 
-  Future afterUpdate({
-    required DocumentReference postDocumentReference,
-  }) async {
-    PostModel post = PostModel.fromSnapshot(await postDocumentReference.get());
-
-    List<Future> futures = [];
-
-    /// Update `updatedAt`
-    futures.add(
-      postDocumentReference.update({
-        'updatedAt': FieldValue.serverTimestamp(),
-        'hasPhoto': post.files.isNotEmpty,
-      }),
-    );
-
-    /// Note, the `updatedAt` field here is not the last time the post was updated.
-    if (SupabaseService.instance.storePosts) {
-      futures.add(
-        supabase.posts.upsert(
-          {
-            'post_id': postDocumentReference.id,
-            'category_id': post.categoryId,
-            'uid': my.uid,
-            'created_at': post.createdAt.toDate().toIso8601String(),
-            'title': post.title,
-            'content': post.content,
-          },
-          onConflict: 'post_id',
-        ),
-      );
-    }
-
-    // if (SupabaseService.instance.storePosts) {
-    //   futures.add(
-    //     supabase.postsAndComments.upsert(
-    //       {
-    //         'id': postDocumentReference.id,
-    //         'post_id': postDocumentReference.id,
-    //         'category_id': post.categoryId,
-    //         'uid': my.uid,
-    //         'created_at': post.createdAt.toDate().toIso8601String(),
-    //         'title': post.title,
-    //         'content': post.content,
-    //       },
-    //       onConflict: 'id',
-    //     ),
-    //   );
-    // }
-
-    await Future.wait(futures);
+  /// 글 업데이트
+  ///
+  /// 주의, updatedAt 필드가 자동 설정되지 않는다.
+  /// 혹시나, post listen 함수 내에서 post update 를 하면 재귀적으로 호출되기 때문에 미리 방지하기 위해서이다.
+  Future update(DocumentReference postDocumentReference, data) async {
+    await postDocumentReference.update(data);
   }
 
-  /// post create method
-  Future afterDelete({
-    required DocumentReference postDocumentReference,
-  }) async {
-    // get the post's data from the database
-    final post = PostModel.fromSnapshot(await postDocumentReference.get());
-    final categoryDoc = CategoryService.instance.doc(post.categoryId);
-    // final category = CategoryModel.fromSnapshot(await categoryDoc.get());
+  /// 글 삭제
+  ///
+  Future delete(PostModel post) async {
+    /// 코멘트가 있으면 삭제 표시
+    if (post.noOfComments > 0) {
+      await post.reference.update({
+        'deleted': true,
+      });
+    } else {
+      /// 코멘트가 없으면 삭제
+      await post.reference.delete();
+    }
 
+    post.deleted = true;
+
+    /// 나머지, 처리를 한번의 await 으로 처리
     List<Future> futures = [];
 
-    // update the user's post count
+    /// 첨부 파일 삭제
+    if (post.files.isNotEmpty) {
+      for (final url in post.files) {
+        futures.add(StorageService.instance.delete(url));
+      }
+      await Future.wait(futures);
+    }
+
+    // 사용자 글 수 1 감소
     futures.add(
       UserService.instance.update(
         noOfPosts: FieldValue.increment(-1),
       ),
     );
 
-    //
+    // 카테고리 글 1 감소
     futures.add(
-      categoryDoc.update(
+      CategoryService.instance.doc(post.categoryId).update(
         {
           'noOfPosts': FieldValue.increment(-1),
         },
       ),
     );
 
+    /// 수파베이스에 글 테이블에서 삭제
     if (SupabaseService.instance.storePosts) {
-      futures.add(
-        supabase.posts.delete().eq('post_id', post.id),
-      );
+      futures.add(supabase.posts.delete().eq('post_id', post.id));
     }
-    if (SupabaseService.instance.storePostsAndComments) {
-      futures.add(
-        supabase.postsAndComments.delete().eq('id', post.id),
-      );
+
+    /// 수파베이스에 글/코멘트 테이블에서 삭제
+    if (SupabaseService.instance.storePosts) {
+      futures.add(supabase.postsAndComments.delete().eq('post_id', post.id));
     }
 
     await Future.wait(futures);

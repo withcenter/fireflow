@@ -24,4 +24,6 @@ class Config {
 
   /// [moveUserData] 에 지정된 컬렉션으로 요청한 사용자 필드를 이동한다.
   Map<String, dynamic>? moveUserData;
+
+  static String deletedPost = 'This post has been deleted.';
 }

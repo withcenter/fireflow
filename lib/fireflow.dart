@@ -3,7 +3,6 @@ export 'config.dart';
 
 /// Service
 export 'src/user/user.service.dart';
-export 'src/user/user_public_data.model.dart';
 export 'src/user_setting/user_setting.service.dart';
 export 'src/user_setting/user_setting.model.dart';
 export 'src/chat/chat_room.model.dart';
@@ -29,6 +28,7 @@ export 'src/user/widgets/my_stream.dart';
 ///
 export 'src/user/widgets/user_sticker.dart';
 export 'src/user/model/user.model.dart';
+export 'src/user/widgets/public_profile.dart';
 
 /// Forum
 
@@ -46,7 +46,9 @@ export 'src/forum/widgets/category.list.dart';
 export 'src/forum/widgets/category.create.dart';
 export 'src/forum/widgets/category.edit.dart';
 export 'src/forum/widgets/post.create.dart';
+export 'src/forum/widgets/post.edit.dart';
 export 'src/forum/widgets/post.view.dart';
+export 'src/forum/widgets/post.view.body.dart';
 export 'src/forum/widgets/comment.view.dart';
 
 /// Chat

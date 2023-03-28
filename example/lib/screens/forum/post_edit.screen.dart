@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
@@ -154,9 +156,10 @@ class _PostEditScreenState extends State<PostEditScreen> {
       'content': content.text,
       'files': files,
     };
-    await PostService.instance.doc(widget.postId!).update(data);
-    PostService.instance.afterUpdate(
-      postDocumentReference: PostService.instance.doc(widget.postId!),
-    );
+    log(data.toString());
+    // await PostService.instance.doc(widget.postId!).update(data);
+    // PostService.instance.afterUpdate(
+    //   postDocumentReference: PostService.instance.doc(widget.postId!),
+    // );
   }
 }
