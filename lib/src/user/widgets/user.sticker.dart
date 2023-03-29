@@ -31,11 +31,18 @@ class UserSticker extends StatelessWidget {
           border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(user.displayName == '' ? 'No display name' : user.displayName),
-            Text('UID: ${user.uid}'),
+            UserAvatar(user: user, padding: const EdgeInsets.only(right: 16)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(user.displayName == ''
+                    ? 'No display name'
+                    : user.displayName),
+                Text('UID: ${user.uid}'),
+              ],
+            ),
           ],
         ),
       ),

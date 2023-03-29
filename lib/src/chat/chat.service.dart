@@ -57,6 +57,7 @@ class ChatService {
   /// 채팅 방생성
   ///
   /// 반드시 채팅방은 이 함수 호출을 통해서만 생성해야 한다. FF 에서 직접 레코드를 생성하면 안된다.
+  /// 왜냐하면, 채팅방을 생성할 때, 반드시 Chat Room 문서의 ID 가 저장되어야 하기 때문이다.
   ///
   /// isGroupChat, leaveProtocolMessage, urlClick, urlPreview 는 자동 설정된다. 만약, 다른
   /// 값을 원하다면, createChatRoom() 호출 할 때, data 로 지정하면 된다.
@@ -88,6 +89,7 @@ class ChatService {
     }
 
     await roomReference.set({
+      'id': roomReference.id,
       'isGroupChat': isGroupChat,
       'lastMessageSeenBy': FieldValue.arrayUnion([
         UserService.instance.ref,
@@ -101,9 +103,21 @@ class ChatService {
     });
   }
 
-  Future<ChatRoomModel> getRoom(String id) async {
-    return ChatRoomModel.fromSnapshot(await rooms.doc(id).get());
+  /// 채팅방 정보를 ChatRoomModel 로 리턴한다.
+  ///
+  /// 채팅방 정보가 존재하지 않으면 null 을 리턴한다.
+  Future<ChatRoomModel?> getRoom(String id) async {
+    final QuerySnapshot querySnapshot = await rooms
+        .where('userDocumentReferences', arrayContains: my.reference)
+        .where('id', isEqualTo: id)
+        .get();
+    if (querySnapshot.size == 0) return null;
+
+    return ChatRoomModel.fromSnapshot(querySnapshot.docs.first);
   }
+
+  /// alias of getRoom()
+  Future<ChatRoomModel?> getChatRoom(String id) => getRoom(id);
 
   createOneAndOneChatRoom({
     required DocumentReference otherUserDocumentReference,
@@ -422,5 +436,29 @@ class ChatService {
   /// Single Chat (1:1 챗) 이면 true 리턴
   bool isSingleChat(String chatRoomId) {
     return chatRoomId.contains('-');
+  }
+
+  /// 채팅방 정보 문서 업데이트
+  ///
+  /// 채팅방 정보 문서가 존재하지 않으면 생성한다.
+  ///
+  /// 채팅방 ID 를 저장한다.
+  Future update(
+    DocumentReference chatRoomDocumentReference, {
+    FieldValue? userDocumentReferences,
+    FieldValue? lastMessageSeenBy,
+    bool? isGroupChat,
+    bool? isSubChatRoom,
+  }) {
+    return chatRoomDocumentReference.set(
+      {
+        'userDocumentReferences': userDocumentReferences,
+        'lastMessageSeenBy': lastMessageSeenBy,
+        'isGroupChat': false,
+        'isSubChatRoom': false,
+        'id': chatRoomDocumentReference.id,
+      },
+      SetOptions(merge: true),
+    );
   }
 }

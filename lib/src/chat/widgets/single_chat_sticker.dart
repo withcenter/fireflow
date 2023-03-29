@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/user/widgets/other_doc.dart';
 import 'package:flutter/material.dart';
 
 /// 다목적 사용자 정보 표시 스티커
@@ -24,9 +23,9 @@ class SingleChatSticker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OtherDoc(
+    return UserDoc(
       /// 사용자 공개 문서
-      otherUserDocumentReference: userDocumentReference,
+      reference: userDocumentReference,
       builder: (user) {
         return GestureDetector(
           /// 사용자 공개 문서 snapshot

@@ -36,8 +36,18 @@ class ReportService {
   }
 
   /// 신고한 글 읽어 ReportModel 로 리턴
-  Future<ReportModel> get({required DocumentReference target}) async {
-    final snapshot = await col.doc(targetId(target)).get();
+  ///
+  /// 처음 신고하는 글에는 이전에 리포팅된 문서가 없으므로, NULL 을 리턴한다.
+  Future<ReportModel?> get({required DocumentReference target}) async {
+    final querySnapshot = await col
+        .where('reporter', isEqualTo: my.reference)
+        .where('target', isEqualTo: target)
+        .get();
+    if (querySnapshot.size == 0) {
+      return null;
+    }
+
+    final snapshot = querySnapshot.docs.first;
     return ReportModel.fromSnapshot(snapshot);
   }
 }

@@ -9,8 +9,8 @@ import 'package:flutter/widgets.dart';
 ///
 /// 특히, 이 함수가 유용한 이유는 authStateChanges() 를 listen 하면, 사용자 문서가 아직, 준비되지 않았을 수 있는데,
 /// 이 함수는 사용자 문서가 준비된 후, 빌드한다.
-class MyStream extends StatelessWidget {
-  const MyStream({Key? key, this.login, this.logout}) : super(key: key);
+class MyDocStream extends StatelessWidget {
+  const MyDocStream({Key? key, this.login, this.logout}) : super(key: key);
 
   final Widget Function(UserModel my)? login;
   final Widget Function()? logout;

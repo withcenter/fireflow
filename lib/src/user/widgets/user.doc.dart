@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
@@ -5,26 +6,23 @@ import 'package:flutter/material.dart';
 /// 다른 사용자의 공개 문서를 listen 한다.
 ///
 ///
-class OtherDoc extends StatefulWidget {
-  const OtherDoc(
-      {Key? key,
-      required this.otherUserDocumentReference,
-      required this.builder})
+class UserDoc extends StatefulWidget {
+  const UserDoc({Key? key, required this.reference, required this.builder})
       : super(key: key);
 
-  final DocumentReference otherUserDocumentReference;
+  final DocumentReference reference;
   final Widget Function(UserModel other) builder;
 
   @override
-  State<OtherDoc> createState() => _OtherDocState();
+  State<UserDoc> createState() => _UserDocState();
 }
 
-class _OtherDocState extends State<OtherDoc> {
+class _UserDocState extends State<UserDoc> {
   UserModel? user;
   @override
   void initState() {
     super.initState();
-    widget.otherUserDocumentReference.snapshots().listen((doc) {
+    widget.reference.snapshots().listen((doc) {
       if (mounted) {
         setState(() {
           user = UserModel.fromSnapshot(doc);

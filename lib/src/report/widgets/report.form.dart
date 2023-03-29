@@ -30,7 +30,7 @@ class _ReportFormState extends State<ReportForm> {
     super.initState();
     ReportService.instance.get(target: widget.target).then((report) {
       setState(() {
-        reportController.text = report.reason;
+        reportController.text = report?.reason ?? '';
       });
     });
   }

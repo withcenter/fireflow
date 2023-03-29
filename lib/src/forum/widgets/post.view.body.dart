@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/user/widgets/other_doc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
@@ -40,8 +39,8 @@ class _PostViewBodyState extends State<PostViewBody> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(post.deleted ? Config.deletedPost : post.title),
-        OtherDoc(
-            otherUserDocumentReference: post.userDocumentReference,
+        UserDoc(
+            reference: post.userDocumentReference,
             builder: (user) {
               return Text(user.displayName);
             }),

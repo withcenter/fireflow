@@ -5,16 +5,25 @@ import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
-import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
-/// ChatRoomMessageList is a widget that displays a list of messages in a chat room.
+/// 채팅방 메시지 목록 & 스크롤
+///
+/// 반드시, 채팅방 문서의 DocumentReference 를 전달받아야 한다.
+/// 채팅방 정보 문서나 모델을 받을 필요가 전혀 없다. 필요한 경우, 채팅방 정보를 생성한다.
+///
+/// 개선점, 만약, 채팅방 문서를 채팅 목록에서 부터 받아 온다면, 채팅방 화면에는 파라메타로
+/// 채팅방 문서(Model)를 가지고 있을 것이다. 그 model 을 이 화면으로 바로 넘기면,
+/// [chatRoomExists] 변수를 최대한 빠르게 true 로 설정하여 채팅메시지를 더 빠르게
+/// 보여 줄 수 있다. 이것은 채팅 화면 깜빡거림을 한번 줄을 수 있는 것이다.
+///
 ///
 class ChatRoomMessageList extends StatefulWidget {
   const ChatRoomMessageList({
     Key? key,
     this.width,
     this.height,
-    required this.chatRoomDocumentReference,
+    this.chatRoomDocumentReference,
+    this.chatRoom,
     this.myMessageBuilder,
     this.otherMessageBuilder,
     this.onEmpty,
@@ -24,7 +33,8 @@ class ChatRoomMessageList extends StatefulWidget {
 
   final double? width;
   final double? height;
-  final DocumentReference chatRoomDocumentReference;
+  final DocumentReference? chatRoomDocumentReference;
+  final ChatRoomModel? chatRoom;
 
   final Widget Function(DocumentSnapshot)? myMessageBuilder;
   final Widget Function(DocumentSnapshot)? otherMessageBuilder;
@@ -43,24 +53,25 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   /// The chat room model.
   ///
   /// This is updated when the chat room is updated.
-  late ChatRoomModel room;
+  late ChatRoomModel? room;
 
   StreamSubscription? subscriptionNewMessage;
 
-  /// Ensure the chat room exists.
-  bool ensureChatRoomExists = false;
+  /// 채팅방 정보 문서가 존재하는가?
+  bool chatRoomExists = false;
+
+  /// 현재 채팅방 문서의 reference
+  DocumentReference get roomReference =>
+      widget.chatRoomDocumentReference ?? room!.reference;
 
   /// The chat room document references of the 1:1 chat room between you and the other user.
-  List<DocumentReference> get youAndMeRef => widget.chatRoomDocumentReference.id
+  List<DocumentReference> get youAndMeRef => roomReference.id
       .split('-')
       .map<DocumentReference>((id) => UserService.instance.doc(id))
       .toList();
 
-  /// The chat room document reference.
-  DocumentReference get chatRoomRef => widget.chatRoomDocumentReference;
-
   /// 채팅방 ID 에 하이픈(-)이 들어가 있으면 1:1 채팅방. 아니면, 그룹 채팅방이다.
-  bool get isSingleChat => widget.chatRoomDocumentReference.id.contains('-');
+  bool get isSingleChat => roomReference.id.contains('-');
 
   ///
   bool get isGroupChat => !isSingleChat;
@@ -69,6 +80,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   void initState() {
     super.initState();
 
+    chatRoomExists = widget.chatRoom != null;
     init();
   }
 
@@ -76,83 +88,91 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   ///
   init() async {
     // Set the chat room ref where I am chat in
-    AppService.instance.currentChatRoomDocumentReference = chatRoomRef;
+    AppService.instance.currentChatRoomDocumentReference = roomReference;
 
     if (isSingleChat) {
-      // For 1:1 chat,
-      //  - create a chat room if it does not exist.
-      //  - just make the last message seen by you.
-      /// Note that, this may produce a permission error on update. It's again the rule.
-      await chatRoomRef.set(
-        {
-          'userDocumentReferences': youAndMeRef,
-          'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
-          'isGroupChat': false,
-          'isSubChatRoom': false,
-          'id': chatRoomRef.id,
-        },
-        SetOptions(merge: true),
+      /// 1:1 채팅방
+      ///
+      /// 채팅방이 이전에 생성되어져 있지 않으면 생성. 그리고 자신은 메시지 읽음으로 표시.
+      ///
+      await ChatService.instance.update(
+        roomReference,
+        userDocumentReferences: FieldValue.arrayUnion(youAndMeRef),
+        lastMessageSeenBy: FieldValue.arrayUnion([myReference]),
+        isGroupChat: false,
+        isSubChatRoom: false,
       );
     } else {
-      // For the open group chat, any user can join the chat room.
+      /// 그룹 채팅 방 읽기
+      room = await ChatService.instance.getRoom(roomReference.id);
 
-      // 채팅방 정보 읽기 & 에러 핸들링.
+      /// 사용자가 방 안에 들어가 있지 않다면?
+      ///
+      /// 사용자를 추가하고, 입장 메시지를 보낸다.
+      if (room != null &&
+          room!.userDocumentReferences.contains(myReference) == false &&
+          room!.isOpenChat) {
+        try {
+          await room!.update(
+            userDocumentReferences: FieldValue.arrayUnion([myReference]),
+          );
+        } catch (e) {
+          dog('에러 발생: 그룹 채팅방 사용자 추가 $e');
+          rethrow;
+        }
+        try {
+          await ChatService.instance.sendMessage(
+            chatRoomDocumentReference: roomReference,
+            protocol: 'enter',
+            protocolTargetUserDocumentReference: myReference,
+          );
+        } catch (e) {
+          dog('에러 발생: 그룹 채팅방 입장 메시지 보내기 $e');
+          rethrow;
+        }
+      }
+
+      /// 그룹 채팅방 업데이트
+      ///
+      /// open chat 이 아닌 경우에는 다른 사용가 초대해야지만 접속 가능
+      /// 채팅 메시지 읽음 표시
+      /// sub chat room 인지 표시
       try {
-        room = ChatRoomModel.fromSnapshot(await chatRoomRef.get());
+        await ChatService.instance.update(
+          roomReference,
+          lastMessageSeenBy: FieldValue.arrayUnion([myReference]),
+          isGroupChat: true,
+          isSubChatRoom: room?.parentChatRoomDocumentReference != null,
+        );
       } catch (e) {
-        snackBarError(
-            context: context,
-            title: 'Failed to get chat room',
-            message:
-                'The chat room does not exists. Or it may be a wrong chat room reference. Or you do not have permission to access the chat room.');
+        dog('에러 발생: 그룹 채팅방 업데이트 $e');
         rethrow;
       }
+    }
 
-      // If the user is not in the room, and the room is open chat, then add the user's ref to the room.
-      // And send a message for 'enter'.
-      if (room.userDocumentReferences.contains(myReference) == false &&
-          room.isOpenChat == true) {
-        await chatRoomRef.update({
-          'userDocumentReferences': FieldValue.arrayUnion([myReference]),
-        });
-        await ChatService.instance.sendMessage(
-          chatRoomDocumentReference: chatRoomRef,
-          protocol: 'enter',
-          protocolTargetUserDocumentReference: myReference,
-        );
-      }
-
-      // For group chat,
-      //  - users can only invited by other user.
-      //  - just make the last message seen by you.
-      //  - set if the room is sub-group-chat or not.
-      await chatRoomRef.update({
-        'lastMessageSeenBy': FieldValue.arrayUnion([myReference]),
-        'isGroupChat': true,
-        'isSubChatRoom': room.parentChatRoomDocumentReference != null,
-        'id': chatRoomRef.id,
+    /// 채팅방이 생성되기 전에 메시지를 가져오려고 시도할 수 있는데,
+    /// 이를 방지하기 위해서, 채팅방 문서가 존재하는지 확인
+    ///
+    /// 채팅방 사용이 가능한 상태이면, 화면을 다시 그린다.
+    /// 화면 깜빡임을 없애기 위해서, 필요하지 않은 경우, build 하지 않도록 한다.
+    if (chatRoomExists == false) {
+      setState(() {
+        chatRoomExists = true;
       });
     }
 
-    /// When the chat begins, the app try to get messages before the chat room exists.
-    /// This may lead permission error and showing an infinite loader.
-    /// Rebuiding the screen helps to avoid the infinite loader.
-    setState(() {
-      ensureChatRoomExists = true;
-    });
-
-    // Listen for new message, and make it read by you.
-    subscriptionNewMessage = chatRoomRef.snapshots().listen((snapshot) {
+    /// 새로운 메시지가 있으면, 읽음 표시.
+    subscriptionNewMessage = roomReference.snapshots().listen((snapshot) {
+      /// 채팅방 정보 업데이트
       room = ChatRoomModel.fromSnapshot(snapshot);
 
-      // room = ChatRoomModel.fromSnapshot(snapshot);
-
       /// If the signed-in user have not seen the message, then make it seen.
-      if (room.lastMessageSeenBy.contains(myReference) == false) {
-        chatRoomRef.update({
-          'lastMessageSeenBy': FieldValue.arrayUnion([myReference])
-        });
+      if (room!.lastMessageSeenBy.contains(myReference) == false) {
+        room!.update(lastMessageSeenBy: FieldValue.arrayUnion([myReference]));
       }
+    }, onError: (e) {
+      dog('에러 발생: 채팅방 메시지 읽음 표시 $e');
+      throw e;
     });
   }
 
@@ -165,7 +185,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
   @override
   Widget build(BuildContext context) {
-    if (ensureChatRoomExists == false) return const SizedBox.shrink();
+    if (chatRoomExists == false) return const SizedBox.shrink();
     return PaginateFirestore(
       reverse: true,
 
@@ -186,7 +206,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       /// Get messages of the chat room.
       query: FirebaseFirestore.instance
           .collection('chat_room_messages')
-          .where('chatRoomDocumentReference', isEqualTo: chatRoomRef)
+          .where('chatRoomDocumentReference', isEqualTo: roomReference)
           .orderBy('sentAt', descending: true),
       // Change types accordingly
       itemBuilderType: PaginateBuilderType.listView,

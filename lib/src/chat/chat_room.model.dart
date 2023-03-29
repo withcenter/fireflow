@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflow/fireflow.dart';
 
 /// ChatRoomModel is a class that represents a document of /chat_rooms.
 ///
 class ChatRoomModel {
+  DocumentReference reference;
+  String id;
   List<DocumentReference> userDocumentReferences;
   String lastMessage;
   Timestamp lastMessageSentAt;
@@ -20,11 +23,12 @@ class ChatRoomModel {
   bool urlClick;
   bool urlPreview;
   DocumentReference? parentChatRoomDocumentReference;
-  String id;
 
   bool isSubChatRoom;
 
   ChatRoomModel({
+    required this.reference,
+    required this.id,
     required this.userDocumentReferences,
     required this.lastMessage,
     required this.lastMessageSentAt,
@@ -42,21 +46,20 @@ class ChatRoomModel {
     required this.urlPreview,
     required this.parentChatRoomDocumentReference,
     required this.isSubChatRoom,
-    required this.id,
   });
 
   factory ChatRoomModel.fromSnapshot(DocumentSnapshot snapshot) {
     return ChatRoomModel.fromJson(
       snapshot.data() as Map<String, dynamic>,
-      id: snapshot.id,
+      reference: snapshot.reference,
     );
   }
 
-  factory ChatRoomModel.fromJson(
-    Map<String, dynamic> json, {
-    String? id,
-  }) {
+  factory ChatRoomModel.fromJson(Map<String, dynamic> json,
+      {required DocumentReference reference}) {
     return ChatRoomModel(
+      reference: reference,
+      id: reference.id,
       userDocumentReferences:
           List<DocumentReference>.from(json['userDocumentReferences'] ?? []),
       lastMessage: json['lastMessage'] ?? '',
@@ -79,7 +82,6 @@ class ChatRoomModel {
       urlPreview: json['urlPreview'] ?? false,
       parentChatRoomDocumentReference: json['parentChatRoomDocumentReference'],
       isSubChatRoom: json['isSubChatRoom'] ?? false,
-      id: id ?? '',
     );
   }
 
@@ -87,5 +89,20 @@ class ChatRoomModel {
   @override
   String toString() {
     return 'ChatRoomModel{ id: $id, userDocumentReferences: $userDocumentReferences, lastMessage: $lastMessage, lastMessageSentAt: $lastMessageSentAt, lastMessageSeenBy: $lastMessageSeenBy, lastMessageSentBy: $lastMessageSentBy, title: $title, moderatorUserDocumentReferences: $moderatorUserDocumentReferences, unsubscribedUserDocumentReferences: $unsubscribedUserDocumentReferences, isGroupChat: $isGroupChat, isOpenChat: $isOpenChat, reminder: $reminder, lastMessageUploadUrl: $lastMessageUploadUrl, backgroundColor: $backgroundColor, urlClick: $urlClick, urlPreview: $urlPreview, parentChatRoomDocumentReference: $parentChatRoomDocumentReference, isSubChatRoom: $isSubChatRoom }';
+  }
+
+  Future update({
+    FieldValue? userDocumentReferences,
+    FieldValue? lastMessageSeenBy,
+    bool? isGroupChat,
+    bool? isSubChatRoom,
+  }) {
+    return ChatService.instance.update(
+      reference,
+      userDocumentReferences: userDocumentReferences,
+      lastMessageSeenBy: lastMessageSeenBy,
+      isGroupChat: isGroupChat,
+      isSubChatRoom: isSubChatRoom,
+    );
   }
 }

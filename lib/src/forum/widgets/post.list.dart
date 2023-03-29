@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/user/widgets/other_doc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
 
@@ -68,8 +67,8 @@ class PostTile extends StatelessWidget {
               ? Config.deletedPost
               : post.createdAt.toDate().toString()),
           const SizedBox(width: 8),
-          OtherDoc(
-            otherUserDocumentReference: post.userDocumentReference,
+          UserDoc(
+            reference: post.userDocumentReference,
             builder: (user) {
               return Text(user.displayName);
             },
