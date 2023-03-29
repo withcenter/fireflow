@@ -6,7 +6,6 @@ import 'package:fireflow/fireflow.dart';
 ///
 class UserModel {
   DocumentReference reference;
-  String id;
   String uid;
   String email;
   String phoneNumber;
@@ -16,8 +15,8 @@ class UserModel {
   // 본명을 기록 할 때 사용.
   String name;
 
-  Timestamp createdTime;
-  Timestamp? updatedAt;
+  DateTime createdTime;
+  DateTime? updatedAt;
   bool admin;
   List<DocumentReference> blockedUsers;
   List<DocumentReference> favoriteChatRooms;
@@ -33,11 +32,11 @@ class UserModel {
   String gender;
 
   // 생일.
-  Timestamp? birthday;
+  DateTime? birthday;
 
   bool hasPhoto;
 
-  Timestamp? lastPostCreatedAt;
+  DateTime? lastPostCreatedAt;
   FeedModel? lastPost;
   List<FeedModel> recentPosts;
 
@@ -46,13 +45,12 @@ class UserModel {
   int noOfComments;
   List<DocumentReference> followings;
   DocumentReference? referral;
-  Timestamp? referralAcceptedAt;
+  DateTime? referralAcceptedAt;
   String stateMessage;
 
   /// UserModel constructor.
   UserModel({
     required this.uid,
-    required this.id,
     required this.email,
     required this.phoneNumber,
     required this.name,
@@ -96,15 +94,13 @@ class UserModel {
   }) {
     return UserModel(
       reference: reference,
-      id: reference.id,
       uid: json['uid'],
       email: json['email'] ?? '',
       phoneNumber: json['phone_number'] ?? '',
       name: json['name'] ?? '',
       displayName: json['display_name'] ?? '',
-      createdTime:
-          json['created_time'] ?? Timestamp.fromDate(DateTime(1973, 1, 1)),
-      updatedAt: json['updatedAt'] ?? Timestamp.fromDate(DateTime(1973, 1, 1)),
+      createdTime: json['created_time'] ?? DateTime(1973, 1, 1),
+      updatedAt: json['updatedAt'] ?? DateTime(1973, 1, 1),
       admin: json['admin'] ?? false,
       blockedUsers: List<DocumentReference>.from(json['blockedUsers'] ?? []),
       favoriteChatRooms:
@@ -116,7 +112,8 @@ class UserModel {
       birthday: json['birthday'],
       hasPhoto: json['hasPhoto'] ?? false,
       lastPostCreatedAt: json['lastPostCreatedAt'],
-      lastPost: json['lastPost'] == null
+      lastPost: json['lastPost'] == null ||
+              json['lastPost']['postDocumentReference'] == null
           ? null
           : FeedModel.fromJson(json['lastPost']),
       recentPosts: (json['recentPosts'] ?? [])
@@ -135,13 +132,12 @@ class UserModel {
   factory UserModel.fromFirebaseUser(User user) {
     return UserModel(
       uid: user.uid,
-      id: user.uid,
       email: user.email ?? '',
       phoneNumber: user.phoneNumber ?? '',
       name: '',
       displayName: '',
-      createdTime: Timestamp.fromDate(DateTime(1973)),
-      updatedAt: Timestamp.fromDate(DateTime(1973)),
+      createdTime: DateTime(1973),
+      updatedAt: DateTime(1973),
       admin: false,
       blockedUsers: [],
       favoriteChatRooms: [],
@@ -163,6 +159,38 @@ class UserModel {
       stateMessage: '',
       reference: UserService.instance.doc(user.uid),
     );
+  }
+
+  /// Create a method named toJson that returns a json object of this class.
+  toJson() {
+    return {
+      'uid': uid,
+      'email': email,
+      'phone_number': phoneNumber,
+      'name': name,
+      'display_name': displayName,
+      'created_time': createdTime,
+      'updatedAt': updatedAt,
+      'admin': admin,
+      'blockedUsers': blockedUsers,
+      'favoriteChatRooms': favoriteChatRooms,
+      'isProfileComplete': isProfileComplete,
+      'photo_url': photoUrl,
+      'coverPhotoUrl': coverPhotoUrl,
+      'gender': gender,
+      'birthday': birthday,
+      'hasPhoto': hasPhoto,
+      'lastPostCreatedAt': lastPostCreatedAt,
+      'lastPost': lastPost?.toJson(),
+      'recentPosts': recentPosts.map((e) => e.toJson()).toList(),
+      'isPremiumUser': isPremiumUser,
+      'noOfPosts': noOfPosts,
+      'noOfComments': noOfComments,
+      'followings': followings,
+      'referral': referral,
+      'referralAcceptedAt': referralAcceptedAt,
+      'stateMessage': stateMessage,
+    };
   }
 
   // create "toString()" method that returns a string of the object of this class

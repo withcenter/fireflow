@@ -84,6 +84,34 @@
   - DocumentReference 의 경우도 초기 값이 없으므로 nullable 이다. 단, `List<DocumentReference>` 는 빈 배열로 초기화를 하면 된다.
 
 
+## 데이터 컨버팅
+
+
+- FF 에서는 built value 를 통해서 데이터 모델링을 한다. Fireflow 에서는 직접 모델을 작성해서 관리한다. 그런데 때로는 이 둘 사이에 데이터 교환이 필요 할 수 있다. 즉, FF 의 Schema Document 를 Fireflow 의 Model 로 변경하고, 반대로 Fireflow 의 Model 을 FF 의 Schema Document 로 변경 해야 할 필요가 있을 때, 아래와 같이 하면 된다. 
+
+
+- FF 의 Schema Document 를 Fireflow Model 로 변경하기
+```dart
+final user = UserModel.fromJson(
+    serializers.toFirestore(UsersRecord.serializer, currentUserDocument),
+    reference: currentUserDocument!.reference);
+print('---> user: $user');
+print(user.reference);
+print(user.uid);
+print(user.displayName);
+print(user.photoUrl);
+```
+
+
+- Fireflow 의 Model 을 FF 의 Schema Document 로 변경하기
+```dart
+final user = UserModel.fromJson(
+    serializers.toFirestore(UsersRecord.serializer, currentUserDocument),
+    reference: currentUserDocument!.reference);
+
+final UsersRecord userRecord =
+    UsersRecord.getDocumentFromData(user.toJson(), user.reference);
+```
 
 
 # 사용자
