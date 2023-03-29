@@ -32,6 +32,7 @@ export 'src/user/widgets/my.doc.stream.dart';
 export 'src/user/widgets/user.sticker.stream.dart';
 export 'src/user/widgets/user.doc.dart';
 export 'src/user/widgets/user.avatar.dart';
+export 'src/user/widgets/user.list.dart';
 
 /// Forum
 
