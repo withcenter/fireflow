@@ -148,6 +148,12 @@ class _CategoryEditState extends State<CategoryEdit> {
           children: [
             TextButton(
               onPressed: () async {
+                final re = await confirm(
+                  context,
+                  'Delete Category',
+                  'Are you sure to delete this category?',
+                );
+                if (re == false) return;
                 await CategoryService.instance.delete(
                   categoryDocumentReference: widget.categoryDocumentReference,
                 );

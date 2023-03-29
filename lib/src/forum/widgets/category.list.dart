@@ -1,14 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
 class CategoryList extends StatelessWidget {
   const CategoryList({
     super.key,
-    required this.onTap,
   });
-
-  final void Function(DocumentReference categoryDocumentReference) onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +37,42 @@ class CategoryList extends StatelessWidget {
               title: Text(category.title),
               subtitle: Text(category.categoryId),
               trailing: const Icon(Icons.keyboard_arrow_right),
-              onTap: () => onTap(category.reference),
+              onTap: () {
+                // generate a dialog with showGeneralDialog displaying category edit form using CategoryEdit widget
+                showGeneralDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  barrierLabel: MaterialLocalizations.of(context)
+                      .modalBarrierDismissLabel,
+                  barrierColor: Colors.black45,
+                  transitionDuration: const Duration(milliseconds: 200),
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return Scaffold(
+                      appBar: AppBar(
+                        title: const Text('Edit Category'),
+                      ),
+                      body: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: CategoryEdit(
+                            categoryDocumentReference: category.reference,
+                            onCancel: (ref) {
+                              Navigator.of(context).pop();
+                            },
+                            onDelete: (ref) {
+                              Navigator.of(context).pop();
+                              success(context, 'Category deleted.');
+                            },
+                            onEdit: (ref) {
+                              success(context, 'Category edited.');
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             );
           },
           itemCount: snapshot.data!.size,

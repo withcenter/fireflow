@@ -24,6 +24,7 @@ class CategoryService {
     required String categoryId,
     String? title,
   }) async {
+    categoryId = categoryId.trim().replaceAll(' ', '');
     if (await exists(categoryId)) {
       throw Exception('Category with the [$categoryId] already exists');
     }
