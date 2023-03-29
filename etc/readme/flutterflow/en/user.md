@@ -80,8 +80,9 @@ Schema **users**
 - `isPremiumUser` is set to `true` if the user is paid for premium service.
 - `referral` is the user document reference who invited me.
 - `referralAcceptedAt` is the time that he user accepted(registered) the invitation.
-- `chatMessageCount` is the no of chat that were sent by the user. See No of chat message in chat.md
 - `stateMessage` is the user's state message. It can be used to display the user's mood or motto. It's a shout-out.
+
+- `chatMessageMinuteCount` is the no of minutes that the user sent. See No of chat message in chat.md
 
 
 

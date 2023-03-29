@@ -14,7 +14,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  built_collection: 5.1.1
+  # For compatiability with FlutterFlow
   built_value: 8.4.3
 
   cached_network_image: 3.2.1

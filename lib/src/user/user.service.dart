@@ -238,6 +238,7 @@ class UserService {
   FeedModel feed(PostModel post) {
     return FeedModel.fromJson({
       'postDocumentReference': post.reference,
+      'userDocumentReference': my.reference,
       'createdAt': post.createdAt,
       'title': safeString(post.title),
       'content': safeString(post.content),
