@@ -55,11 +55,11 @@ class _CategoryEditState extends State<CategoryEdit> {
       });
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (my.admin == false) {
-        warning(context, 'You are not admin.');
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   if (my.admin == false) {
+    //     warning(context, 'You are not admin.');
+    //   }
+    // });
   }
 
   @override
