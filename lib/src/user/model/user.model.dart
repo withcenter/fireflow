@@ -6,6 +6,7 @@ import 'package:fireflow/fireflow.dart';
 ///
 class UserModel {
   DocumentReference reference;
+  String id;
   String uid;
   String email;
   String phoneNumber;
@@ -51,6 +52,7 @@ class UserModel {
   /// UserModel constructor.
   UserModel({
     required this.uid,
+    required this.id,
     required this.email,
     required this.phoneNumber,
     required this.name,
@@ -94,6 +96,7 @@ class UserModel {
   }) {
     return UserModel(
       reference: reference,
+      id: reference.id,
       uid: json['uid'],
       email: json['email'] ?? '',
       phoneNumber: json['phone_number'] ?? '',
@@ -132,6 +135,7 @@ class UserModel {
   factory UserModel.fromFirebaseUser(User user) {
     return UserModel(
       uid: user.uid,
+      id: user.uid,
       email: user.email ?? '',
       phoneNumber: user.phoneNumber ?? '',
       name: '',
