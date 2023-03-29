@@ -99,8 +99,8 @@ class UserModel {
       phoneNumber: json['phone_number'] ?? '',
       name: json['name'] ?? '',
       displayName: json['display_name'] ?? '',
-      createdTime: json['created_time'] ?? DateTime(1973, 1, 1),
-      updatedAt: json['updatedAt'] ?? DateTime(1973, 1, 1),
+      createdTime: tryDateTime(json['created_time']) ?? DateTime(1973, 1, 1),
+      updatedAt: tryDateTime(json['updatedAt']) ?? DateTime(1973, 1, 1),
       admin: json['admin'] ?? false,
       blockedUsers: List<DocumentReference>.from(json['blockedUsers'] ?? []),
       favoriteChatRooms:
@@ -111,7 +111,7 @@ class UserModel {
       gender: json['gender'] ?? '',
       birthday: json['birthday'],
       hasPhoto: json['hasPhoto'] ?? false,
-      lastPostCreatedAt: json['lastPostCreatedAt'],
+      lastPostCreatedAt: tryDateTime(json['lastPostCreatedAt']),
       lastPost: json['lastPost'] == null ||
               json['lastPost']['postDocumentReference'] == null
           ? null

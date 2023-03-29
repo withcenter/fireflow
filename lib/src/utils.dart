@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 /// globa debug mode
@@ -13,6 +14,12 @@ bool gDebug = false;
 /// [message] is the message to print
 dog(String message) {
   if (gDebug) log("DOG ---> $message");
+}
+
+DateTime? tryDateTime(dynamic value) {
+  if (value is DateTime) return value;
+  if (value is Timestamp) return value.toDate();
+  return null;
 }
 
 warning(BuildContext context, String message) {

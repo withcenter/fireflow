@@ -1,3 +1,8 @@
+## 0.1.5
+
+* Add. Public User widget
+
+
 ## 0.1.4
 
 * Update. User list
