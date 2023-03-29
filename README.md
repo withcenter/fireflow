@@ -18,6 +18,18 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 * If you encounter an error, please create an issue in [fireflow git issue](https://github.com/withcenter/fireflow/issues).
 
 
+# Supabase
+
+- Enable the Supabase from FlutterFlow or you will see an error like below
+
+```dart
+Because xxx_your_app_xxx depends on fireflow ^0.1.1 which depends on rxdart 0.27.5, rxdart 0.27.5 is required.
+So, because xxx_your_app_xxx depends on rxdart 0.27.4, version solving failed.
+```
+
+- We use Supabase for Full Text Search. (Free version of Supabase will do)
+
+
 
 # User
 
