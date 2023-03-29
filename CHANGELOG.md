@@ -1,3 +1,7 @@
+## 0.1.0
+
+* Refactoring. Working on chat.
+
 ## 0.0.159
 
 * Add. `createdAt` in the chat room document.
