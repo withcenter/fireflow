@@ -13,12 +13,17 @@
 Schema **recentPosts**
 | Field Name    | Data Type |
 | ------------- |----------:|
-| postDocumentReference     | Doc Reference (psots) |
+| postDocumentReference     | Doc Reference (posts) |
+| userDocumentReference     | Doc Reference (users) |
 | createdAt     | Timestamp |
 | title | String |
 | content | String |
 | photoUrl | String |
 
+
+- `postDocumentRefernece` - The origin post document reference
+- `userDocumentReference` - The user's document reference who wrote the post
+- `photoUrl` - the first photo url of the post.
 
 ## Category
 
@@ -34,7 +39,7 @@ Schema **recentPosts**
 Schema **categories**
 | Field Name    | Data Type |
 | ------------- |----------:|
-| category     | String |
+| categoryId    | String |
 | title | String |
 | noOfPosts | Integer |
 | noOfComments | Integer |
@@ -65,7 +70,7 @@ Schema **categories**
 Schema **posts**
 | Field Name    | Data Type |
 | ------------- |----------:|
-| category     | String |
+| categoryId    | String |
 | postId | String |
 | userDocumentReference     | Doc Reference (users) |
 | createdAt | Timestamp |
@@ -114,7 +119,7 @@ Schema **comments**
 | Field Name    | Data Type |
 | ------------- |----------:|
 | commentId | String |
-| category | String |
+| categoryId | String |
 | userDocumentReference     | Doc Reference (users) |
 | postDocumentReference     | Doc Reference (posts) |
 | parentCommentDocumentReference | Doc Reference (comments) |

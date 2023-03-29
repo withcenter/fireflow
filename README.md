@@ -21,6 +21,12 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 
 # User
 
+# Category
+
+- How to use caetgory
+
+
+
 # Forum
 
 # Chat

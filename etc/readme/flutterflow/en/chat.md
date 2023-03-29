@@ -30,14 +30,12 @@ Schema **chat_rooms**
 | isGroupChat | Boolean |
 | isOpenChat | Boolean |
 | reminder | String |
-| lastMessageUploadUrl | String |
 | backgroundColor | String |
 | urlClick | Boolean |
 | urlPreview | Boolean |
 | isSubChatRoom| Boolean |
 | parentChatRoomDocumentReference | Doc Reference (chat_rooms) |
 | subChatRoomCount | Integer |
-| isSubChatRoom | Boolean |
 | noOfMessages| Integer |
 | readOnly | Boolean |
 

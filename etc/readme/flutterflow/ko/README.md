@@ -55,6 +55,9 @@
   - 관리자가 신고 확인.
 
 
+- Supabase 키를 key.dart 파일에 저장하지 말고, 관리자 페이지에서 직접 입력 할 수 있도록 한다. 그리고 system_settings/keys 에 보관한다.
+
+
 
 # 설계
 
