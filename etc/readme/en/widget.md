@@ -75,8 +75,8 @@ class _PopupExampleSate extends State<PopupExample> {
 
 ```dart
 import 'package:fireflow/fireflow.dart';
-import '../../components/user_photo_popup_icon_widget.dart';
-import '../../components/user_photo_popup_menu_widget.dart';
+import '../components/user_photo_popup_icon_widget.dart';
+import '../components/user_photo_popup_menu_widget.dart';
 
 class UserPhoto extends StatefulWidget {
   const UserPhoto({
