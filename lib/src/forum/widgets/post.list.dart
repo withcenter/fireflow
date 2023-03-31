@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
+import 'package:provider/provider.dart';
 
 /// 글 목록 위젯
 ///
 /// 글이 탭 되면, [onTap] 콜백이 지정되었으면 [onTap] 이 호출한다. 아니면, 기본 디자인 Dialog 화면으로 글 내용을 보여준다.
 ///
-class PostList extends StatelessWidget {
+class PostList extends StatefulWidget {
   const PostList({
     super.key,
     this.categoryId,
@@ -17,10 +18,21 @@ class PostList extends StatelessWidget {
   final String? categoryId;
   final void Function(PostModel)? onTap;
 
+  @override
+  State<PostList> createState() => _PostListState();
+}
+
+class _PostListState extends State<PostList> {
+  @override
+  void initState() {
+    super.initState();
+    //
+  }
+
   Query get query {
     Query q = PostService.instance.col;
-    if (categoryId != null) {
-      q = q.where('categoryId', isEqualTo: categoryId);
+    if (widget.categoryId != null) {
+      q = q.where('categoryId', isEqualTo: widget.categoryId);
     }
     // q = q.where('deleted', isEqualTo: false);
     q = q.orderBy('createdAt', descending: true);
@@ -29,19 +41,75 @@ class PostList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PaginateFirestore(
-      itemBuilder: (context, documentSnapshots, index) {
-        final snapshot = documentSnapshots[index];
-        final post = PostModel.fromSnapshot(snapshot);
-        return PostTile(
-          post: post,
-          onTap: (p) =>
-              onTap != null ? onTap!(post) : showPostViewDialog(context, p),
+    return Column(
+      children: [
+        Container(
+          color: Colors.blue,
+          child: SafeArea(
+            bottom: false,
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: Navigator.of(context).pop,
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.white,
+                  ),
+                ),
+                const Text('글 목록'),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: showPostCreateDialog,
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: PaginateFirestore(
+            itemBuilder: (context, documentSnapshots, index) {
+              final snapshot = documentSnapshots[index];
+              final post = PostModel.fromSnapshot(snapshot);
+              return PostTile(
+                post: post,
+                onTap: (p) => widget.onTap != null
+                    ? widget.onTap!(post)
+                    : showPostViewDialog(context, p),
+              );
+            },
+            query: query,
+            itemBuilderType: PaginateBuilderType.listView,
+            isLive: true,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void showPostCreateDialog() {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, a, b) {
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.arrow_back)),
+            title: const Text('Post Create'),
+          ),
+          body: SingleChildScrollView(
+            child: PostCreate(
+              categoryId: widget.categoryId,
+              onCreated: (post) {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
         );
       },
-      query: query,
-      itemBuilderType: PaginateBuilderType.listView,
-      isLive: true,
     );
   }
 
@@ -55,11 +123,14 @@ class PostList extends StatelessWidget {
       pageBuilder: (BuildContext buildContext, Animation animation,
           Animation secondaryAnimation) {
         return Scaffold(
+          appBar: AppBar(
+            title: Text(post.title),
+          ),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: PostView(
-                post: post!,
+                post: post,
                 onDelete: (post) {
                   Navigator.of(context).pop();
                 },

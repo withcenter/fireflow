@@ -35,7 +35,6 @@ export 'src/user/widgets/user.avatar.dart';
 export 'src/user/widgets/user.list.dart';
 
 /// Forum
-
 export 'src/forum/post.service.dart';
 export 'src/forum/category.service.dart';
 export 'src/forum/comment.service.dart';
