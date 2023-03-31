@@ -5,17 +5,17 @@ import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
 
 /// 글 목록 위젯
 ///
-/// 새로운 글이 있어도 자동으로 갱신되지 않는다.
+/// 글이 탭 되면, [onTap] 콜백이 지정되었으면 [onTap] 이 호출한다. 아니면, 기본 디자인 Dialog 화면으로 글 내용을 보여준다.
 ///
 class PostList extends StatelessWidget {
   const PostList({
     super.key,
     this.categoryId,
-    required this.onTap,
+    this.onTap,
   });
 
   final String? categoryId;
-  final void Function(PostModel) onTap;
+  final void Function(PostModel)? onTap;
 
   Query get query {
     Query q = PostService.instance.col;
@@ -35,12 +35,43 @@ class PostList extends StatelessWidget {
         final post = PostModel.fromSnapshot(snapshot);
         return PostTile(
           post: post,
-          onTap: onTap,
+          onTap: (p) =>
+              onTap != null ? onTap!(post) : showPostViewDialog(context, p),
         );
       },
       query: query,
       itemBuilderType: PaginateBuilderType.listView,
       isLive: true,
+    );
+  }
+
+  void showPostViewDialog(BuildContext context, PostModel post) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black45,
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (BuildContext buildContext, Animation animation,
+          Animation secondaryAnimation) {
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: PostView(
+                post: post!,
+                onDelete: (post) {
+                  Navigator.of(context).pop();
+                },
+                onEdit: (post) {
+                  //
+                  print('edit post: ${post.id}');
+                },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -22,8 +22,8 @@ class Config {
   ///
   static int chatCountInterval = 60;
 
-  /// [moveUserData] 에 지정된 컬렉션으로 요청한 사용자 필드를 이동한다.
-  Map<String, dynamic>? moveUserData;
+  /// [moveUserPrivateDataTo] 에 지정된 컬렉션으로 요청한 사용자 필드를 이동한다.
+  String? moveUserPrivateDataTo;
 
   static String deletedPost = 'This post has been deleted.';
 }

@@ -99,6 +99,7 @@ class UserService {
   /// 해당 사용자가 이미 로그아웃을 한 상태이므로 permission denied 가 발생한다.
   /// 이것은 너무 흔한 permission denied 이며, 큰 문제는 아니지만, 제대로 처리하기 위해서는 logout() 한다.
   ///
+  ///
   listenUserDocument() {
     mySubscription?.cancel();
     dog('listenUserDocument(); doc updated; uid: $uid ${ref.path}');
@@ -111,6 +112,7 @@ class UserService {
         dog('listenUserDocument(): ${my.displayName}, ${my.updatedAt}');
 
         /// 사용자 필드 옮기기
+        /// 주의, 사용자 문서 업데이트를 listen() 하고 있는 중에 다시 사용자 문서 업데이트를 한다. 재귀적 호출을 하는지 잘 살펴봐야 한다.
         _moveUserData();
       }
     });
@@ -119,20 +121,31 @@ class UserService {
   /// 개발자가 사용자의 email 이나 phone_number 를 다른 컬렉션에 저장하고 싶을 때,
   /// README 참고
   _moveUserData() async {
-    if (Config.instance.moveUserData == null) return;
+    if (Config.instance.moveUserPrivateDataTo == null) return;
 
     if (my.email.isNotEmpty || my.phoneNumber.isNotEmpty) {
+      dog('moveUserData() -> Going to move user data; email: ${my.email}, phone_number: ${my.phoneNumber}');
+
+      /// backup first,
+      final email = my.email;
+      final phoneNumber = my.phoneNumber;
       await update(
         email: FieldValue.delete(),
         phoneNumber: FieldValue.delete(),
       );
-      await FirebaseFirestore.instance
-          .collection(Config.instance.moveUserData!['collection'])
-          .doc(uid)
-          .update({
-        if (my.email.isNotEmpty) 'email': my.email,
-        if (my.phoneNumber.isNotEmpty) 'phone_number': my.phoneNumber,
-      });
+
+      try {
+        await FirebaseFirestore.instance
+            .collection(Config.instance.moveUserPrivateDataTo!)
+            .doc(uid)
+            .set({
+          if (email.isNotEmpty) 'email': email,
+          if (phoneNumber.isNotEmpty) 'phone_number': phoneNumber,
+        }, SetOptions(merge: true));
+      } catch (e) {
+        dog('-- -- -- -- -> Failed to move user private data into ${Config.instance.moveUserPrivateDataTo} --> Check if the collection has permission.');
+        rethrow;
+      }
     }
   }
 

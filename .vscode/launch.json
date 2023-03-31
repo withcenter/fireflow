@@ -14,6 +14,15 @@
       "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     },
     {
+      "name": "Phil - Simulator - iMac",
+      "cwd": "apps/phil",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "ECE40623-ACC2-4729-8DD4-B3DBB46D4B25"
+    },
+    {
       "name": "Free Expression - debug - iPhone11MaxPro",
       "cwd": "apps/freeex",
       "request": "launch",
