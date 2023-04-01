@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
-import 'package:provider/provider.dart';
 
 /// 글 목록 위젯
 ///
@@ -23,16 +22,19 @@ class PostList extends StatefulWidget {
 }
 
 class _PostListState extends State<PostList> {
+  String? categoryId;
+
   @override
   void initState() {
     super.initState();
-    //
+
+    categoryId = widget.categoryId;
   }
 
   Query get query {
     Query q = PostService.instance.col;
-    if (widget.categoryId != null) {
-      q = q.where('categoryId', isEqualTo: widget.categoryId);
+    if (categoryId != null) {
+      q = q.where('categoryId', isEqualTo: categoryId);
     }
     // q = q.where('deleted', isEqualTo: false);
     q = q.orderBy('createdAt', descending: true);
@@ -43,6 +45,7 @@ class _PostListState extends State<PostList> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        /// 게시 글 목록 헤더
         Container(
           color: Colors.blue,
           child: SafeArea(
@@ -66,8 +69,52 @@ class _PostListState extends State<PostList> {
             ),
           ),
         ),
+
+        /// 게시글 목록 상단 카테고리 목록
+        SizedBox(
+          height: 60,
+          child: FutureBuilder(
+            future: CategoryService.instance.col
+                .where('displayCategoryOnListMenu', isEqualTo: true)
+                .get(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                final docs = snapshot.data!.docs;
+                final Map<String, String> categories = {};
+                categories[''] = '전체';
+                for (final doc in docs) {
+                  final category = CategoryModel.fromSnapshot(doc);
+                  categories[category.id] = category.title;
+                }
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final id = categories.keys.elementAt(index);
+                    final title = categories.values.elementAt(index);
+                    return TextButton(
+                      onPressed: () {
+                        setState(() {
+                          print(id);
+                          setState(() {
+                            categoryId = (id == '') ? null : id;
+                          });
+                        });
+                      },
+                      child: Text(title),
+                    );
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+
+        /// 게시글 목록
         Expanded(
           child: PaginateFirestore(
+            key: ValueKey('categoryId${categoryId ?? ''}'),
             itemBuilder: (context, documentSnapshots, index) {
               final snapshot = documentSnapshots[index];
               final post = PostModel.fromSnapshot(snapshot);
@@ -103,7 +150,7 @@ class _PostListState extends State<PostList> {
           ),
           body: SingleChildScrollView(
             child: PostCreate(
-              categoryId: widget.categoryId,
+              categoryId: categoryId,
               onCreated: (post) {
                 Navigator.of(context).pop();
               },
