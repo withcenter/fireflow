@@ -53,6 +53,7 @@ export 'src/forum/widgets/post.edit.dart';
 export 'src/forum/widgets/post.view.dart';
 export 'src/forum/widgets/post.view.body.dart';
 export 'src/forum/widgets/comment.view.dart';
+export 'src/forum/widgets/post.list.tile.dart';
 
 /// Chat
 

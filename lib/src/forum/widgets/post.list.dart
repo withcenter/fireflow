@@ -46,6 +46,8 @@ class _PostListState extends State<PostList> {
     return Column(
       children: [
         /// 게시 글 목록 헤더
+        ///
+        /// 뒤로가기 버튼, 글 작성 버튼 등.
         Container(
           color: Colors.blue,
           child: SafeArea(
@@ -71,6 +73,9 @@ class _PostListState extends State<PostList> {
         ),
 
         /// 게시글 목록 상단 카테고리 목록
+        ///
+        /// 관리자 페이지에서 각 카테고리 별, 메뉴에 표시하기 설정을 하면 여기에 표시된다.
+        /// 단, 메뉴에 표시하기로 선택된 카테고리가 하나도 없으면, 메뉴 자체가 나타나지 않고, 전체 카테고리가 표시된다.
         SizedBox(
           height: 60,
           child: FutureBuilder(
@@ -118,7 +123,7 @@ class _PostListState extends State<PostList> {
             itemBuilder: (context, documentSnapshots, index) {
               final snapshot = documentSnapshots[index];
               final post = PostModel.fromSnapshot(snapshot);
-              return PostTile(
+              return PostListTile(
                 post: post,
                 onTap: (p) => widget.onTap != null
                     ? widget.onTap!(post)
@@ -166,9 +171,6 @@ class _PostListState extends State<PostList> {
   void showPostViewDialog(BuildContext context, PostModel post) {
     showGeneralDialog(
       context: context,
-      barrierDismissible: true,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierColor: Colors.black45,
       transitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (BuildContext buildContext, Animation animation,
           Animation secondaryAnimation) {
@@ -184,10 +186,7 @@ class _PostListState extends State<PostList> {
                 onDelete: (post) {
                   Navigator.of(context).pop();
                 },
-                onEdit: (post) {
-                  //
-                  print('edit post: ${post.id}');
-                },
+                onEdit: (post) => showPostEditDialog(context, post),
               ),
             ),
           ),
@@ -195,39 +194,33 @@ class _PostListState extends State<PostList> {
       },
     );
   }
-}
 
-class PostTile extends StatelessWidget {
-  const PostTile({
-    super.key,
-    required this.post,
-    required this.onTap,
-  });
-
-  final PostModel post;
-  final void Function(PostModel) onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(post.deleted ? Config.deletedPost : post.title),
-      subtitle: Wrap(
-        children: [
-          Text(post.id),
-          const SizedBox(width: 8),
-          Text(post.deleted
-              ? Config.deletedPost
-              : post.createdAt.toDate().toString()),
-          const SizedBox(width: 8),
-          UserDoc(
-            reference: post.userDocumentReference,
-            builder: (user) {
-              return Text(user.displayName);
-            },
+  void showPostEditDialog(BuildContext context, PostModel post) {
+    showGeneralDialog(
+      context: context,
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (BuildContext buildContext, Animation animation,
+          Animation secondaryAnimation) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(post.title),
           ),
-        ],
-      ),
-      onTap: () => onTap(post),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: PostEdit(
+                postDocumentReference: post.reference,
+                onEdit: (post) {
+                  Navigator.of(context).pop();
+                },
+                onFileUpload: (post) {
+                  print(post);
+                },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
