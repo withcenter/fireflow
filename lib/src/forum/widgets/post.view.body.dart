@@ -168,8 +168,15 @@ class _PostViewBodyState extends State<PostViewBody> {
                                   ? FieldValue.arrayRemove([user!.reference])
                                   : FieldValue.arrayUnion([user!.reference]),
                             );
-                            success(context,
-                                'You have ${contains ? 'un-followed' : 'followed'} ${user!.displayName}');
+                            success(
+                              context,
+                              ln(
+                                contains ? 'unfollowed' : 'followed',
+                                replace: {
+                                  'name': user!.displayName,
+                                },
+                              ),
+                            );
                           },
                         ),
                       ),

@@ -61,14 +61,26 @@ class TranslationService {
   /// 만약, 번역된 문자열이 없으면, 기본 값인 initialValue 를 반환한다.
   /// 특히, AppService 에서 번역된 문자열을 로드하기 전에 홈 화면이 먼저 보여지면, 번역된 문자열이 없을 수 있다.
   /// 이 때, initialValue 를 사용하면, 기본 문자열을 보여줄 수 있다.
-  String get(String code, {String? initialValue}) {
+  String get(
+    String code, {
+    String? initialValue,
+    Map<String, String>? replace,
+  }) {
     code = code.toLowerCase();
-    final dynamic text = texts[code];
+    String? text = texts[code];
     if (text == null) {
-      return initialValue ?? "[$code]";
+      text = initialValue ?? "[$code]";
     } else {
-      return text.toString();
+      text = text.toString();
     }
+
+    if (replace != null) {
+      for (final key in replace.keys) {
+        text = text!.replaceAll('#$key', replace[key]!);
+      }
+    }
+
+    return text!;
   }
 }
 
@@ -78,8 +90,13 @@ class TranslationService {
 String ln(
   String code, {
   String? initialValue,
+  Map<String, String>? replace,
 }) =>
-    TranslationService.instance.get(code, initialValue: initialValue);
+    TranslationService.instance.get(
+      code,
+      initialValue: initialValue,
+      replace: replace,
+    );
 
 /// 문자열이 DB 에서 변경되면 Stream 으로 실시간으로 업데이트
 ///
