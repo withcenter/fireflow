@@ -40,6 +40,8 @@ dependencies:
 
   firebase_ui_firestore: 1.1.1
 
+  http: ^0.13.5
+
   # for file upload
   image_picker: 0.8.5+3
   image_picker_android: 0.8.5+3
@@ -61,8 +63,9 @@ dependencies:
   # video_player_web: 2.0.12
 
   path: 1.8.2
+  provider: 6.0.4
 
-  http: ^0.13.5
+  
 
   # used in serialization
   from_css_color: 2.0.0

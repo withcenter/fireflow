@@ -96,7 +96,7 @@ class AppService {
   ///
   void init({
     required BuildContext? context,
-    Map<String, dynamic>? moveUserData,
+    String? moveUserPrivateDataTo,
     bool debug = false,
     bool displayError = false,
     int noOfRecentPosts = 20,
@@ -110,7 +110,7 @@ class AppService {
     Config.instance.supabase = supabase;
     Config.instance.messaging = messaging;
     Config.instance.displayError = displayError;
-    Config.instance.moveUserData = moveUserData;
+    Config.instance.moveUserPrivateDataTo = moveUserPrivateDataTo;
 
     ///
     if (initialized == false) {
@@ -144,6 +144,7 @@ class AppService {
       } else {
         dog('AppService._initUser() - user is logged in - ${user.email}, ${user.uid}');
 
+        /// 사용자 문서가 생성되어져 있지 않으면, /users/<uid> 에 생성한다.
         UserService.instance.maybeGenerateUserDocument().then((value) {
           UserService.instance.listenUserDocument();
         });

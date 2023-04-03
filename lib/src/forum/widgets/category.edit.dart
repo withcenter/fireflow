@@ -34,6 +34,7 @@ class _CategoryEditState extends State<CategoryEdit> {
 
   bool emphasizePremiumUserPost = false;
   bool displayCategoryInForm = false;
+  bool displayCategoryOnListMenu = false;
   bool readOnly = false;
 
   @override
@@ -51,6 +52,8 @@ class _CategoryEditState extends State<CategoryEdit> {
         waitMinutesForPremiumUserNextPostController.text =
             category.waitMinutesForPremiumUserNextPost.toString();
         emphasizePremiumUserPost = category.emphasizePremiumUserPost;
+        displayCategoryInForm = category.displayCategoryInForm;
+        displayCategoryOnListMenu = category.displayCategoryOnListMenu;
         readOnly = category.readOnly;
       });
     });
@@ -133,6 +136,17 @@ class _CategoryEditState extends State<CategoryEdit> {
           },
         ),
 
+        // 글 목록 페이지 상단 메뉴에 카테고리 표시
+        SwitchListTile(
+          title: const Text('Display category on post list menu'),
+          value: displayCategoryOnListMenu,
+          onChanged: (value) {
+            setState(() {
+              displayCategoryOnListMenu = value;
+            });
+          },
+        ),
+
         // 관리자 전용 글 쓰기
         SwitchListTile(
           title: const Text('Admin only post create'),
@@ -183,6 +197,7 @@ class _CategoryEditState extends State<CategoryEdit> {
                       0,
                   emphasizePremiumUserPost: emphasizePremiumUserPost,
                   displayCategoryInForm: displayCategoryInForm,
+                  displayCategoryOnListMenu: displayCategoryOnListMenu,
                   readOnly: readOnly,
                 );
                 widget.onEdit(widget.categoryDocumentReference);

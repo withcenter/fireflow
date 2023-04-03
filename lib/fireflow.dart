@@ -35,7 +35,6 @@ export 'src/user/widgets/user.avatar.dart';
 export 'src/user/widgets/user.list.dart';
 
 /// Forum
-
 export 'src/forum/post.service.dart';
 export 'src/forum/category.service.dart';
 export 'src/forum/comment.service.dart';
@@ -54,6 +53,7 @@ export 'src/forum/widgets/post.edit.dart';
 export 'src/forum/widgets/post.view.dart';
 export 'src/forum/widgets/post.view.body.dart';
 export 'src/forum/widgets/comment.view.dart';
+export 'src/forum/widgets/post.list.tile.dart';
 
 /// Chat
 

@@ -44,6 +44,7 @@ class CategoryService {
     int? waitMinutesForPremiumUserNextPost,
     bool? emphasizePremiumUserPost,
     bool? displayCategoryInForm,
+    bool? displayCategoryOnListMenu,
     bool? readOnly,
   }) async {
     return categoryDocumentReference.update(
@@ -53,6 +54,7 @@ class CategoryService {
         waitMinutesForPremiumUserNextPost: waitMinutesForPremiumUserNextPost,
         emphasizePremiumUserPost: emphasizePremiumUserPost,
         displayCategoryInForm: displayCategoryInForm,
+        displayCategoryOnListMenu: displayCategoryOnListMenu,
         readOnly: readOnly,
       ),
     );

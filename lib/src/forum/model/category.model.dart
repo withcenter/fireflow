@@ -27,6 +27,9 @@ class CategoryModel {
   /// 글 작성/수정 페이지에, 카테고리 선택 항목에 표시 여부
   final bool displayCategoryInForm;
 
+  /// 글 목록 화면의 상단에, 카테고리를 표시 할지 말지 여부.
+  final bool displayCategoryOnListMenu;
+
   /// 관리자만 글 작성 가능 여부
   final bool readOnly;
 
@@ -42,6 +45,7 @@ class CategoryModel {
     required this.waitMinutesForNextPost,
     required this.waitMinutesForPremiumUserNextPost,
     required this.displayCategoryInForm,
+    required this.displayCategoryOnListMenu,
     required this.readOnly,
   });
 
@@ -72,6 +76,7 @@ class CategoryModel {
       waitMinutesForPremiumUserNextPost:
           json['waitMinutesForPremiumUserNextPost'] ?? 0,
       displayCategoryInForm: json['displayCategoryInForm'] ?? false,
+      displayCategoryOnListMenu: json['displayCategoryOnListMenu'] ?? false,
       readOnly: json['readOnly'] ?? false,
     );
   }
@@ -79,7 +84,7 @@ class CategoryModel {
   // create "toString()" method that returns a string of the object of this class
   @override
   String toString() {
-    return 'CategoryModel{ categoryId: $categoryId, title: $title, noOfPosts: $noOfPosts, noOfComments: $noOfComments, enablePushNotificationSubscription: $enablePushNotificationSubscription, emphasizePremiumUserPost: $emphasizePremiumUserPost, waitMinutesForNextPost: $waitMinutesForNextPost, waitMinutesForPremiumUserNextPost: $waitMinutesForPremiumUserNextPost}';
+    return 'CategoryModel{ categoryId: $categoryId, title: $title, noOfPosts: $noOfPosts, noOfComments: $noOfComments, enablePushNotificationSubscription: $enablePushNotificationSubscription, emphasizePremiumUserPost: $emphasizePremiumUserPost, waitMinutesForNextPost: $waitMinutesForNextPost, waitMinutesForPremiumUserNextPost: $waitMinutesForPremiumUserNextPost, displayCategoryInForm: $displayCategoryInForm, displayCategoryOnListMenu: $displayCategoryOnListMenu, readOnly: $readOnly}';
   }
 
   /// increase noOfPosts by 1.
@@ -100,6 +105,7 @@ class CategoryModel {
     int? waitMinutesForPremiumUserNextPost,
     bool? emphasizePremiumUserPost,
     bool? displayCategoryInForm,
+    bool? displayCategoryOnListMenu,
     bool? readOnly,
   }) {
     return {
@@ -112,6 +118,8 @@ class CategoryModel {
         'emphasizePremiumUserPost': emphasizePremiumUserPost,
       if (displayCategoryInForm != null)
         'displayCategoryInForm': displayCategoryInForm,
+      if (displayCategoryOnListMenu != null)
+        'displayCategoryOnListMenu': displayCategoryOnListMenu,
       if (readOnly != null) 'readOnly': readOnly,
     };
   }

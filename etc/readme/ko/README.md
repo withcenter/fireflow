@@ -35,8 +35,28 @@
 
 # 해야 할 것
 
-- BuiltValue 를 없애고 대신 JSON Serialization 을 쓴다.
-- moveUserData 기능
+- 게시판 위젯 - `PostList` 위젯 하나면 추가하면, 이 위젯이 showGeneralDialog 를 이용해서,
+  - 글 읽기, 쓰기, 수정, 프로필 보기 등 필요한 모든 기능을 다 하도록 한다. 즉, 이리 저리 페이지를 만들지 않도록 한다.
+
+- 필럽 v2 작성 할 때, 테마와 디자인 라이브러리르 잘 사용해서 개발 한다..
+  코믹스 다인을 사용한다.
+  - AppContainer
+  - AppCard 
+  - AppButton
+  - AppHeader
+  - AppFooter
+  - TextBody
+
+  그리고 Theme.of(context).textTheme. 에 맞도록 아래의 각각의 커스텀 위젯을 만들고, 내부적으로 디자인을 미리 해 놓도록 한다.
+  - TextBodyLarge
+  - TextBodySmall
+  - TextHeader
+  - TextLarge
+  - TextSmall
+  - TextLabel
+
+
+- moveUserData 기능 동작 확인
 - `/backend/schema` 폴더에 있는 schema 를 없애고 대신 나만의 BuiltValue 코딩을 한다. 굳이, `getDocumentFromData()` 이런 것 없어도 된다. 직접 할 수 있는 것 까지만 하면 된다. Service 를 활용하면된다.
   - 왜냐하면, FF 에서 코드를 자동 생성되다 보니 좀 BuiltValue 가 깨끝하지 못하고, 필요 없는 코드가 복잡하게 얽혀져 있다.
 
@@ -119,12 +139,26 @@ final UsersRecord userRecord =
 - Fireflow 버전 0.1.x 에서 `/users_public_data` 를 지우고 `/users` 컬렉션으로 통일하여, 일관성 있는 작업을 하도록 했다.
   - 다만, 사용자의 메일 주소와 전화번호는 유출되면 안되는 민감한 데이터이므로 보안상의 이유로 다른 컬렉션으로 보관할 수 있는 옵션을 제공한다.
   (참고로, Firebase 에서는 접속 키가 공개되어 별도의 보안 작업을 하지 않으면 쉽게 노출 된다.)
-    - `AppService.instance.init(moveUserData: {'collection': 'users_private', fields: ['email', 'phone_number']})` 를 하면, `/users` 컬렉션에서 email 과 phone number 를 삭제하고, 지정한 컬렉션으로 이동시켜 준다.
+    - `AppService.instance.init(moveUserPrivateDataTo: 'users_private_data')` 를 하면, `/users` 컬렉션에서 email 과 phone number 를 삭제하고, 지정한 컬렉션으로 이동시켜 준다. 현재는 email 과 phone number 두 개만 이동을 한다. 이 두개는 FF 에 의해서 자동으로 지정되는 것으로 그 외의 사용자 이름, 집 주소 등은 직접 다른 컬렉션으로 집어 넣으면 된다.
+  - 이 때, 사용자 데이터를 보관하는 문서는 security rules 로 안전하게 지켜야 한다.
+예
+```txt
+  match /users_private_data/{documentId} {
+    allow read,write: if request.auth.uid == documentId;
+  }
+```
 
 
 ## 사용자 계정 생성, 수정, 삭제
 
 - 사용자 정보는 모두 FF 를 통해서 작업을 하면 된다.
+
+
+## 사용자 개인 정보
+
+- Firebase 를 사용하는 많은 앱들의 문제점이 보안이다. 특히, FF 의 경우, 기본 사용자 문서 저장 collection 이 기본적으로 users 인데, 이 문서가 읽기용으로 공개되는 경우가 대부분이다. 그런데 이 문서에 사용자의 이메일이나 전화번호, 집 주소 등이 들어가는데, 대한민국에서는 매우 민감하게 이 문제를 다루고 있다. 하지만, 안타깝게도 FF 개발을 하는 경우 거의 모두 이러한 문제에 노출되어져 있다.
+
+
 
 ## UserService.instance.my
 
@@ -134,6 +168,9 @@ final UsersRecord userRecord =
 ## UserService.instance.pub
 
 - 사용자 공개 문서가 업데이트 될 때 마다 최신 정보를 유지한다.
+
+
+
 
 ## 사용자 정보 업데이트 할 때 위젯 빌드
 
@@ -147,6 +184,7 @@ final UsersRecord userRecord =
   - `PubDoc` 은 로그인을 한 다음, /users_public_data 문서의 변화를 감지 할 때,
   - `MyStream` 은, 로그인/로그아웃이 변할 때, 다른 위젯을 보여주고자할 때 사용 할 수 있는데, /users 컬렉션 문서가 변할 때 마다 위젯을 rebuild 한다.
   - `PubStream` 은, 로그인/로그아웃이 변할 때, 다른 위젯을 보여주고자할 때 사용 할 수 있는데, /users_public_data 컬렉션 문서가 변할 때 마다 위젯을 rebuild 한다.
+
 
 
 
