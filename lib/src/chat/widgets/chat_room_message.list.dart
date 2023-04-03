@@ -11,8 +11,9 @@ import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
 /// 반드시, 채팅방 문서의 DocumentReference 를 전달받아야 한다.
 /// 채팅방 정보 문서나 모델을 받을 필요가 전혀 없다. 필요한 경우, 채팅방 정보를 생성한다.
 ///
-/// 개선점, 만약, 채팅방 문서를 채팅 목록에서 부터 받아 온다면, 채팅방 화면에는 파라메타로
-/// 채팅방 문서(Model)를 가지고 있을 것이다. 그 model 을 이 화면으로 바로 넘기면,
+/// [chatRoom] 또는 [chatRoomDocumentReference] 둘 중 하나는 입력 되어야 한다.
+///
+/// 채팅방 문서인 chatRoom 을 채팅 목록에서 부터 받아 온다면,
 /// [chatRoomExists] 변수를 최대한 빠르게 true 로 설정하여 채팅메시지를 더 빠르게
 /// 보여 줄 수 있다. 이것은 채팅 화면 깜빡거림을 한번 줄을 수 있는 것이다.
 ///
@@ -29,7 +30,9 @@ class ChatRoomMessageList extends StatefulWidget {
     this.onEmpty,
     this.protocolMessageBuilder,
     this.builder,
-  }) : super(key: key);
+  }) :
+        // assert(chatRoom != null || chatRoomDocumentReference != null),
+        super(key: key);
 
   final double? width;
   final double? height;
