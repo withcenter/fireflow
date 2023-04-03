@@ -12,44 +12,71 @@ class UserSticker extends StatelessWidget {
   const UserSticker({
     super.key,
     required this.user,
+    this.userPhotoRadius = 24,
     required this.onTap,
+    this.title,
+    this.displayName = true,
+    this.uid = false,
+    this.trailing,
+    this.margin = const EdgeInsets.all(0),
+    this.padding = const EdgeInsets.all(16),
+    this.decoration,
   });
 
   /// 사용자의 DocumentReference
   final UserModel user;
+  final double userPhotoRadius;
 
   final void Function(UserModel doc) onTap;
+
+  final Widget? title;
+
+  final bool displayName;
+  final bool uid;
+
+  final Widget? trailing;
+
+  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry padding;
+
+  final BoxDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => onTap(user),
       child: Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(8),
-        ),
+        margin: margin,
+        padding: padding,
+        decoration: decoration,
         child: Row(
           children: [
-            UserAvatar(user: user, padding: const EdgeInsets.only(right: 16)),
+            UserAvatar(
+              user: user,
+              padding: const EdgeInsets.only(right: 16),
+              radius: userPhotoRadius,
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(user.displayName == ''
-                      ? 'No display name'
-                      : user.displayName),
-                  Text(
-                    'UID: ${user.uid}',
-                    style: const TextStyle(fontSize: 10),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  ),
+                  if (title != null) title!,
+                  if (displayName)
+                    Text(user.displayName == ''
+                        ? 'No display name'
+                        : user.displayName),
+                  if (uid)
+                    Text(
+                      'UID: ${user.uid}',
+                      style: const TextStyle(fontSize: 10),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                 ],
               ),
             ),
+            if (trailing != null) trailing!,
           ],
         ),
       ),

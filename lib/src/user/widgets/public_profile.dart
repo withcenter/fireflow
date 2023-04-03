@@ -67,6 +67,12 @@ class _PublicProfileState extends State<PublicProfile> {
             label: 'Display Name',
             text: user?.displayName ?? '',
           ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+              onPressed: () {
+                dog('---- TODO: Follow ${user?.displayName} ----');
+              },
+              child: const Text('Follow'))
         ],
       ),
     );

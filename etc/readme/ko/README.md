@@ -67,16 +67,14 @@
   와 같이 특별 명령을 하면, `onCommand( message ) => Container(...UI Design...)` 가 실행되고, 직접 원하는 커스텀 코드를 수행하고, 결과를 UI 로 보여주게 한다.
 
 
-- Favorite(북마크, 즐겨찾기)는 별도의 컬렉션을 만들어서, 사용자, 글, 코멘트를 favorite 할 수 있게 한다.
-- 단, 채팅방 favorite 은 /users 컬렉션에 보관한다.
+
+- Supabase 키를 key.dart 파일에 저장하지 말고, 관리자 페이지에서 직접 입력 할 수 있도록 한다. 그리고 system_settings/keys 에 보관한다.
+
+
 - 코멘트, 사용자, 채팅메세지 신고 기능.
   - 신고 목록
   - 신고 삭제
   - 관리자가 신고 확인.
-
-
-- Supabase 키를 key.dart 파일에 저장하지 말고, 관리자 페이지에서 직접 입력 할 수 있도록 한다. 그리고 system_settings/keys 에 보관한다.
-
 
 
 # 설계
@@ -132,6 +130,17 @@ final user = UserModel.fromJson(
 final UsersRecord userRecord =
     UsersRecord.getDocumentFromData(user.toJson(), user.reference);
 ```
+
+
+
+
+# 코딩 가이드라인
+
+
+- 각종 다이얼로그에서 가능한 자체적으로 다이얼로그를 닫지 않고, callback 함수를 둔다. 다이얼로그를 열어서, 작업이 종료되어도 계속 화면에 보여 줄 수도 있다. 그래서 다이얼로그를 오픈 한 부모 위젯에서 닫을 수 있도록 한다.
+  - 이 때, 콜백 함수는 `onError`, `onCancel`, `onSuccess` 로 통일을 한다.
+
+
 
 
 # 사용자
@@ -221,6 +230,7 @@ MyStream(login: ..., logout ...);
 ## 사용자가 로그인을 할 때 위젯 rebuild 및 사용자 정보 업데이트
 
 
+
 ### loggedIn, currentUser 와 firebaseUserProviderStream
 
 - `lib/src/auth/firebase_user_provider.dat` 에 정의 된 것으로 currentUser 와 firebaseUserProviderStream 는 한 쌍으로 동작한다.
@@ -253,6 +263,15 @@ MyStream = firebaseUserProviderStream()..listen((_) {});
 - 참고로 currentUser 와 firebaseUserProviderStream 은 FF 의 컨셉을 적용한 것일 뿐 큰 의미를 두지 않는다. 굳이 사용하지 않아도 된다.
 
 
+
+## 차단
+
+
+- 차단은 사용자를 대상으로 할 수 있다. 글, 코멘트, 채팅, 사진 등에 차단을 하면 결국은 그 컨텐츠를 업로드 한 사용자를 차단하는 것이다.
+
+- 내가 다른 사용자를 차단하면, 나의 문서에서 `blockedUsers` 필드에 차단한 사용자들의 reference 가 배열로 저장된다.
+
+- 사용자를 차단하면, 그 사용자의 글, 코멘트, 채팅, 사진 등 그 사용자의 컨텐츠를 볼 수 없다.
 
 # 게시판
 
@@ -423,8 +442,14 @@ ChatRoomMessageList(
 
 
 
-# 코딩 가이드라인
+
+# 즐겨찾기
+
+- 즐겨찾기(favorite)는 각 사용자 마다 다시 보고 싶은 글, 코멘트, 프로필 등을 따로 모아 놓는 것이다.
+  - 참고로, 채팅방 즐겨찾기는 /users 컬렉션에 직접 기록된다.
 
 
-- 각종 다이얼로그에서 가능한 자체적으로 다이얼로그를 닫지 않고, callback 함수를 둔다. 다이얼로그를 열어서, 작업이 종료되어도 계속 화면에 보여 줄 수도 있다. 그래서 다이얼로그를 오픈 한 부모 위젯에서 닫을 수 있도록 한다.
-  - 이 때, 콜백 함수는 `onError`, `onCancel`, `onSuccess` 로 통일을 한다.
+- 스키마 etc/schema/favorite.md 참고
+
+- `type` 은 자동으로 각 컬렉션의 이름을 따서 `users`, `posts`, `comments` 중 하나가 된다. 그래서, `type` 필드는 컬렉션 이름이라고 생각을 해도 된다.
+

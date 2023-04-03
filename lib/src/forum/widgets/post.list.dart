@@ -100,7 +100,7 @@ class _PostListState extends State<PostList> {
                     return TextButton(
                       onPressed: () {
                         setState(() {
-                          print(id);
+                          dog(id);
                           setState(() {
                             categoryId = (id == '') ? null : id;
                           });

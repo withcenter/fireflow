@@ -182,14 +182,24 @@ class _PostViewBodyState extends State<PostViewBody> {
                       ),
 
                     /// 즐겨찾기
-                    ListTile(
-                      leading: const Icon(Icons.star_border),
-                      title: const Text('Favorite'),
-                      onTap: () {
-                        print('favorite');
-                        Navigator.of(context).pop();
-                      },
-                    ),
+                    Favorite(
+                        targetDocumentReference: post.reference,
+                        builder: (favorite) {
+                          return ListTile(
+                            leading: Icon(favorite == null
+                                ? Icons.star_border
+                                : Icons.star),
+                            title: const Text('Favorite'),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              FavoriteService.instance.set(
+                                targetDocumentReference: post.reference,
+                              );
+                            },
+                          );
+                        }),
+
+                    /// 차단
                     if (post.isNotMine)
                       MyDoc(builder: (my) {
                         final contains =
@@ -198,18 +208,23 @@ class _PostViewBodyState extends State<PostViewBody> {
                           leading: Icon(
                               contains ? Icons.block : Icons.circle_outlined),
                           title: const Text('Block'),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.of(context).pop();
-                            UserService.instance.update(
-                              blockedUsers: contains
-                                  ? FieldValue.arrayRemove([user!.reference])
-                                  : FieldValue.arrayUnion([user!.reference]),
-                            );
-                            success(context,
-                                'You have ${contains ? 'un-blocked' : 'blocked'} ${user!.displayName}');
+                            final re = await UserService.instance
+                                .block(user!.reference);
+                            if (mounted) {
+                              success(
+                                context,
+                                ln(re ? 'blocked' : 'unblocked',
+                                    replace: {'name': user!.displayName}),
+                              );
+                              // 'You have ${contains ? 'un-blocked' : 'blocked'} ${user!.displayName}');
+                            }
                           },
                         );
                       }),
+
+                    /// 신고
                     if (post.isNotMine)
                       ListTile(
                         leading: const Icon(Icons.report_outlined),

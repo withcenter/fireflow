@@ -1,5 +1,4 @@
 import 'package:fireflow/fireflow.dart';
-import 'package:fireflow/src/test/test.utils.dart';
 
 Future testFollow() async {
   await loginA();

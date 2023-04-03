@@ -6,10 +6,12 @@ class UserAvatar extends StatelessWidget {
   const UserAvatar({
     super.key,
     required this.user,
+    this.radius,
     this.padding = const EdgeInsets.all(0),
   });
 
   final UserModel user;
+  final double? radius;
   final EdgeInsets padding;
 
   @override
@@ -18,6 +20,7 @@ class UserAvatar extends StatelessWidget {
       return Padding(
         padding: padding,
         child: CircleAvatar(
+          radius: radius,
           backgroundImage: CachedNetworkImageProvider(user.photoUrl!),
         ),
       );

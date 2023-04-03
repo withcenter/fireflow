@@ -10,12 +10,20 @@ class UserStickerStream extends StatelessWidget {
     super.key,
     required this.reference,
     required this.onTap,
+    this.title,
+    this.displayName = true,
+    this.uid = false,
   });
 
   /// 사용자의 DocumentReference
   final DocumentReference reference;
 
   final void Function(UserModel doc) onTap;
+
+  final Widget? title;
+
+  final bool displayName;
+  final bool uid;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +32,9 @@ class UserStickerStream extends StatelessWidget {
       builder: (user) => UserSticker(
         user: user,
         onTap: onTap,
+        title: title,
+        displayName: displayName,
+        uid: uid,
       ),
     );
   }

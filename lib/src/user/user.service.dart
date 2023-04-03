@@ -512,4 +512,18 @@ class UserService {
       'recentPosts': FieldValue.delete(),
     });
   }
+
+  /// 사용자 차단 또는 해제
+  ///
+  ///
+  /// 차단을 했으면 true, 차단 해제를 했으면 false 를 리턴한다.
+  Future<bool> block(DocumentReference userDocumentReference) async {
+    final contains = my.blockedUsers.contains(userDocumentReference);
+    await update(
+      blockedUsers: contains
+          ? FieldValue.arrayRemove([userDocumentReference])
+          : FieldValue.arrayUnion([userDocumentReference]),
+    );
+    return !contains;
+  }
 }
