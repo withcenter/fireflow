@@ -36,7 +36,7 @@ class _PostViewState extends State<PostView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// TODO: (처리) 갑자기 글이 삭제되는 경우, 여기서 에러가 난다.
+        /// 글 내용. 글 제목, 작성자, 날짜, 내용, 사진, 좋아요, 댓글 등.
         StreamBuilder(
           stream: post.reference.snapshots(),
           builder: (context, snapshot) {
@@ -53,7 +53,7 @@ class _PostViewState extends State<PostView> {
               dog('글이 없거나, 글이 갑자기 삭제되면 이곳으로 온다.');
               return const Center(
                 child: Text(
-                    'snapshot.data is not exist. Or the post has just deleted.'),
+                    'The snapshot.data is not exist. Or the post has just deleted.'),
               );
             }
             post = PostModel.fromSnapshot(snapshot.data!);

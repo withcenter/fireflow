@@ -58,8 +58,34 @@ class UserService {
   UserModel get my => _my!;
   set my(UserModel? v) => _my = v;
 
+  /// 내 문서가 변경될 때 마다 발생하는 이벤트
+  ///
+  /// 특히, 최초 앱 실행시, 내 문서를 가져오는 동안에는 null 이 발생한다.
+  /// 따라서, 이 값이 null 이 아닐 때만, 내 문서를 사용할 수 있고, my 등의 관련된 변수를 쓸 수 있다.
+  /// 이 말은, STREAM 이, null 이 아닌 값을 발생할 때 까지 my 를 쓰지 말고 기다려야 한다는 것이다.
+  /// 그렇지 않으면 Null check operator used on null value 에러가 발생한다.
   final BehaviorSubject<UserModel?> onMyChange =
       BehaviorSubject<UserModel?>.seeded(null);
+
+  /// 내 문서가 준비되었는지 여부
+  ///
+  /// 최초 앱 실행시, 내 문서를 가져오는 동안에는 false 이다.
+  /// 이 stream 이 true 를 발생하면,[my] 변수를 사용할 수 있다. 그 전에 사용하면,
+  /// Null check operator used on null value 에러가 발생한다.
+  ///
+  /// 예제. 여러가지 상황에서 [my] 를 사용하는데, 이 때, 앱이 시작 되자 마자 또는 첫 페이지에서 [my] 를
+  /// 사용 할 가능성이 있는 코드라면 아래와 같이 [ready] 를 listen 하여 [my] 를 사용 할 수 있을 때,
+  /// 사용하면 된다.
+  /// ```dart
+  /// UserService.instance.ready.listen((value) {
+  ///   if (value == true) {
+  ///     PostService.instance
+  ///         .get('69vaWG7uJsQvuO1rJEP0')
+  ///         .then((post) => showPostViewDialog(context, post));
+  ///   }
+  /// });
+  /// ```
+  final BehaviorSubject<bool> ready = BehaviorSubject<bool>.seeded(false);
 
   /// 로그아웃
   ///
@@ -67,6 +93,7 @@ class UserService {
   logout() {
     my = null;
     onMyChange.add(null);
+    ready.add(false);
     mySubscription?.cancel();
   }
 
@@ -108,6 +135,7 @@ class UserService {
         // 사용자 문서가 변경되었다.
         my = UserModel.fromSnapshot(snapshot);
         onMyChange.add(my);
+        ready.add(true);
 
         dog('listenUserDocument(): ${my.displayName}, ${my.updatedAt}');
 

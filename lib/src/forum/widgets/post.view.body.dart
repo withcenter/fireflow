@@ -3,6 +3,9 @@ import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
+/// 글 보기 위젯
+///
+/// 글 제목, 작성자, 날짜, 내용, 사진, 좋아요, 댓글 및 기타 버튼 표시.
 class PostViewBody extends StatefulWidget {
   const PostViewBody({
     super.key,
@@ -106,7 +109,7 @@ class _PostViewBodyState extends State<PostViewBody> {
             ),
             const Spacer(),
 
-            /// 게시 글 메뉴: 더보기
+            /// 게시 글 메뉴: 더보기 버튼
             CustomIconPopup(
               icon: Container(
                 padding: const EdgeInsets.all(12),
@@ -129,7 +132,7 @@ class _PostViewBodyState extends State<PostViewBody> {
                 ),
                 child: Column(
                   children: [
-                    // 사용자 프로필
+                    /// 사용자 프로필
                     if (user != null)
                       UserSticker(
                           user: user!,
@@ -137,7 +140,8 @@ class _PostViewBodyState extends State<PostViewBody> {
                             Navigator.of(context).pop();
                             showUserProfile();
                           }),
-                    // 프로필 보기
+
+                    /// 프로필 보기
                     ListTile(
                       leading: const Icon(Icons.person_outline),
                       title: const Text('Profile'),
@@ -146,8 +150,9 @@ class _PostViewBodyState extends State<PostViewBody> {
                         showUserProfile();
                       },
                     ),
-                    // 팔로우
-                    if (my.reference != user?.reference)
+
+                    /// 팔로우
+                    if (post.isNotMine)
                       MyDoc(
                         builder: (my) => ListTile(
                           leading: Icon(my.followings.contains(user!.reference)
@@ -169,15 +174,16 @@ class _PostViewBodyState extends State<PostViewBody> {
                         ),
                       ),
 
-                    // ListTile(
-                    //   leading: const Icon(Icons.star_border),
-                    //   title: const Text('Favorite'),
-                    //   onTap: () {
-                    //     print('favorite');
-                    //     Navigator.of(context).pop();
-                    //   },
-                    // ),
-                    if (my.reference != user?.reference)
+                    /// 즐겨찾기
+                    ListTile(
+                      leading: const Icon(Icons.star_border),
+                      title: const Text('Favorite'),
+                      onTap: () {
+                        print('favorite');
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    if (post.isNotMine)
                       MyDoc(builder: (my) {
                         final contains =
                             my.blockedUsers.contains(user!.reference);
@@ -197,22 +203,27 @@ class _PostViewBodyState extends State<PostViewBody> {
                           },
                         );
                       }),
-                    ListTile(
-                      leading: const Icon(Icons.report_outlined),
-                      title: const Text('Report'),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return ReportForm(
-                              target: post.reference,
-                              reportee: post.userDocumentReference,
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    if (post.isNotMine)
+                      ListTile(
+                        leading: const Icon(Icons.report_outlined),
+                        title: const Text('Report'),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return ReportForm(
+                                target: post.reference,
+                                reportee: post.userDocumentReference,
+                                onSuccess: () {
+                                  Navigator.of(context).pop();
+                                  success(context, ln('report_success'));
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
                   ],
                 ),
               ),

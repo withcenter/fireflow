@@ -90,6 +90,16 @@ class PostModel {
     return 'PostModel{ id: $id, categoryId: $categoryId, title: $title, content: $content, userDocumentReference: $userDocumentReference, createdAt: $createdAt, updatedAt: $updatedAt, hasPhoto: $hasPhoto, noOfComments: $noOfComments, hasComment: $hasComment, deleted: $deleted, likes: $likes, hasLike: $hasLike, files: $files, wasPremiumUser: $wasPremiumUser, emphasizePremiumUserPost: $emphasizePremiumUserPost}';
   }
 
+  /// 내 글이면 참 리턴
+  bool get isMine {
+    return my.reference == userDocumentReference;
+  }
+
+  /// 내 글이 아니면 참 리턴
+  bool get isNotMine {
+    return !isMine;
+  }
+
   /// increase noOfComments by 1.
   ///
   /// This method is used when a new comment is created.

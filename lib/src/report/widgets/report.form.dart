@@ -13,10 +13,12 @@ class ReportForm extends StatefulWidget {
     super.key,
     required this.target,
     required this.reportee,
+    required this.onSuccess,
   });
 
   final DocumentReference target;
   final DocumentReference reportee;
+  final void Function() onSuccess;
 
   @override
   State<ReportForm> createState() => _ReportFormState();
@@ -64,7 +66,8 @@ class _ReportFormState extends State<ReportForm> {
                     reportee: widget.reportee,
                     reason: reportController.text,
                   );
-                  Navigator.of(context).pop();
+                  // Navigator.of(context).pop();
+                  widget.onSuccess();
                 },
                 child: const Text('Report without reason'),
               ),

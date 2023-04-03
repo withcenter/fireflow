@@ -13,7 +13,7 @@ export 'src/push_notifications/messaging.service.dart';
 export 'src/push_notifications/messaging.options.dart';
 export 'src/push_notifications/message.model.dart';
 
-export 'src/forum/model/comment.model.dart';
+export 'src/forum/models/comment.model.dart';
 
 export 'src/supabase/supabase.options.dart';
 export 'src/supabase/supabase.service.dart';
@@ -41,9 +41,9 @@ export 'src/forum/comment.service.dart';
 
 export 'src/forum/widgets/post.list.dart';
 
-export 'src/forum/model/category.model.dart';
-export 'src/forum/model/post.model.dart';
-export 'src/forum/model/feed.model.dart';
+export 'src/forum/models/category.model.dart';
+export 'src/forum/models/post.model.dart';
+export 'src/forum/models/feed.model.dart';
 
 export 'src/forum/widgets/category.list.dart';
 export 'src/forum/widgets/category.create.dart';
@@ -54,6 +54,9 @@ export 'src/forum/widgets/post.view.dart';
 export 'src/forum/widgets/post.view.body.dart';
 export 'src/forum/widgets/comment.view.dart';
 export 'src/forum/widgets/post.list.tile.dart';
+
+export 'src/forum/actions/show_post_view_dialog.dart';
+export 'src/forum/actions/show_post_edit_dialog.dart';
 
 /// Chat
 
@@ -72,7 +75,7 @@ export 'src/chat/widgets/chat_room.app_bar.dart';
 
 /// Report
 export 'src/report/report.service.dart';
-export 'src/report/model/report.model.dart';
+export 'src/report/models/report.model.dart';
 export 'src/report/widgets/report.form.dart';
 export 'src/report/widgets/report.list.dart';
 
