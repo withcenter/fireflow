@@ -18,6 +18,31 @@ Flutter Documents: [English](https://github.com/withcenter/fireflow/blob/main/et
 * If you encounter an error, please create an issue in [fireflow git issue](https://github.com/withcenter/fireflow/issues).
 
 
+# How to start on Development
+
+- Clone `git clone https://github.com/withcenter/fireflow`
+- Run the example by
+  - `cd fireflow/example`
+  - `flutter run`
+
+- You can continue building like this.
+
+
+- If you want to build a real project, then
+  - `cd apps` (or mkdir apps)
+  - then, clone your app.
+  - then, locate the fireflow in pubspec.yaml
+  - then, start building.
+
+- If you are working on FF, then better to use `ffloader`.
+
+
+
+
+
+
+
+
 # Supabase
 
 - Enable the Supabase from FlutterFlow or you will see an error like below
