@@ -12,10 +12,12 @@ class PostList extends StatefulWidget {
     super.key,
     this.categoryId,
     this.onTap,
+    // this.onChat,
   });
 
   final String? categoryId;
   final void Function(PostModel)? onTap;
+  // final void Function(UserModel)? onChat;
 
   @override
   State<PostList> createState() => _PostListState();
@@ -45,75 +47,11 @@ class _PostListState extends State<PostList> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        /// 게시 글 목록 헤더
-        ///
-        /// 뒤로가기 버튼, 글 작성 버튼 등.
-        Container(
-          color: Colors.blue,
-          child: SafeArea(
-            bottom: false,
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: Navigator.of(context).pop,
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.white,
-                  ),
-                ),
-                const Text('글 목록'),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: showPostCreateDialog,
-                ),
-              ],
-            ),
-          ),
-        ),
+        PostListHeader(categoryId: categoryId),
 
-        /// 게시글 목록 상단 카테고리 목록
-        ///
-        /// 관리자 페이지에서 각 카테고리 별, 메뉴에 표시하기 설정을 하면 여기에 표시된다.
-        /// 단, 메뉴에 표시하기로 선택된 카테고리가 하나도 없으면, 메뉴 자체가 나타나지 않고, 전체 카테고리가 표시된다.
-        SizedBox(
-          height: 60,
-          child: FutureBuilder(
-            future: CategoryService.instance.col
-                .where('displayCategoryOnListMenu', isEqualTo: true)
-                .get(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasData) {
-                final docs = snapshot.data!.docs;
-                final Map<String, String> categories = {};
-                categories[''] = '전체';
-                for (final doc in docs) {
-                  final category = CategoryModel.fromSnapshot(doc);
-                  categories[category.id] = category.title;
-                }
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final id = categories.keys.elementAt(index);
-                    final title = categories.values.elementAt(index);
-                    return TextButton(
-                      onPressed: () {
-                        setState(() {
-                          dog(id);
-                          setState(() {
-                            categoryId = (id == '') ? null : id;
-                          });
-                        });
-                      },
-                      child: Text(title),
-                    );
-                  },
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
+        PostListCategories(
+          onTap: (String? id) =>
+              setState(() => categoryId = (id == '') ? null : id),
         ),
 
         /// 게시글 목록
@@ -127,7 +65,11 @@ class _PostListState extends State<PostList> {
                 post: post,
                 onTap: (p) => widget.onTap != null
                     ? widget.onTap!(post)
-                    : showPostViewDialog(context, p),
+                    : showPostViewDialog(
+                        context: context,
+                        post: p,
+                        // onChat: widget.onChat,
+                      ),
               );
             },
             query: query,
@@ -136,33 +78,6 @@ class _PostListState extends State<PostList> {
           ),
         ),
       ],
-    );
-  }
-
-  /// 글 생성에 필요한 전체 기능을 가진 화면을 보여준다.
-  void showPostCreateDialog() {
-    showGeneralDialog(
-      context: context,
-      pageBuilder: (context, a, b) {
-        return Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.arrow_back)),
-            title: const Text('Post Create'),
-          ),
-          body: SingleChildScrollView(
-            child: PostCreate(
-              categoryId: categoryId,
-              onCreated: (post) {
-                Navigator.of(context).pop();
-              },
-            ),
-          ),
-        );
-      },
     );
   }
 }

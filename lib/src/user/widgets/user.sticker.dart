@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,8 @@ import 'package:flutter/material.dart';
 class UserSticker extends StatelessWidget {
   const UserSticker({
     super.key,
-    required this.user,
+    this.user,
+    this.reference,
     this.userPhotoRadius = 24,
     required this.onTap,
     this.title,
@@ -21,10 +23,13 @@ class UserSticker extends StatelessWidget {
     this.margin = const EdgeInsets.all(0),
     this.padding = const EdgeInsets.all(16),
     this.decoration,
-  });
+  })  : assert(user != null || reference != null),
+        assert(user == null || reference == null);
 
   /// 사용자의 DocumentReference
-  final UserModel user;
+  /// [user] 와 [reference] 둘 중 하나만 입력해야 한다.
+  final DocumentReference? reference;
+  final UserModel? user;
   final double userPhotoRadius;
 
   final void Function(UserModel doc) onTap;
@@ -43,6 +48,23 @@ class UserSticker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (user != null) {
+      return _sticker(user!);
+    } else {
+      return FutureBuilder(
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _sticker(snapshot.data as UserModel);
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+        future: UserService.instance.get(reference!.id),
+      );
+    }
+  }
+
+  Widget _sticker(UserModel user) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => onTap(user),

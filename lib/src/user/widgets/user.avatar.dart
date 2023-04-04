@@ -25,7 +25,19 @@ class UserAvatar extends StatelessWidget {
         ),
       );
     } else {
-      return const SizedBox.shrink();
+      return Padding(
+        padding: padding,
+        child: CircleAvatar(
+          radius: radius,
+          backgroundColor: Colors.brown.shade800,
+          child: Text(
+            (user.displayName == "" ? "NA" : user.displayName)
+                .substring(0, 2)
+                .toUpperCase(),
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      );
     }
   }
 }

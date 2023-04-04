@@ -33,6 +33,9 @@ export 'src/user/widgets/user.sticker.stream.dart';
 export 'src/user/widgets/user.doc.dart';
 export 'src/user/widgets/user.avatar.dart';
 export 'src/user/widgets/user.list.dart';
+export 'src/user/widgets/follow.dart';
+export 'src/user/widgets/follow.list.dart';
+export 'src/user/actions/show_user_public_profile_dialog.dart';
 
 /// Forum
 export 'src/forum/post.service.dart';
@@ -57,6 +60,9 @@ export 'src/forum/widgets/post.list.tile.dart';
 
 export 'src/forum/actions/show_post_view_dialog.dart';
 export 'src/forum/actions/show_post_edit_dialog.dart';
+export 'src/forum/actions/show_post_create_dialog.dart';
+export 'src/forum/widgets/post.list.header.dart';
+export 'src/forum/widgets/post.list.categories.dart';
 
 /// Chat
 
@@ -99,6 +105,9 @@ export 'src/favorite/favorite.service.dart';
 export 'src/favorite/models/favorite.model.dart';
 export 'src/favorite/widgets/favorite.dart';
 export 'src/favorite/widgets/favorite.list.dart';
+
+/// Widgets
+export 'src/widgets/icon_text.dart';
 
 /// TEST
 export 'src/test/test.service.dart';

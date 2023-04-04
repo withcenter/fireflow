@@ -13,9 +13,14 @@
 
 
 - [FireFlow](#fireflow)
-- [사용자](#사용자)- [FireFlow](#fireflow)
+- [해야 할 것](#해야-할-것)
+- [설계](#설계)
+- [모델링](#모델링)
+  - [데이터 컨버팅](#데이터-컨버팅)
+- [코딩 가이드라인](#코딩-가이드라인)
 - [사용자](#사용자)
   - [사용자 계정 생성, 수정, 삭제](#사용자-계정-생성-수정-삭제)
+  - [사용자 개인 정보](#사용자-개인-정보)
   - [UserService.instance.my](#userserviceinstancemy)
   - [UserService.instance.pub](#userserviceinstancepub)
   - [사용자 정보 업데이트 할 때 위젯 빌드](#사용자-정보-업데이트-할-때-위젯-빌드)
@@ -23,6 +28,10 @@
     - [MyStream](#mystream)
   - [사용자가 로그인을 할 때 위젯 rebuild 및 사용자 정보 업데이트](#사용자가-로그인을-할-때-위젯-rebuild-및-사용자-정보-업데이트)
     - [loggedIn, currentUser 와 firebaseUserProviderStream](#loggedin-currentuser-와-firebaseuserproviderstream)
+  - [차단](#차단)
+  - [팔로잉](#팔로잉)
+- [게시판](#게시판)
+  - [카테고리](#카테고리)
 - [채팅](#채팅)
   - [DocumentSnapshot 을 Schema Document 로 변경](#documentsnapshot-을-schema-document-로-변경)
   - [채팅방 입장](#채팅방-입장)
@@ -31,6 +40,10 @@
     - [각각의 요소를 개별 디자인](#각각의-요소를-개별-디자인)
     - [전체 디자인을 하나의 커스텀 컴포넌트로 연결](#전체-디자인을-하나의-커스텀-컴포넌트로-연결)
 - [파일 업로드, 사진 업로드](#파일-업로드-사진-업로드)
+- [신고](#신고)
+- [다국어](#다국어)
+  - [단국어 코드 별 치환단어](#단국어-코드-별-치환단어)
+- [즐겨찾기](#즐겨찾기)
 
 
 # 해야 할 것
@@ -134,11 +147,84 @@ final UsersRecord userRecord =
 
 
 
-# 코딩 가이드라인
+# 코딩 가이드
 
 
 - 각종 다이얼로그에서 가능한 자체적으로 다이얼로그를 닫지 않고, callback 함수를 둔다. 다이얼로그를 열어서, 작업이 종료되어도 계속 화면에 보여 줄 수도 있다. 그래서 다이얼로그를 오픈 한 부모 위젯에서 닫을 수 있도록 한다.
   - 이 때, 콜백 함수는 `onError`, `onCancel`, `onSuccess` 로 통일을 한다.
+
+
+
+## 초기화
+
+- 앱을 시작 할 때, `AppService.instance.init()` 을 호출하면 된다. 이 값은 navstack 의 최 하위 페이지(루트)에서 한번만 실행하면 된다.
+
+```dart
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    _router = createRouter();
+
+    //
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      navigatorKey = _router.routerDelegate.navigatorKey;
+
+      AppService.instance.init(
+        context: navigatorKey.currentContext,
+        debug: true,
+        moveUserPrivateDataTo: 'users_private_data',
+        onChat: (UserModel user) => _router.pushNamed(
+          ChatRoomScreen.routeName,
+          queryParams: {
+            'chatRoomDocumentId': ChatService.instance
+                .getSingChatRoomReference(user.reference)
+                .id,
+          },
+        ),
+      );
+    });
+  }
+}
+```
+
+- 만약, 페이지 변경을 할 때 또는 기타 이유로 navstack 에서 `AppService.instance.init()` 을 한 페이지가 사라지면, `BuildContext` 를 새로 지정해 주어야 한다.
+```dart
+AppService.instance.init(
+  context: content,
+);
+```
+
+- 참고, FF팀에서 `Custom code in main.dart` 와 같은 업데이트를 준비하고 있다. 그러면 main.dart 에 커스텀 코드로 `init()` 를 직접 추가 할 수 있으니, 작업이 한결 간편해 질 수 있다.
+
+
+
+
+### 채팅 화면으로 이동
+
+- 직접 모든 UI 작업을 하는 경우는 채팅 화면으로 직접 이동하면 되겠지만, 기본 위젯을 사용하는 경우 채팅 화면으로 이동을 하기 위한 별도의 액션이 준비되어야 한다.
+  - 예를 들면, `메인 화면 -> 채팅 버튼`, `사용자 목록 -> 사용자 프로필 -> 채팅 버튼`, `글 목록 -> 글 읽기 -> 더보기 메뉴 -> 채팅 버튼` 등 여러가지 메뉴에서 다양하게 채팅방으로 이동을 해야하는데, parameter drilling 으로 필요한 값이나 콜백을 전달하기에는 무리가 있다. 그래서 `AppService.instance.init(onChat: ...)` 에 콜백을 전달해서, 채팅 버튼이 탭 될 때마다 그 콜백에서 적절히 채팅방으로 이동을 하면 된다.
+
+```dart
+AppService.instance.init(
+  onChat: (UserModel user) => _router.pushNamed(
+    ChatRoomScreen.routeName,
+    queryParams: {
+      'chatRoomDocumentId': ChatService.instance
+          .getSingChatRoomReference(user.reference)
+          .id,
+    },
+  ),
+);
+```
+
+
+## UI 디자인 작업
+
+- Fireflow 는 각 쓰임새에 맞는 기본 위젯을 제공하며, 원한다면 직접 모든 것을 다 디자인 할 수 있다.
+  - 예를 들어, 팔로잉하고 있는 사용자 목록을 할 때, Fireflow 에서 제공하는 기본 위젯을 써도 되고, 직접 백엔드 쿼리를 통해서 디자인을 해도 된다.
+  - 기본 위젯을 쓰면, 사용자 목록에서 사용자를 탭하면 그 사용자의 프로필이 화면에 나타나는 것 까지 기본 위젯으로 모두 동작한다.
+  - 하지만, 직접 UI 디자인을 하면 그러한 모든 동작을 직접 작업해야 한다.
 
 
 
@@ -263,6 +349,40 @@ MyStream = firebaseUserProviderStream()..listen((_) {});
 - 참고로 currentUser 와 firebaseUserProviderStream 은 FF 의 컨셉을 적용한 것일 뿐 큰 의미를 두지 않는다. 굳이 사용하지 않아도 된다.
 
 
+## 공개프로필
+
+- 아래와 같이, `onTap` 콜백을 두어서, 사용자 공개 프로필을 보여주는 페이지로 이동하는 코드를 직접 작성해도 된다.
+- 또는 `onTap` 을 null 로 지정(또는 생략)하면, 사용자의 공개 프로필을 다이얼로그로 화면에 보여준다.
+
+
+```dart
+import 'package:fireflow/fireflow.dart';
+import 'package:flutter/material.dart';
+import 'package:phil/screens/user/public_profile.screen.dart';
+import 'package:go_router/go_router.dart';
+
+class FollowingScreen extends StatelessWidget {
+  const FollowingScreen({super.key});
+
+  static const String routeName = '/following';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Following'),
+      ),
+      body: FollowList(onTap: (user) {
+        context.pushNamed(PublicProfileScreen.routeName, queryParams: {
+          'uid': user.uid,
+        });
+      }),
+    );
+  }
+}
+```
+
+
 
 ## 차단
 
@@ -272,6 +392,21 @@ MyStream = firebaseUserProviderStream()..listen((_) {});
 - 내가 다른 사용자를 차단하면, 나의 문서에서 `blockedUsers` 필드에 차단한 사용자들의 reference 가 배열로 저장된다.
 
 - 사용자를 차단하면, 그 사용자의 글, 코멘트, 채팅, 사진 등 그 사용자의 컨텐츠를 볼 수 없다.
+
+
+
+
+## 팔로잉
+
+
+- 팔로잉은 사람을 팔로잉하는 것이다. 글이나 코멘트를 팔로잉하는 것이 아니다.
+- 그래서 간단히 사용자 문서의 `followings` 필드에 팔로잉하는 사용자의 reference 를 배열로 저장한다.
+
+
+
+
+
+
 
 # 게시판
 

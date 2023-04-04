@@ -9,6 +9,12 @@ import 'package:flutter/material.dart';
 /// Note that, it can't be inside AppService class. It will cause stack overflow.
 bool gDebug = false;
 
+enum Collections {
+  users,
+  posts,
+  comments,
+}
+
 /// This function is used to print debug message.
 ///
 /// [message] is the message to print

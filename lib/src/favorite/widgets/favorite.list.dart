@@ -12,18 +12,39 @@ class FavoriteList extends StatelessWidget {
       itemBuilder: (context, snapshots, index) {
         final favorite = FavoriteModel.fromSnapshot(snapshots[index]);
 
+        /// 글 즐겨찾기
         if (favorite.type == FavoriteType.posts.name) {
           return FavoritePostTile(
-              postDocumentReference: favorite.targetDocumentReference);
-        }
+            postDocumentReference: favorite.targetDocumentReference,
+          );
 
-        return Row(
-          children: [
-            Text(favorite.targetDocumentReference.path),
-            const SizedBox(width: 10),
-            Text(favorite.createdAt.toString()),
-          ],
-        );
+          /// 코멘트 즐겨찾기
+        } else if (favorite.type == FavoriteType.comments.name) {
+          return Row(
+            children: [
+              Text(
+                favorite.targetDocumentReference.path,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+              const SizedBox(width: 10),
+              Text(favorite.createdAt.toString()),
+            ],
+          );
+
+          /// 사용자 즐겨찾기
+        } else if (favorite.type == FavoriteType.users.name) {
+          return UserSticker(
+            reference: favorite.targetDocumentReference,
+            onTap: (user) => showUserPublicProfileDialog(context, user),
+
+            // Navigator.of(context).pushNamed(
+            //   '/user/${user.reference.id}',
+            // ),
+            trailing: const Icon(Icons.chevron_right),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
       },
       query: FavoriteService.instance.myFavorites,
       itemBuilderType: PaginateBuilderType.listView,

@@ -333,12 +333,22 @@ class UserService {
     return UserModel.fromSnapshot(snapshot.docs[0]);
   }
 
-  /// Follow a user
+  /// 팔로잉
   ///
-  Future follow(DocumentReference userDocumentReference) async {
-    await update(
-      followings: FieldValue.arrayUnion([userDocumentReference]),
-    );
+  /// 팔로잉을 하면 true, 팔로잉을 취소하면 false 를 리턴한다. 따로 unfollow() 함수가 없다.
+  ///
+  Future<bool> follow(DocumentReference userDocumentReference) async {
+    if (my.followings.contains(userDocumentReference)) {
+      await update(
+        followings: FieldValue.arrayRemove([userDocumentReference]),
+      );
+      return false;
+    } else {
+      await update(
+        followings: FieldValue.arrayUnion([userDocumentReference]),
+      );
+      return true;
+    }
   }
 
   /// Reset the followings

@@ -102,6 +102,7 @@ class AppService {
     int noOfRecentPosts = 20,
     SupabaseOptions? supabase,
     MessagingOptions? messaging,
+    void Function(UserModel)? onChat,
   }) {
     dog('AppService.instance.init()');
     _context = context;
@@ -111,6 +112,7 @@ class AppService {
     Config.instance.messaging = messaging;
     Config.instance.displayError = displayError;
     Config.instance.moveUserPrivateDataTo = moveUserPrivateDataTo;
+    Config.instance.onChat = onChat;
 
     ///
     if (initialized == false) {

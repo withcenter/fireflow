@@ -8,7 +8,7 @@ class ReportModel {
   final DocumentReference reference;
   final DocumentReference reporter;
   final DocumentReference reportee;
-  final DocumentReference target;
+  final DocumentReference targetDocumentReference;
   final String reason;
   final DateTime reportedAt;
   final String collection;
@@ -17,7 +17,7 @@ class ReportModel {
     required this.reference,
     required this.reporter,
     required this.reportee,
-    required this.target,
+    required this.targetDocumentReference,
     required this.reason,
     required this.reportedAt,
     required this.collection,
@@ -25,15 +25,16 @@ class ReportModel {
 
   factory ReportModel.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
-    final target = data['target'] as DocumentReference;
+    final targetDocumentReference =
+        data['targetDocumentReference'] as DocumentReference;
     return ReportModel(
       reference: snapshot.reference,
       reporter: data['reporter'] as DocumentReference,
       reportee: data['reportee'] as DocumentReference,
-      target: target,
+      targetDocumentReference: targetDocumentReference,
       reason: data['reason'] as String,
       reportedAt: (data['reportedAt'] as Timestamp).toDate(),
-      collection: target.path.split('/')[0],
+      collection: targetDocumentReference.path.split('/')[0],
     );
   }
 }

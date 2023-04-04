@@ -12,11 +12,13 @@ class PostViewBody extends StatefulWidget {
     required this.post,
     required this.onEdit,
     required this.onDelete,
+    // this.onChat,
   });
 
   final PostModel post;
   final void Function(PostModel) onEdit;
   final void Function(PostModel) onDelete;
+  // final void Function(UserModel)? onChat;
 
   @override
   State<PostViewBody> createState() => _PostViewBodyState();
@@ -151,49 +153,99 @@ class _PostViewBodyState extends State<PostViewBody> {
                       },
                     ),
 
+                    /// 채팅
+                    if (post.isNotMine && Config.instance.onChat != null)
+                      ListTile(
+                        leading: const Icon(Icons.chat_bubble_outline),
+                        title: const Text('Chat'),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Config.instance.onChat!(user!);
+
+                          // if (widget.onChat != null) widget.onChat!(user!);
+                        },
+                      ),
+
                     /// 팔로우
-                    if (post.isNotMine)
-                      MyDoc(
-                        builder: (my) => ListTile(
-                          leading: Icon(my.followings.contains(user!.reference)
+                    Follow(
+                      userDocumentReference: post.userDocumentReference,
+                      builder: (isFollowing) {
+                        return ListTile(
+                          leading: Icon(isFollowing
                               ? Icons.favorite
                               : Icons.favorite_border),
                           title: const Text('Follow'),
                           onTap: () {
-                            final contains =
-                                my.followings.contains(user!.reference);
                             Navigator.of(context).pop();
                             UserService.instance.update(
-                              followings: contains
-                                  ? FieldValue.arrayRemove([user!.reference])
-                                  : FieldValue.arrayUnion([user!.reference]),
+                              followings: isFollowing
+                                  ? FieldValue.arrayRemove(
+                                      [post.userDocumentReference])
+                                  : FieldValue.arrayUnion(
+                                      [post.userDocumentReference]),
                             );
                             success(
                               context,
                               ln(
-                                contains ? 'unfollowed' : 'followed',
+                                isFollowing ? 'unfollowed' : 'followed',
                                 replace: {
                                   'name': user!.displayName,
                                 },
                               ),
                             );
                           },
-                        ),
-                      ),
+                        );
+                      },
+                    ),
+
+                    // if (post.isNotMine)
+                    //   MyDoc(
+                    //     builder: (my) => ListTile(
+                    //       leading: Icon(my.followings.contains(user!.reference)
+                    //           ? Icons.favorite
+                    //           : Icons.favorite_border),
+                    //       title: const Text('Follow'),
+                    //       onTap: () {
+                    //         final contains =
+                    //             my.followings.contains(user!.reference);
+                    //         Navigator.of(context).pop();
+                    //         UserService.instance.update(
+                    //           followings: contains
+                    //               ? FieldValue.arrayRemove([user!.reference])
+                    //               : FieldValue.arrayUnion([user!.reference]),
+                    //         );
+                    //         success(
+                    //           context,
+                    //           ln(
+                    //             contains ? 'unfollowed' : 'followed',
+                    //             replace: {
+                    //               'name': user!.displayName,
+                    //             },
+                    //           ),
+                    //         );
+                    //       },
+                    //     ),
+                    //   ),
 
                     /// 즐겨찾기
                     Favorite(
                         targetDocumentReference: post.reference,
-                        builder: (favorite) {
+                        builder: (isFavorite) {
                           return ListTile(
-                            leading: Icon(favorite == null
-                                ? Icons.star_border
-                                : Icons.star),
+                            leading: Icon(
+                              isFavorite ? Icons.star : Icons.star_border,
+                            ),
                             title: const Text('Favorite'),
                             onTap: () {
                               Navigator.of(context).pop();
                               FavoriteService.instance.set(
                                 targetDocumentReference: post.reference,
+                              );
+
+                              success(
+                                context,
+                                ln(isFavorite ? 'unfavorite' : 'favorite',
+                                    replace: {'name': user!.displayName}),
                               );
                             },
                           );
@@ -235,7 +287,7 @@ class _PostViewBodyState extends State<PostViewBody> {
                             context: context,
                             builder: (context) {
                               return ReportForm(
-                                target: post.reference,
+                                targetDocumentReference: post.reference,
                                 reportee: post.userDocumentReference,
                                 onSuccess: () {
                                   Navigator.of(context).pop();

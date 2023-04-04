@@ -9,26 +9,26 @@ class ReportService {
 
   final col = FirebaseFirestore.instance.collection('reports');
 
-  String targetId(DocumentReference target) {
-    return '${target.path.replaceAll('/', '-')}-${my.uid}';
+  String targetId(DocumentReference targetDocumentReference) {
+    return '${targetDocumentReference.path.replaceAll('/', '-')}-${my.uid}';
   }
 
   /// 신고하기
   Future<ReportModel> create({
-    required DocumentReference target,
+    required DocumentReference targetDocumentReference,
     required DocumentReference reportee,
     required String reason,
   }) async {
     final data = {
       'reporter': my.reference,
       'reportee': reportee,
-      'target': target,
+      'targetDocumentReference': targetDocumentReference,
       'reason': reason,
       'reportedAt': FieldValue.serverTimestamp(),
     };
 
     /// 고유한 문서 ID. 참고, readme.
-    final doc = col.doc(targetId(target));
+    final doc = col.doc(targetId(targetDocumentReference));
 
     await doc.set(data, SetOptions(merge: true));
     final snapshot = await doc.get();
@@ -38,10 +38,11 @@ class ReportService {
   /// 신고한 글 읽어 ReportModel 로 리턴
   ///
   /// 처음 신고하는 글에는 이전에 리포팅된 문서가 없으므로, NULL 을 리턴한다.
-  Future<ReportModel?> get({required DocumentReference target}) async {
+  Future<ReportModel?> get(
+      {required DocumentReference targetDocumentReference}) async {
     final querySnapshot = await col
         .where('reporter', isEqualTo: my.reference)
-        .where('target', isEqualTo: target)
+        .where('targetDocumentReference', isEqualTo: targetDocumentReference)
         .get();
     if (querySnapshot.size == 0) {
       return null;

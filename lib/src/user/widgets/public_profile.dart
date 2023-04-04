@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fireflow/src/user/widgets/block.dart';
 import 'package:flutter/material.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutterflow_widgets/flutterflow_widgets.dart';
@@ -20,10 +21,13 @@ class PublicProfile extends StatefulWidget {
     super.key,
     this.user,
     this.userDocumentReference,
+    // this.onChat,
   });
 
   final UserModel? user;
   final DocumentReference? userDocumentReference;
+
+  // final void Function(UserModel user)? onChat;
 
   @override
   State<PublicProfile> createState() => _PublicProfileState();
@@ -68,11 +72,99 @@ class _PublicProfileState extends State<PublicProfile> {
             text: user?.displayName ?? '',
           ),
           const SizedBox(height: 24),
-          ElevatedButton(
-              onPressed: () {
-                dog('---- TODO: Follow ${user?.displayName} ----');
-              },
-              child: const Text('Follow'))
+          Wrap(
+            children: [
+              /// 채팅
+              if (Config.instance.onChat != null)
+                TextButton.icon(
+                  onPressed: () => Config.instance.onChat!(user!),
+                  icon: const Icon(Icons.chat_bubble_outline),
+                  label: const Text('Chat'),
+                ),
+
+              /// 팔로우
+              TextButton.icon(
+                onPressed: () async {
+                  final re = await UserService.instance.follow(user!.reference);
+
+                  if (mounted) {
+                    success(
+                      context,
+                      ln(re ? 'followed' : 'unfollowed',
+                          replace: {'name': user!.displayName}),
+                    );
+                  }
+                },
+                icon: Follow(
+                    userDocumentReference: user!.reference,
+                    builder: (isFollowing) {
+                      return Icon(
+                        isFollowing ? Icons.favorite : Icons.favorite_border,
+                      );
+                    }),
+                label: const Text('Follow'),
+              ),
+
+              /// 즐겨찾기
+              TextButton.icon(
+                onPressed: () async {
+                  bool re = await FavoriteService.instance
+                      .set(targetDocumentReference: user!.reference);
+
+                  if (mounted) {
+                    success(
+                      context,
+                      ln(re ? 'favorite' : 'unfavorite',
+                          replace: {'name': user!.displayName}),
+                    );
+                  }
+                },
+                icon: Favorite(
+                    targetDocumentReference: user!.reference,
+                    builder: (isFavorite) {
+                      return Icon(
+                        isFavorite ? Icons.star : Icons.star_border,
+                      );
+                    }),
+                label: const Text('Favorite'),
+              ),
+
+              /// 차단
+              Block(
+                userDocumentReference: user!.reference,
+                builder: (isBlocked) => IconText(
+                  icon: isBlocked ? Icons.block : Icons.circle_outlined,
+                  text: 'Block',
+                ),
+                onChange: (value) => success(
+                  context,
+                  ln(value ? 'blocked' : 'unblocked',
+                      replace: {'name': user!.displayName}),
+                ),
+              ),
+
+              /// 신고
+              TextButton.icon(
+                onPressed: () async {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return ReportForm(
+                        targetDocumentReference: user!.reference,
+                        reportee: user!.reference,
+                        onSuccess: () {
+                          Navigator.of(context).pop();
+                          success(context, ln('report_success'));
+                        },
+                      );
+                    },
+                  );
+                },
+                icon: const Icon(Icons.report),
+                label: const Text('Report'),
+              ),
+            ],
+          )
         ],
       ),
     );

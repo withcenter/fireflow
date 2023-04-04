@@ -11,11 +11,13 @@ class PostView extends StatefulWidget {
     required this.post,
     required this.onEdit,
     required this.onDelete,
+    // this.onChat,
   });
 
   final PostModel post;
   final void Function(PostModel) onEdit;
   final void Function(PostModel) onDelete;
+  // final void Function(UserModel)? onChat;
 
   @override
   State<PostView> createState() => _PostViewState();
@@ -61,6 +63,7 @@ class _PostViewState extends State<PostView> {
               post: post,
               onEdit: widget.onEdit,
               onDelete: widget.onDelete,
+              // onChat: widget.onChat,
             );
           },
         ),

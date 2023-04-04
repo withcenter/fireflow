@@ -32,22 +32,8 @@ class FavoritePostTile extends StatelessWidget {
                     title: Text(post.title),
                     trailing: const Icon(Icons.keyboard_arrow_right),
                     onTap: (user) {
-                      showPostViewDialog(context, post);
+                      showPostViewDialog(context: context, post: post);
                     });
-
-                // return ListTile(
-                //   leading: user.photoUrl == null
-                //       ? null
-                //       : CircleAvatar(
-                //           // maxRadius: 64,
-                //           backgroundImage: NetworkImage(user.photoUrl!),
-                //         ),
-                //   title: Text(post.title),
-                //   subtitle: Text(user.displayName),
-                //   onTap: () {
-                //     showPostViewDialog(context, post);
-                //   },
-                // );
               });
         }
       },
