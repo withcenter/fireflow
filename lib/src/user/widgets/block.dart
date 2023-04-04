@@ -34,6 +34,7 @@ class Block extends StatelessWidget {
             bool re = await UserService.instance.block(userDocumentReference);
             onChange(re);
           },
+          behavior: HitTestBehavior.opaque,
           child: builder(my.blockedUsers.contains(userDocumentReference)),
         );
       },

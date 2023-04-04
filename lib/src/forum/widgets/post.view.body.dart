@@ -229,27 +229,44 @@ class _PostViewBodyState extends State<PostViewBody> {
 
                     /// 즐겨찾기
                     Favorite(
-                        targetDocumentReference: post.reference,
-                        builder: (isFavorite) {
-                          return ListTile(
-                            leading: Icon(
-                              isFavorite ? Icons.star : Icons.star_border,
-                            ),
-                            title: const Text('Favorite'),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              FavoriteService.instance.set(
-                                targetDocumentReference: post.reference,
-                              );
+                      targetDocumentReference: post.reference,
+                      builder: (isFavorite) => ListTile(
+                        leading: Icon(
+                          isFavorite ? Icons.star : Icons.star_border,
+                        ),
+                        title: const Text('Favorite'),
+                      ),
+                      onChange: (isFavorite) {
+                        Navigator.of(context).pop();
+                        success(
+                          context,
+                          ln(isFavorite ? 'favorite' : 'unfavorite',
+                              replace: {'name': user!.displayName}),
+                        );
+                      },
+                    ),
+                    // Favorite(
+                    //     targetDocumentReference: post.reference,
+                    //     builder: (isFavorite) {
+                    //       return ListTile(
+                    //         leading: Icon(
+                    //           isFavorite ? Icons.star : Icons.star_border,
+                    //         ),
+                    //         title: const Text('Favorite'),
+                    //         onTap: () {
+                    //           Navigator.of(context).pop();
+                    //           FavoriteService.instance.set(
+                    //             targetDocumentReference: post.reference,
+                    //           );
 
-                              success(
-                                context,
-                                ln(isFavorite ? 'unfavorite' : 'favorite',
-                                    replace: {'name': user!.displayName}),
-                              );
-                            },
-                          );
-                        }),
+                    //           success(
+                    //             context,
+                    //             ln(isFavorite ? 'unfavorite' : 'favorite',
+                    //                 replace: {'name': user!.displayName}),
+                    //           );
+                    //         },
+                    //       );
+                    //     }),
 
                     /// 차단
                     if (post.isNotMine)

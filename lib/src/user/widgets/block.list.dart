@@ -1,8 +1,8 @@
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
-class FollowList extends StatelessWidget {
-  const FollowList({
+class BlockList extends StatelessWidget {
+  const BlockList({
     super.key,
     this.onTap,
   });
@@ -12,14 +12,14 @@ class FollowList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyDocStream(login: (_) {
-      if (my.followings.isEmpty) {
+      if (my.blockedUsers.isEmpty) {
         return EmptyList(
-          title: ln('no_item_in_follow_list'),
+          title: ln('no_item_in_block_list'),
         );
       }
       return ListView(
         children: [
-          for (final ref in my.followings)
+          for (final ref in my.blockedUsers)
             UserSticker(
               reference: ref,
               onTap: (user) => onTap != null

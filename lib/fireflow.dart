@@ -36,6 +36,7 @@ export 'src/user/widgets/user.list.dart';
 export 'src/user/widgets/follow.dart';
 export 'src/user/widgets/follow.list.dart';
 export 'src/user/actions/show_user_public_profile_dialog.dart';
+export 'src/user/widgets/block.list.dart';
 
 /// Forum
 export 'src/forum/post.service.dart';
@@ -108,6 +109,7 @@ export 'src/favorite/widgets/favorite.list.dart';
 
 /// Widgets
 export 'src/widgets/icon_text.dart';
+export 'src/widgets/empty.list.dart';
 
 /// TEST
 export 'src/test/test.service.dart';

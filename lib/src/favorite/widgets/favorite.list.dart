@@ -48,6 +48,8 @@ class FavoriteList extends StatelessWidget {
       },
       query: FavoriteService.instance.myFavorites,
       itemBuilderType: PaginateBuilderType.listView,
+      onEmpty: EmptyList(title: ln('no_item_in_favorite_list')),
+      isLive: true,
     );
   }
 }

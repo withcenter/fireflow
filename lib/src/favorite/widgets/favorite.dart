@@ -13,9 +13,12 @@ class Favorite extends StatelessWidget {
     Key? key,
     required this.targetDocumentReference,
     required this.builder,
+    required this.onChange,
   }) : super(key: key);
   final DocumentReference targetDocumentReference;
   final Widget Function(bool isFavorite) builder;
+
+  final void Function(bool isBlocked) onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +32,30 @@ class Favorite extends StatelessWidget {
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           }
+
+          Widget child;
+
           if (!snapshot.hasData || snapshot.data == null) {
-            return builder(false);
+            child = builder(false);
           } else {
             final QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot;
             if (querySnapshot.docs.isEmpty) {
-              return builder(false);
+              child = builder(false);
             } else {
-              return builder(true);
+              child = builder(true);
             }
           }
+
+          return GestureDetector(
+            key: ValueKey('Favorite-${targetDocumentReference.id}'),
+            onTap: () async {
+              bool re = await FavoriteService.instance
+                  .set(targetDocumentReference: targetDocumentReference);
+              onChange(re);
+            },
+            behavior: HitTestBehavior.opaque,
+            child: child,
+          );
         });
   }
 }

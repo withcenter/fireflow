@@ -84,10 +84,14 @@
 - Supabase 키를 key.dart 파일에 저장하지 말고, 관리자 페이지에서 직접 입력 할 수 있도록 한다. 그리고 system_settings/keys 에 보관한다.
 
 
-- 코멘트, 사용자, 채팅메세지 신고 기능.
-  - 신고 목록
-  - 신고 삭제
+- 채팅메세지 신고 기능.
   - 관리자가 신고 확인.
+
+- 게시글, 채팅방 공유
+- 추천인 기능
+- Android 헤드업 푸시 알림
+- 외부에서 내부로 사진/파일 등 공유
+
 
 
 # 설계
@@ -352,7 +356,7 @@ MyStream = firebaseUserProviderStream()..listen((_) {});
 ## 공개프로필
 
 - 아래와 같이, `onTap` 콜백을 두어서, 사용자 공개 프로필을 보여주는 페이지로 이동하는 코드를 직접 작성해도 된다.
-- 또는 `onTap` 을 null 로 지정(또는 생략)하면, 사용자의 공개 프로필을 다이얼로그로 화면에 보여준다.
+- 또는 `onTap` 을 null 로 지정(또는 생략)하면, 기본 위젯을 사용해서 사용자의 공개 프로필을 다이얼로그로 화면에 보여준다.
 
 
 ```dart
@@ -451,7 +455,17 @@ class FollowingScreen extends StatelessWidget {
 - Fireflow 에서 제공하는 채팅방이나 채팅메시지 데이터는 Firestore 의 DocumentSnapshot 이다. 이 값을 FlutterFlow 에서 인식할 수 있도록
   - `ChatRoomsRecord.getDocumentFromData()` 또는
   - `ChatRoomMessagesRecord.getDocumentFromData()` 와 같이 변환을 해 주어야 한다.
-  - 
+
+
+## 채팅방 목록
+
+- 채팅방 목록에는 `친구`, `채팅`, `오픈챗`과 같이 세개가 있다.
+  - `친구`목록 화면에는 카카오톡과 같이 최 상단에 나의 프로필이 뜨고, 그 아래에 즐겨찾기 목록, 그 아래에 1:1 채팅의 사용자들이 가나다 순으로 표시된다.
+  - `채팅`목록 화면에는 내가 참여한 모든 채팅방 목록이 나타난다. 1:1 챗, 그룹 챗 등이 나열 된다.
+    - 채팅 목록은 새로운 메시지가 있는 채팅 방이 위에 표시되고 그외에는 마지막 채팅 메시지 순으로 목록된다.
+  - `오픈챗`목록 화면에는 공개된 채팅방으로 아무나 입장을 할 수 있다.
+
+
 
 ## 채팅방 입장
 
@@ -573,7 +587,9 @@ ChatRoomMessageList(
 |your_name_is|#name, #uid|회원의 이름을 표시|회원님의 이름은 #name입니다.|
 |followed|#name|팔로우 한 경우|#name님을 팔로우했습니다.|
 |unfollowed|#name|팔로우 해제 한 경우|#name님을 팔로우 해제했습니다.|
-
+|no_item_in_follow_list| | 팔로우 한 회원이 없는 경우 | 아직 다른 회원을 팔로잉하고 있지 않습니다. |
+|no_item_in_block_list| | 블럭 한 회원이 없는 경우 | 아직 다른 회원을 차단하지 않았습니다. |
+|no_item_in_favorite_list| | 즐겨찾기 항목이 없는 경우 | 아직 즐겨찾기 항목이 없습니다. |
 
 
 

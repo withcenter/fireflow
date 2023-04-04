@@ -106,28 +106,39 @@ class _PublicProfileState extends State<PublicProfile> {
               ),
 
               /// 즐겨찾기
-              TextButton.icon(
-                onPressed: () async {
-                  bool re = await FavoriteService.instance
-                      .set(targetDocumentReference: user!.reference);
-
-                  if (mounted) {
-                    success(
-                      context,
-                      ln(re ? 'favorite' : 'unfavorite',
-                          replace: {'name': user!.displayName}),
-                    );
-                  }
-                },
-                icon: Favorite(
-                    targetDocumentReference: user!.reference,
-                    builder: (isFavorite) {
-                      return Icon(
-                        isFavorite ? Icons.star : Icons.star_border,
-                      );
-                    }),
-                label: const Text('Favorite'),
+              Favorite(
+                targetDocumentReference: user!.reference,
+                builder: (isFavorite) => IconText(
+                    icon: isFavorite ? Icons.star : Icons.star_border,
+                    text: 'Favorite'),
+                onChange: (isFavorite) => success(
+                  context,
+                  ln(isFavorite ? 'favorite' : 'unfavorite',
+                      replace: {'name': user!.displayName}),
+                ),
               ),
+              // TextButton.icon(
+              //   onPressed: () async {
+              //     bool re = await FavoriteService.instance
+              //         .set(targetDocumentReference: user!.reference);
+
+              //     if (mounted) {
+              //       success(
+              //         context,
+              //         ln(re ? 'favorite' : 'unfavorite',
+              //             replace: {'name': user!.displayName}),
+              //       );
+              //     }
+              //   },
+              //   icon: Favorite(
+              //       targetDocumentReference: user!.reference,
+              //       builder: (isFavorite) {
+              //         return Icon(
+              //           isFavorite ? Icons.star : Icons.star_border,
+              //         );
+              //       }),
+              //   label: const Text('Favorite'),
+              // ),
 
               /// 차단
               Block(
