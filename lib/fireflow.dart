@@ -76,11 +76,12 @@ export 'src/chat/widgets/chat_room_message.protocol.dart';
 export 'src/chat/widgets/chat_room_info.group_tile.dart';
 export 'src/chat/widgets/chat_room_info.single_tile.dart';
 export 'src/chat/widgets/chat_room_info.tile.dart';
-export 'src/chat/widgets/chat_room.friend_list.dart';
 export 'src/chat/widgets/chat_room_message.empty.dart';
 export 'src/chat/widgets/chat_room_message.dart';
 export 'src/chat/widgets/chat_room.app_bar.dart';
-export 'src/chat/widgets/chat_room.my_list.dart';
+export 'src/chat/widgets/chat_room_list.mine.dart';
+export 'src/chat/widgets/chat_room_list.open.dart';
+export 'src/chat/widgets/chat_room_list.friend.dart';
 
 /// Report
 export 'src/report/report.service.dart';

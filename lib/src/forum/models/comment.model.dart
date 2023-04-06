@@ -77,6 +77,9 @@ class CommentModel {
   /// 코멘트 생성을 위한 reference
   ///
   /// [reference] 는 자기 자신을 가르키는 reference 이다.
+  ///
+  ///
+  /// TODO 함수명을 createCommentData() 로 변경하고, 글로벌 함수로 뺄 것.
   static Map<String, dynamic> toCreate({
     required DocumentReference postDocumentReference,
     // DocumentReference? parentCommentDocumentReference,

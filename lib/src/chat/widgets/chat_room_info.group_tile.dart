@@ -34,7 +34,8 @@ class ChatRoomInfoGroupTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Group chat room'),
-            Text(room.title == '' ? 'No title' : room.title!),
+            Text(room.title == '' ? 'No title' : room.title),
+            Text(room.lastMessage),
             Text('Chat room: ${room.id}'),
           ],
         ),

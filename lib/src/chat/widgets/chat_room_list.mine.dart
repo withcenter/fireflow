@@ -2,8 +2,8 @@ import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
 
-class ChatRoomMyList extends StatelessWidget {
-  const ChatRoomMyList({
+class ChatRoomListMine extends StatelessWidget {
+  const ChatRoomListMine({
     super.key,
     required this.onTap,
   });

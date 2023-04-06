@@ -13,9 +13,10 @@ import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
 ///
 /// [chatRoom] 또는 [chatRoomDocumentReference] 둘 중 하나는 입력 되어야 한다.
 ///
-/// 채팅방 문서인 chatRoom 을 채팅 목록에서 부터 받아 온다면,
-/// [chatRoomExists] 변수를 최대한 빠르게 true 로 설정하여 채팅메시지를 더 빠르게
-/// 보여 줄 수 있다. 이것은 채팅 화면 깜빡거림을 한번 줄을 수 있는 것이다.
+/// [chatRoom] 용도는 단순하다.
+/// 채팅방 문서인 chatRoom 을 채팅 목록에서 부터 받아 온다면, 채팅방 정보가 이미 존재한다는 것이므로,
+/// [chatRoomExists] 변수를 최대한 빠르게 true 로 설정하여 채팅메시지를 (조금 더) 빠르게
+/// 보여준다. 이것은 채팅 화면 깜빡거림을 한번 줄을 수 있는 것이다.
 ///
 ///
 class ChatRoomMessageList extends StatefulWidget {
@@ -110,33 +111,14 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       );
     } else {
       /// 그룹 채팅 방 읽기
+      ///
+      /// - 그리고 오픈챗인 경우에만,
+      /// - 그리고 내가 그 방에 들어가 있지 않으면
+      /// 나를 추가를 한다.
+
       room = await ChatService.instance.getRoom(roomReference.id);
 
-      /// 사용자가 방 안에 들어가 있지 않다면?
-      ///
-      /// 사용자를 추가하고, 입장 메시지를 보낸다.
-      if (room != null &&
-          room!.userDocumentReferences.contains(myReference) == false &&
-          room!.isOpenChat) {
-        try {
-          await room!.upsert(
-            userDocumentReferences: FieldValue.arrayUnion([myReference]),
-          );
-        } catch (e) {
-          dog('에러 발생: 그룹 채팅방 사용자 추가 $e');
-          rethrow;
-        }
-        try {
-          await ChatService.instance.sendMessage(
-            chatRoomDocumentReference: roomReference,
-            protocol: 'enter',
-            protocolTargetUserDocumentReference: myReference,
-          );
-        } catch (e) {
-          dog('에러 발생: 그룹 채팅방 입장 메시지 보내기 $e');
-          rethrow;
-        }
-      }
+      await ChatService.instance.enter(room: room);
 
       /// 그룹 채팅방 업데이트
       ///
@@ -167,7 +149,8 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       });
     }
 
-    /// 새로운 메시지가 있으면, 읽음 표시.
+    /// 채팅방 정보가 업데이트되면, rebuild
+    /// - 새로운 메시지가 있으면, 읽음 표시.
     subscriptionNewMessage = roomReference.snapshots().listen((snapshot) {
       /// 채팅방 정보 업데이트
       room = ChatRoomModel.fromSnapshot(snapshot);
@@ -203,6 +186,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
         final message = ChatRoomMessageModel.fromSnapshot(snapshot);
 
+        /// TODO 이미지/파일 업로드 처리
         if (message.protocol.isNotEmpty) {
           return protocolMessageBuilder(snapshot);
         } else if (message.userDocumentReference == myReference) {
@@ -212,7 +196,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
         }
       },
 
-      /// Get messages of the chat room.
+      /// 채팅방의 메시지 목록 가져오기
       query: FirebaseFirestore.instance
           .collection('chat_room_messages')
           .where('chatRoomDocumentReference', isEqualTo: roomReference)

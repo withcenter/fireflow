@@ -11,26 +11,44 @@ class ChatRoomMessageProtocol extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// TODO 프로토콜 초대, 퇴장, 강퇴 처리.
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          margin: const EdgeInsets.all(8),
-          padding: const EdgeInsets.all(8),
-          constraints: const BoxConstraints(maxWidth: 300),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade100.withAlpha(128),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(8),
-              bottomLeft: Radius.circular(8),
-              bottomRight: Radius.circular(8),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Container(
+            height: 1,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
             ),
           ),
-          child: Text(
-            message.text,
-            textAlign: TextAlign.right,
+        ),
+        const SizedBox(width: 16),
+        if (message.protocol == ChatProtocol.enter.name)
+          UserDoc(
+            reference: message.protocolTargetUserDocumentReference!,
+            builder: (user) => Text(
+              "${user.displayName}님이 입장하셨습니다.",
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 11,
+              ),
+            ),
+          ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Container(
+            height: 1,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+            ),
           ),
         ),
+        const SizedBox(width: 16),
       ],
     );
   }

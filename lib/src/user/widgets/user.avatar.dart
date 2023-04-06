@@ -43,7 +43,9 @@ class UserAvatar extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              (user.displayName == "" ? "NA" : user.displayName)
+              (user.displayName == ""
+                      ? user.uid.substring(0, 2)
+                      : user.displayName)
                   .substring(0, 2)
                   .toUpperCase(),
               style: const TextStyle(color: Colors.white),

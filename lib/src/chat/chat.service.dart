@@ -2,6 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
+enum ChatProtocol {
+  invite,
+  enter,
+  leave,
+  kick,
+}
+
 /// ChatService
 ///
 /// ChatService is a singleton class that provides the chat service.
@@ -98,6 +105,7 @@ class ChatService {
       id: roomReference.id,
       title: title,
       isGroupChat: isGroupChat,
+      isOpenChat: isOpenChat,
       lastMessageSeenBy: FieldValue.arrayUnion([my.reference]),
       userDocumentReferences: userDocumentReferences ?? [my.reference],
       leaveProtocolMessage: true,
@@ -105,23 +113,47 @@ class ChatService {
       urlPreview: true,
     );
 
-    print('createRoom() info: $info');
+    // print('createRoom() info: $info');
 
     await roomReference.set(info);
     return roomReference;
   }
 
-  /// 채팅방 정보를 ChatRoomModel 로 리턴한다.
+  /// 채팅방 문서 [id] 를 입력 받아, DB 로 부터 가져와, ChatRoomModel 로 리턴한다.
   ///
   /// 채팅방 정보가 존재하지 않으면 null 을 리턴한다.
+  ///
+  /// 주의, 나의 reference 가 userDocumentReferences 에 포함되어 있어야 한다. 그렇지 않으면, null 을
+  /// 리턴한다.
+  /// 이러한 이유로, 내가 채팅방에 들어가 있거나, open chat 인 경우에만 채팅방 정보를 가져올 수 있다.
+  ///
+  /// 채팅방 정보를 가져오는 방법은 다음과 같다.
+  /// - 먼저 userDocumentReferences 에 나의 ref 가 포함되어 있는지 쿼리를 한다.
+  ///   - 1:1 채팅이든 그룹 채팅이든 나의 ref 가 userDocumentReferences 에 들어가 있어야 한다.
+  /// - 만약, userDocumentReferences 에 나의 ref 가 포함되어져 있지 않으면, 그리고 그룹 챗 ID 이면,
+  ///   - isOpenChat 으로 검색을 한번 더 검색한다. 즉, open chat 의 경우 채팅방을 읽을 수 있는 것이다.
+  ///
   Future<ChatRoomModel?> getRoom(String id) async {
     final QuerySnapshot querySnapshot = await rooms
         .where('userDocumentReferences', arrayContains: my.reference)
         .where('id', isEqualTo: id)
+        .limit(1)
         .get();
-    if (querySnapshot.size == 0) return null;
+    if (querySnapshot.size != 0) {
+      return ChatRoomModel.fromSnapshot(querySnapshot.docs.first);
+    }
 
-    return ChatRoomModel.fromSnapshot(querySnapshot.docs.first);
+    final QuerySnapshot querySnapshot2 = await rooms
+        .where('isOpenChat', isEqualTo: true)
+        .where('id', isEqualTo: id)
+        .limit(1)
+        .get();
+
+    if (querySnapshot2.size != 0) {
+      return ChatRoomModel.fromSnapshot(querySnapshot2.docs.first);
+    }
+
+    return null;
   }
 
   /// alias of getRoom()
@@ -471,5 +503,41 @@ class ChatService {
       },
       SetOptions(merge: true),
     );
+  }
+
+  /// 나 자신을 오픈 챗 방에 추가한다.
+  Future enter({
+    ChatRoomModel? room,
+  }) async {
+    /// 방 정보가 존재하고,
+    if (room == null) {
+      return;
+    }
+
+    /// 내가 방에 없고, 오픈 챗이면,
+    if (room.userDocumentReferences.contains(my.reference) == false &&
+        room.isOpenChat) {
+      try {
+        /// 나를 추가
+        await upsert(
+          room.reference,
+          userDocumentReferences: FieldValue.arrayUnion([my.reference]),
+        );
+      } catch (e) {
+        dog('에러 발생: 그룹 채팅방 사용자 추가 $e');
+        rethrow;
+      }
+      try {
+        /// 나를 추가 후, enter protocol 메시지를 보낸다.
+        await ChatService.instance.sendMessage(
+          chatRoomDocumentReference: room.reference,
+          protocol: 'enter',
+          protocolTargetUserDocumentReference: my.reference,
+        );
+      } catch (e) {
+        dog('에러 발생: 그룹 채팅방 입장 메시지 보내기 $e');
+        rethrow;
+      }
+    }
   }
 }

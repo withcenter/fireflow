@@ -110,6 +110,8 @@ class PostModel {
   ///
   /// 직접 Map 을 작성하면 오타가 발생 할 수 있기 때문에 안전하게 생성한다.
   /// 글 생성을 할 때, 또는 기타 용도로 쓰면 된다.
+  ///
+  /// TODO 함수명을 createPostData() 로 변경하고, 글로벌 함수로 뺄 것.
   static Map<String, dynamic> toCreate({
     required String categoryId,
     required String title,
@@ -150,6 +152,9 @@ class PostModel {
   /// 글 수정 할 때 Map 이 필요한 데 이 메소드를 사용하면 된다.
   ///
   /// FieldValue 타입을 지정하면 안된다.
+  ///
+  ///
+  /// TODO 함수명을 updatePostData() 로 변경하고, 글로벌 함수로 뺄 것.
   static Map<String, dynamic> toUpdate({
     DocumentReference? postDocumentReference,
     String? title,

@@ -2,8 +2,8 @@ import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_paginate_firestore/paginate_firestore.dart';
 
-class ChatRoomOpenList extends StatelessWidget {
-  const ChatRoomOpenList({
+class ChatRoomListOpen extends StatelessWidget {
+  const ChatRoomListOpen({
     super.key,
     required this.onTap,
   });
@@ -29,7 +29,7 @@ class ChatRoomOpenList extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
                 ),
-                const Text('채팅',
+                const Text('오픈챗',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
