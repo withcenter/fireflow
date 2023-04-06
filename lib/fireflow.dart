@@ -28,7 +28,7 @@ export 'src/user/widgets/user.sticker.dart';
 export 'src/user/model/user.model.dart';
 export 'src/user/widgets/public_profile.dart';
 export 'src/user/widgets/my.doc.dart';
-export 'src/user/widgets/my.doc.stream.dart';
+export 'src/user/widgets/auth.stream.dart';
 export 'src/user/widgets/user.sticker.stream.dart';
 export 'src/user/widgets/user.doc.dart';
 export 'src/user/widgets/user.avatar.dart';
@@ -69,16 +69,18 @@ export 'src/forum/widgets/post.list.categories.dart';
 
 export 'src/chat/widgets/chat_no_of_rooms_with_new_message.dart';
 export 'src/chat/widgets/chat_room_message.list.dart';
-export 'src/chat/widgets/chat_room.message.send.dart';
+export 'src/chat/widgets/chat_room_message.send.dart';
 export 'src/chat/widgets/chat_room_message.mine.dart';
 export 'src/chat/widgets/chat_room_message.others.dart';
 export 'src/chat/widgets/chat_room_message.protocol.dart';
-export 'src/chat/widgets/group_chat_sticker.dart';
-export 'src/chat/widgets/single_chat_sticker.dart';
-export 'src/chat/widgets/chat_room.list.dart';
+export 'src/chat/widgets/chat_room_info.group_tile.dart';
+export 'src/chat/widgets/chat_room_info.single_tile.dart';
+export 'src/chat/widgets/chat_room_info.tile.dart';
+export 'src/chat/widgets/chat_room.friend_list.dart';
 export 'src/chat/widgets/chat_room_message.empty.dart';
 export 'src/chat/widgets/chat_room_message.dart';
 export 'src/chat/widgets/chat_room.app_bar.dart';
+export 'src/chat/widgets/chat_room.my_list.dart';
 
 /// Report
 export 'src/report/report.service.dart';

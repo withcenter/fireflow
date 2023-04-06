@@ -43,8 +43,8 @@ class FavoriteModel {
   }
 }
 
-/// Favorite 문서를 생성하기 위한 함수
-Map<String, dynamic> createFavorite({
+/// Favorite 문서를 생성하기 위한 Data Map 을 만드는 함수
+Map<String, dynamic> createFavoriteData({
   required String type,
   required DocumentReference targetDocumentReference,
 }) {

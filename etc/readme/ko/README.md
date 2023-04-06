@@ -68,6 +68,7 @@
   - TextSmall
   - TextLabel
 
+- Push notification
 
 - moveUserData 기능 동작 확인
 - `/backend/schema` 폴더에 있는 schema 를 없애고 대신 나만의 BuiltValue 코딩을 한다. 굳이, `getDocumentFromData()` 이런 것 없어도 된다. 직접 할 수 있는 것 까지만 하면 된다. Service 를 활용하면된다.
@@ -91,6 +92,19 @@
 - 추천인 기능
 - Android 헤드업 푸시 알림
 - 외부에서 내부로 사진/파일 등 공유
+
+
+- 우선 사용자 문서를 클라이언트에서 캐시 후 사용.
+  - 차 후, 사용자 문서를 realtime database 로 동기화 시키고, 클라이언트에서 캐시를 해서 사용.
+
+
+- Remote Config 말고 그냥 Firestore 관리자 기능으로 할 수 있지만, 어차피, ... 그러한 옵션들이, 의뢰인(운영자)가 할 것이 아니고, 또 한 두번만 설정하면 끝나기 때문에 편한데로 한다.
+  - 어떤것이 편할까? 일단, Remote Config 로 한다.
+
+- 자기 자신과 채팅을 할 수 있다.
+  - Remote config 로 자기 자신과 채팅 할지 말지를 결정 할 수 있도록 한다.
+
+
 
 
 

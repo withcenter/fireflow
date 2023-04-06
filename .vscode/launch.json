@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "PHIL - Simulator",
+      "name": "PHIL - Simulator - M1",
       "cwd": "apps/phil",
       "request": "launch",
       "type": "dart",
@@ -14,13 +14,22 @@
       "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     },
     {
-      "name": "FireFlow 3 - Simulator",
-      "cwd": "apps/fireflow3",
+      "name": "PHIL - iPhone - Debug",
+      "cwd": "apps/phil",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "debug",
-      "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
+      "deviceId": "00008030-000904C80290802E"
+    },
+    {
+      "name": "PHIL - iPhone - Release",
+      "cwd": "apps/phil",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "deviceId": "00008030-000904C80290802E"
     },
     {
       "name": "Phil - Simulator - iMac",
@@ -30,6 +39,15 @@
       "program": "lib/main.dart",
       "flutterMode": "debug",
       "deviceId": "F9C3E82F-C978-4271-8528-F75B5A7A3BD3"
+    },
+    {
+      "name": "FireFlow 3 - Simulator",
+      "cwd": "apps/fireflow3",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "deviceId": "8E7C4276-1F64-453C-AE32-422C59170B93"
     },
     {
       "name": "Free Expression - debug - iPhone11MaxPro",

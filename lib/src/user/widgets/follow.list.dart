@@ -11,7 +11,7 @@ class FollowList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyDocStream(login: (_) {
+    return AuthStream(login: (_) {
       if (my.followings.isEmpty) {
         return EmptyList(
           title: ln('no_item_in_follow_list'),

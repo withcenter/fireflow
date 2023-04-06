@@ -14,7 +14,7 @@ class UserSticker extends StatelessWidget {
     super.key,
     this.user,
     this.reference,
-    this.userPhotoRadius = 24,
+    this.userPhotoSize = 40,
     required this.onTap,
     this.title,
     this.displayName = true,
@@ -30,7 +30,7 @@ class UserSticker extends StatelessWidget {
   /// [user] 와 [reference] 둘 중 하나만 입력해야 한다.
   final DocumentReference? reference;
   final UserModel? user;
-  final double userPhotoRadius;
+  final double userPhotoSize;
 
   final void Function(UserModel doc) onTap;
 
@@ -77,7 +77,7 @@ class UserSticker extends StatelessWidget {
             UserAvatar(
               user: user,
               padding: const EdgeInsets.only(right: 16),
-              radius: userPhotoRadius,
+              size: userPhotoSize,
             ),
             Expanded(
               child: Column(

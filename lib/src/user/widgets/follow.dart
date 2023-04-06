@@ -24,7 +24,7 @@ class Follow extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return MyDocStream(
+    return AuthStream(
       login: (_) {
         return builder(my.followings.contains(userDocumentReference));
       },

@@ -83,11 +83,14 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   void initState() {
     super.initState();
 
+    /// [widget.chatRoom] 이 존재하면, 이미 채팅방이 존재하는 것이므로 빠르게 채팅 메시지 목록을 보여준다.
     chatRoomExists = widget.chatRoom != null;
+
+    /// aysnc/await 을 하지 않으므로, 빠르게 채팅방 목록을 보여준다.
     init();
   }
 
-  /// Initialize the chat room.
+  /// 채팅방 초기화
   ///
   init() async {
     // Set the chat room ref where I am chat in
@@ -98,7 +101,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       ///
       /// 채팅방이 이전에 생성되어져 있지 않으면 생성. 그리고 자신은 메시지 읽음으로 표시.
       ///
-      await ChatService.instance.update(
+      await ChatService.instance.upsert(
         roomReference,
         userDocumentReferences: FieldValue.arrayUnion(youAndMeRef),
         lastMessageSeenBy: FieldValue.arrayUnion([myReference]),
@@ -116,7 +119,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
           room!.userDocumentReferences.contains(myReference) == false &&
           room!.isOpenChat) {
         try {
-          await room!.update(
+          await room!.upsert(
             userDocumentReferences: FieldValue.arrayUnion([myReference]),
           );
         } catch (e) {
@@ -141,7 +144,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
       /// 채팅 메시지 읽음 표시
       /// sub chat room 인지 표시
       try {
-        await ChatService.instance.update(
+        await ChatService.instance.upsert(
           roomReference,
           lastMessageSeenBy: FieldValue.arrayUnion([myReference]),
           isGroupChat: true,
@@ -171,7 +174,7 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
       /// If the signed-in user have not seen the message, then make it seen.
       if (room!.lastMessageSeenBy.contains(myReference) == false) {
-        room!.update(lastMessageSeenBy: FieldValue.arrayUnion([myReference]));
+        room!.upsert(lastMessageSeenBy: FieldValue.arrayUnion([myReference]));
       }
     }, onError: (e) {
       dog('에러 발생: 채팅방 메시지 읽음 표시 $e');
@@ -188,7 +191,10 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
   @override
   Widget build(BuildContext context) {
+    /// 채팅방이 생성되기 전에는 빈 화면을 보여준다.
     if (chatRoomExists == false) return const SizedBox.shrink();
+
+    /// 채팅방이 존재하는 경우, 채팅 메시지 목록을 가져와 보여준다.
     return PaginateFirestore(
       reverse: true,
 

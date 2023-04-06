@@ -67,6 +67,7 @@ Future loginA() => loginAs(TestConfig.emailA);
 Future loginB() => loginAs(TestConfig.emailB);
 Future loginC() => loginAs(TestConfig.emailC);
 Future loginD() => loginAs(TestConfig.emailD);
+Future loginI() => loginAs(TestConfig.emailI);
 
 Future createPost({String? title}) async {
   dog('test.utils.dart -> createPost()');

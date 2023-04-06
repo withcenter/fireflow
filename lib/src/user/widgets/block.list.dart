@@ -11,7 +11,7 @@ class BlockList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyDocStream(login: (_) {
+    return AuthStream(login: (_) {
       if (my.blockedUsers.isEmpty) {
         return EmptyList(
           title: ln('no_item_in_block_list'),

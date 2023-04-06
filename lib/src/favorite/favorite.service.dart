@@ -51,7 +51,7 @@ class FavoriteService {
     final favorite = await get(targetDocumentReference);
 
     if (favorite == null) {
-      await col.add(createFavorite(
+      await col.add(createFavoriteData(
           type: type, targetDocumentReference: targetDocumentReference));
       return true;
     } else {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
@@ -18,16 +20,27 @@ class UserDoc extends StatefulWidget {
 
 class _UserDocState extends State<UserDoc> {
   UserModel? user;
+  StreamSubscription? _subscription;
   @override
   void initState() {
     super.initState();
-    widget.reference.snapshots().listen((doc) {
+    _subscription = widget.reference.snapshots().listen((doc) {
+      // if (doc.exists == false) {
+      //   dog('---> UserDoc() does not exists; ${widget.reference.path}');
+      //   return;
+      // }
       if (mounted) {
         setState(() {
           user = UserModel.fromSnapshot(doc);
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 
   @override

@@ -25,7 +25,7 @@ class Block extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return MyDocStream(
+    return AuthStream(
       login: (_) {
         return GestureDetector(
           key: ValueKey(
