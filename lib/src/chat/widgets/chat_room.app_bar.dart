@@ -28,6 +28,9 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
 
   StreamSubscription? _roomSubscription;
 
+  DocumentReference get otherUserReference => ChatService.instance
+      .getOtherUserDocumentReferenceFromChatRoomReference(room.reference);
+
   @override
   void initState() {
     super.initState();
@@ -68,38 +71,30 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
           },
         ),
 
-        /// 채팅방 이름 또는 상대방 이름
-        Expanded(
-          child: room.isGroupChat
-              ?
+        /// 채팅방 사진. 1:1 채팅 또는 그룹 채팅방 사진
+        room.isGroupChat
+            ?
 
-              /// 그룹 채팅
-              Stack(
-                  children: room.userDocumentReferences
-                      .map((ref) => UserDoc(
-                            reference: ref,
-                            builder: (user) => UserAvatar(
-                              user: user,
-                              padding: const EdgeInsets.only(right: 8),
-                            ),
-                          ))
-                      .toList(),
-                )
-              // Text(room.title)
+            /// 그룹 채팅
+            GroupChatUsers(room: room)
+            // Text(room.title)
 
-              /// 1:1 채팅
-              : UserDoc(
-                  reference: ChatService.instance
-                      .getOtherUserDocumentReferenceFromChatRoomReference(
-                          room.reference),
-                  builder: (user) => Row(children: [
-                    UserAvatar(
-                      user: user,
-                      padding: const EdgeInsets.only(right: 8),
-                    ),
-                    Text(isGroupChat ? room.title : user.displayName),
-                  ]),
+            /// 1:1 채팅
+            : UserDoc(
+                reference: otherUserReference,
+                builder: (user) => UserAvatar(
+                  user: user,
+                  padding: const EdgeInsets.only(right: 8),
                 ),
+              ),
+
+        /// 채팅방 제목 및 기타 메타
+        Expanded(
+          child: isGroupChat
+              ? Text(room.title)
+              : UserDoc(
+                  reference: otherUserReference,
+                  builder: (user) => Text(user.displayName)),
         ),
         CustomIconPopup(
           icon: const Icon(Icons.settings),
@@ -143,6 +138,50 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
           ),
         )
       ],
+    );
+  }
+}
+
+class GroupChatUsers extends StatelessWidget {
+  const GroupChatUsers({
+    super.key,
+    required this.room,
+  });
+
+  final ChatRoomModel room;
+
+  final double avatarSize = 38;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: avatarSize * 1.4,
+      child: Stack(
+        children: [
+          if (room.lastMessageSentBy != null)
+            UserDoc(
+              reference: room.lastMessageSentBy!,
+              builder: (user) => UserAvatar(
+                user: user,
+                size: avatarSize,
+                padding: const EdgeInsets.only(right: 8),
+                border: 2,
+              ),
+            ),
+          Positioned(
+            right: 0,
+            child: UserDoc(
+              reference: room.lastMessageSentBy!,
+              builder: (user) => UserAvatar(
+                user: user,
+                size: avatarSize,
+                padding: const EdgeInsets.only(right: 8),
+                border: 2,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -6,13 +6,18 @@ class UserAvatar extends StatelessWidget {
   const UserAvatar({
     super.key,
     required this.user,
-    this.size = 48,
+    this.size = 40,
     this.padding = const EdgeInsets.all(0),
+    this.border,
+    this.borderColor = Colors.white,
   });
 
   final UserModel user;
   final double size;
   final EdgeInsets padding;
+
+  final double? border;
+  final Color borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +33,12 @@ class UserAvatar extends StatelessWidget {
               image: CachedNetworkImageProvider(user.photoUrl!),
               fit: BoxFit.cover,
             ),
+            border: border == null
+                ? null
+                : Border.all(
+                    color: borderColor,
+                    width: border!,
+                  ),
           ),
         ),
       );
