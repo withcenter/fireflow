@@ -29,6 +29,7 @@ DateTime? tryDateTime(dynamic value) {
 }
 
 warning(BuildContext context, String message) {
+  if (context.mounted == false) return;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text("WARNING: $message",

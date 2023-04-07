@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:fireflow/fireflow.dart';
 import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
 /// 채팅방 상단 헤더
@@ -35,17 +37,26 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
   void initState() {
     super.initState();
 
+    /// 반짝임 방지를 위해서, 상단 앱바를 최대한 적게 랜더링한다.
     _roomSubscription = ChatService.instance.rooms
         .where('userDocumentReferences', arrayContains: my.reference)
         .where('id', isEqualTo: widget.chatRoomDocumentReference.id)
         .limit(1)
         .snapshots()
+
+        /// 마지막 채팅 메시지가 다르면 방 업데이트
+        .distinct((prev, next) =>
+            prev.size > 0 &&
+            (prev.docs.first.data() as Map)['lastMessage'] ==
+                (next.docs.first.data() as Map)['lastMessage'])
         .listen((snapshot) {
       if (snapshot.size == 0) {
         return;
       }
+
       setState(() {
         _room = ChatRoomModel.fromSnapshot(snapshot.docs.first);
+        log(_room.toString());
       });
     });
   }
@@ -76,7 +87,7 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
             ?
 
             /// 그룹 채팅
-            GroupChatUsers(room: room)
+            GroupChatUserPhotos(room: room)
             // Text(room.title)
 
             /// 1:1 채팅
@@ -138,50 +149,6 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
           ),
         )
       ],
-    );
-  }
-}
-
-class GroupChatUsers extends StatelessWidget {
-  const GroupChatUsers({
-    super.key,
-    required this.room,
-  });
-
-  final ChatRoomModel room;
-
-  final double avatarSize = 38;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: avatarSize * 1.4,
-      child: Stack(
-        children: [
-          if (room.lastMessageSentBy != null)
-            UserDoc(
-              reference: room.lastMessageSentBy!,
-              builder: (user) => UserAvatar(
-                user: user,
-                size: avatarSize,
-                padding: const EdgeInsets.only(right: 8),
-                border: 2,
-              ),
-            ),
-          Positioned(
-            right: 0,
-            child: UserDoc(
-              reference: room.lastMessageSentBy!,
-              builder: (user) => UserAvatar(
-                user: user,
-                size: avatarSize,
-                padding: const EdgeInsets.only(right: 8),
-                border: 2,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

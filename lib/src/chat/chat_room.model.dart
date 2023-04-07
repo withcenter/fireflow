@@ -107,6 +107,41 @@ class ChatRoomModel {
       isSubChatRoom: isSubChatRoom,
     );
   }
+
+  /// 채팅방에 가장 마지막으로 입장한 사용자 ref 를 리턴한다.
+  /// 단, 마지막 입장한 사용자가, 마지막 채팅 사용자라면, 그 전 사용자를 리턴.
+  ///
+  /// 참고로, Firestore 의 LIST(array)는 입장한 순서대로 저장된다.
+  DocumentReference get lastEnteredUser {
+    /// 채팅방 입장한 사용자 목록
+    final users = userDocumentReferences;
+
+    /// 채팅방에 입장한 사용자가 없는 경우, 방장이 있으면 방장을 리턴한다.
+    if (users.isEmpty) {
+      if (moderatorUserDocumentReferences != null ||
+          moderatorUserDocumentReferences!.isNotEmpty) {
+        return moderatorUserDocumentReferences!.first;
+      } else {
+        /// 모순 에러. 방장도 없는데, 채팅방에 입장한 사용자도 없는 경우는 없다. 이 경우는 발생하지 말아야 한다.
+        return my.reference;
+      }
+    } else if (users.length == 1) {
+      return users.first;
+
+      /// 마지막 입장한 사용자가, 마지막 채팅 사용자라면, 그 전 사용자를 리턴.
+    } else if (lastMessageSentBy == users.last) {
+      return users[users.length - 2];
+    } else {
+      /// 그 외에는 마지막 입장한 사용자를 리턴.
+      return users.last;
+    }
+  }
+
+  /// 마지막으로 채팅을 보낸 사용자의 ref 를 리턴한다.
+  /// 단, 마지막 채팅 사용자가 없는 경우, 마지막 입장한 사용자를 리턴한다.
+  DocumentReference get lastMessagedUser {
+    return lastMessageSentBy ?? lastEnteredUser;
+  }
 }
 
 /// Chat room 문서를 생성하기 위한 Data Map 을 만드는 함수

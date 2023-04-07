@@ -10,6 +10,7 @@ class UserAvatar extends StatelessWidget {
     this.padding = const EdgeInsets.all(0),
     this.border,
     this.borderColor = Colors.white,
+    this.radius,
   });
 
   final UserModel user;
@@ -18,6 +19,7 @@ class UserAvatar extends StatelessWidget {
 
   final double? border;
   final Color borderColor;
+  final double? radius;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class UserAvatar extends StatelessWidget {
           width: size,
           height: size,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
+            borderRadius: BorderRadius.circular(radius ?? size / 2),
             image: DecorationImage(
               image: CachedNetworkImageProvider(user.photoUrl!),
               fit: BoxFit.cover,

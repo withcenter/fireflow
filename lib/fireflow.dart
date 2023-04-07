@@ -82,6 +82,7 @@ export 'src/chat/widgets/chat_room.app_bar.dart';
 export 'src/chat/widgets/chat_room_list.mine.dart';
 export 'src/chat/widgets/chat_room_list.open.dart';
 export 'src/chat/widgets/chat_room_list.friend.dart';
+export 'src/chat/widgets/group_chat_user_photos.dart';
 
 /// Report
 export 'src/report/report.service.dart';
