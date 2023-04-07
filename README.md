@@ -1,12 +1,13 @@
 
 ![Image Link](https://github.com/withcenter/fireflow/blob/main/res/fireflow-logo.jpg?raw=true "This is image title")
 
-[English](https://github.com/withcenter/fireflow/blob/main/README.md) | [한국어](https://github.com/withcenter/fireflow/blob/main/etc/readme/ko/README.md)
+[English README](https://github.com/withcenter/fireflow/blob/main/etc/readme/en/READMD.md)
+
 
 
 # FireFlow
 
-- 버전 0.0 과 버전 0.1. 에는 큰 차이가 있다. 특히, 핵심 코드 및 컬렉션 구조가 바뀌어서, 0.0 버전과는 호환이 되지 않는다.
+- 버전 0.0 과 버전 0.1. 에는 큰 차이가 있다. 특히, 핵심 코드 및 컬렉션 구조가 바뀌어서, 0.0 버전과는 호환이 되지 않는다. 본 문서는 현재, 0.1.x 버전을 작업과 동시에 업데이트 됨에 따라, 자주 업데이트가 있으므로 유의하기 바란다. 
 - Fireflow 는 FlutterFlow(이하, FF) 를 지원하기 위해서 만들어진 것이다. 그래서, FlutterFlow 와 가능한 많이 호환되도록, 가능한 많이 FlutterFlow 의 컨셉을 따라 하도록 노력했다. 다만, Flutter 를 사용 할 때에는 Fireflow 를 사용하면 된다.
 - 버전 0.1 에서는 기본 위젯을 모두 제공한다. 그래서, 빠르게 앱을 빌드하기 위해서는 기본 제공 위젯을 Custom Widget 으로 연결하면 된다. 그 후 천천히 UI 를 커스터마이징하면 된다.
 - 혹시, 버전 0.0.x 대의 소스 코드를 원하시는 분이 있으면, [0.0.x branch](https://github.com/withcenter/fireflow/tree/0.0.x) 를 참고하면 된다.
