@@ -142,6 +142,15 @@ class ChatRoomModel {
   DocumentReference get lastMessagedUser {
     return lastMessageSentBy ?? lastEnteredUser;
   }
+
+  /// 내가 채팅방의 마지막 메시지를 읽었으면, true 아니면 false 를 리턴한다.
+  bool get isRead {
+    if (lastMessageSentBy == my.reference) {
+      return true;
+    } else {
+      return lastMessageSeenBy.contains(my.reference);
+    }
+  }
 }
 
 /// Chat room 문서를 생성하기 위한 Data Map 을 만드는 함수

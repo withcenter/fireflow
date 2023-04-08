@@ -13,6 +13,8 @@ String? firstString(List<String> strings) {
 /// In some cases the string should be in a moderate format. Like when the post
 /// content is delivered over push notification, it should not be too long and
 /// should not contain any special characters, nor HTML tags.
+///
+@Deprecated('Use safe in String Extension instead.')
 String safeString(String? content) {
   if (content == null) {
     return '';

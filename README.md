@@ -275,6 +275,14 @@ AppService.instance.init(
   - 하지만, 직접 UI 디자인을 하면 그러한 모든 동작을 직접 작업해야 한다.
 
 
+### 색상
+
+- 색상 디자인은 기본적으로 `MaterialTheme(theme: ... )` 에서 하면 된다.
+
+
+- 각종 border, outline 색상은 `outline` 을 쓰면 된다.
+
+
 
 
 # 사용자

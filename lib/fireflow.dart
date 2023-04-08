@@ -104,6 +104,7 @@ export 'src/functions/country_code.dart';
 export 'src/functions/comment_order.dart';
 export 'src/functions/array_functions.dart';
 export 'src/auth/firebase_user_provider.dart';
+export 'src/global_variables.dart';
 
 /// Favorite
 export 'src/favorite/favorite.service.dart';
@@ -114,6 +115,7 @@ export 'src/favorite/widgets/favorite.list.dart';
 /// Widgets
 export 'src/widgets/icon_text.dart';
 export 'src/widgets/empty.list.dart';
+export 'src/widgets/short_date_time.dart';
 
 /// TEST
 export 'src/test/test.service.dart';

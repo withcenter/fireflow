@@ -12,16 +12,24 @@ class GroupChatUserPhotos extends StatelessWidget {
   const GroupChatUserPhotos({
     super.key,
     required this.room,
+    this.border = 1,
+    this.borderColor = Colors.white,
+    this.radius = 14,
+    this.size = 38,
   });
 
   final ChatRoomModel room;
 
-  final double avatarSize = 38;
+  final double size;
+
+  final double border;
+  final Color borderColor;
+  final double radius;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: avatarSize * 1.9,
+      width: size * 1.9,
       child: Stack(
         children: [
           /// 마지막 채팅한 사용자
@@ -33,10 +41,11 @@ class GroupChatUserPhotos extends StatelessWidget {
                 reference: room.lastMessagedUser,
                 builder: (user) => UserAvatar(
                   user: user,
-                  size: avatarSize,
+                  size: size,
                   padding: const EdgeInsets.only(right: 8),
-                  border: 1,
-                  radius: 14,
+                  border: border,
+                  borderColor: borderColor,
+                  radius: radius,
                 ),
               ),
             ),
@@ -49,10 +58,11 @@ class GroupChatUserPhotos extends StatelessWidget {
               reference: room.lastEnteredUser,
               builder: (user) => UserAvatar(
                 user: user,
-                size: avatarSize,
+                size: size,
                 padding: const EdgeInsets.only(right: 8),
-                border: 1,
-                radius: 14,
+                border: border,
+                borderColor: borderColor,
+                radius: radius,
               ),
             ),
           ),

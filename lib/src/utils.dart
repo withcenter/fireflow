@@ -1,4 +1,5 @@
-import 'dart:developer';
+import 'dart:developer' as d;
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ enum Collections {
 ///
 /// [message] is the message to print
 dog(String message) {
-  if (gDebug) log("DOG ---> $message");
+  if (gDebug) d.log("DOG ---> $message");
 }
 
 DateTime? tryDateTime(dynamic value) {
@@ -75,4 +76,51 @@ Future<bool?> confirm(BuildContext context, String title, String message) {
       );
     },
   );
+}
+
+/// 문자열 유틸리티
+extension FireFlowStringUtility on String {
+  /// int 형으로 변환 시도. 실패하면 0을 반환한다.
+  int tryInt() {
+    return int.tryParse(this) ?? 0;
+  }
+
+  /// double 형으로 변환 시도. 실패하면 0을 반환한다.
+  double tryDouble() {
+    return double.tryParse(this) ?? 0;
+  }
+
+  /// 문자열을 각종 상황에서 안전하게 반환한다.
+  /// 예를 들면, 여러 줄의 문자열을 한 줄로 만들거나, HTML 태그를 제거한다.
+  /// 기본 길이는 128자로 제한한다.
+  String get safe {
+    return replaceAll(RegExp(r'<[^>]*>'), '')
+        .replaceAll(RegExp(r"\s+"), " ")
+        .substring(0, min(length, 128));
+  }
+
+  /// 안전한 문자열 32 글자로 리턴한다.
+  String get safe32 {
+    return safe.cut32;
+  }
+
+  /// 안전한 문자열 64 글자로 리턴한다.
+  String get safe64 {
+    return safe.cut64;
+  }
+
+  /// 문자열을 32자 이하로 자른다.
+  String get cut32 {
+    return substring(0, min(length, 32));
+  }
+
+  /// 문자열을 64자 이하로 자른다.
+  String get cut64 {
+    return substring(0, min(length, 64));
+  }
+
+  /// 문자열을 128자 이하로 자른다.
+  String get cut128 {
+    return substring(0, min(length, 128));
+  }
 }

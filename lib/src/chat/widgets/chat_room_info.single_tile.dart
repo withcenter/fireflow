@@ -59,6 +59,14 @@ class ChatRoomInfoSingleTile extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 Column(children: [
+                  Container(
+                    width: 5,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: room.isRead ? Colors.blue : Colors.red,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
                   ShortDateTime(dateTime: room.lastMessageSentAt),
                 ]),
               ],
@@ -67,31 +75,5 @@ class ChatRoomInfoSingleTile extends StatelessWidget {
         );
       },
     );
-  }
-}
-
-class ShortDateTime extends StatelessWidget {
-  const ShortDateTime({
-    super.key,
-    required this.dateTime,
-  });
-
-  final DateTime dateTime;
-
-  @override
-  Widget build(BuildContext context) {
-    String text;
-    if (dateTime.year == DateTime.now().year &&
-        dateTime.month == DateTime.now().month &&
-        dateTime.day == DateTime.now().day) {
-      /// AM 또는 PM 으로 나누어서 text 변수에 저장
-      text = dateTime.hour > 12
-          ? '${dateTime.hour - 12}:${dateTime.minute} PM'
-          : '${dateTime.hour}:${dateTime.minute} AM';
-    } else {
-      text = "${dateTime.year}-${dateTime.month}-${dateTime.day}";
-    }
-
-    return Text(text);
   }
 }

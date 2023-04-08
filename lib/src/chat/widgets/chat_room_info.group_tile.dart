@@ -25,54 +25,27 @@ class ChatRoomInfoGroupTile extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(room),
       child: Container(
-        margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: const Color.fromARGB(255, 175, 137, 23)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            const Text('Group chat room'),
-            Text(room.title == '' ? 'No title' : room.title),
-            Text(room.lastMessage),
-            Text('Chat room: ${room.id}'),
+            GroupChatUserPhotos(
+              room: room,
+              border: 1,
+              borderColor: outline,
+              size: 42,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(room.title == '' ? 'No title' : room.title),
+                  Text(room.lastMessage.safe32),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
-
-    // return StreamBuilder(
-    //     stream: room.reference.snapshots(),
-    //     builder: (context, snapshot) {
-    //       ChatRoomModel room;
-
-    //       /// 문서를 읽는 동안, 파라메타로 넘어온 채팅방 정보를 이용해 랜더링.
-    //       if (snapshot.data!.exists == false) {
-    //         room = room;
-    //       } else {
-    //         room = ChatRoomModel.fromSnapshot(snapshot.data!);
-    //       }
-
-    //       return GestureDetector(
-    //         onTap: () => onTap(room),
-    //         child: Container(
-    //           margin: const EdgeInsets.all(16),
-    //           padding: const EdgeInsets.all(16),
-    //           decoration: BoxDecoration(
-    //             border:
-    //                 Border.all(color: const Color.fromARGB(255, 175, 137, 23)),
-    //           ),
-    //           child: Column(
-    //             crossAxisAlignment: CrossAxisAlignment.start,
-    //             children: [
-    //               const Text('Group chat room'),
-    //               Text(room.title == '' ? 'No title' : room.title!),
-    //               Text('Chat room: ${room.id}'),
-    //             ],
-    //           ),
-    //         ),
-    //       );
-    //     });
   }
 }
