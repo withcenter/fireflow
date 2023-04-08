@@ -58,17 +58,7 @@ class ChatRoomInfoSingleTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Column(children: [
-                  Container(
-                    width: 5,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: room.isRead ? Colors.blue : Colors.red,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  ShortDateTime(dateTime: room.lastMessageSentAt),
-                ]),
+                ChatRoomInfoMeta(room: room),
               ],
             ),
           ),

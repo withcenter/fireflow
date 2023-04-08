@@ -5,9 +5,11 @@ class ShortDateTime extends StatelessWidget {
   const ShortDateTime({
     super.key,
     required this.dateTime,
+    this.style,
   });
 
   final DateTime dateTime;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,6 @@ class ShortDateTime extends StatelessWidget {
       text = "${dateTime.year}-${dateTime.month}-${dateTime.day}";
     }
 
-    return Text(text);
+    return Text(text, style: style);
   }
 }

@@ -43,6 +43,8 @@ class ChatRoomInfoGroupTile extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(width: 16),
+            ChatRoomInfoMeta(room: room),
           ],
         ),
       ),
