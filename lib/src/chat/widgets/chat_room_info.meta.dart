@@ -17,7 +17,7 @@ class ChatRoomInfoMeta extends StatelessWidget {
         dateTime: room.lastMessageSentAt,
         style: const TextStyle(fontSize: 12),
       ),
-      ChatRoomReadBadge(room: room, padding: const EdgeInsets.only(top: 4)),
+      ChatRoomReadBadge(room: room, margin: const EdgeInsets.only(top: 6)),
     ]);
   }
 }

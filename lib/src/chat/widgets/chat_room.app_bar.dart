@@ -98,6 +98,7 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
                   padding: const EdgeInsets.only(right: 8),
                 ),
               ),
+        const SizedBox(width: 8),
 
         /// 채팅방 제목 및 기타 메타
         Expanded(

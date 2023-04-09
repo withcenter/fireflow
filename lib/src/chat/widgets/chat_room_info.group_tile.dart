@@ -1,7 +1,7 @@
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
-/// 그룹 채팅방 정보 표시 스티커
+/// 그룹 채팅방 정보 - 목록에 표시할 때 사용하는 Tile
 ///
 /// 왼쪽에 그룹 관련 사진, 오른쪽에 채팅방 정보(이름, 참여자 수, 최근 메시지, 시간 등)을 표시한다.
 ///
@@ -24,6 +24,7 @@ class ChatRoomInfoGroupTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onTap(room),
+      behavior: HitTestBehavior.opaque,
       child: Container(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -34,12 +35,15 @@ class ChatRoomInfoGroupTile extends StatelessWidget {
               borderColor: outline,
               size: 42,
             ),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(room.title == '' ? 'No title' : room.title),
-                  Text(room.lastMessage.safe32),
+                  if (room.lastMessage.isNotEmpty)
+                    Text(room.lastMessage.safe32),
                 ],
               ),
             ),

@@ -1,7 +1,7 @@
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
-/// 다목적 사용자 정보 표시 스티커
+/// 1:1 채팅방 정보 - 목록에 표시할 때 사용하는 Tile
 ///
 /// 왼쪽에 사용자 프로필 사진, 오른쪽에 사용자 이름, 가입 날짜, 성별, 나일 등을 옵션으로 표시한다.
 /// 사용자 목록/검색, 채팅 목록에 1:1 친구 목록 등에서 사용 될 수 있다.

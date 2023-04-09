@@ -40,12 +40,12 @@ class ChatRoomMessageList extends StatefulWidget {
   final DocumentReference? chatRoomDocumentReference;
   final ChatRoomModel? chatRoom;
 
-  final Widget Function(DocumentSnapshot)? myMessageBuilder;
-  final Widget Function(DocumentSnapshot)? otherMessageBuilder;
-  final Widget Function(DocumentSnapshot)? protocolMessageBuilder;
+  final Widget Function(ChatRoomMessageModel)? myMessageBuilder;
+  final Widget Function(ChatRoomMessageModel)? otherMessageBuilder;
+  final Widget Function(ChatRoomMessageModel)? protocolMessageBuilder;
   final Widget? onEmpty;
 
-  final Widget Function(String type, DocumentSnapshot?)? builder;
+  final Widget Function(String type, ChatRoomMessageModel?)? builder;
 
   @override
   ChatRoomMessageListState createState() => ChatRoomMessageListState();
@@ -150,15 +150,19 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
     }
 
     /// 채팅방 정보가 업데이트되면, rebuild
+    /// - 1:1 채팅에서는 여기서 room 변수가 설정된다. 그룹 채팅은 위에서 room 변수가 설정되었다.
     /// - 새로운 메시지가 있으면, 읽음 표시.
     subscriptionNewMessage = roomReference.snapshots().listen((snapshot) {
       /// 채팅방 정보 업데이트
       room = ChatRoomModel.fromSnapshot(snapshot);
 
-      /// If the signed-in user have not seen the message, then make it seen.
+      /// 최신 메시지를 읽은 사용자 목록에 나를 추가
       if (room!.lastMessageSeenBy.contains(myReference) == false) {
         room!.upsert(lastMessageSeenBy: FieldValue.arrayUnion([myReference]));
       }
+
+      /// 방정보 rebuild
+      setState(() {});
     }, onError: (e) {
       dog('에러 발생: 채팅방 메시지 읽음 표시 $e');
       throw e;
@@ -188,11 +192,11 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
 
         /// TODO 이미지/파일 업로드 처리
         if (message.protocol.isNotEmpty) {
-          return protocolMessageBuilder(snapshot);
+          return protocolMessageBuilder(message);
         } else if (message.userDocumentReference == myReference) {
-          return myMessageBuilder(snapshot);
+          return myMessageBuilder(message);
         } else {
-          return otherMessageBuilder(snapshot);
+          return otherMessageBuilder(message);
         }
       },
 
@@ -212,42 +216,43 @@ class ChatRoomMessageListState extends State<ChatRoomMessageList> {
   }
 
   /// 내 메시지를 내가 보는 경우, widget builder
-  Widget myMessageBuilder(DocumentSnapshot snapshot) {
+  Widget myMessageBuilder(ChatRoomMessageModel message) {
     if (widget.builder != null) {
-      return widget.builder!('my', snapshot);
+      return widget.builder!('my', message);
     }
     if (widget.myMessageBuilder != null) {
-      return widget.myMessageBuilder!(snapshot);
+      return widget.myMessageBuilder!(message);
     } else {
       return ChatRoomMessageMine(
-        message: ChatRoomMessageModel.fromSnapshot(snapshot),
+        room: room!,
+        message: message,
       );
     }
   }
 
   /// 다른 사람의 메시지를 보는 경우,
-  Widget otherMessageBuilder(DocumentSnapshot snapshot) {
+  Widget otherMessageBuilder(ChatRoomMessageModel message) {
     if (widget.builder != null) {
-      return widget.builder!('other', snapshot);
+      return widget.builder!('other', message);
     }
     if (widget.otherMessageBuilder != null) {
-      return widget.otherMessageBuilder!(snapshot);
+      return widget.otherMessageBuilder!(message);
     } else {
       return ChatRoomMessageOthers(
-        message: ChatRoomMessageModel.fromSnapshot(snapshot),
+        message: message,
       );
     }
   }
 
-  Widget protocolMessageBuilder(DocumentSnapshot snapshot) {
+  Widget protocolMessageBuilder(ChatRoomMessageModel message) {
     if (widget.builder != null) {
-      return widget.builder!('protocol', snapshot);
+      return widget.builder!('protocol', message);
     }
     if (widget.protocolMessageBuilder != null) {
-      return widget.protocolMessageBuilder!(snapshot);
+      return widget.protocolMessageBuilder!(message);
     } else {
       return ChatRoomMessageProtocol(
-        message: ChatRoomMessageModel.fromSnapshot(snapshot),
+        message: message,
       );
     }
   }

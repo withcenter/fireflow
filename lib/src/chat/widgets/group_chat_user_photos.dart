@@ -29,10 +29,10 @@ class GroupChatUserPhotos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: size * 1.9,
+      width: room.lastMessageSentBy == null ? size : size * 1.74,
       child: Stack(
         children: [
-          /// 마지막 채팅한 사용자
+          /// 마지막 채팅한 사용자. 방이 막 만들어 진 경우, 마지막 채팅 사용자가 없을 수 있다.
           if (room.lastMessageSentBy != null)
             Align(
               alignment: Alignment.centerLeft,
@@ -42,7 +42,6 @@ class GroupChatUserPhotos extends StatelessWidget {
                 builder: (user) => UserAvatar(
                   user: user,
                   size: size,
-                  padding: const EdgeInsets.only(right: 8),
                   border: border,
                   borderColor: borderColor,
                   radius: radius,
@@ -50,7 +49,7 @@ class GroupChatUserPhotos extends StatelessWidget {
               ),
             ),
 
-          /// 마지막 입장한 사용자
+          /// 마지막 입장한 사용자. 마지막 입장한 사용자는 늘 존재.
           Align(
             alignment: Alignment.centerRight,
             child: UserDoc(
@@ -59,7 +58,6 @@ class GroupChatUserPhotos extends StatelessWidget {
               builder: (user) => UserAvatar(
                 user: user,
                 size: size,
-                padding: const EdgeInsets.only(right: 8),
                 border: border,
                 borderColor: borderColor,
                 radius: radius,

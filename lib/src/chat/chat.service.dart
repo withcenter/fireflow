@@ -168,7 +168,7 @@ class ChatService {
     );
   }
 
-  /// Send a message
+  /// 채팅 메세지 전송
   ///
   /// This method sends a chat message and updates the chat room.
   ///
@@ -185,6 +185,16 @@ class ChatService {
   ///
   /// Note that, this method is asynchronous. It does not wait until the
   /// functions to be finished.
+  ///
+  /// [otherUserDocumentReference] 는 1:1 채팅방의 경우에만 설정한다.
+  /// [chatRoomDocumentReference] 는 그룹 채팅방의 경우에만 설정한다.
+  /// [text] 는 채팅 메시지. 파일/사진 업로드 할 때에는 null.
+  /// [uploadUrl] 는 파일/사진 업로드 할 때에 URL 입력. 채팅 메시지를 전송 할 때에는 null.
+  /// [protocol] 는 프로토콜. 채팅 메시지 할 때에는 null.
+  /// [protocolTargetUserDocumentReference] 는 프로토콜의 대상이 되는 사용자의 reference.
+  /// [replyDisplayName] 는 답장할 때, 답장할 메시지의 사용자 이름.
+  /// [replyText] 는 답장할 때, 답장할 메시지의 내용.
+  ///
   sendMessage({
     DocumentReference? otherUserDocumentReference,
     DocumentReference? chatRoomDocumentReference,

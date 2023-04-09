@@ -151,6 +151,11 @@ class ChatRoomModel {
       return lastMessageSeenBy.contains(my.reference);
     }
   }
+
+  /// 내가 방에 입장했으면, true 아니면 false 를 리턴한다.
+  bool get isMember {
+    return userDocumentReferences.contains(my.reference);
+  }
 }
 
 /// Chat room 문서를 생성하기 위한 Data Map 을 만드는 함수
