@@ -14,8 +14,6 @@ class ChatRoomMessageMine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(message);
-
     /// 채팅 메시지를 오른쪽 정렬하기 위한 Row 컨테이너
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,

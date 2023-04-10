@@ -297,8 +297,8 @@ class UserService {
       'postDocumentReference': post.reference,
       'userDocumentReference': my.reference,
       'createdAt': post.createdAt,
-      'title': safeString(post.title),
-      'content': safeString(post.content),
+      'title': post.title.safe64,
+      'content': post.content.safe64,
       'photoUrl': post.files.isNotEmpty ? post.files.first : null,
     });
   }
