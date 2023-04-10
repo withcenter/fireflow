@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,11 +10,11 @@ import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 class ChatRoomAppBar extends StatefulWidget {
   const ChatRoomAppBar({
     super.key,
-    required this.chatRoomDocumentReference,
+    required this.room,
     required this.onLeave,
   });
 
-  final DocumentReference chatRoomDocumentReference;
+  final ChatRoomModel room;
   final VoidCallback onLeave;
 
   @override
@@ -23,8 +22,7 @@ class ChatRoomAppBar extends StatefulWidget {
 }
 
 class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
-  ChatRoomModel? _room;
-  ChatRoomModel get room => _room!;
+  ChatRoomModel get room => widget.room;
 
   bool get isGroupChat => room.isGroupChat;
 
@@ -37,10 +35,11 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
   void initState() {
     super.initState();
 
+    /// 채팅방 정보가 없데이트 되면, rebuild
     /// 반짝임 방지를 위해서, 상단 앱바를 최대한 적게 랜더링한다.
     _roomSubscription = ChatService.instance.rooms
         .where('userDocumentReferences', arrayContains: my.reference)
-        .where('id', isEqualTo: widget.chatRoomDocumentReference.id)
+        .where('id', isEqualTo: widget.room.id)
         .limit(1)
         .snapshots()
 
@@ -53,11 +52,6 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
       if (snapshot.size == 0) {
         return;
       }
-
-      setState(() {
-        _room = ChatRoomModel.fromSnapshot(snapshot.docs.first);
-        log(_room.toString());
-      });
     });
   }
 
@@ -69,10 +63,6 @@ class _ChatRoomAppBarState extends State<ChatRoomAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    if (_room == null) {
-      return const SizedBox.shrink();
-    }
-
     return Row(
       children: <Widget>[
         IconButton(

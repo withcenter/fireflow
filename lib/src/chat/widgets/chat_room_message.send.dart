@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
@@ -19,12 +18,12 @@ import 'package:flutter/material.dart';
 class ChatRoomMessageSend extends StatefulWidget {
   const ChatRoomMessageSend({
     super.key,
-    required this.chatRoomDocumentReference,
+    required this.room,
     required this.onUpload,
     this.onSend,
   });
 
-  final DocumentReference chatRoomDocumentReference;
+  final ChatRoomModel room;
   final void Function() onUpload;
   final void Function(String)? onSend;
 
@@ -67,7 +66,7 @@ class _ChatRoomMessageSendState extends State<ChatRoomMessageSend> {
               widget.onSend!(text);
             } else {
               ChatService.instance.sendMessage(
-                chatRoomDocumentReference: widget.chatRoomDocumentReference,
+                chatRoomDocumentReference: widget.room.reference,
                 text: text,
               );
             }
