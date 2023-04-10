@@ -36,6 +36,29 @@ class PostListHeader extends StatelessWidget {
                 categoryId: categoryId,
               ),
             ),
+            if (my.admin)
+
+              /// create popup menu button with settings icon and edit menu
+              PopupMenuButton(
+                icon: const Icon(Icons.settings),
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem(
+                      value: 'category',
+                      child: Text('Category Management'),
+                    ),
+                    // const PopupMenuItem(
+                    //   value: 'delete',
+                    //   child: Text('Delete'),
+                    // ),
+                  ];
+                },
+                onSelected: (value) {
+                  if (value == 'category') {
+                    showCategoryListDialog(context: context);
+                  }
+                },
+              ),
           ],
         ),
       ),

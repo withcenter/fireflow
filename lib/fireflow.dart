@@ -65,6 +65,10 @@ export 'src/forum/actions/show_post_create_dialog.dart';
 export 'src/forum/widgets/post.list.header.dart';
 export 'src/forum/widgets/post.list.categories.dart';
 
+export 'src/forum/actions/show_category_create_dialog.dart';
+export 'src/forum/actions/show_category_edit_dialog.dart';
+export 'src/forum/actions/show_category_list_dialog.dart';
+
 /// Chat
 
 export 'src/chat/widgets/chat_no_of_rooms_with_new_message.dart';
