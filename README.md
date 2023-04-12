@@ -131,14 +131,11 @@
 - 우선 사용자 문서를 클라이언트에서 캐시 후 사용.
   - 차 후, 사용자 문서를 realtime database 로 동기화 시키고, 클라이언트에서 캐시를 해서 사용.
 
-
 - Remote Config 말고 그냥 Firestore 관리자 기능으로 할 수 있지만, 어차피, ... 그러한 옵션들이, 의뢰인(운영자)가 할 것이 아니고, 또 한 두번만 설정하면 끝나기 때문에 편한데로 한다.
   - 어떤것이 편할까? 일단, Remote Config 로 한다.
 
 - 자기 자신과 채팅을 할 수 있다.
   - Remote config 로 자기 자신과 채팅 할지 말지를 결정 할 수 있도록 한다.
-
-
 
 
 
@@ -166,12 +163,9 @@
   - 이미지 경로의 경우도, nullable 이 된다. 이름이나 다른 값은 빈 문자열로 초기화를 하면 되지만, 이미지 경로의 경우는 빈 문자열이 초기 값이 될 수 없다.
   - DocumentReference 의 경우도 초기 값이 없으므로 nullable 이다. 단, `List<DocumentReference>` 는 빈 배열로 초기화를 하면 된다.
 
-
 ## 데이터 컨버팅
 
-
 - FF 에서는 built value 를 통해서 데이터 모델링을 한다. Fireflow 에서는 직접 모델을 작성해서 관리한다. 그런데 때로는 이 둘 사이에 데이터 교환이 필요 할 수 있다. 즉, FF 의 Schema Document 를 Fireflow 의 Model 로 변경하고, 반대로 Fireflow 의 Model 을 FF 의 Schema Document 로 변경 해야 할 필요가 있을 때, 아래와 같이 하면 된다. 
-
 
 - FF 의 Schema Document 를 Fireflow Model 로 변경하기
 ```dart
@@ -185,7 +179,6 @@ print(user.displayName);
 print(user.photoUrl);
 ```
 
-
 - Fireflow 의 Model 을 FF 의 Schema Document 로 변경하기
 ```dart
 final user = UserModel.fromJson(
@@ -197,14 +190,10 @@ final UsersRecord userRecord =
 ```
 
 
-
-
 # 코딩 가이드
-
 
 - 각종 다이얼로그에서 가능한 자체적으로 다이얼로그를 닫지 않고, callback 함수를 둔다. 다이얼로그를 열어서, 작업이 종료되어도 계속 화면에 보여 줄 수도 있다. 그래서 다이얼로그를 오픈 한 부모 위젯에서 닫을 수 있도록 한다.
   - 이 때, 콜백 함수는 `onError`, `onCancel`, `onSuccess` 로 통일을 한다.
-
 
 
 ## 초기화
@@ -544,6 +533,38 @@ class _PostListScreenState extends State<PostListScreen> {
       ),
     );
   }
+}
+```
+
+#### 게시판 상단 헤더에서 글 쓰기 버튼 클릭시
+
+
+- 게시판 디자인에서, 상단 헤더를 커스텀 디자인하는 경우, 글 쓰기 버튼을 디자인하고, 사용자가 클릭하면, 글 생성 다이얼로그를 열 수 있도록 해 주어야 한다.
+  글 생성 다이얼로그(또는 페이지)를 직접 디자인 할 수도 있지만, 아래와 같이 기본 글 쓰기 다이얼로그를 사용 할 수 있다.
+
+예제: FF 에서, 글 쓰기 다이얼로그를 여는 커스텀 액션
+```dart
+// Automatic FlutterFlow imports
+import '/backend/backend.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart'; // Imports other custom actions
+import '/flutter_flow/custom_functions.dart'; // Imports custom functions
+import 'package:flutter/material.dart';
+// Begin custom action code
+// DO NOT REMOVE OR MODIFY THE CODE ABOVE!
+
+import 'package:fireflow/fireflow.dart';
+
+Future openPostCreateDialog(
+  BuildContext context,
+  String? categoryId,
+) async {
+  // Add your function code here!
+  showPostCreateDialog(
+    context: context,
+    categoryId: categoryId,
+  );
 }
 ```
 
