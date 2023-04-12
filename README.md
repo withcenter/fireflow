@@ -25,14 +25,16 @@
   - [초기화](#초기화)
     - [채팅 화면으로 이동](#채팅-화면으로-이동)
   - [UI 디자인 작업](#ui-디자인-작업)
+    - [색상](#색상)
 - [사용자](#사용자)
   - [사용자 계정 생성, 수정, 삭제](#사용자-계정-생성-수정-삭제)
   - [사용자 개인 정보](#사용자-개인-정보)
   - [UserService.instance.my](#userserviceinstancemy)
   - [UserService.instance.pub](#userserviceinstancepub)
   - [사용자 정보 업데이트 할 때 위젯 빌드](#사용자-정보-업데이트-할-때-위젯-빌드)
-    - [MyDoc 과 PubDoc](#mydoc-과-pubdoc)
-    - [AuthStream](#AuthStream)
+    - [MyDoc](#mydoc)
+    - [AuthStream](#authstream)
+    - [UserDoc](#userdoc)
   - [사용자가 로그인을 할 때 위젯 rebuild 및 사용자 정보 업데이트](#사용자가-로그인을-할-때-위젯-rebuild-및-사용자-정보-업데이트)
     - [loggedIn, currentUser 와 firebaseUserProviderStream](#loggedin-currentuser-와-firebaseuserproviderstream)
   - [공개프로필](#공개프로필)
@@ -48,11 +50,9 @@
     - [기본 디자인 사용](#기본-디자인-사용)
     - [각각의 요소를 개별 디자인](#각각의-요소를-개별-디자인)
     - [전체 디자인을 하나의 커스텀 컴포넌트로 연결](#전체-디자인을-하나의-커스텀-컴포넌트로-연결)
-- [Chat](#chat)
-  - [Chat Overview](#chat-overview)
-  - [Chat schema](#chat-schema)
-    - [Chat Room collection](#chat-room-collection)
-    - [Chat message collection](#chat-message-collection)
+  - [채팅 컬렉션](#채팅-컬렉션)
+    - [채팅방 컬렉션](#채팅방-컬렉션)
+    - [채팅 메시지 컬렉션](#채팅-메시지-컬렉션)
   - [Logic of chat](#logic-of-chat)
     - [Entering Chat Room to begin chat](#entering-chat-room-to-begin-chat)
     - [How to list my chat rooms](#how-to-list-my-chat-rooms)
@@ -77,7 +77,8 @@
 - [다국어](#다국어)
   - [단국어 코드 별 치환단어](#단국어-코드-별-치환단어)
 - [즐겨찾기](#즐겨찾기)
-
+- [에러, 문제해결](#에러-문제해결)
+  - [UserService.my 가 null 이라고 에러가 나는 경우,](#userservicemy-가-null-이라고-에러가-나는-경우)
 
 # 해야 할 것
 
@@ -481,6 +482,70 @@ class FollowingScreen extends StatelessWidget {
   - 예: `/categories/qna { categoryId: qna }`
 
 
+## 게시판 UI 디자인
+
+### 게시판 상단 헤더
+
+- `PostList` 위젯의 `headerBuilder` 를 통해서 아래와 같이 상단 디자인을 할 수 있다. FF 에서는 커스텀 컴포넌트를 사용하면 된다.
+
+```dart
+import 'package:fireflow/fireflow.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class PostListScreen extends StatefulWidget {
+  const PostListScreen({
+    super.key,
+    this.categoryId,
+  });
+  static const String routeName = '/postList';
+
+  final String? categoryId;
+
+  @override
+  State<PostListScreen> createState() => _PostListScreenState();
+}
+
+class _PostListScreenState extends State<PostListScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PostList(
+        categoryId: widget.categoryId,
+        headerBuilder: (categoryId) {
+          return Container(
+            width: double.infinity,
+            color: Colors.blue,
+            child: SafeArea(
+              bottom: false,
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () => context.pop(),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                      )),
+                  const Text('This is header',
+                      style: TextStyle(color: Colors.white)),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+```
 
 
 # 채팅
@@ -1176,5 +1241,22 @@ And navigate ChatRoom screen passing the `createdChatRoom` as chatRoomDocument p
 
 
 
+
+
+
+# 에러, 문제해결
+
+
+## UserService.my 가 null 이라고 에러가 나는 경우,
+
+- 에러 예
+
+```text
+When the exception was thrown, this was the stack:
+#0      UserService.my (package:fireflow/src/user/user.service.dart:58:26)
+#1      my (package:fireflow/src/user/user.service.dart:11:42)
+```
+
+- `AppService.instance.init()` 을 호출했는지 확인한다.
 
 

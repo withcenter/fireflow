@@ -12,12 +12,15 @@ class PostList extends StatefulWidget {
     super.key,
     this.categoryId,
     this.onTap,
-    // this.onChat,
+    // this.onChat, // 채팅 기능 일시 보류. 채팅에 너무 많은 문서 access 가 발생해, firestore 에서 realtime database 로 수정해야 한다.
+    this.headerBuilder,
   });
 
   final String? categoryId;
   final void Function(PostModel)? onTap;
   // final void Function(UserModel)? onChat;
+
+  final Widget Function(String? categoryId)? headerBuilder;
 
   @override
   State<PostList> createState() => _PostListState();
@@ -47,7 +50,9 @@ class _PostListState extends State<PostList> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        PostListHeader(categoryId: categoryId),
+        widget.headerBuilder != null
+            ? widget.headerBuilder!(categoryId)
+            : PostListHeader(categoryId: categoryId),
 
         PostListCategories(
           onTap: (String? id) =>
