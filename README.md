@@ -473,6 +473,12 @@ class FollowingScreen extends StatelessWidget {
 
 ## 게시판 UI 디자인
 
+### 기본 다지인 사용하기
+
+- Fireflow 에서 제공하는 기본 디지안을 사용하면, 아주 간단하게 게시판 기능을 추가 할 수 있다. 사실 디자인 수정 작업을 하는 것이 시간이 걸리는 일이다.
+
+
+
 ### 게시판 상단 헤더
 
 - `PostList` 위젯의 `headerBuilder` 를 통해서 아래와 같이 상단 디자인을 할 수 있다. FF 에서는 커스텀 컴포넌트를 사용하면 된다.

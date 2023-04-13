@@ -1,3 +1,8 @@
+## 0.1.8
+
+* Add. Refactoring forum. Adding `categoryMenuBuilder` & `itemBuilder`.
+
+
 ## 0.1.7
 
 * Add. Refactoring forum. Adding `headerBuilder`.

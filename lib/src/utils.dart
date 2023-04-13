@@ -90,13 +90,18 @@ extension FireFlowStringUtility on String {
     return double.tryParse(this) ?? 0;
   }
 
+  int get _length {
+    return length < 0 ? 0 : length - 1;
+  }
+
   /// 문자열을 각종 상황에서 안전하게 반환한다.
   /// 예를 들면, 여러 줄의 문자열을 한 줄로 만들거나, HTML 태그를 제거한다.
   /// 기본 길이는 128자로 제한한다.
   String get safe {
+    if (this == '') return this;
     return replaceAll(RegExp(r'<[^>]*>'), '')
         .replaceAll(RegExp(r"\s+"), " ")
-        .substring(0, min(length, 128));
+        .substring(0, min(_length, 128));
   }
 
   /// 안전한 문자열 32 글자로 리턴한다.
@@ -111,16 +116,19 @@ extension FireFlowStringUtility on String {
 
   /// 문자열을 32자 이하로 자른다.
   String get cut32 {
-    return substring(0, min(length, 32));
+    if (this == '') return this;
+    return substring(0, min(_length, 32));
   }
 
   /// 문자열을 64자 이하로 자른다.
   String get cut64 {
-    return substring(0, min(length, 64));
+    if (this == '') return this;
+    return substring(0, min(_length, 64));
   }
 
   /// 문자열을 128자 이하로 자른다.
   String get cut128 {
-    return substring(0, min(length, 128));
+    if (this == '') return this;
+    return substring(0, min(_length, 128));
   }
 }
