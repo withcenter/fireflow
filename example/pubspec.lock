@@ -432,10 +432,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutterflow_widgets
-      sha256: c120d488f46ca40e3ea8450d73ecb7a5ff90987951eeec581f4a88e810078831
+      sha256: "210c000b7fa8996d6e399b61583de5917aea0f145776c968be7a4a693e59a8ca"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.38"
+    version: "0.0.47"
   from_css_color:
     dependency: transitive
     description:
@@ -1093,10 +1093,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_web
-      sha256: ed949a3df5fe88533254bbdd242c3d8eea19ecbc4e7af90da84ef087533f584b
+      sha256: fb3bbeaf0302cb0c31340ebd6075487939aa1fe3b379d1a8784ef852b679940e
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.12"
+    version: "2.0.15"
   wakelock:
     dependency: transitive
     description:

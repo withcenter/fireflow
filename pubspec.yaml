@@ -77,7 +77,7 @@ dependencies:
   # Saving data locally. Used in chat service.
   # shared_preferences: 2.0.15
 
-  flutterflow_widgets: ^0.0.29
+  flutterflow_widgets: ^0.0.47
 
   # google map
   # google_maps: 6.2.0
