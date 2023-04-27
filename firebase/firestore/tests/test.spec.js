@@ -14,17 +14,13 @@ const authD = { uid: D, email: D + "@gmail.com" };
 
 // Get Firestore DB connection with user auth
 function db(auth = null) {
-  return firebase
-    .initializeTestApp({ projectId: TEST_PROJECT_ID, auth: auth })
-    .firestore();
+  return firebase.initializeTestApp({ projectId: TEST_PROJECT_ID, auth: auth }).firestore();
 }
 
 // Get Firestore DB connection with admin auth
 // Note, if you are logged in as admin, it will pass the security check.
 function admin() {
-  return firebase
-    .initializeAdminApp({ projectId: TEST_PROJECT_ID })
-    .firestore();
+  return firebase.initializeAdminApp({ projectId: TEST_PROJECT_ID }).firestore();
 }
 
 // Get user document reference with the user permission.
@@ -83,7 +79,7 @@ async function createPost(data) {
 }
 
 /// Create chat room with users
-async function createChatRoom(users) {
+async function createRoom(users) {
   const ref = await admin()
     .collection("chat_rooms")
     .add({
@@ -102,7 +98,7 @@ beforeEach(async () => {
 
 describe("Firestore security test", () => {
   it("Chat room read", async () => {
-    const snapshot = await createChatRoom([A]);
+    const snapshot = await createRoom([A]);
 
     const bToBeFailed = db(authB).collection("chat_rooms").doc(snapshot.id);
     await firebase.assertFails(bToBeFailed.get());
@@ -111,7 +107,7 @@ describe("Firestore security test", () => {
     await firebase.assertSucceeds(aToBeSucceed.get());
   });
   it("Chat room list", async () => {
-    let snapshot = await createChatRoom([A, C]);
+    let snapshot = await createRoom([A, C]);
     // const adminList = await admin()
     //   .collection("chat_rooms")
     //   .where("usersDocumentReferences", "array-contains", [userDoc(B)])
@@ -146,7 +142,7 @@ describe("Firestore security test", () => {
   });
 
   it("Chat room update - expect failure", async () => {
-    const snapshot = await createChatRoom([A]);
+    const snapshot = await createRoom([A]);
     await firebase.assertFails(
       db(authB).collection("chat_rooms").doc(snapshot.id).update({
         lastMessage: "Hello",
@@ -154,7 +150,7 @@ describe("Firestore security test", () => {
     );
   });
   it("Chat room update - expect success", async () => {
-    const snapshot = await createChatRoom([A, C]);
+    const snapshot = await createRoom([A, C]);
     // console.log(snapshot.data().users.map((e) => e.id));
     await firebase.assertSucceeds(
       db(authA).collection("chat_rooms").doc(snapshot.id).update({
@@ -163,7 +159,7 @@ describe("Firestore security test", () => {
     );
   });
   it("Chat room create and create message", async () => {
-    const snapshot = await createChatRoom([A, C]);
+    const snapshot = await createRoom([A, C]);
 
     await firebase.assertSucceeds(
       db(authA)
@@ -197,7 +193,7 @@ describe("Firestore security test", () => {
   });
 
   it("Chat room create and read message", async () => {
-    const snapshot = await createChatRoom([A, C]);
+    const snapshot = await createRoom([A, C]);
 
     await firebase.assertSucceeds(
       db(authA)
@@ -232,7 +228,7 @@ describe("Firestore security test", () => {
   });
 
   it("Chat room collection query - by moderator", async () => {
-    const snapshot = await createChatRoom([A, C]);
+    const snapshot = await createRoom([A, C]);
 
     await snapshot.ref.update({
       moderatorUserDocumentReferences: [userDoc(B)],
@@ -253,7 +249,7 @@ describe("Firestore security test", () => {
 
   it("Chat room update - Not by moderator", async () => {
     // User A, C enters
-    const snapshot = await createChatRoom([A, C]);
+    const snapshot = await createRoom([A, C]);
 
     // User B is not a moderator and tries to update
     await firebase.assertFails(
@@ -295,7 +291,7 @@ describe("Firestore security test", () => {
   });
 
   it("Chat message edit", async () => {
-    const snapshot = await createChatRoom([A, C]);
+    const snapshot = await createRoom([A, C]);
 
     const ref = await db(authA)
       .collection("chat_room_messages")
@@ -308,26 +304,17 @@ describe("Firestore security test", () => {
     const messageDoc = await ref.get();
 
     await firebase.assertFails(
-      db(authB)
-        .collection("chat_room_messages")
-        .doc(messageDoc.id)
-        .update({ text: "up" })
+      db(authB).collection("chat_room_messages").doc(messageDoc.id).update({ text: "up" })
     );
     await firebase.assertFails(
-      db(authC)
-        .collection("chat_room_messages")
-        .doc(messageDoc.id)
-        .update({ text: "up" })
+      db(authC).collection("chat_room_messages").doc(messageDoc.id).update({ text: "up" })
     );
     await firebase.assertSucceeds(
-      db(authA)
-        .collection("chat_room_messages")
-        .doc(messageDoc.id)
-        .update({ text: "up" })
+      db(authA).collection("chat_room_messages").doc(messageDoc.id).update({ text: "up" })
     );
   });
   it("Chat message delete", async () => {
-    const snapshot = await createChatRoom([A, C]);
+    const snapshot = await createRoom([A, C]);
 
     const ref = await db(authA)
       .collection("chat_room_messages")
@@ -351,7 +338,7 @@ describe("Firestore security test", () => {
   });
 
   it("Subscribe", async () => {
-    let snapshot = await createChatRoom([A, B, C]);
+    let snapshot = await createRoom([A, B, C]);
     let ref = snapshot.ref;
     let data = snapshot.data();
     assert(data.unsubscribedUserDocumentReferences.length === 0);
@@ -362,16 +349,13 @@ describe("Firestore security test", () => {
         .collection("chat_rooms")
         .doc(snapshot.id)
         .update({
-          unsubscribedUserDocumentReferences:
-            firebase.firestore.FieldValue.arrayUnion(userDoc(A)),
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayUnion(userDoc(A)),
         })
     );
 
     snapshot = await ref.get();
     assert(snapshot.data().unsubscribedUserDocumentReferences.length === 1);
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(A).id
-    );
+    assert(snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(A).id);
 
     // [ A ] -> [ ]
     await firebase.assertSucceeds(
@@ -379,8 +363,7 @@ describe("Firestore security test", () => {
         .collection("chat_rooms")
         .doc(snapshot.id)
         .update({
-          unsubscribedUserDocumentReferences:
-            firebase.firestore.FieldValue.arrayRemove(userDoc(A)),
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(A)),
         })
     );
 
@@ -392,28 +375,15 @@ describe("Firestore security test", () => {
       .collection("chat_rooms")
       .doc(snapshot.id)
       .update({
-        unsubscribedUserDocumentReferences: [
-          userDoc(A),
-          userDoc(B),
-          userDoc(C),
-          userDoc(D),
-        ],
+        unsubscribedUserDocumentReferences: [userDoc(A), userDoc(B), userDoc(C), userDoc(D)],
       });
 
     snapshot = await ref.get();
     assert(snapshot.data().unsubscribedUserDocumentReferences.length === 4);
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(A).id
-    );
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[1].id === userDoc(B).id
-    );
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[2].id === userDoc(C).id
-    );
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[3].id === userDoc(D).id
-    );
+    assert(snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(A).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[1].id === userDoc(B).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[2].id === userDoc(C).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[3].id === userDoc(D).id);
 
     // Failure. It is not allowed to remove other users.
     //
@@ -423,8 +393,7 @@ describe("Firestore security test", () => {
         .collection("chat_rooms")
         .doc(snapshot.id)
         .update({
-          unsubscribedUserDocumentReferences:
-            firebase.firestore.FieldValue.arrayRemove(userDoc(D)),
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(D)),
         })
     );
     // [ A, B, C, D] -> [ B, C, D ]
@@ -433,22 +402,15 @@ describe("Firestore security test", () => {
         .collection("chat_rooms")
         .doc(snapshot.id)
         .update({
-          unsubscribedUserDocumentReferences:
-            firebase.firestore.FieldValue.arrayRemove(userDoc(A)),
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(A)),
         })
     );
 
     snapshot = await ref.get();
     assert(snapshot.data().unsubscribedUserDocumentReferences.length === 3);
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(B).id
-    );
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[1].id === userDoc(C).id
-    );
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[2].id === userDoc(D).id
-    );
+    assert(snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(B).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[1].id === userDoc(C).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[2].id === userDoc(D).id);
 
     // Trying to remove a user ref that is not in the array. So, the update action does not happen.
     //
@@ -458,8 +420,7 @@ describe("Firestore security test", () => {
         .collection("chat_rooms")
         .doc(snapshot.id)
         .update({
-          unsubscribedUserDocumentReferences:
-            firebase.firestore.FieldValue.arrayRemove(userDoc(A)),
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(A)),
         })
     );
 
@@ -469,19 +430,14 @@ describe("Firestore security test", () => {
         .collection("chat_rooms")
         .doc(snapshot.id)
         .update({
-          unsubscribedUserDocumentReferences:
-            firebase.firestore.FieldValue.arrayRemove(userDoc(B)),
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayRemove(userDoc(B)),
         })
     );
 
     snapshot = await ref.get();
     assert(snapshot.data().unsubscribedUserDocumentReferences.length === 2);
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(C).id
-    );
-    assert(
-      snapshot.data().unsubscribedUserDocumentReferences[1].id === userDoc(D).id
-    );
+    assert(snapshot.data().unsubscribedUserDocumentReferences[0].id === userDoc(C).id);
+    assert(snapshot.data().unsubscribedUserDocumentReferences[1].id === userDoc(D).id);
 
     // It is not allowed to add other user's ref.
     //
@@ -491,17 +447,14 @@ describe("Firestore security test", () => {
         .collection("chat_rooms")
         .doc(snapshot.id)
         .update({
-          unsubscribedUserDocumentReferences:
-            firebase.firestore.FieldValue.arrayUnion(userDoc(A)),
+          unsubscribedUserDocumentReferences: firebase.firestore.FieldValue.arrayUnion(userDoc(A)),
         })
     );
   });
 
   it("Failure on creating a post with non-existing category.", async () => {
     await firebase.assertFails(
-      db(authA)
-        .collection("posts")
-        .add({ category: "non-existsing", title: "title" })
+      db(authA).collection("posts").add({ category: "non-existsing", title: "title" })
     );
   });
   it("Success on creating a post with existing category, but without my ref.", async () => {
@@ -545,15 +498,11 @@ describe("Firestore security test", () => {
       })
     );
     /// create - ok
-    const added = db(authA)
-      .collection("users")
-      .doc(A)
-      .collection("fcm_tokens")
-      .add({
-        fcm_token: "...",
-        device_type: "ios",
-        created_at: firebase.firestore.FieldValue.serverTimestamp(),
-      });
+    const added = db(authA).collection("users").doc(A).collection("fcm_tokens").add({
+      fcm_token: "...",
+      device_type: "ios",
+      created_at: firebase.firestore.FieldValue.serverTimestamp(),
+    });
     await firebase.assertSucceeds(added);
 
     /// update - ok

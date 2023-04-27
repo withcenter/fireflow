@@ -28,11 +28,15 @@ export 'src/user/widgets/user.sticker.dart';
 export 'src/user/model/user.model.dart';
 export 'src/user/widgets/public_profile.dart';
 export 'src/user/widgets/my.doc.dart';
-export 'src/user/widgets/my.doc.stream.dart';
+export 'src/user/widgets/auth.stream.dart';
 export 'src/user/widgets/user.sticker.stream.dart';
 export 'src/user/widgets/user.doc.dart';
 export 'src/user/widgets/user.avatar.dart';
 export 'src/user/widgets/user.list.dart';
+export 'src/user/widgets/follow.dart';
+export 'src/user/widgets/follow.list.dart';
+export 'src/user/actions/show_user_public_profile_dialog.dart';
+export 'src/user/widgets/block.list.dart';
 
 /// Forum
 export 'src/forum/post.service.dart';
@@ -57,21 +61,34 @@ export 'src/forum/widgets/post.list.tile.dart';
 
 export 'src/forum/actions/show_post_view_dialog.dart';
 export 'src/forum/actions/show_post_edit_dialog.dart';
+export 'src/forum/actions/show_post_create_dialog.dart';
+export 'src/forum/widgets/post.list.header.dart';
+export 'src/forum/widgets/post.list.categories.dart';
+
+export 'src/forum/actions/show_category_create_dialog.dart';
+export 'src/forum/actions/show_category_edit_dialog.dart';
+export 'src/forum/actions/show_category_list_dialog.dart';
 
 /// Chat
 
 export 'src/chat/widgets/chat_no_of_rooms_with_new_message.dart';
 export 'src/chat/widgets/chat_room_message.list.dart';
-export 'src/chat/widgets/chat_room.message.send.dart';
+export 'src/chat/widgets/chat_room_message.send.dart';
 export 'src/chat/widgets/chat_room_message.mine.dart';
 export 'src/chat/widgets/chat_room_message.others.dart';
 export 'src/chat/widgets/chat_room_message.protocol.dart';
-export 'src/chat/widgets/group_chat_sticker.dart';
-export 'src/chat/widgets/single_chat_sticker.dart';
-export 'src/chat/widgets/chat_room.list.dart';
+export 'src/chat/widgets/chat_room_info.group_tile.dart';
+export 'src/chat/widgets/chat_room_info.single_tile.dart';
+export 'src/chat/widgets/chat_room_info.tile.dart';
 export 'src/chat/widgets/chat_room_message.empty.dart';
 export 'src/chat/widgets/chat_room_message.dart';
 export 'src/chat/widgets/chat_room.app_bar.dart';
+export 'src/chat/widgets/chat_room_list.mine.dart';
+export 'src/chat/widgets/chat_room_list.open.dart';
+export 'src/chat/widgets/chat_room_list.friend.dart';
+export 'src/chat/widgets/group_chat_user_photos.dart';
+export 'src/chat/widgets/chat_room_read_badge.dart';
+export 'src/chat/widgets/chat_room_info.meta.dart';
 
 /// Report
 export 'src/report/report.service.dart';
@@ -92,8 +109,19 @@ export 'src/actions/flushbar/flushbar.dart';
 export 'src/functions/country_code.dart';
 export 'src/functions/comment_order.dart';
 export 'src/functions/array_functions.dart';
-
 export 'src/auth/firebase_user_provider.dart';
+export 'src/global_variables.dart';
+
+/// Favorite
+export 'src/favorite/favorite.service.dart';
+export 'src/favorite/models/favorite.model.dart';
+export 'src/favorite/widgets/favorite.dart';
+export 'src/favorite/widgets/favorite.list.dart';
+
+/// Widgets
+export 'src/widgets/icon_text.dart';
+export 'src/widgets/empty.list.dart';
+export 'src/widgets/short_date_time.dart';
 
 /// TEST
 export 'src/test/test.service.dart';

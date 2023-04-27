@@ -6,23 +6,66 @@ class UserAvatar extends StatelessWidget {
   const UserAvatar({
     super.key,
     required this.user,
+    this.size = 40,
     this.padding = const EdgeInsets.all(0),
+    this.border,
+    this.borderColor = Colors.white,
+    this.radius,
   });
 
   final UserModel user;
+  final double size;
   final EdgeInsets padding;
+
+  final double? border;
+  final Color borderColor;
+  final double? radius;
 
   @override
   Widget build(BuildContext context) {
     if (user.photoUrl != null && user.photoUrl != '') {
       return Padding(
         padding: padding,
-        child: CircleAvatar(
-          backgroundImage: CachedNetworkImageProvider(user.photoUrl!),
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(radius ?? size / 2),
+            image: DecorationImage(
+              image: CachedNetworkImageProvider(user.photoUrl!),
+              fit: BoxFit.cover,
+            ),
+            border: border == null
+                ? null
+                : Border.all(
+                    color: borderColor,
+                    width: border!,
+                  ),
+          ),
         ),
       );
     } else {
-      return const SizedBox.shrink();
+      return Padding(
+        padding: padding,
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.brown.shade800,
+          ),
+          child: Center(
+            child: Text(
+              (user.displayName == ""
+                      ? user.uid.substring(0, 2)
+                      : user.displayName)
+                  .substring(0, 2)
+                  .toUpperCase(),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      );
     }
   }
 }

@@ -5,6 +5,7 @@ class TestConfig {
   static const String emailB = 'banana@test-email.com';
   static const String emailC = 'cherry@test-email.com';
   static const String emailD = 'durian@test-email.com';
+  static const String emailI = 'iphone@test-email.com';
   static const String password = 'p/Dux,*3u.:Et';
   static const String adminEmail = 'admin@test-email.com';
 

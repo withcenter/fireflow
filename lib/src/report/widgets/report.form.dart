@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 ///
 /// 악성 글/코멘트/사용자/채팅메시지 등을 신고를 할 때 사용하는 범용 위젯.
 ///
-/// [target] 은 신고할 대상 문서의 DocumentReference. 예) 글, 코멘트, 사용자, 채팅 메시지 문서의 DocumentReference
-/// [reportee] 는 신고 되는 사람 또는 target 문서를 작성한 사람의 사용자 문서 DocumentReference
+/// [targetDocumentReference] 은 신고할 대상 문서의 DocumentReference. 예) 글, 코멘트, 사용자, 채팅 메시지 문서의 DocumentReference
+/// [reportee] 는 신고 되는 사람 또는 targetDocumentReference 문서를 작성한 사람의 사용자 문서 DocumentReference
 class ReportForm extends StatefulWidget {
   const ReportForm({
     super.key,
-    required this.target,
+    required this.targetDocumentReference,
     required this.reportee,
     required this.onSuccess,
   });
 
-  final DocumentReference target;
+  final DocumentReference targetDocumentReference;
   final DocumentReference reportee;
   final void Function() onSuccess;
 
@@ -30,7 +30,9 @@ class _ReportFormState extends State<ReportForm> {
   @override
   initState() {
     super.initState();
-    ReportService.instance.get(target: widget.target).then((report) {
+    ReportService.instance
+        .get(targetDocumentReference: widget.targetDocumentReference)
+        .then((report) {
       setState(() {
         reportController.text = report?.reason ?? '';
       });
@@ -62,7 +64,7 @@ class _ReportFormState extends State<ReportForm> {
               child: ElevatedButton(
                 onPressed: () async {
                   ReportService.instance.create(
-                    target: widget.target,
+                    targetDocumentReference: widget.targetDocumentReference,
                     reportee: widget.reportee,
                     reason: reportController.text,
                   );

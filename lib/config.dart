@@ -26,4 +26,8 @@ class Config {
   String? moveUserPrivateDataTo;
 
   static String deletedPost = 'This post has been deleted.';
+
+  /// 다른 페이지는 다이얼로그로 보여 줄 수 있지만, ChatRoom 은 Dialog 로 보여주지 않는다.
+  /// README.md 참고
+  void Function(UserModel)? onChat;
 }

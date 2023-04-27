@@ -1,4 +1,5 @@
-import 'dart:developer';
+import 'dart:developer' as d;
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,17 @@ import 'package:flutter/material.dart';
 /// Note that, it can't be inside AppService class. It will cause stack overflow.
 bool gDebug = false;
 
+enum Collections {
+  users,
+  posts,
+  comments,
+}
+
 /// This function is used to print debug message.
 ///
 /// [message] is the message to print
 dog(String message) {
-  if (gDebug) log("DOG ---> $message");
+  if (gDebug) d.log("DOG ---> $message");
 }
 
 DateTime? tryDateTime(dynamic value) {
@@ -23,6 +30,7 @@ DateTime? tryDateTime(dynamic value) {
 }
 
 warning(BuildContext context, String message) {
+  if (context.mounted == false) return;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text("WARNING: $message",
@@ -68,4 +76,59 @@ Future<bool?> confirm(BuildContext context, String title, String message) {
       );
     },
   );
+}
+
+/// 문자열 유틸리티
+extension FireFlowStringUtility on String {
+  /// int 형으로 변환 시도. 실패하면 0을 반환한다.
+  int tryInt() {
+    return int.tryParse(this) ?? 0;
+  }
+
+  /// double 형으로 변환 시도. 실패하면 0을 반환한다.
+  double tryDouble() {
+    return double.tryParse(this) ?? 0;
+  }
+
+  int get _length {
+    return length < 0 ? 0 : length - 1;
+  }
+
+  /// 문자열을 각종 상황에서 안전하게 반환한다.
+  /// 예를 들면, 여러 줄의 문자열을 한 줄로 만들거나, HTML 태그를 제거한다.
+  /// 기본 길이는 128자로 제한한다.
+  String get safe {
+    if (this == '') return this;
+    return replaceAll(RegExp(r'<[^>]*>'), '')
+        .replaceAll(RegExp(r"\s+"), " ")
+        .substring(0, min(_length, 128));
+  }
+
+  /// 안전한 문자열 32 글자로 리턴한다.
+  String get safe32 {
+    return safe.cut32;
+  }
+
+  /// 안전한 문자열 64 글자로 리턴한다.
+  String get safe64 {
+    return safe.cut64;
+  }
+
+  /// 문자열을 32자 이하로 자른다.
+  String get cut32 {
+    if (this == '') return this;
+    return substring(0, min(_length, 32));
+  }
+
+  /// 문자열을 64자 이하로 자른다.
+  String get cut64 {
+    if (this == '') return this;
+    return substring(0, min(_length, 64));
+  }
+
+  /// 문자열을 128자 이하로 자른다.
+  String get cut128 {
+    if (this == '') return this;
+    return substring(0, min(_length, 128));
+  }
 }

@@ -12,11 +12,13 @@ class PostViewBody extends StatefulWidget {
     required this.post,
     required this.onEdit,
     required this.onDelete,
+    // this.onChat,
   });
 
   final PostModel post;
   final void Function(PostModel) onEdit;
   final void Function(PostModel) onDelete;
+  // final void Function(UserModel)? onChat;
 
   @override
   State<PostViewBody> createState() => _PostViewBodyState();
@@ -151,38 +153,122 @@ class _PostViewBodyState extends State<PostViewBody> {
                       },
                     ),
 
+                    /// 채팅
+                    if (post.isNotMine && Config.instance.onChat != null)
+                      ListTile(
+                        leading: const Icon(Icons.chat_bubble_outline),
+                        title: const Text('Chat'),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Config.instance.onChat!(user!);
+
+                          // if (widget.onChat != null) widget.onChat!(user!);
+                        },
+                      ),
+
                     /// 팔로우
-                    if (post.isNotMine)
-                      MyDoc(
-                        builder: (my) => ListTile(
-                          leading: Icon(my.followings.contains(user!.reference)
+                    Follow(
+                      userDocumentReference: post.userDocumentReference,
+                      builder: (isFollowing) {
+                        return ListTile(
+                          leading: Icon(isFollowing
                               ? Icons.favorite
                               : Icons.favorite_border),
                           title: const Text('Follow'),
                           onTap: () {
-                            final contains =
-                                my.followings.contains(user!.reference);
                             Navigator.of(context).pop();
                             UserService.instance.update(
-                              followings: contains
-                                  ? FieldValue.arrayRemove([user!.reference])
-                                  : FieldValue.arrayUnion([user!.reference]),
+                              followings: isFollowing
+                                  ? FieldValue.arrayRemove(
+                                      [post.userDocumentReference])
+                                  : FieldValue.arrayUnion(
+                                      [post.userDocumentReference]),
                             );
-                            success(context,
-                                'You have ${contains ? 'un-followed' : 'followed'} ${user!.displayName}');
+                            success(
+                              context,
+                              ln(
+                                isFollowing ? 'unfollowed' : 'followed',
+                                replace: {
+                                  'name': user!.displayName,
+                                },
+                              ),
+                            );
                           },
-                        ),
-                      ),
-
-                    /// 즐겨찾기
-                    ListTile(
-                      leading: const Icon(Icons.star_border),
-                      title: const Text('Favorite'),
-                      onTap: () {
-                        print('favorite');
-                        Navigator.of(context).pop();
+                        );
                       },
                     ),
+
+                    // if (post.isNotMine)
+                    //   MyDoc(
+                    //     builder: (my) => ListTile(
+                    //       leading: Icon(my.followings.contains(user!.reference)
+                    //           ? Icons.favorite
+                    //           : Icons.favorite_border),
+                    //       title: const Text('Follow'),
+                    //       onTap: () {
+                    //         final contains =
+                    //             my.followings.contains(user!.reference);
+                    //         Navigator.of(context).pop();
+                    //         UserService.instance.update(
+                    //           followings: contains
+                    //               ? FieldValue.arrayRemove([user!.reference])
+                    //               : FieldValue.arrayUnion([user!.reference]),
+                    //         );
+                    //         success(
+                    //           context,
+                    //           ln(
+                    //             contains ? 'unfollowed' : 'followed',
+                    //             replace: {
+                    //               'name': user!.displayName,
+                    //             },
+                    //           ),
+                    //         );
+                    //       },
+                    //     ),
+                    //   ),
+
+                    /// 즐겨찾기
+                    Favorite(
+                      targetDocumentReference: post.reference,
+                      builder: (isFavorite) => ListTile(
+                        leading: Icon(
+                          isFavorite ? Icons.star : Icons.star_border,
+                        ),
+                        title: const Text('Favorite'),
+                      ),
+                      onChange: (isFavorite) {
+                        Navigator.of(context).pop();
+                        success(
+                          context,
+                          ln(isFavorite ? 'favorite' : 'unfavorite',
+                              replace: {'name': user!.displayName}),
+                        );
+                      },
+                    ),
+                    // Favorite(
+                    //     targetDocumentReference: post.reference,
+                    //     builder: (isFavorite) {
+                    //       return ListTile(
+                    //         leading: Icon(
+                    //           isFavorite ? Icons.star : Icons.star_border,
+                    //         ),
+                    //         title: const Text('Favorite'),
+                    //         onTap: () {
+                    //           Navigator.of(context).pop();
+                    //           FavoriteService.instance.set(
+                    //             targetDocumentReference: post.reference,
+                    //           );
+
+                    //           success(
+                    //             context,
+                    //             ln(isFavorite ? 'unfavorite' : 'favorite',
+                    //                 replace: {'name': user!.displayName}),
+                    //           );
+                    //         },
+                    //       );
+                    //     }),
+
+                    /// 차단
                     if (post.isNotMine)
                       MyDoc(builder: (my) {
                         final contains =
@@ -191,18 +277,23 @@ class _PostViewBodyState extends State<PostViewBody> {
                           leading: Icon(
                               contains ? Icons.block : Icons.circle_outlined),
                           title: const Text('Block'),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.of(context).pop();
-                            UserService.instance.update(
-                              blockedUsers: contains
-                                  ? FieldValue.arrayRemove([user!.reference])
-                                  : FieldValue.arrayUnion([user!.reference]),
-                            );
-                            success(context,
-                                'You have ${contains ? 'un-blocked' : 'blocked'} ${user!.displayName}');
+                            final re = await UserService.instance
+                                .block(user!.reference);
+                            if (mounted) {
+                              success(
+                                context,
+                                ln(re ? 'blocked' : 'unblocked',
+                                    replace: {'name': user!.displayName}),
+                              );
+                              // 'You have ${contains ? 'un-blocked' : 'blocked'} ${user!.displayName}');
+                            }
                           },
                         );
                       }),
+
+                    /// 신고
                     if (post.isNotMine)
                       ListTile(
                         leading: const Icon(Icons.report_outlined),
@@ -213,7 +304,7 @@ class _PostViewBodyState extends State<PostViewBody> {
                             context: context,
                             builder: (context) {
                               return ReportForm(
-                                target: post.reference,
+                                targetDocumentReference: post.reference,
                                 reportee: post.userDocumentReference,
                                 onSuccess: () {
                                   Navigator.of(context).pop();

@@ -69,7 +69,7 @@ class ChatRoomMessageModel {
     );
   }
 
-  /// Create a map data from ChatRoomMessageModel object
+  /// 맵으로 정보를 리턴한다.
   Map<String, dynamic> get data {
     return {
       'userDocumentReference': userDocumentReference,
@@ -88,5 +88,10 @@ class ChatRoomMessageModel {
       'replyDisplayName': replyDisplayName,
       'replyText': replyText,
     };
+  }
+
+  @override
+  String toString() {
+    return 'ChatRoomMessageModel{${data.toString()}}';
   }
 }

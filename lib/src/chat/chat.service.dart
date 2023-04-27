@@ -2,6 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutterflow_widgets/flutterflow_widgets.dart';
 
+enum ChatProtocol {
+  invite,
+  enter,
+  leave,
+  kick,
+}
+
 /// ChatService
 ///
 /// ChatService is a singleton class that provides the chat service.
@@ -24,6 +31,8 @@ class ChatService {
 
   Query get myRooms => rooms.where('userDocumentReferences',
       arrayContains: UserService.instance.ref);
+
+  Query get openRooms => rooms.where('isOpenChat', isEqualTo: true);
 
   /// Returns a chat room message document reference of the given id.
   DocumentReference message(String id) => messages.doc(id);
@@ -56,21 +65,25 @@ class ChatService {
 
   /// 채팅 방생성
   ///
-  /// 반드시 채팅방은 이 함수 호출을 통해서만 생성해야 한다. FF 에서 직접 레코드를 생성하면 안된다.
+  /// 반드시 채팅방(1:1과 그룹 채팅방 모두)은 이 함수 호출을 통해서만 생성해야 한다. FF 에서 직접 레코드를 생성하면 안된다.
   /// 왜냐하면, 채팅방을 생성할 때, 반드시 Chat Room 문서의 ID 가 저장되어야 하기 때문이다.
   ///
   /// isGroupChat, leaveProtocolMessage, urlClick, urlPreview 는 자동 설정된다. 만약, 다른
-  /// 값을 원하다면, createChatRoom() 호출 할 때, data 로 지정하면 된다.
+  /// 값을 원하다면, createRoom() 호출 할 때, data 로 지정하면 된다.
   ///
   ///
-  createChatRoom({
+  Future<DocumentReference> createRoom({
     DocumentReference? otherUserDocumentReference,
     List<String>? otherUids,
-    Map<String, dynamic>? data,
+    String? title,
+    bool? isOpenChat,
+    FieldValue? createdAt,
   }) async {
     DocumentReference roomReference;
     List<DocumentReference>? userDocumentReferences;
-    late bool isGroupChat;
+
+    /// 그룹 채팅방인지 여부는 자동으로 결정된다.
+    bool isGroupChat;
 
     ///
     if (otherUids != null) {
@@ -88,32 +101,59 @@ class ChatService {
       isGroupChat = true;
     }
 
-    await roomReference.set({
-      'id': roomReference.id,
-      'isGroupChat': isGroupChat,
-      'lastMessageSeenBy': FieldValue.arrayUnion([
-        UserService.instance.ref,
-      ]),
-      'userDocumentReferences':
-          userDocumentReferences ?? [UserService.instance.ref],
-      'leaveProtocolMessage': true,
-      'urlClick': true,
-      'urlPreview': true,
-      if (data != null) ...data,
-    });
+    final info = createChatRoomData(
+      id: roomReference.id,
+      title: title,
+      isGroupChat: isGroupChat,
+      isOpenChat: isOpenChat,
+      lastMessageSeenBy: FieldValue.arrayUnion([my.reference]),
+      userDocumentReferences: userDocumentReferences ?? [my.reference],
+      leaveProtocolMessage: true,
+      urlClick: true,
+      urlPreview: true,
+    );
+
+    // print('createRoom() info: $info');
+
+    await roomReference.set(info);
+    return roomReference;
   }
 
-  /// 채팅방 정보를 ChatRoomModel 로 리턴한다.
+  /// 채팅방 문서 [id] 를 입력 받아, DB 로 부터 가져와, ChatRoomModel 로 리턴한다.
   ///
   /// 채팅방 정보가 존재하지 않으면 null 을 리턴한다.
+  ///
+  /// 주의, 나의 reference 가 userDocumentReferences 에 포함되어 있어야 한다. 그렇지 않으면, null 을
+  /// 리턴한다.
+  /// 이러한 이유로, 내가 채팅방에 들어가 있거나, open chat 인 경우에만 채팅방 정보를 가져올 수 있다.
+  ///
+  /// 채팅방 정보를 가져오는 방법은 다음과 같다.
+  /// - 먼저 userDocumentReferences 에 나의 ref 가 포함되어 있는지 쿼리를 한다.
+  ///   - 1:1 채팅이든 그룹 채팅이든 나의 ref 가 userDocumentReferences 에 들어가 있어야 한다.
+  /// - 만약, userDocumentReferences 에 나의 ref 가 포함되어져 있지 않으면, 그리고 그룹 챗 ID 이면,
+  ///   - isOpenChat 으로 검색을 한번 더 검색한다. 즉, open chat 의 경우 채팅방을 읽을 수 있는 것이다.
+  ///
   Future<ChatRoomModel?> getRoom(String id) async {
     final QuerySnapshot querySnapshot = await rooms
         .where('userDocumentReferences', arrayContains: my.reference)
         .where('id', isEqualTo: id)
+        .limit(1)
         .get();
-    if (querySnapshot.size == 0) return null;
+    if (querySnapshot.size != 0) {
+      return ChatRoomModel.fromSnapshot(querySnapshot.docs.first);
+    }
 
-    return ChatRoomModel.fromSnapshot(querySnapshot.docs.first);
+    final QuerySnapshot querySnapshot2 = await rooms
+        .where('isOpenChat', isEqualTo: true)
+        .where('id', isEqualTo: id)
+        .limit(1)
+        .get();
+
+    if (querySnapshot2.size != 0) {
+      return ChatRoomModel.fromSnapshot(querySnapshot2.docs.first);
+    }
+
+    return null;
   }
 
   /// alias of getRoom()
@@ -122,13 +162,13 @@ class ChatService {
   createOneAndOneChatRoom({
     required DocumentReference otherUserDocumentReference,
   }) async {
-    await createChatRoom(
+    await createRoom(
       otherUserDocumentReference: otherUserDocumentReference,
       otherUids: [otherUserDocumentReference.id],
     );
   }
 
-  /// Send a message
+  /// 채팅 메세지 전송
   ///
   /// This method sends a chat message and updates the chat room.
   ///
@@ -145,6 +185,16 @@ class ChatService {
   ///
   /// Note that, this method is asynchronous. It does not wait until the
   /// functions to be finished.
+  ///
+  /// [otherUserDocumentReference] 는 1:1 채팅방의 경우에만 설정한다.
+  /// [chatRoomDocumentReference] 는 그룹 채팅방의 경우에만 설정한다.
+  /// [text] 는 채팅 메시지. 파일/사진 업로드 할 때에는 null.
+  /// [uploadUrl] 는 파일/사진 업로드 할 때에 URL 입력. 채팅 메시지를 전송 할 때에는 null.
+  /// [protocol] 는 프로토콜. 채팅 메시지 할 때에는 null.
+  /// [protocolTargetUserDocumentReference] 는 프로토콜의 대상이 되는 사용자의 reference.
+  /// [replyDisplayName] 는 답장할 때, 답장할 메시지의 사용자 이름.
+  /// [replyText] 는 답장할 때, 답장할 메시지의 내용.
+  ///
   sendMessage({
     DocumentReference? otherUserDocumentReference,
     DocumentReference? chatRoomDocumentReference,
@@ -417,7 +467,9 @@ class ChatService {
     }
   }
 
-  /// Get the other document reference from the one and one chat document reference
+  /// 채팅방 reference 로 부터, 다른 사용자 reference 를 리턴.
+  ///
+  /// 1:1 채팅이면 항상 채팅방 reference 에 하이픈(-)이 있다.
   ///
   DocumentReference getOtherUserDocumentReferenceFromChatRoomReference(
       DocumentReference chatRoomDocumentReference) {
@@ -443,7 +495,7 @@ class ChatService {
   /// 채팅방 정보 문서가 존재하지 않으면 생성한다.
   ///
   /// 채팅방 ID 를 저장한다.
-  Future update(
+  Future upsert(
     DocumentReference chatRoomDocumentReference, {
     FieldValue? userDocumentReferences,
     FieldValue? lastMessageSeenBy,
@@ -452,13 +504,50 @@ class ChatService {
   }) {
     return chatRoomDocumentReference.set(
       {
-        'userDocumentReferences': userDocumentReferences,
-        'lastMessageSeenBy': lastMessageSeenBy,
-        'isGroupChat': false,
-        'isSubChatRoom': false,
+        if (userDocumentReferences != null)
+          'userDocumentReferences': userDocumentReferences,
+        if (lastMessageSeenBy != null) 'lastMessageSeenBy': lastMessageSeenBy,
+        if (isGroupChat != null) 'isGroupChat': isGroupChat,
+        if (isSubChatRoom != null) 'isSubChatRoom': isSubChatRoom,
         'id': chatRoomDocumentReference.id,
       },
       SetOptions(merge: true),
     );
+  }
+
+  /// 나 자신을 오픈 챗 방에 추가한다.
+  Future enter({
+    ChatRoomModel? room,
+  }) async {
+    /// 방 정보가 존재하고,
+    if (room == null) {
+      return;
+    }
+
+    /// 내가 방에 없고, 오픈 챗이면,
+    if (room.userDocumentReferences.contains(my.reference) == false &&
+        room.isOpenChat) {
+      try {
+        /// 나를 추가
+        await upsert(
+          room.reference,
+          userDocumentReferences: FieldValue.arrayUnion([my.reference]),
+        );
+      } catch (e) {
+        dog('에러 발생: 그룹 채팅방 사용자 추가 $e');
+        rethrow;
+      }
+      try {
+        /// 나를 추가 후, enter protocol 메시지를 보낸다.
+        await ChatService.instance.sendMessage(
+          chatRoomDocumentReference: room.reference,
+          protocol: 'enter',
+          protocolTargetUserDocumentReference: my.reference,
+        );
+      } catch (e) {
+        dog('에러 발생: 그룹 채팅방 입장 메시지 보내기 $e');
+        rethrow;
+      }
+    }
   }
 }

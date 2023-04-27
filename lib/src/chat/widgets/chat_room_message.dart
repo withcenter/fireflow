@@ -1,30 +1,32 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fireflow/fireflow.dart';
 import 'package:flutter/material.dart';
 
 class ChatRoomMessage extends StatelessWidget {
   const ChatRoomMessage({
     super.key,
+    required this.room,
     required this.type,
-    required this.snapshot,
+    required this.message,
   });
+  final ChatRoomModel room;
   final String type;
-  final DocumentSnapshot? snapshot;
+  final ChatRoomMessageModel? message;
 
   @override
   Widget build(BuildContext context) {
     switch (type) {
       case 'my':
         return ChatRoomMessageMine(
-          message: ChatRoomMessageModel.fromSnapshot(snapshot!),
+          room: room,
+          message: message!,
         );
       case 'other':
         return ChatRoomMessageOthers(
-          message: ChatRoomMessageModel.fromSnapshot(snapshot!),
+          message: message!,
         );
       case 'protocol':
         return ChatRoomMessageProtocol(
-          message: ChatRoomMessageModel.fromSnapshot(snapshot!),
+          message: message!,
         );
       case 'empty':
         return const ChatRoomMessageEmpty();

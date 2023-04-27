@@ -70,8 +70,8 @@ class PostService {
 
       futures.add(
         MessagingService.instance.send(
-          notificationTitle: safeString(post.title),
-          notificationText: safeString(post.content),
+          notificationTitle: post.title.safe,
+          notificationText: post.content.safe,
           notificationSound: 'default',
           notificationImageUrl: post.files.isNotEmpty ? post.files.first : null,
           userRefs: userRefs,

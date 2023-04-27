@@ -1,3 +1,17 @@
+## 0.1.8
+
+* Add. Refactoring forum. Adding `categoryMenuBuilder` & `itemBuilder`.
+
+
+## 0.1.7
+
+* Add. Refactoring forum. Adding `headerBuilder`.
+
+
+## 0.1.6
+
+* Add. refactoring forum.
+
 ## 0.1.5
 
 * Add. Public User widget

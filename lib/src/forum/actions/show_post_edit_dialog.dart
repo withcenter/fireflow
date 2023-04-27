@@ -20,7 +20,7 @@ void showPostEditDialog(BuildContext context, PostModel post) {
                 Navigator.of(context).pop();
               },
               onFileUpload: (post) {
-                print(post);
+                dog(post.toString());
               },
             ),
           ),

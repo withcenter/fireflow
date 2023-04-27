@@ -97,12 +97,28 @@ class UserService {
     mySubscription?.cancel();
   }
 
-  /// Get user document by uid.
+  /// 사용자 문서를 가져온다.
   ///
-  /// Note, it returns user data model. Not the user's public data.
+  /// 주의, 내부적으로 메모리 캐시를 해서, 중복으로 호출해도, 한번만 DB 액세스를 하여, DB 액세스를 최소화 하고, 속도를 높인다.
+  /// 참고, 예상치 못한 경우로 반복적인 DB 호출이 굉장히 심하게 발생 할 수 있다. 예를 들면, UI 작업을 잘못해서, 리스트 맨
+  /// 밑에서 스크롤이 위/아래로 반복적으로 빠르게 움직일 때, 위젯을 rebuild 하므로, DB 접속을 수십/수백번 하게 된다.
+  /// 이 처럼 예기치 못한 상황을 잘 대처 할 수 있다.
+  final Map<String, UserModel> _userModelCache = {};
   Future<UserModel> get([String? id]) async {
-    final snapshot = await doc(id ?? uid).get();
-    return UserModel.fromSnapshot(snapshot);
+    id = id ?? uid;
+    if (_userModelCache.containsKey(id)) {
+      // print('----> reuser id $id, name ${_userModelCache[id]!.displayName}');
+      return _userModelCache[id]!;
+    }
+    final snapshot = await doc(id).get();
+    final model = UserModel.fromSnapshot(snapshot);
+    _userModelCache[id] = model;
+    return model;
+  }
+
+  /// 사용자 캐시 문서를 업데이트한다.
+  updateUserModelCache(UserModel model) {
+    _userModelCache[model.uid] = model;
   }
 
   /// /users 컬렉션 생성
@@ -281,8 +297,8 @@ class UserService {
       'postDocumentReference': post.reference,
       'userDocumentReference': my.reference,
       'createdAt': post.createdAt,
-      'title': safeString(post.title),
-      'content': safeString(post.content),
+      'title': post.title.safe64,
+      'content': post.content.safe64,
       'photoUrl': post.files.isNotEmpty ? post.files.first : null,
     });
   }
@@ -333,12 +349,22 @@ class UserService {
     return UserModel.fromSnapshot(snapshot.docs[0]);
   }
 
-  /// Follow a user
+  /// 팔로잉
   ///
-  Future follow(DocumentReference userDocumentReference) async {
-    await update(
-      followings: FieldValue.arrayUnion([userDocumentReference]),
-    );
+  /// 팔로잉을 하면 true, 팔로잉을 취소하면 false 를 리턴한다. 따로 unfollow() 함수가 없다.
+  ///
+  Future<bool> follow(DocumentReference userDocumentReference) async {
+    if (my.followings.contains(userDocumentReference)) {
+      await update(
+        followings: FieldValue.arrayRemove([userDocumentReference]),
+      );
+      return false;
+    } else {
+      await update(
+        followings: FieldValue.arrayUnion([userDocumentReference]),
+      );
+      return true;
+    }
   }
 
   /// Reset the followings
@@ -511,5 +537,19 @@ class UserService {
       'lastPost': FieldValue.delete(),
       'recentPosts': FieldValue.delete(),
     });
+  }
+
+  /// 사용자 차단 또는 해제
+  ///
+  ///
+  /// 차단을 했으면 true, 차단 해제를 했으면 false 를 리턴한다.
+  Future<bool> block(DocumentReference userDocumentReference) async {
+    final contains = my.blockedUsers.contains(userDocumentReference);
+    await update(
+      blockedUsers: contains
+          ? FieldValue.arrayRemove([userDocumentReference])
+          : FieldValue.arrayUnion([userDocumentReference]),
+    );
+    return !contains;
   }
 }

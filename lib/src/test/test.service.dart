@@ -2,7 +2,6 @@ import 'package:fireflow/fireflow.dart';
 import 'package:fireflow/src/test/test.feeds.dart';
 import 'package:fireflow/src/test/test.follow.dart';
 import 'package:fireflow/src/test/test.supabase.search.dart';
-import 'package:fireflow/src/test/test.utils.dart';
 
 class TestService {
   static final TestService instance = _instance ??= TestService();

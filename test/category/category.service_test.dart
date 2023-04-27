@@ -19,6 +19,7 @@ void main() async {
       waitMinutesForPremiumUserNextPost: 0,
       displayCategoryInForm: false,
       readOnly: false,
+      displayCategoryOnListMenu: false,
     );
     expect(category.categoryId, 'id');
   });

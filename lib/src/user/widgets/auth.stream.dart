@@ -7,10 +7,11 @@ import 'package:flutter/widgets.dart';
 /// 원칙은 로그인/로그아웃 할 때 마다 빌드하는 것이 아니지만, 로그인/로그아웃 할 때,
 /// UserService.instance.onMyChange 가 호출되므로, 로그인/로그아웃 할 때 마다 같이 빌드된다.
 ///
-/// 특히, 이 함수가 유용한 이유는 authStateChanges() 를 listen 하면, 사용자 문서가 아직, 준비되지 않았을 수 있는데,
-/// 이 함수는 사용자 문서가 준비된 후, 빌드한다.
-class MyDocStream extends StatelessWidget {
-  const MyDocStream({Key? key, this.login, this.logout}) : super(key: key);
+/// 특히, 이 함수가 유용한 이유는 authStateChanges() 를 listen 하면, 사용자 문서가 아직, 준비되지 않아서,
+/// 에러가 날 수 있는데, 이 위젯은 사용자 문서가 준비된 후, 빌드하므로, UserService.instance.my 를
+/// 안전하게 사용 할 수 있다.
+class AuthStream extends StatelessWidget {
+  const AuthStream({Key? key, this.login, this.logout}) : super(key: key);
 
   final Widget Function(UserModel my)? login;
   final Widget Function()? logout;
