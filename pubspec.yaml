@@ -1,6 +1,6 @@
 name: fireflow
 description: This package is designed for FlutterFlow app to provide enhanced features.
-version: 0.0.161
+version: 0.0.162
 homepage: https://github.com/withcenter/fireflow
 
 environment:
@@ -23,7 +23,7 @@ dependencies:
   cloud_functions: 4.0.6
   cloud_functions_platform_interface: 5.1.25
   cloud_functions_web: 4.3.14
-  file_picker: 4.5.1
+  file_picker: 5.2.6
   firebase_auth: 4.2.0
   firebase_auth_platform_interface: 6.11.4
   firebase_auth_web: 5.2.0
