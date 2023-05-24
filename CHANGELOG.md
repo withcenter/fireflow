@@ -1,3 +1,8 @@
+## 0.0.165
+
+* Supabase dependency version update
+
+
 ## 0.0.161
 
 * Bump

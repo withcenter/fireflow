@@ -343,7 +343,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.164"
+    version: "0.0.165"
   fixnum:
     dependency: transitive
     description:
@@ -736,10 +736,10 @@ packages:
     dependency: transitive
     description:
       name: postgrest
-      sha256: "9a411e62fdc00e02e35a4c4d2979d1632a6e9ea7a21ec7f3627d6eac322c7b7f"
+      sha256: b6c2d1b58e648bdf1e6c775a90064ae1c505879b439c30028cfc5072969e8601
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.2.3"
   process:
     dependency: transitive
     description:
@@ -844,6 +844,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  sign_in_with_apple:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple
+      sha256: ac3b113767dfdd765078c507dad9d4d9fe96b669cc7bd88fc36fc15376fb3400
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.0"
+  sign_in_with_apple_platform_interface:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple_platform_interface
+      sha256: a5883edee09ed6be19de19e7d9f618a617fe41a6fa03f76d082dfb787e9ea18d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  sign_in_with_apple_web:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple_web
+      sha256: "44b66528f576e77847c14999d5e881e17e7223b7b0625a185417829e5306f47a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   simple_gesture_detector:
     dependency: transitive
     description:
@@ -893,10 +917,10 @@ packages:
     dependency: transitive
     description:
       name: storage_client
-      sha256: "58eebe33fba221499afc18008b4e8ea4205cc0d4024021c0badd6d662bcdb87c"
+      sha256: e14434a4cc16b01f2e96f3c646e43fb0bb16624b279a65a34da889cffe4b083c
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.4.0"
   stream_channel:
     dependency: transitive
     description:
@@ -917,18 +941,18 @@ packages:
     dependency: "direct main"
     description:
       name: supabase
-      sha256: a2f4e974be5bad58bc6623fba62dfc674c4af8e4bf5507bc7077c0f706276a56
+      sha256: d3c7978c547260950d5b9cbfe7351bc883a16c916c12f3c9c6963b084f42a516
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.6.3"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
-      sha256: a59700a843d058db9bea22f6a8dd81254f05c0f88821820f5a567977d73a6344
+      sha256: ac0bedd16b31439557e144446bb3788a66410a544a6fb76a795229f9a8d7a6d7
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.7.0"
   synchronized:
     dependency: transitive
     description:
@@ -1145,6 +1169,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  webview_flutter:
+    dependency: transitive
+    description:
+      name: webview_flutter
+      sha256: "5604dac1178680a34fbe4a08c7b69ec42cca6601dc300009ec9ff69bef284cc2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
+  webview_flutter_android:
+    dependency: transitive
+    description:
+      name: webview_flutter_android
+      sha256: "57a22c86065375c1598b57224f92d6008141be0c877c64100de8bfb6f71083d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.1"
+  webview_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: webview_flutter_platform_interface
+      sha256: "656e2aeaef318900fffd21468b6ddc7958c7092a642f0e7220bac328b70d4a81"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.1"
+  webview_flutter_wkwebview:
+    dependency: transitive
+    description:
+      name: webview_flutter_wkwebview
+      sha256: "6bbc6ade302b842999b27cbaa7171241c273deea8a9c73f92ceb3d811c767de2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.4"
   win32:
     dependency: transitive
     description:
