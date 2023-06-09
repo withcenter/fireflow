@@ -1,5 +1,9 @@
 ## 0.0.165
 
+* Supabase. Search for users, posts, comments.
+
+## 0.0.165
+
 * Supabase dependency version update
 
 

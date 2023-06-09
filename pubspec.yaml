@@ -1,6 +1,6 @@
 name: fireflow
 description: This package is designed for FlutterFlow app to provide enhanced features.
-version: 0.0.165
+version: 0.0.166
 homepage: https://github.com/withcenter/fireflow
 
 environment:
@@ -94,10 +94,5 @@ dev_dependencies:
   #
   fake_cloud_firestore: ^2.1.0
   # firebase_auth_mocks: ^0.10.3
-
-dependency_overrides:
-  # rxdart: 0.27.4 # Don't overrides non-dev packages.
-  # This is for firebase_auth_mocks. If it produces problem on deploying, remove it.
-  # firebase_auth_platform_interface: 6.11.4
 
 flutter:

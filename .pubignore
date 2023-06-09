@@ -1,7 +1,7 @@
 doc/
 etc/
 key.dart
-
+.fvm/
 
 example/.dart_tool
 example/.idea
