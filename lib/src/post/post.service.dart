@@ -139,6 +139,7 @@ class PostService {
           id: postDocumentReference.id,
           category: 'posts',
           text: "${post.title} ${post.content}",
+          createdAt: post.createdAt.toDate().toIso8601String(),
         ),
       );
     }
@@ -201,6 +202,7 @@ class PostService {
           id: postDocumentReference.id,
           category: 'posts',
           text: "${post.title} ${post.content}",
+          createdAt: post.createdAt.toDate().toIso8601String(),
         ),
       );
     }

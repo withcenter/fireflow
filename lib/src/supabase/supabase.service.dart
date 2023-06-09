@@ -36,11 +36,13 @@ class SupabaseService {
     required String id,
     required String category,
     required String text,
+    required String createdAt,
   }) {
     return _search.insert({
       'id': id,
       'category': category,
       'text': text,
+      'created_at': createdAt
     });
   }
 
@@ -48,10 +50,12 @@ class SupabaseService {
     required String id,
     String? category,
     String? text,
+    String? createdAt,
   }) {
     return _search.update({
       if (category != null) 'category': category,
       if (text != null) 'text': text,
+      if (createdAt != null) 'created_at': createdAt,
     }).eq('id', id);
   }
 
@@ -59,12 +63,14 @@ class SupabaseService {
     required String id,
     String? category,
     String? text,
+    String? createdAt,
   }) {
     return _search.upsert(
       {
         'id': id,
         if (category != null) 'category': category,
         if (text != null) 'text': text,
+        if (createdAt != null) 'created_at': createdAt,
       },
       onConflict: 'id',
     );

@@ -242,7 +242,8 @@ class UserService {
           await supabase.searchUpsert(
             id: pub.uid,
             category: 'users',
-            text: "${pub.displayName} ${gender}",
+            text: "${pub.displayName} $gender",
+            createdAt: pub.registeredAt.toDate().toIso8601String(),
           );
         }
       }

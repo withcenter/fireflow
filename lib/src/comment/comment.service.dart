@@ -156,6 +156,7 @@ class CommentService {
           id: commentDocumentReference.id,
           category: 'comments',
           text: comment.content,
+          createdAt: comment.createdAt.toDate().toIso8601String(),
         ),
       );
     }
@@ -219,6 +220,7 @@ class CommentService {
           id: commentDocumentReference.id,
           category: 'comments',
           text: comment.content,
+          createdAt: comment.createdAt.toDate().toIso8601String(),
         ),
       );
     }
