@@ -2,6 +2,8 @@ doc/
 apps/
 node_modules/
 
+.fvm/
+
 key.dart
 
 firebase_options.dart
