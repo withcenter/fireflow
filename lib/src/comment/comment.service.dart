@@ -150,6 +150,16 @@ class CommentService {
       );
     }
 
+    if (SupabaseService.instance.storeSearch) {
+      futures.add(
+        supabase.searchInsert(
+          id: commentDocumentReference.id,
+          category: 'comments',
+          text: comment.content,
+        ),
+      );
+    }
+
     await Future.wait(futures);
   }
 
@@ -203,6 +213,16 @@ class CommentService {
       );
     }
 
+    if (SupabaseService.instance.storeSearch) {
+      futures.add(
+        supabase.searchUpsert(
+          id: commentDocumentReference.id,
+          category: 'comments',
+          text: comment.content,
+        ),
+      );
+    }
+
     await Future.wait(futures);
   }
 
@@ -237,6 +257,12 @@ class CommentService {
     if (SupabaseService.instance.storePostsAndComments) {
       futures.add(
         supabase.postsAndComments.delete().eq('id', comment.id),
+      );
+    }
+
+    if (SupabaseService.instance.storeSearch) {
+      futures.add(
+        supabase.searchDelete(comment.id),
       );
     }
 

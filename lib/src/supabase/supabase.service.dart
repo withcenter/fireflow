@@ -29,6 +29,9 @@ class SupabaseService {
       Config.instance.supa &&
       Config.instance.supabase!.postsAndComments != null;
 
+  bool get storeSearch =>
+      Config.instance.supa && Config.instance.supabase!.search != null;
+
   Future searchInsert({
     required String id,
     required String category,

@@ -230,6 +230,21 @@ class UserService {
             onConflict: 'uid',
           );
         }
+
+        if (SupabaseService.instance.storeSearch) {
+          String gender = '';
+
+          if (pub.gender == 'M') {
+            gender = 'male';
+          } else if (pub.gender == 'F') {
+            gender = 'female';
+          }
+          await supabase.searchUpsert(
+            id: pub.uid,
+            category: 'users',
+            text: "${pub.displayName} ${gender}",
+          );
+        }
       }
     });
   }

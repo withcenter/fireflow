@@ -133,6 +133,16 @@ class PostService {
       );
     }
 
+    if (SupabaseService.instance.storeSearch) {
+      futures.add(
+        supabase.searchInsert(
+          id: postDocumentReference.id,
+          category: 'posts',
+          text: "${post.title} ${post.content}",
+        ),
+      );
+    }
+
     await Future.wait(futures);
   }
 
@@ -185,6 +195,16 @@ class PostService {
       );
     }
 
+    if (SupabaseService.instance.storeSearch) {
+      futures.add(
+        supabase.searchUpsert(
+          id: postDocumentReference.id,
+          category: 'posts',
+          text: "${post.title} ${post.content}",
+        ),
+      );
+    }
+
     await Future.wait(futures);
   }
 
@@ -225,6 +245,14 @@ class PostService {
     if (SupabaseService.instance.storePostsAndComments) {
       futures.add(
         supabase.postsAndComments.delete().eq('id', post.id),
+      );
+    }
+
+    if (SupabaseService.instance.storeSearch) {
+      futures.add(
+        supabase.searchDelete(
+          postDocumentReference.id,
+        ),
       );
     }
 
